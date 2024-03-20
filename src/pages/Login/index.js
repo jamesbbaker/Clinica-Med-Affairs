@@ -2,17 +2,20 @@ import React from "react";
 import logo from "../../assets/images/logo.png";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import { useNavigate } from "react-router";
+import InputField from "../../components/InputField";
 
 const inputs = [
   {
-    name: "Email",
+    name: "email",
+    label: "Email",
     id: "email",
     placeholder: "Enter your email address",
     type: "email",
   },
   {
-    name: "Password",
+    name: "password",
     id: "password",
+    label: "Password",
     placeholder: "Enter your password",
     type: "password",
   },
@@ -39,14 +42,7 @@ const Login = () => {
           <img src={logo} className="w-40" />
           <div className="flex w-full flex-col gap-8">
             {inputs.map((input) => (
-              <div>
-                <h1 className="font-medium">{input.name}</h1>
-                <input
-                  type={input.type}
-                  className="px-4 py-2 mt-2 focus:outline-none border-primary w-full border-opacity-25 border"
-                  placeholder={input.placeholder}
-                />
-              </div>
+              <InputField input={input} />
             ))}
           </div>
           <PrimaryBtn

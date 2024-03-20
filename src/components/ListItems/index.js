@@ -6,7 +6,7 @@ const ListItems = ({ items }) => {
       {items.map((item) => (
         <div className="relative w-1/4  border flex flex-col gap-2 px-4 py-6">
           <div>
-            Name: <span className="font-medium">{item.name}</span>
+            Name: <span className="font-medium">{item.email}</span>
           </div>
           <div>
             Code: <span className="font-medium">{item.code}</span>

@@ -4,18 +4,21 @@ import { users } from "./usersList";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
-import FormInput from "../../components/FormInput";
+import InputForm from "../../components/InputForm";
+import { useSelector } from "react-redux";
 
 const Home = () => {
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
+  const items = useSelector((state) => state.admin.users);
+
   return (
     <div className="px-4 py-6">
       <div className="flex w-full justify-end">
         <PrimaryBtn
           className={"w-40"}
           onClick={() => setOpen((o) => !o)}
-          text={"Add User"}
+          text={"+ Add User"}
         />
         <Popup
           onClose={closeModal}
@@ -24,10 +27,10 @@ const Home = () => {
           closeOnDocumentClick
           position="center center"
         >
-          <FormInput />
+          <InputForm handleClose={closeModal} />
         </Popup>
       </div>
-      <ListItems items={users} />
+      <ListItems items={items} />
     </div>
   );
 };
