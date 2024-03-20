@@ -33,20 +33,18 @@ const sidebarOptions = [
 
 const Sidebar = () => {
   return (
-    <div className="w-1/5 bg-primary text-primary shadow-right">
-      <div className="shadow-2xl border-b-2 border-white h-16 flex justify-center items-center top-0 left-0 w-full">
+    <div className="w-1/5 bg-primary text-primary">
+      <div className="shadow-2xl left-0 top-0 flex h-16 w-full items-center justify-center border-b-2 border-white">
         <img
           src={logo}
-          className={"w-48  bg-slate-50 px-10 rounded-full object-contain"}
+          className={"w-48  rounded-full bg-slate-50 object-contain px-10"}
           alt="logo"
         />
       </div>
-      <h1 className="text-sm font-semibold text-slate-50 my-4 px-10 underline">
-        MAIN MENU
-      </h1>
+
       <div className="flex flex-row  items-start gap-4 ">
         {sidebarOptions.map((option) => (
-          <div className="cursor-pointer w-full flex items-center bg-slate-50 px-10 py-2 gap-2 font-meduum text-l">
+          <div className="font-meduum text-l flex w-full cursor-pointer items-center gap-2 bg-slate-50 px-10 py-2">
             <option.icon />
             {option.name}
           </div>

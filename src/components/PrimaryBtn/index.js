@@ -5,7 +5,7 @@ export const PrimaryBtn = ({ text, onClick }) => {
     <div className="relative w-full">
       <button
         type="submit"
-        className="bg-primary relative z-0 rounded-full py-4 w-full text-slate-50 shadow-lg font-bold hover:shadow-lg transition-all ease-in-out active:scale-95"
+        className="shadow-lg hover:shadow-lg relative z-0 w-full rounded-full bg-primary py-4 font-bold text-slate-50 transition-all ease-in-out active:scale-95"
         onClick={onClick}
       >
         {text}
