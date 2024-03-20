@@ -36,15 +36,9 @@ const Reducer = (state = initialState, action) => {
         errors: {},
       };
     case ActionTypes.SUBMIT_FORM:
-      const errors = {};
-      action.payload.fields.forEach((field) => {
-        if (field.required && !state.formData[field.name]) {
-          errors[field.name] = `${field.label || field.name} is required.`;
-        }
-      });
       return {
         ...state,
-        errors: { ...errors },
+        ...action.payload,
       };
     default:
       return state;
@@ -55,7 +49,24 @@ const InputForm = ({ handleClose }) => {
   const [state, dispatch] = useReducer(Reducer, initialState);
   const reduxDispatch = useDispatch();
 
+  const validateForm = (fields) => {
+    let errors = { ...state.errors };
+    fields.forEach((field) => {
+      if (field.required && !state.formData[field.name]) {
+        errors[field.name] = `${field.label || field.name} is required.`;
+      }
+    });
+    dispatch({
+      type: ActionTypes.SUBMIT_FORM,
+      payload: { ["errors"]: errors ? { ...errors } : {} },
+    });
+    return Object.values(errors).length == 0;
+  };
+
   const handleSubmit = () => {
+    if (!validateForm(inputs)) {
+      return;
+    }
     let data = {
       ...state.formData,
       code: Math.floor(1000 + Math.random() * 9000),
@@ -74,11 +85,17 @@ const InputForm = ({ handleClose }) => {
   };
 
   return (
-    <div className="flex flex-col items-center bg-slate-50 gap-12 px-4 py-12">
+    <div className="flex flex-col items-center bg-slate-50 gap-6 px-4 py-12">
       <h1 className="text-2xl font-medium">Add New User</h1>
-      {inputs.map((input) => (
-        <InputField onChange={handleChange} input={input} />
-      ))}
+      <div className="flex flex-col">
+        {inputs.map((input) => (
+          <InputField
+            error={state.errors[input.name]}
+            onChange={handleChange}
+            input={input}
+          />
+        ))}
+      </div>
       <PrimaryBtn onClick={handleSubmit} className={"w-40"} text={"Submit"} />
     </div>
   );

@@ -11,13 +11,15 @@ export const adminSlice = createSlice({
   },
   reducers: {
     updateUsers: (state, action) => {
-      console.log(action.payload);
       state.users.push(action.payload);
+    },
+    deleteUser: (state, action) => {
+      state.users = state.users.filter((user) => user.id !== action.payload);
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { updateUsers } = adminSlice.actions;
+export const { updateUsers, deleteUser } = adminSlice.actions;
 
 export default adminSlice.reducer;

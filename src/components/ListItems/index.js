@@ -1,8 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
+import Popup from "reactjs-popup";
+import DialogBox from "../DialogBox";
+import { useDispatch } from "react-redux";
+import { deleteUser } from "../../features/admin/adminSlice";
 
 const ListItems = ({ items }) => {
+  const [itemId, setItemId] = useState(null);
+  const closeModal = () => setItemId(null);
+  const dispatch = useDispatch();
+
+  const handleDelete = () => {
+    dispatch(deleteUser(itemId));
+    closeModal();
+  };
+
   return (
     <div className="flex flex-wrap items-center gap-10 mt-8">
+      <Popup
+        onClose={closeModal}
+        modal
+        open={itemId != null}
+        position="center center"
+      >
+        <DialogBox
+          handleDelete={handleDelete}
+          handleReject={closeModal}
+          text={"Do you want to delete this user?"}
+        />
+      </Popup>
       {items.map((item) => (
         <div className="relative w-1/4  border flex flex-col gap-2 px-4 py-6">
           <div>
@@ -12,7 +37,8 @@ const ListItems = ({ items }) => {
             Code: <span className="font-medium">{item.code}</span>
           </div>
           <svg
-            className="absolute bottom-2 right-2 w-4 h-4 object-contain cursor-pointer hover:scale-105 transition-all"
+            onClick={() => setItemId(item.id)}
+            className="absolute bottom-2  right-2 w-4 h-4 object-contain cursor-pointer hover:scale-105 transition-all"
             xmlns="http://www.w3.org/2000/svg"
             x="0px"
             y="0px"
