@@ -2,7 +2,7 @@ import React, { useReducer } from "react";
 import InputField from "../InputField";
 import PrimaryBtn from "../PrimaryBtn";
 import { updateUsers } from "../../features/admin/adminSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const inputs = [
   { name: "email", label: "Email", type: "email", required: true },
@@ -48,9 +48,9 @@ const Reducer = (state = initialState, action) => {
 const InputForm = ({ handleClose }) => {
   const [state, dispatch] = useReducer(Reducer, initialState);
   const reduxDispatch = useDispatch();
-  const users = useSelector((state) => state.admin.users);
+
   const validateForm = (fields) => {
-    let errors = {};
+    let errors = { ...state.errors };
     fields.forEach((field) => {
       if (field.required && !state.formData[field.name]) {
         errors[field.name] = `${field.label || field.name} is required.`;
@@ -63,14 +63,12 @@ const InputForm = ({ handleClose }) => {
     return Object.values(errors).length == 0;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     if (!validateForm(inputs)) {
       return;
     }
     let data = {
       ...state.formData,
-      id: Math.floor(1000 + Math.random() * 9000),
       code: Math.floor(1000 + Math.random() * 9000),
     };
     reduxDispatch(updateUsers(data));
@@ -87,7 +85,7 @@ const InputForm = ({ handleClose }) => {
   };
 
   return (
-    <form className="flex flex-col items-center bg-slate-50 gap-6 px-4 py-12">
+    <div className="flex flex-col items-center bg-slate-50 gap-6 px-4 py-12">
       <h1 className="text-2xl font-medium">Add New User</h1>
       <div className="flex flex-col">
         {inputs.map((input) => (
@@ -99,12 +97,11 @@ const InputForm = ({ handleClose }) => {
         ))}
       </div>
       <PrimaryBtn
-        type="submit"
         onClick={handleSubmit}
         className={"w-40 text-slate-50"}
         text={"Submit"}
       />
-    </form>
+    </div>
   );
 };
 

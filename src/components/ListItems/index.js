@@ -9,7 +9,7 @@ const ListItems = ({ items }) => {
   const closeModal = () => setItemId(null);
   const dispatch = useDispatch();
 
-  const handleAffirm = () => {
+  const handleDelete = () => {
     dispatch(deleteUser(itemId));
     closeModal();
   };
@@ -23,15 +23,13 @@ const ListItems = ({ items }) => {
         position="center center"
       >
         <DialogBox
-          handleAffirm={handleAffirm}
+          handleDelete={handleDelete}
           handleReject={closeModal}
           text={"Do you want to delete this user?"}
         />
       </Popup>
-      {items.map((item, index) => (
-        <div
-          className={`relative w-1/4 opacity-0 shadow-box animate-fade-in rounded-lg hover:bg-slate-300 transition-all linear cursor-pointer flex flex-col gap-2 px-4 py-6`}
-        >
+      {items.map((item) => (
+        <div className="relative w-1/4  border flex flex-col gap-2 px-4 py-6">
           <div>
             Name: <span className="font-medium">{item.email}</span>
           </div>
@@ -40,7 +38,7 @@ const ListItems = ({ items }) => {
           </div>
           <svg
             onClick={() => setItemId(item.id)}
-            className="absolute bottom-2 hover:stroke-black right-2 w-4 h-4 object-contain cursor-pointer hover:scale-105 transition-all"
+            className="absolute bottom-2  right-2 w-4 h-4 object-contain cursor-pointer hover:scale-105 transition-all"
             xmlns="http://www.w3.org/2000/svg"
             x="0px"
             y="0px"

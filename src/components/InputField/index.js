@@ -9,7 +9,7 @@ const InputField = ({ error, input, onChange = () => {} }) => {
         name={input.name}
         type={input.type}
         onChange={onChange}
-        className="px-4 py-2 mt-2 focus:outline-none border-primary w-full border-opacity-50 border"
+        className="px-4 py-2 mt-2 focus:outline-none border-primary w-full border-opacity-25 border"
         placeholder={input.placeholder}
       />
       <p className="mt-1 h-6 text-red-700"> {error}</p>

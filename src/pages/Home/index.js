@@ -13,9 +13,8 @@ const Home = () => {
   const items = useSelector((state) => state.admin.users);
 
   return (
-    <div className="px-8 py-4 h-full">
-      <div className="flex w-full shadow-md px-8 py-4 justify-between rounded-2xl items-center">
-        <div className="font-semibold">Dashboard</div>
+    <div className="px-4 py-6">
+      <div className="flex w-full justify-end">
         <PrimaryBtn
           className={"w-40 text-slate-50"}
           onClick={() => setOpen((o) => !o)}
