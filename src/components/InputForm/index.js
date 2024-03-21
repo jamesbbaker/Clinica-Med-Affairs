@@ -5,7 +5,56 @@ import { updateUsers } from "../../features/admin/adminSlice";
 import { useDispatch } from "react-redux";
 
 const inputs = [
-  { name: "email", label: "Email", type: "email", required: true },
+  {
+    name: "name",
+    id: "name",
+    placeholder: "Enter Name",
+    label: "Name",
+    type: "text",
+    required: true,
+  },
+
+  {
+    name: "email",
+    id: "email",
+    placeholder: "Enter Email",
+    label: "Email",
+    type: "email",
+    required: true,
+  },
+
+  {
+    name: "password",
+    placeholder: "Enter Password",
+    id: "Password",
+    label: "Password",
+    type: "text",
+    required: true,
+  },
+  {
+    name: "region",
+    id: "region",
+    label: "Region",
+    type: "text",
+    required: true,
+    placeholder: "Enter Region",
+  },
+  {
+    name: "company",
+    placeholder: "Enter Company Name",
+    id: "company",
+    label: "Company",
+    type: "text",
+    required: true,
+  },
+  {
+    name: "role",
+    id: "role",
+    label: "Role",
+    type: "checkbox",
+    required: true,
+    placeholder: "Enter Role",
+  },
 ];
 
 const initialState = {
@@ -87,7 +136,7 @@ const InputForm = ({ handleClose }) => {
   return (
     <div className="flex flex-col items-center bg-slate-50 gap-6 px-4 py-12">
       <h1 className="text-2xl font-medium">Add New User</h1>
-      <div className="flex flex-col">
+      <div className="grid gap-4 grid-cols-2">
         {inputs.map((input) => (
           <InputField
             error={state.errors[input.name]}

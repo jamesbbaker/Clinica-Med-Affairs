@@ -4,10 +4,12 @@ export const menuSlice = createSlice({
   name: "menu",
   initialState: {
     currentMenu: "users",
+    subMenu: "",
   },
   reducers: {
     updateMenu: (state, action) => {
-      state.currentMenu = action.payload;
+      console.log(action.payload);
+      return { ...state, ...action.payload };
     },
   },
 });
