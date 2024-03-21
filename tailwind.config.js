@@ -20,6 +20,12 @@ module.exports = {
       animation: {
         "fade-in": "fade 0.5s cubic-bezier(0.4, 0, 0.6, 1) forwards",
       },
+      fontFamily: {
+        primary: ["Montserrat"],
+      },
+      borderRadius: {
+        "1/2": "50%",
+      },
       keyframes: {
         fade: {
           "0%": { opacity: 0 },

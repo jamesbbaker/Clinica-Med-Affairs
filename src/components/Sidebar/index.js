@@ -1,31 +1,104 @@
 import React from "react";
 import logo from "../../assets/images/logo.png";
+import { useDispatch, useSelector } from "react-redux";
+import { updateMenu } from "../../features/menu/menuSlice";
+
+const menuList = [
+  {
+    name: "Users",
+    id: "users",
+  },
+  {
+    name: "Dashboard",
+    id: "dashboard",
+  },
+  {
+    name: "Outputs",
+    id: "outputs",
+    children: [
+      {
+        name: "Patient Opportunity Mapping and Strategy",
+        id: "patient_opportunity_mapping_and_strategy",
+        menuId: "outputs",
+      },
+      {
+        name: "Eligible Patient Locator",
+        id: "ligible_patient_locator",
+        menuId: "outputs",
+      },
+      {
+        name: "HCP Profiles",
+        id: "hcp_profiles",
+        menuId: "outputs",
+      },
+      {
+        name: "Leading Indicators",
+        id: "lead_indicators",
+        menuId: "outputs",
+      },
+    ],
+  },
+];
 
 const Sidebar = () => {
+  const { currentMenu, subMenu } = useSelector((state) => state.menu);
+  const dispatch = useDispatch();
+
+  const handleClick = (item, isSubMenu) => {
+    dispatch(
+      updateMenu({
+        currentMenu: isSubMenu ? item.menuId : item.id,
+        subMenu: isSubMenu ? item.id : item.children ? item.children[0].id : "",
+      })
+    );
+  };
+
   return (
-    <div className="w-1/5 h-full bg-primary">
-      <img src={logo} alt="logo" className="w-1/2 mx-auto mt-4" />
+    <div className="w-1/5 h-full bg-primary border border-primary">
+      <div className="w-full bg-slate-50 py-2">
+        <img src={logo} alt="logo" className="w-1/2 mx-auto" />
+      </div>
       <div className="flex flex-col mt-8">
-        <div className="flex justify-center items-center gap-2 bg-slate-50 py-2">
-          <svg
-            class="feather feather-users"
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
+        {menuList.map((item) => (
+          <div
+            className={`flex cursor-pointer text-left flex-col justify-center items-center`}
           >
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-            <circle cx="9" cy="7" r="4" />
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-          </svg>
-          <div>USERS</div>
-        </div>
+            <div
+              onClick={() => handleClick(item)}
+              className={` ${currentMenu !== item.id && "text-slate-50 "} ${
+                currentMenu == item.id && "bg-slate-50"
+              } px-4 py-2 w-full text-left`}
+            >
+              {item.name}
+            </div>
+            {item.children && (
+              <div className="flex bg-pri justify-center flex-col items-center gap-2 w-full">
+                {item.children.map((subItem) => (
+                  <div
+                    onClick={() => handleClick(subItem, true)}
+                    className={`${subMenu !== subItem.id && "text-slate-50"} ${
+                      subMenu == subItem.id && "bg-slate-50"
+                    } py-1 flex items-center gap-1 text-sm w-full text-left`}
+                  >
+                    <div className="w-6 h-6 object-contain">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="m14.707 11.293-4-4A1 1 0 0 0 9 8v8a1 1 0 0 0 1.707.707l4-4a1 1 0 0 0 0-1.414z"
+                          className="fill-primary"
+                          data-name="Right"
+                        />
+                      </svg>
+                    </div>
+                    <div className="w-3/4">{subItem.name}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
