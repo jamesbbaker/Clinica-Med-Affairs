@@ -1,37 +1,54 @@
-# Getting Started with Create React App
+# Web App Front End
 
-Steps to start the application
-- clone the git project using git clone [URL]
-- cd/ to the project folder
-- install dependencies using "npm install"
-- after completion, you can run the project using "npm start" or "npm run dev"
-- Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-- To build, use "npm run build"
+Welcome to the Clinica AI Med Servers repository! This repository contains the front-end codebase for the web application.
 
-## Available Scripts
+## Introduction
 
-In the project directory, you can run:
+This repository houses the front-end codebase for the web application. This is a platform designed to help users connect, explore, and enhance their intimate experiences in a safe and welcoming environment.
 
-### `npm start`
+## Clone the Repository
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```
+git clone https://github.com/jamesbbaker/Clinica-Med-Affairs.git
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Code Structure
 
-### `npm test`
+The codebase follows a structured organization to maintain modularity and readability. Here's a brief overview of the directory structure:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **src**: Main source code directory.
+  - **Pages**: Contains various pages of the application, categorized into different sections such as authentication, creating history, pricing, etc.
+  - **Assets**: Stores images and icons used throughout the application.
+  - **Components**: Reusable components used across different parts of the application.
+  - **Contexts**: Houses context providers and consumers for managing application-wide state.
+  - **Constants**: Contains static and mock data files.
+  - **Redux**: Manages API interactions and state management using Redux.
+  - **Utils**: Houses utility functions used throughout the codebase.
+  - **Services**: Handles API implementations with axios.
+  - **Layout**: Manages different layouts based on the authentication state.
+  - **Mocks**: Contains mock data used for testing and development purposes.
+  - **Tests**: Contains unit tests for components, utilities, and other modules.
+  - **App.js**: Entry point for application routing.
+  - **Styles**: SCSS files for styling components.
+- **public**: Directory for storing public assets such as images.
 
-### `npm run build`
+## Process to Run the Application
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+To run the web application locally, follow these steps:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1.  Install npm in your system.
+2.  Clone the repository to your local machine:
+3.  Switch to the `main` branch:
+4.  Install dependencies: `npm intall`
+5.  Start the application for dev envirnoment `npm run dev` and for production envirnoment `npm run dev:production`. It will run locally at `https://localhost:3000`.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Building the Application
 
+To build the web application for development or production environments, you can use the following commands:
+
+- **Development Build**: `npm run build:dev`
+- **Production Build**: `npm run build`
+
+## Checking Production Build Locally
+
+After building the application for production, you can check the production build locally by serving the build files. Use the following command: `npm start`

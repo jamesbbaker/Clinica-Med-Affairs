@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import logo from "../../assets/images/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { updateMenu } from "../../features/menu/menuSlice";
+import {
+  useLocation,
+  useNavigate,
+  useNavigation,
+  useParams,
+} from "react-router-dom";
 
 const menuList = [
   {
@@ -9,8 +15,8 @@ const menuList = [
     id: "users",
   },
   {
-    name: "Dashboard",
-    id: "dashboard",
+    name: "Home",
+    id: "home",
   },
   {
     name: "Outputs",
@@ -43,8 +49,25 @@ const menuList = [
 const Sidebar = () => {
   const { currentMenu, subMenu } = useSelector((state) => state.menu);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  let location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname == "/output") {
+      dispatch(
+        updateMenu({
+          currentMenu: "outputs",
+          subMenu: "patient_opportunity_mapping_and_strategy",
+        })
+      );
+    }
+  }, [location]);
 
   const handleClick = (item, isSubMenu) => {
+    let route = isSubMenu || item.id == "outputs" ? "output" : "";
+    navigate(`/${route}`, {
+      replace: true,
+    });
     dispatch(
       updateMenu({
         currentMenu: isSubMenu ? item.menuId : item.id,

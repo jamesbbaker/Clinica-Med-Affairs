@@ -1,6 +1,6 @@
 import React from "react";
 
-const InputField = ({ error, input, index, onChange = () => {} }) => {
+const InputField = ({ error, input, onChange = () => {} }) => {
   return (
     <div
       className={`${
@@ -14,6 +14,7 @@ const InputField = ({ error, input, index, onChange = () => {} }) => {
       </h1>
       <input
         id={input.id}
+        value={input.value}
         name={input.name}
         type={input.type}
         onChange={onChange}
