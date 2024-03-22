@@ -3,24 +3,36 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import DashboardLayout from "./layouts/DashboardLayout";
 import AuthProvider from "./context/AuthContext";
+import Output from "./pages/Output";
 
 const router = createBrowserRouter([
   {
     element: <AuthProvider />,
     children: [
       {
-        path: "/",
-        element: <DashboardLayout><Home /></DashboardLayout>
-      }, {
+        element: <DashboardLayout />,
+        children: [
+          {
+            path: "/",
+            element: <Home />,
+          },
+          {
+            path: "output",
+            element: <Output />,
+          },
+        ],
+      },
+
+      {
         path: "/auth",
-        element: <Login />
-      }
-    ]
+        element: <Login />,
+      },
+    ],
   },
 ]);
 
 function App() {
-  return <RouterProvider router={router}/>
+  return <RouterProvider router={router} />;
 }
 
 export default App;

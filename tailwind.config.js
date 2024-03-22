@@ -16,6 +16,8 @@ module.exports = {
       },
       boxShadow: {
         box: "rgba(0, 0, 0, 0.10) 0px 3px 6px, rgba(0, 0, 0, 0.16) 0px 3px 6px;",
+        "box-2":
+          "rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;",
       },
       animation: {
         "fade-in": "fade 0.5s cubic-bezier(0.4, 0, 0.6, 1) forwards",

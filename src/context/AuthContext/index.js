@@ -5,7 +5,7 @@ export const AuthContext = createContext();
 
 const AuthProvider = () => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("site") || "");
+  // const [token, setToken] = useState(localStorage.getItem("site") || "");
   const navigate = useNavigate();
   const loginAction = async (data) => {
     try {
@@ -17,15 +17,14 @@ const AuthProvider = () => {
         body: JSON.stringify({ ...data }),
       });
       const res = await response.json();
-      console.log(res, "responseee");
-      if (res.data) {
-        setUser(res.data.user);
-        setToken(res.token);
-        localStorage.setItem("site", res.token);
+      console.log(res);
+      if (res.message == "Login successful") {
+        setUser({ ...data });
+        // setToken(res.token);
+        // localStorage.setItem("site", res.token);
         navigate("/");
         return;
       }
-      throw new Error(res.message);
     } catch (err) {
       console.error(err);
     }
@@ -33,13 +32,13 @@ const AuthProvider = () => {
 
   const logOut = () => {
     setUser(null);
-    setToken("");
+    // setToken("");
     localStorage.removeItem("site");
     navigate("/auth");
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, loginAction, logOut }}>
+    <AuthContext.Provider value={{ user, loginAction, logOut }}>
       <Outlet />
     </AuthContext.Provider>
   );

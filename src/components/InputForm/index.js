@@ -3,6 +3,7 @@ import InputField from "../InputField";
 import PrimaryBtn from "../PrimaryBtn";
 import { updateUsers } from "../../features/admin/adminSlice";
 import { useDispatch } from "react-redux";
+import SelectBox from "../SelectBox";
 
 const inputs = [
   {
@@ -26,7 +27,7 @@ const inputs = [
   {
     name: "password",
     placeholder: "Enter Password",
-    id: "Password",
+    id: "password",
     label: "Password",
     type: "text",
     required: true,
@@ -34,10 +35,18 @@ const inputs = [
   {
     name: "region",
     id: "region",
-    label: "Region",
-    type: "text",
+    label: "Select Region",
+    type: "select",
+    options: [
+      { id: "HQ", name: "HQ" },
+      { id: "NE", name: "NE" },
+      { id: "NW", name: "NW" },
+      { id: "MW", name: "MW" },
+      { id: "SE", name: "SE" },
+      { id: "SW", name: "SW" },
+    ],
     required: true,
-    placeholder: "Enter Region",
+    placeholder: "Region",
   },
   {
     name: "company",
@@ -50,15 +59,17 @@ const inputs = [
   {
     name: "role",
     id: "role",
-    label: "Role",
+    label: "Admin",
     type: "checkbox",
-    required: true,
+    required: false,
     placeholder: "Enter Role",
   },
 ];
 
 const initialState = {
-  formData: {},
+  formData: {
+    admin: false,
+  },
   errors: {},
 };
 
@@ -99,10 +110,10 @@ const InputForm = ({ handleClose }) => {
   const reduxDispatch = useDispatch();
 
   const validateForm = (fields) => {
-    let errors = { ...state.errors };
+    let errors = {};
     fields.forEach((field) => {
-      if (field.required && !state.formData[field.name]) {
-        errors[field.name] = `${field.label || field.name} is required.`;
+      if (field.required && !state.formData[field.id]) {
+        errors[field.id] = `${field.name} is required.`;
       }
     });
     dispatch({
@@ -112,7 +123,7 @@ const InputForm = ({ handleClose }) => {
     return Object.values(errors).length == 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validateForm(inputs)) {
       return;
     }
@@ -120,6 +131,19 @@ const InputForm = ({ handleClose }) => {
       ...state.formData,
       code: Math.floor(1000 + Math.random() * 9000),
     };
+    // const response = await fetch(
+    //   "https://clinica-server.replit.app/create_user",
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({ ...data }),
+    //   }
+    // );
+    // const res = await response.json();
+    // console.log(res);
+
     reduxDispatch(updateUsers(data));
     handleClose();
   };
@@ -128,7 +152,16 @@ const InputForm = ({ handleClose }) => {
     dispatch({
       type: ActionTypes.SET_FIELD_VALUE,
       payload: {
-        [e.target.name]: e.target.value,
+        [e.target.id]: e.target.value,
+      },
+    });
+  };
+
+  const handleSelect = (e) => {
+    dispatch({
+      type: ActionTypes.SET_FIELD_VALUE,
+      payload: {
+        [e.target.id]: e.target.value,
       },
     });
   };
@@ -137,13 +170,21 @@ const InputForm = ({ handleClose }) => {
     <div className="flex flex-col items-center bg-slate-50 gap-6 px-4 py-12">
       <h1 className="text-2xl font-medium">Add New User</h1>
       <div className="grid gap-4 grid-cols-2">
-        {inputs.map((input) => (
-          <InputField
-            error={state.errors[input.name]}
-            onChange={handleChange}
-            input={input}
-          />
-        ))}
+        {inputs.map((input) =>
+          input.type == "select" ? (
+            <SelectBox
+              error={state.errors[input.name]}
+              handleSelect={handleSelect}
+              input={input}
+            />
+          ) : (
+            <InputField
+              error={state.errors[input.name]}
+              onChange={handleChange}
+              input={input}
+            />
+          )
+        )}
       </div>
       <PrimaryBtn
         onClick={handleSubmit}

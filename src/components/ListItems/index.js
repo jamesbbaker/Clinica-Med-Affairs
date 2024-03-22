@@ -29,13 +29,11 @@ const ListItems = ({ items }) => {
         />
       </Popup>
       {items.map((item) => (
-        <div className="relative w-1/4  border flex flex-col gap-2 px-4 py-6">
-          <div>
-            Name: <span className="font-medium">{item.email}</span>
-          </div>
-          <div>
-            Code: <span className="font-medium">{item.code}</span>
-          </div>
+        <div className="relative w-1/4 shadow-box-2 rounded-md bg-slate-200 hover:bg-slate-300 cursor-pointer flex flex-col px-4 py-2">
+          <div className="text-sm font-semibold">{item.name}</div>
+          <div className="text-sm font-regular">{item.email}</div>
+          <div className="text-sm font-regular">{item.region}</div>
+          <div className="text-sm font-regular">{item.company}</div>
           <svg
             onClick={() => setItemId(item.id)}
             className="absolute bottom-2  right-2 w-4 h-4 object-contain cursor-pointer hover:scale-105 transition-all"
