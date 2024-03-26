@@ -1,101 +1,82 @@
-import { useEffect, useRef, useState } from "react";
-import { Chart } from "react-chartjs-2";
-import * as ChartGeo from "chartjs-chart-geo";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  Tooltip,
-  Title,
-  Legend,
-} from "chart.js";
+import mapboxgl from "mapbox-gl";
+import React, { useEffect, useRef, useState } from "react";
+import { createRoot } from "react-dom/client";
+import geoJson from "./map-data.json";
 
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  ChartGeo.ChoroplethController,
-  ChartGeo.ProjectionScale,
-  ChartGeo.ColorScale,
-  ChartGeo.GeoFeature
-);
+mapboxgl.accessToken =
+  "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
 
-export default function Map() {
-  const chartRef = useRef();
-  const [data, setData] = useState([]);
-  const [area, setArea] = useState([]);
-  const [labels, setLabels] = useState([]);
+const Map = () => {
+  const mapContainerRef = useRef(null);
+  const mapRef = useRef(null);
+  const [latitude, setLatitude] = useState(-90);
+  const [longitude, setLongitude] = useState(40);
+  const [zoom, setZoom] = useState(3);
 
+  const Marker = ({ onClick, children, feature }) => {
+    const _onClick = () => {
+      onClick(feature.geometry.coordinates);
+    };
+
+    return (
+      <button onClick={_onClick} className="marker">
+        {children}
+      </button>
+    );
+  };
+
+  // Initialize map when component mounts
   useEffect(() => {
-    fetch("https://cdn.jsdelivr.net/npm/us-atlas/states-10m.json")
-      .then((r) => r.json())
-      .then((value) => {
-        const _data = value.objects.states.geometries.map((_d) => {
-          let obj = {
-            value: Math.random(),
-            feature: ChartGeo.topojson
-              .feature(value, value?.objects?.states)
-              .features.find((d) => d.properties.name === _d.properties.name),
-          };
-          return obj;
-        });
-        const _value = value.objects.states.geometries.map(
-          (d) => d.properties.name
-        );
-        setLabels([..._value]);
-        setArea([..._data]);
-        setData(value);
-      });
+    mapRef.current = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: "mapbox://styles/mapbox/streets-v11",
+      center: [latitude, longitude],
+      zoom: zoom,
+    });
+
+    // Render custom marker components
+    geoJson.features.forEach((feature) => {
+      // Create a React ref
+      const ref = React.createRef();
+      // Create a new DOM node and save it to the React ref
+      ref.current = document.createElement("div");
+      // Render a Marker Component on our new DOM node
+      createRoot(ref.current).render(
+        <Marker onClick={markerClicked} feature={feature} />
+      );
+
+      // Create a Mapbox Marker at our new DOM node
+      new mapboxgl.Marker(ref.current)
+        .setLngLat(feature.geometry.coordinates)
+        .addTo(mapRef.current);
+    });
+
+    // Add navigation control (the +/- zoom buttons)
+    mapRef.current.addControl(new mapboxgl.NavigationControl(), "top-right");
+
+    // Clean up on unmount
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.remove();
+      }
+    };
   }, []);
 
-  return (
-    <div className="px-6 py-8 border border-slate-200 shadow-box-2 rounded-lg">
-      <div className="font-medium mb-4">MAP</div>
+  const markerClicked = (coordinates) => {
+    mapRef.current.flyTo({
+      center: coordinates,
+      zoom: 10,
+      essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+    });
+    // window.alert(title);
+  };
 
-      {data &&
-        data.objects &&
-        data.objects.nation &&
-        data.objects.states &&
-        area.length > 0 &&
-        labels.length > 0 && (
-          <Chart
-            height={100}
-            ref={chartRef}
-            type="choropleth"
-            data={{
-              labels: [...labels],
-              datasets: [
-                {
-                  label: "States",
-                  outline: ChartGeo.topojson.feature(
-                    data,
-                    data?.objects?.nation
-                  ).features[0], // ... outline to compute bounds
-                  showOutline: true,
-                  data: [...area],
-                },
-              ],
-            }}
-            options={{
-              showOutline: true,
-              showGraticule: true,
-              plugins: {
-                legend: {
-                  display: false,
-                },
-              },
-              scales: {
-                xy: {
-                  projection: "equalEarth",
-                },
-                // // Hide color scale
-                // color: {
-                //   display: false,
-                // },
-              },
-            }}
-          />
-        )}
-    </div>
+  return (
+    <div
+      className="map-container relative w-full h-extraLarge"
+      ref={mapContainerRef}
+    />
   );
-}
+};
+
+export default Map;

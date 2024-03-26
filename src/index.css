@@ -4,20 +4,28 @@
 @tailwind components;
 @tailwind utilities;
 
-/* #popup-root {
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  left: 0;
+.sidebarStyle {
+  display: inline-block;
+  position: absolute;
   top: 0;
+  left: 0;
+  margin: 12px;
+  background-color: #404040;
+  color: #ffffff;
+  z-index: 1 !important;
+  padding: 6px;
+  font-weight: bold;
 }
 
-.popup-overlay {
-  backdrop-filter: blur(8px) !important;
+.marker {
+  background-color: #4caf50;
+  border: 1px solid blue;
+  color: white;
+  padding: 6px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  border-radius: 50%;
 }
-
-.popup-content {
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-} */
