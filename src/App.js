@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import DashboardLayout from "./layouts/DashboardLayout";
 import AuthProvider from "./context/AuthContext";
 import Output from "./pages/Output";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 const router = createBrowserRouter([
   {
