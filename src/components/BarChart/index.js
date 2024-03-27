@@ -89,7 +89,7 @@ export const _data = {
   ],
 };
 
-const BarChart = ({ heading, data = _data, options = _options }) => {
+const BarChart = ({ height = 90, data = _data, options = _options }) => {
   const chartRef = useRef(null);
   const [selectedValue, setSelectedValue] = useState(0);
 
@@ -101,22 +101,15 @@ const BarChart = ({ heading, data = _data, options = _options }) => {
     }
   };
 
-  useEffect(() => {
-    if (chartRef.current) {
-      console.log(chartRef.current);
-    }
-  }, [chartRef]);
-
   return (
-    <div className="px-2 w-full mt-2 rounded-lg py-4">
+    <div className="px-4 w-full h-full mt-2 rounded-lg py-4">
       <Bar
-        height={90}
+        height={height}
         ref={chartRef}
         options={options}
         onClick={onClick}
         data={data}
       />
-      <div>{`Selected Value ${selectedValue}`}</div>
     </div>
   );
 };
