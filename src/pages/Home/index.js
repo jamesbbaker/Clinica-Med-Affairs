@@ -7,7 +7,6 @@ import InputForm from "../../components/InputForm";
 import { useSelector } from "react-redux";
 import RealTimeBox from "../../components/RealTimeBox";
 import HCPTable from "../../components/HCPTable";
-import { HCP_DATA } from "./data.js";
 import { sidebarRoutes } from "../../constants/appConstants.js";
 
 const Home = () => {
@@ -17,7 +16,7 @@ const Home = () => {
   const items = useSelector((state) => state.admin.users);
 
   return (
-    <div className="px-4 py-6">
+    <div>
       {currentMenu == sidebarRoutes.USERS ? (
         <>
           <div className="flex w-full justify-end">
@@ -41,7 +40,6 @@ const Home = () => {
       ) : (
         <>
           <RealTimeBox />
-          {/* <div className="grid grid-cols-2 gap-4 mt-4 w-full"> */}
           <HCPTable />;
         </>
       )}

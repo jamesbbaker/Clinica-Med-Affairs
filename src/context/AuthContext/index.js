@@ -5,7 +5,7 @@ export const AuthContext = createContext();
 
 const AuthProvider = () => {
   const [user, setUser] = useState(null);
-  // const [token, setToken] = useState(localStorage.getItem("site") || "");
+  const [token, setToken] = useState(localStorage.getItem("site") || "");
   const navigate = useNavigate();
   const loginAction = async (data) => {
     try {
@@ -20,8 +20,8 @@ const AuthProvider = () => {
       console.log(res);
       if (res.message == "Login successful") {
         setUser({ ...data });
-        // setToken(res.token);
-        // localStorage.setItem("site", res.token);
+        setToken(res.token);
+        localStorage.setItem("site", res.token);
         navigate("/");
         return;
       }
@@ -32,13 +32,13 @@ const AuthProvider = () => {
 
   const logOut = () => {
     setUser(null);
-    // setToken("");
+    setToken("");
     localStorage.removeItem("site");
     navigate("/auth");
   };
 
   return (
-    <AuthContext.Provider value={{ user, loginAction, logOut }}>
+    <AuthContext.Provider value={{ token, user, loginAction, logOut }}>
       <Outlet />
     </AuthContext.Provider>
   );
