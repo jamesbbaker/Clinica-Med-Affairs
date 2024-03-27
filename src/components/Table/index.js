@@ -1,51 +1,64 @@
 import fakeData from "./table-data.json";
 import * as React from "react";
+import { useState } from "react";
 import { useEffect } from "react";
 import { useTable } from "react-table";
+import Popup from "reactjs-popup";
+import BarChart from "../BarChart";
+import { EPL_TABLE_COLUMNS } from "../../constants/appConstants";
+
+const BarChartOptions = {
+  indexAxis: "y",
+  elements: {
+    bar: {
+      borderWidth: 1,
+    },
+  },
+  responsive: true,
+  scales: {
+    y: {
+      ticks: {
+        font: {
+          size: 12,
+          weight: 700,
+        },
+      },
+    },
+    x: {
+      title: {
+        display: true,
+        text: "Patients",
+      },
+      ticks: {
+        // Include a dollar sign in the ticks
+        callback: function (value, index, ticks) {
+          return value ? `${value}%` : 0;
+        },
+        font: {
+          size: 10,
+        },
+      },
+    },
+  },
+  plugins: {
+    legend: {
+      display: false,
+    },
+    tooltip: {
+      callbacks: {
+        label: function (context) {
+          console.log(context);
+          let label = context.formattedValue;
+          return label ? `${label}%` : 0;
+        },
+      },
+    },
+  },
+};
 
 function Table() {
   const data = React.useMemo(() => fakeData, []);
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: "Improper CV risk testing",
-        accessor: "cvRisk",
-      },
-      {
-        Header: "Improper calcium channel blocker",
-        accessor: "calciumBlocker",
-      },
-      { Header: "Lack of monitoring by CV specialist", accessor: "monitoring" },
-      {
-        Header: "Off-label treatment High AF stroke risk without anticoagulant",
-        accessor: "offLabelTreatment",
-      },
-      {
-        Header: "Non-adherence to anticoagulants",
-        accessor: "nonAdherenceAnticoagulants",
-      },
-      {
-        Header:
-          "Incomplete comorbidity testing Continued AF without treatment escalation",
-        accessor: "incompleteTesting",
-      },
-      {
-        Header: "Repeated cardioversions without treatment escalation",
-        accessor: "repeatedCardioversions",
-      },
-      { Header: "Improper support of therapy", accessor: "supportTherapy" },
-      { Header: "Failure to manage AEs", accessor: "manageAEs" },
-      {
-        Header: "Non-adherence to other AF drug treatments",
-        accessor: "nonAdherenceAFDrugs",
-      },
-      {
-        Header: "Failure to complete follow-up testing",
-        accessor: "failureFollowUp",
-      },
-    ],
-    []
-  );
+  const columns = React.useMemo(() => EPL_TABLE_COLUMNS, []);
 
   const {
     getTableProps,
@@ -55,10 +68,32 @@ function Table() {
     rows,
     prepareRow,
   } = useTable({ columns, data });
+  const [openPopup, setOpenPopup] = useState(false);
+  const [barChartConfig, setBarChartConfig] = useState(null);
 
   useEffect(() => {
     allColumns.map((column, index) => index % 2 && column.toggleHidden());
   }, []);
+
+  const handleClick = (row) => {
+    setOpenPopup((o) => !o);
+    const barChartData = {
+      labels: row.allCells.map((cell, index) => cell.column.Header),
+      datasets: [
+        {
+          data: row.allCells.map((cell, index) => cell.value.split("%")[0]),
+          borderColor: "rgb(155, 249, 122)",
+          backgroundColor: "rgb(155, 249, 122, 0.4)",
+        },
+      ],
+    };
+    setBarChartConfig(barChartData);
+  };
+
+  const handleClose = () => {
+    setOpenPopup((o) => !o);
+    setBarChartConfig(null);
+  };
 
   return (
     <div className="w-screen max-w-full px-2 py-4 overflow-auto">
@@ -90,7 +125,11 @@ function Table() {
           {rows.map((row) => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()}>
+              <tr
+                className="hover:bg-slate-300 cursor-pointer"
+                onClick={() => handleClick(row)}
+                {...row.getRowProps()}
+              >
                 {row.cells.map((cell) => (
                   <td {...cell.getCellProps()}> {cell.render("Cell")} </td>
                 ))}
@@ -99,6 +138,22 @@ function Table() {
           })}
         </tbody>
       </table>
+      <Popup
+        onClose={handleClose}
+        modal
+        open={openPopup}
+        position="center center"
+      >
+        <div>
+          {barChartConfig && (
+            <BarChart
+              height={120}
+              data={barChartConfig}
+              options={BarChartOptions}
+            />
+          )}
+        </div>
+      </Popup>
     </div>
   );
 }

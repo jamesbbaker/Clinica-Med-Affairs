@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { createContext, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
@@ -5,7 +6,26 @@ export const AuthContext = createContext();
 
 const AuthProvider = () => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("site") || "");
+  const [accessToken, setAccessToken] = useState(
+    localStorage.getItem("accessToken")
+  );
+  const [refreshToken, setRefreshToken] = useState(
+    localStorage.getItem("refreshToken")
+  );
+
+  useEffect(() => {
+    // Check if tokens are already stored in local storage on page load
+    const storedAccessToken = localStorage.getItem("accessToken");
+    const storedRefreshToken = localStorage.getItem("refreshToken");
+
+    if (storedAccessToken) {
+      setAccessToken(storedAccessToken);
+    }
+    if (storedRefreshToken) {
+      setRefreshToken(storedRefreshToken);
+    }
+  }, []);
+
   const navigate = useNavigate();
   const loginAction = async (data) => {
     try {
@@ -17,11 +37,13 @@ const AuthProvider = () => {
         body: JSON.stringify({ ...data }),
       });
       const res = await response.json();
-      console.log(res);
+
       if (res.message == "Login successful") {
         setUser({ ...data });
-        setToken(res.token);
-        localStorage.setItem("site", res.token);
+        setAccessToken(res.access_token);
+        setRefreshToken(res.refresh_token);
+        localStorage.setItem("accessToken", res.access_token);
+        localStorage.setItem("refreshToken", res.refresh_token);
         navigate("/");
         return;
       }
@@ -32,13 +54,17 @@ const AuthProvider = () => {
 
   const logOut = () => {
     setUser(null);
-    setToken("");
-    localStorage.removeItem("site");
+    setAccessToken(null);
+    setRefreshToken(null);
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     navigate("/auth");
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, loginAction, logOut }}>
+    <AuthContext.Provider
+      value={{ accessToken, refreshToken, user, loginAction, logOut }}
+    >
       <Outlet />
     </AuthContext.Provider>
   );

@@ -31,7 +31,7 @@ const ListItems = ({ items }) => {
       {items.map((item) => (
         <div className="relative w-1/4 shadow-box-2 rounded-md bg-slate-200 hover:bg-slate-300 cursor-pointer flex flex-col px-4 py-2">
           <div className="text-sm font-semibold">{item.name}</div>
-          <div className="text-sm font-regular">{item.email}</div>
+          <div className="text-sm font-semibold">{item.email}</div>
           <div className="text-sm font-regular">{item.region}</div>
           <div className="text-sm font-regular">{item.company}</div>
           <svg

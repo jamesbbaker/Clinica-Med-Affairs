@@ -1,9 +1,44 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
+import { AuthContext } from "../../context/AuthContext";
+import { accessToken } from "mapbox-gl";
+import { useDispatch } from "react-redux";
+import { addMultipleUsers } from "../../features/admin/adminSlice";
 
 const DashboardLayout = () => {
   const [openDialog, setOpenDialog] = useState(false);
+  const { logOut, accessToken } = useContext(AuthContext);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(
+          "https://clinica-server.replit.app/get_all_users",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        if (response.ok) {
+          const userData = await response.json();
+
+          dispatch(addMultipleUsers(userData));
+        } else {
+          console.error("Failed to fetch user data:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    if (accessToken) {
+      fetchUserData();
+    }
+  }, [accessToken]);
+
   const toggleDialog = () => {
     setOpenDialog((prev) => !prev);
   };
@@ -26,7 +61,10 @@ const DashboardLayout = () => {
                 className="fixed z-10 left-0 right-0 top-0 bottom-0"
               ></div>
               <div className="absolute right-6 top-14 bg-slate-50 z-20  flex flex-col gap-2 py-2 border">
-                <div className="hover:bg-slate-200 px-4 cursor-pointer">
+                <div
+                  onClick={logOut}
+                  className="hover:bg-slate-200 px-4 cursor-pointer"
+                >
                   Sign Out
                 </div>
               </div>

@@ -4,11 +4,14 @@ import { users } from "../../pages/Home/usersList";
 export const adminSlice = createSlice({
   name: "admin",
   initialState: {
-    users: [...users],
+    users: [],
   },
   reducers: {
-    updateUsers: (state, action) => {
+    addUser: (state, action) => {
       state.users.push(action.payload);
+    },
+    addMultipleUsers: (state, action) => {
+      state.users.push(...action.payload);
     },
     deleteUser: (state, action) => {
       state.users = state.users.filter((user) => user.id !== action.payload);
@@ -17,6 +20,6 @@ export const adminSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { updateUsers, deleteUser } = adminSlice.actions;
+export const { addUser, deleteUser, addMultipleUsers } = adminSlice.actions;
 
 export default adminSlice.reducer;

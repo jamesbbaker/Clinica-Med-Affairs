@@ -1,9 +1,10 @@
-import React, { useReducer } from "react";
+import React, { useContext, useReducer } from "react";
 import InputField from "../InputField";
 import PrimaryBtn from "../PrimaryBtn";
-import { updateUsers } from "../../features/admin/adminSlice";
+import { addUser } from "../../features/admin/adminSlice";
 import { useDispatch } from "react-redux";
 import SelectBox from "../SelectBox";
+import { AuthContext } from "../../context/AuthContext";
 
 const inputs = [
   {
@@ -108,6 +109,7 @@ const Reducer = (state = initialState, action) => {
 const InputForm = ({ handleClose }) => {
   const [state, dispatch] = useReducer(Reducer, initialState);
   const reduxDispatch = useDispatch();
+  const { accessToken } = useContext(AuthContext);
 
   const validateForm = (fields) => {
     let errors = {};
@@ -131,20 +133,20 @@ const InputForm = ({ handleClose }) => {
       ...state.formData,
       code: Math.floor(1000 + Math.random() * 9000),
     };
-    // const response = await fetch(
-    //   "https://clinica-server.replit.app/create_user",
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({ ...data }),
-    //   }
-    // );
-    // const res = await response.json();
-    // console.log(res);
+    const response = await fetch(
+      "https://clinica-server.replit.app/create_user",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ ...data }),
+      }
+    );
+    const res = await response.json();
 
-    reduxDispatch(updateUsers(data));
+    reduxDispatch(addUser(data));
     handleClose();
   };
 
