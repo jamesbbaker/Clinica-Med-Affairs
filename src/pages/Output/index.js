@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Map from "../../components/Map";
 import BarChart from "../../components/BarChart";
 import { RadarChart } from "../../components/RadarChart";
+import Table from "../../components/Table";
 
 const options = {
   indexAxis: "y",
@@ -83,6 +84,7 @@ const Output = () => {
         <BarChart data={data} options={options} />
       </div>
       <RadarChart />
+      <Table />
     </div>
   );
 };

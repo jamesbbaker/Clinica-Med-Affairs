@@ -73,7 +73,7 @@ const Map = () => {
 
   return (
     <div
-      className="map-container relative w-full h-extraLarge"
+      className="map-container relative w-full h-large"
       ref={mapContainerRef}
     />
   );
