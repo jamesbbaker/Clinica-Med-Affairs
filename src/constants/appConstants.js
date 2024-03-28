@@ -46,7 +46,7 @@ export const APP_ROUTES = {
   outputs: "outputs",
   patient_opportunity_mapping_and_strategy:
     "patient_opportunity_mapping_and_strategy",
-  hcp_segmentaion: "hcp_segmentaion",
+  hcp_segmentation: "hcp_segmentation",
   eligible_patient_locator: "eligible_patient_locator",
   hcp_profiles: "hcp_profiles",
   lead_indicators: "lead_indicators",
