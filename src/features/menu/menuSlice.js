@@ -8,7 +8,6 @@ export const menuSlice = createSlice({
   },
   reducers: {
     updateMenu: (state, action) => {
-      console.log(action.payload);
       return { ...state, ...action.payload };
     },
   },

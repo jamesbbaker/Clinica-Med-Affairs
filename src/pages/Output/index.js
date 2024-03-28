@@ -1,8 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Map from "../../components/Map";
 import BarChart from "../../components/BarChart";
 import { RadarChart } from "../../components/RadarChart";
 import Table from "../../components/Table";
+import { APP_ROUTES } from "../../constants/appConstants";
+import { useSelector } from "react-redux";
+import { LineChart } from "../../components/LineChart";
+import Sankey from "../../components/Sankey";
 
 const options = {
   indexAxis: "y",
@@ -73,18 +77,30 @@ const data = {
 };
 
 const Output = () => {
+  const { currentMenu } = useSelector((state) => state.menu);
+
   return (
     <div className="px-2 py-4">
-      <Map />
-      <div className="text-md font-medium mt-4">
-        Summary of nation suboptimal treatment and trends over time
-      </div>
-      <div className="grid grid-cols-2 ">
-        <BarChart />
-        <BarChart data={data} options={options} />
-      </div>
-      <RadarChart />
-      <Table />
+      {currentMenu === APP_ROUTES.patient_journey && <Sankey />}
+      {currentMenu == APP_ROUTES.patient_opportunity_mapping_and_strategy && (
+        <>
+          <Map />
+          <div className="text-md font-medium mt-4">
+            Summary of nation suboptimal treatment and trends over time
+          </div>
+          <div className="grid grid-cols-2 ">
+            <BarChart />
+            <BarChart data={data} options={options} />
+          </div>
+        </>
+      )}
+      {currentMenu === APP_ROUTES.hcp_segmentaion && (
+        <div className="grid grid-cols-2">
+          <RadarChart />
+          <LineChart />
+        </div>
+      )}
+      {currentMenu === APP_ROUTES.eligible_patient_locator && <Table />}
     </div>
   );
 };

@@ -96,13 +96,13 @@ function Table() {
   };
 
   return (
-    <div className="w-screen max-w-full px-2 py-4 overflow-auto">
+    <div className="w-screen max-w-full overflow-auto">
       <div className="flex flex-wrap items-center gap-2">
         {allColumns.map((column) => {
           return (
             <div
               onClick={() => column.toggleHidden()}
-              className={`px-2 text-sm cursor-pointer  ${
+              className={`px-2 text-xs cursor-pointer  ${
                 column.isVisible ? "bg-orange-300" : "hover:bg-orange-200"
               }  py-1 border border-gray-700 rounded-sm`}
             >
@@ -111,7 +111,7 @@ function Table() {
           );
         })}
       </div>
-      <table className="text-sm" {...getTableProps()}>
+      <table className="text-sm mt-4" {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>

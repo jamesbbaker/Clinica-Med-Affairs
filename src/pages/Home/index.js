@@ -12,7 +12,7 @@ import { sidebarRoutes } from "../../constants/appConstants.js";
 const Home = () => {
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
-  const { currentMenu, subMenu } = useSelector((state) => state.menu);
+  const { currentMenu } = useSelector((state) => state.menu);
   const items = useSelector((state) => state.admin.users);
 
   return (

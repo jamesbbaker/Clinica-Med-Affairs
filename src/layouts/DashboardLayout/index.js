@@ -1,15 +1,33 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 import { AuthContext } from "../../context/AuthContext";
-import { accessToken } from "mapbox-gl";
 import { useDispatch } from "react-redux";
 import { addMultipleUsers } from "../../features/admin/adminSlice";
+import { updateMenu } from "../../features/menu/menuSlice";
 
 const DashboardLayout = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const { logOut, accessToken } = useContext(AuthContext);
   const dispatch = useDispatch();
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!accessToken) {
+      navigate("/auth");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (id) {
+      dispatch(
+        updateMenu({
+          currentMenu: id,
+        })
+      );
+    }
+  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {

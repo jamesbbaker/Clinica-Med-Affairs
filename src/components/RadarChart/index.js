@@ -98,7 +98,7 @@ export function RadarChart() {
   };
 
   return (
-    <div className="w-1/2 h-46 px-4 py-6 border rounded-xl shadow-box">
+    <div className="h-46 px-4 py-6 border rounded-xl shadow-box">
       <div className="text-sm font-medium">
         Al-based HCP segments and top features (potential drivers) of each
         segment

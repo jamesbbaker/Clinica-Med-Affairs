@@ -69,3 +69,18 @@ th {
   scrollbar-width: thin;
   scrollbar-color: #888 #f1f1f1;
 }
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loader {
+  border-top-color: #3498db;
+  border-left-color: #3498db;
+  animation: spin 1s linear infinite;
+}

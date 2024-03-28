@@ -7,47 +7,29 @@ import data from "./data.json";
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
 
+const active = {
+  name: "GDP",
+  description: "Estimate total GDP in millions of dollars",
+  property: "density",
+  stops: [
+    [0, "#f8d5cc"],
+    [10, "#f4bfb6"],
+    [50, "#f1a8a5"],
+    [100, "#ee8f9a"],
+    [500, "#ec739b"],
+    [1000, "#dd5ca8"],
+    [2500, "#c44cc0"],
+    [50000, "#9f43d7"],
+    [100000, "#6e40e6"],
+  ],
+};
+
 const Map = () => {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const [latitude, setLatitude] = useState(-90);
   const [longitude, setLongitude] = useState(40);
   const [zoom, setZoom] = useState(3);
-  const options = [
-    {
-      name: "Population",
-      description: "Estimated total population",
-      property: "pop_est",
-      stops: [
-        [0, "#f8d5cc"],
-        [1000000, "#f4bfb6"],
-        [5000000, "#f1a8a5"],
-        [10000000, "#ee8f9a"],
-        [50000000, "#ec739b"],
-        [100000000, "#dd5ca8"],
-        [250000000, "#c44cc0"],
-        [500000000, "#9f43d7"],
-        [1000000000, "#6e40e6"],
-      ],
-    },
-    {
-      name: "GDP",
-      description: "Estimate total GDP in millions of dollars",
-      property: "gdp_md_est",
-      stops: [
-        [0, "#f8d5cc"],
-        [1000, "#f4bfb6"],
-        [5000, "#f1a8a5"],
-        [10000, "#ee8f9a"],
-        [50000, "#ec739b"],
-        [100000, "#dd5ca8"],
-        [250000, "#c44cc0"],
-        [5000000, "#9f43d7"],
-        [10000000, "#6e40e6"],
-      ],
-    },
-  ];
-  const [active, setActive] = useState(options[0]);
 
   const Marker = ({ onClick, children, feature }) => {
     const _onClick = () => {
@@ -73,8 +55,17 @@ const Map = () => {
     mapRef.current.on("load", () => {
       mapRef.current.addSource("countries", {
         type: "geojson",
-        data,
+        data: data,
       });
+      const layers = mapRef.current.getStyle().layers;
+      // Find the index of the first symbol layer in the map style.
+      let firstSymbolId;
+      for (const layer of layers) {
+        if (layer.type === "symbol") {
+          firstSymbolId = layer.id;
+          break;
+        }
+      }
 
       mapRef.current.setLayoutProperty("country-label", "text-field", [
         "format",
@@ -94,70 +85,16 @@ const Map = () => {
 
       mapRef.current.addLayer(
         {
-          id: "country-fills",
+          id: "countries",
           type: "fill",
           source: "countries",
-          paint: {
-            "fill-color": "#c4c4c4",
-            "fill-opacity": 0.5,
-          },
         },
-        "country-label"
+        firstSymbolId
       );
 
-      // mapRef.current.setPaintProperty("country-fills", "fill-color", {
-      //   property: active.property,
-      //   stops: active.stops,
-      // });
-
-      // Add country borders
-      mapRef.current.addLayer({
-        id: "country-borders",
-        type: "line",
-        source: "countries",
-        layout: {},
-        paint: {
-          "line-color": "#627BC1",
-          "line-width": 0.25,
-        },
-      });
-
-      // Add country hover layer
-      mapRef.current.addLayer({
-        id: "country-fills-hover",
-        type: "fill",
-        source: "countries",
-        layout: {},
-        paint: {
-          "fill-color": "#000000",
-          "fill-opacity": 0.3,
-        },
-        filter: ["==", "name", ""],
-      });
-
-      // Add country hover effect
-      mapRef.current.on("mousemove", (e) => {
-        const features = mapRef.current.queryRenderedFeatures(e.point, {
-          layers: ["country-fills"],
-        });
-
-        if (features.length) {
-          mapRef.current.getCanvas().style.cursor = "pointer";
-          mapRef.current.setFilter("country-fills-hover", [
-            "==",
-            "name",
-            features[0].properties.name,
-          ]);
-        } else {
-          mapRef.current.setFilter("country-fills-hover", ["==", "name", ""]);
-          mapRef.current.getCanvas().style.cursor = "";
-        }
-      });
-
-      // Add country un-hover effect
-      mapRef.current.on("mouseout", () => {
-        mapRef.current.getCanvas().style.cursor = "auto";
-        mapRef.current.setFilter("country-fills-hover", ["==", "name", ""]);
+      mapRef.current.setPaintProperty("countries", "fill-color", {
+        property: active.property,
+        stops: active.stops,
       });
     });
 

@@ -46,9 +46,11 @@ const AuthProvider = () => {
         localStorage.setItem("refreshToken", res.refresh_token);
         navigate("/");
         return;
+      } else {
+        throw new Error();
       }
     } catch (err) {
-      console.error(err);
+      throw new Error();
     }
   };
 
