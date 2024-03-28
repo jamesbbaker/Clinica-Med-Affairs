@@ -43,9 +43,9 @@ const menuList = [
         icon: () => <AiOutlineGlobal />,
       },
       {
-        name: "HCP Segmentaion",
-        id: "hcp_segmentaion",
-        route: `${APP_ROUTES.outputs}/${APP_ROUTES.hcp_segmentaion}`,
+        name: "HCP Segmentation",
+        id: "hcp_segmentation",
+        route: `${APP_ROUTES.outputs}/${APP_ROUTES.hcp_segmentation}`,
         icon: () => <AiOutlineBarChart />,
       },
       {
