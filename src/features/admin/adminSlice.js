@@ -11,7 +11,7 @@ export const adminSlice = createSlice({
       state.users.push(action.payload);
     },
     addMultipleUsers: (state, action) => {
-      state.users.push(...action.payload);
+      state.users = action.payload;
     },
     deleteUser: (state, action) => {
       state.users = state.users.filter((user) => user.id !== action.payload);

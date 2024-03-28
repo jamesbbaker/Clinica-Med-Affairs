@@ -1,4 +1,9 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  Outlet,
+  RouterProvider,
+  createBrowserRouter,
+  useNavigate,
+} from "react-router-dom";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -18,12 +23,16 @@ const router = createBrowserRouter([
             element: <Home />,
           },
           {
-            path: "output",
-            element: <Output />,
+            path: "outputs",
+            children: [
+              {
+                path: "/outputs/:id",
+                element: <Output />,
+              },
+            ],
           },
         ],
       },
-
       {
         path: "/auth",
         element: <Login />,

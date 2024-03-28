@@ -23,7 +23,7 @@ const InputField = ({ error, input, onChange = () => {} }) => {
         } text-sm rounded-md focus:outline-none border-primary border-opacity-25 border`}
         placeholder={input.placeholder}
       />
-      <p className="mt-1 text-xs h-6 text-red-700"> {error}</p>
+      <p className="mt-1 text-xs h-6 text-red-700">{error}</p>
     </div>
   );
 };

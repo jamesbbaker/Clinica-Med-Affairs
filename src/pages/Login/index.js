@@ -3,6 +3,7 @@ import logo from "../../assets/images/logo.png";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import InputField from "../../components/InputField";
 import { AuthContext } from "../../context/AuthContext";
+import { useState } from "react";
 
 const inputs = [
   {
@@ -63,6 +64,7 @@ const Reducer = (state = initialState, action) => {
 const Login = () => {
   const [state, dispatch] = useReducer(Reducer, initialState);
   const { loginAction } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
 
   const validateForm = (fields) => {
     let errors = {};
@@ -79,10 +81,23 @@ const Login = () => {
   };
 
   const handleSubmit = () => {
+    setLoading(true);
     if (!validateForm(inputs)) {
+      setLoading(false);
       return;
     }
-    loginAction(state.formData);
+
+    loginAction(state.formData)
+      .then((res) => {
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        dispatch({
+          type: ActionTypes.SUBMIT_FORM,
+          payload: { ["errors"]: { global: "Invalid Email or Password" } },
+        });
+      });
   };
 
   const handleChange = (e) => {
@@ -105,7 +120,7 @@ const Login = () => {
         </h4>
       </div>
       <div className="w-1/2 bg-slate-50 h-full flex justify-center items-center">
-        <div className="w-1/2 flex flex-col justify-center items-center gap-14">
+        <div className="w-1/2 flex flex-col justify-center items-center gap-8">
           <img src={logo} className="w-40" />
           <div className="flex w-full flex-col gap-2">
             {inputs.map((input) => (
@@ -116,11 +131,17 @@ const Login = () => {
               />
             ))}
           </div>
-          <PrimaryBtn
-            className={"w-full text-slate-50"}
-            text={"Log In"}
-            onClick={handleSubmit}
-          />
+          <div className="flex w-full flex-col gap">
+            <div className="mt-1 text-center text-xs h-6 text-red-700">
+              {state.errors.global || ""}
+            </div>
+            <PrimaryBtn
+              disabled={loading}
+              className={"w-full text-slate-50"}
+              text={"Log In"}
+              onClick={handleSubmit}
+            />
+          </div>
         </div>
       </div>
     </div>
