@@ -42,7 +42,20 @@ export const EPL_TABLE_COLUMNS = [
   },
 ];
 
+export const USERS_TABLE_COLUMNS = [
+  {
+    Header: "Email",
+    accessor: "email",
+  },
+  {
+    Header: "Region",
+    accessor: "region",
+  },
+  { Header: "Company", accessor: "company" },
+];
+
 export const APP_ROUTES = {
+  users: "users",
   outputs: "outputs",
   patient_opportunity_mapping_and_strategy:
     "patient_opportunity_mapping_and_strategy",
@@ -51,4 +64,21 @@ export const APP_ROUTES = {
   hcp_profiles: "hcp_profiles",
   lead_indicators: "lead_indicators",
   patient_journey: "patient_journey",
+  impact_tracking: "impact_tracking",
+  insitutional_variation: "institutional_variation",
+};
+
+export const APP_ROUTES_LABEL = {
+  home: "Home",
+  users: "Users",
+  outputs: "Outputs",
+  patient_opportunity_mapping_and_strategy:
+    "Patient Opportunity Mapping and Strategy",
+  hcp_segmentation: "HCP Segmentation",
+  eligible_patient_locator: "Eligible Patient Locator",
+  hcp_profiles: "HCP Profiles",
+  lead_indicators: "Leading Indicators",
+  patient_journey: "Patient Journey",
+  impact_tracking: "Impact Tracking",
+  insitutional_variation: "Institutional Variation",
 };

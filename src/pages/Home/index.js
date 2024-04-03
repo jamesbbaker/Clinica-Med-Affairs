@@ -19,22 +19,20 @@ const Home = () => {
     <div>
       {currentMenu == sidebarRoutes.USERS ? (
         <>
-          <div className="flex w-full justify-end">
-            <PrimaryBtn
-              className={"w-40 text-slate-50"}
-              onClick={() => setOpen((o) => !o)}
-              text={"+ Add User"}
-            />
-            <Popup
-              onClose={closeModal}
-              modal
-              open={open}
-              closeOnDocumentClick
-              position="center center"
-            >
-              <InputForm handleClose={closeModal} />
-            </Popup>
-          </div>
+          <Popup
+            onClose={closeModal}
+            modal
+            open={open}
+            closeOnDocumentClick
+            position="center center"
+          >
+            <InputForm handleClose={closeModal} />
+          </Popup>
+          <PrimaryBtn
+            className={"w-40 absolute z-10 top-16 right-2 text-slate-50"}
+            onClick={() => setOpen((o) => !o)}
+            text={"+ Add User"}
+          />
           <ListItems items={items} />
         </>
       ) : (

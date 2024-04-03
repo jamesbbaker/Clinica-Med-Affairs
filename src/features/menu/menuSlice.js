@@ -4,6 +4,7 @@ export const menuSlice = createSlice({
   name: "menu",
   initialState: {
     currentMenu: "users",
+    currentMenuLabel: "Users",
     subMenu: "",
   },
   reducers: {

@@ -6,6 +6,8 @@ import { useTable } from "react-table";
 import Popup from "reactjs-popup";
 import BarChart from "../BarChart";
 import { EPL_TABLE_COLUMNS } from "../../constants/appConstants";
+import SelectionButtons from "../SelectionButtons";
+import { breakString, removeCommasFromString } from "../../utils/StringUtils";
 
 const BarChartOptions = {
   indexAxis: "y",
@@ -19,7 +21,7 @@ const BarChartOptions = {
     y: {
       ticks: {
         font: {
-          size: 12,
+          size: 10,
           weight: 700,
         },
       },
@@ -46,8 +48,11 @@ const BarChartOptions = {
     },
     tooltip: {
       callbacks: {
+        title: function (context) {
+          let title = context[0].label;
+          return removeCommasFromString(title);
+        },
         label: function (context) {
-          console.log(context);
           let label = context.formattedValue;
           return label ? `${label}%` : 0;
         },
@@ -56,9 +61,13 @@ const BarChartOptions = {
   },
 };
 
-function Table() {
-  const data = React.useMemo(() => fakeData, []);
-  const columns = React.useMemo(() => EPL_TABLE_COLUMNS, []);
+const Table = ({
+  UserTable = false,
+  TableData = fakeData,
+  TableColummns = EPL_TABLE_COLUMNS,
+}) => {
+  const data = React.useMemo(() => TableData, [TableData]);
+  const columns = React.useMemo(() => TableColummns, []);
 
   const {
     getTableProps,
@@ -72,13 +81,17 @@ function Table() {
   const [barChartConfig, setBarChartConfig] = useState(null);
 
   useEffect(() => {
-    allColumns.map((column, index) => index % 2 && column.toggleHidden());
+    allColumns.map(
+      (column, index) => !UserTable && index % 2 && column.toggleHidden()
+    );
   }, []);
 
   const handleClick = (row) => {
     setOpenPopup((o) => !o);
     const barChartData = {
-      labels: row.allCells.map((cell, index) => cell.column.Header),
+      labels: row.allCells.map((cell, index) =>
+        breakString(cell.column.Header, 40)
+      ),
       datasets: [
         {
           data: row.allCells.map((cell, index) => cell.value.split("%")[0]),
@@ -95,22 +108,19 @@ function Table() {
     setBarChartConfig(null);
   };
 
+  const handleFilterClick = (col) => {
+    return col.toggleHidden();
+  };
+
   return (
     <div className="w-screen max-w-full overflow-auto">
-      <div className="flex flex-wrap items-center gap-2">
-        {allColumns.map((column) => {
-          return (
-            <div
-              onClick={() => column.toggleHidden()}
-              className={`px-2 text-xs cursor-pointer  ${
-                column.isVisible ? "bg-orange-300" : "hover:bg-orange-200"
-              }  py-1 border border-gray-700 rounded-sm`}
-            >
-              {column.Header}
-            </div>
-          );
-        })}
-      </div>
+      {!UserTable && (
+        <SelectionButtons
+          data={allColumns}
+          visibleKey={"isVisible"}
+          onClick={handleFilterClick}
+        />
+      )}
       <table className="text-sm mt-4" {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
@@ -130,9 +140,11 @@ function Table() {
                 onClick={() => handleClick(row)}
                 {...row.getRowProps()}
               >
-                {row.cells.map((cell) => (
-                  <td {...cell.getCellProps()}> {cell.render("Cell")} </td>
-                ))}
+                {row.cells.map((cell) => {
+                  return (
+                    <td {...cell.getCellProps()}> {cell.render("Cell")} </td>
+                  );
+                })}
               </tr>
             );
           })}
@@ -141,13 +153,13 @@ function Table() {
       <Popup
         onClose={handleClose}
         modal
-        open={openPopup}
+        open={openPopup && !UserTable}
         position="center center"
       >
-        <div>
+        <div className="w-extraLarge">
           {barChartConfig && (
             <BarChart
-              height={120}
+              height={250}
               data={barChartConfig}
               options={BarChartOptions}
             />
@@ -156,6 +168,6 @@ function Table() {
       </Popup>
     </div>
   );
-}
+};
 
 export default Table;

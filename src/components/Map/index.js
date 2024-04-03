@@ -7,7 +7,7 @@ import data from "./data.json";
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
 
-const active = {
+const defaultActive = {
   name: "GDP",
   description: "Estimate total GDP in millions of dollars",
   property: "density",
@@ -24,12 +24,62 @@ const active = {
   ],
 };
 
-const Map = () => {
+function MapAddLayer(map, data) {
+  map.on("load", () => {
+    map.addSource("countries", {
+      type: "geojson",
+      data: data,
+    });
+    const layers = map.getStyle().layers;
+    // Find the index of the first symbol layer in the map style.
+    let firstSymbolId;
+    for (const layer of layers) {
+      if (layer.type === "symbol") {
+        firstSymbolId = layer.id;
+        break;
+      }
+    }
+
+    map.setLayoutProperty("country-label", "text-field", [
+      "format",
+      ["get", "name_en"],
+      { "font-scale": 1.2 },
+      "\n",
+      {},
+      ["get", "name"],
+      {
+        "font-scale": 0.8,
+        "text-font": [
+          "literal",
+          ["DIN Offc Pro Italic", "Arial Unicode MS Regular"],
+        ],
+      },
+    ]);
+
+    map.addLayer(
+      {
+        id: "countries",
+        type: "fill",
+        source: "countries",
+      },
+      firstSymbolId
+    );
+
+    map.setPaintProperty("countries", "fill-color", {
+      property: defaultActive.property,
+      stops: defaultActive.stops,
+    });
+  });
+
+  // Render custom marker components
+}
+
+const Map = ({ LayerFn = MapAddLayer, markersEnabled = true }) => {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const [latitude, setLatitude] = useState(-90);
   const [longitude, setLongitude] = useState(40);
-  const [zoom, setZoom] = useState(3);
+  const [zoom, setZoom] = useState(3.5);
 
   const Marker = ({ onClick, children, feature }) => {
     const _onClick = () => {
@@ -46,75 +96,31 @@ const Map = () => {
   // Initialize map when component mounts
   useEffect(() => {
     mapRef.current = new mapboxgl.Map({
+      maxZoom: 10,
+      minZoom: 3.5,
       container: mapContainerRef.current,
       style: "mapbox://styles/mapbox/streets-v11",
       center: [latitude, longitude],
       zoom: zoom,
     });
+    LayerFn(mapRef.current, data);
+    if (markersEnabled) {
+      geoJson.features.forEach((feature) => {
+        // Create a React ref
+        const ref = React.createRef();
+        // Create a new DOM node and save it to the React ref
+        ref.current = document.createElement("div");
+        // Render a Marker Component on our new DOM node
+        createRoot(ref.current).render(
+          <Marker onClick={markerClicked} feature={feature} />
+        );
 
-    mapRef.current.on("load", () => {
-      mapRef.current.addSource("countries", {
-        type: "geojson",
-        data: data,
+        // Create a Mapbox Marker at our new DOM node
+        new mapboxgl.Marker(ref.current)
+          .setLngLat(feature.geometry.coordinates)
+          .addTo(mapRef.current);
       });
-      const layers = mapRef.current.getStyle().layers;
-      // Find the index of the first symbol layer in the map style.
-      let firstSymbolId;
-      for (const layer of layers) {
-        if (layer.type === "symbol") {
-          firstSymbolId = layer.id;
-          break;
-        }
-      }
-
-      mapRef.current.setLayoutProperty("country-label", "text-field", [
-        "format",
-        ["get", "name_en"],
-        { "font-scale": 1.2 },
-        "\n",
-        {},
-        ["get", "name"],
-        {
-          "font-scale": 0.8,
-          "text-font": [
-            "literal",
-            ["DIN Offc Pro Italic", "Arial Unicode MS Regular"],
-          ],
-        },
-      ]);
-
-      mapRef.current.addLayer(
-        {
-          id: "countries",
-          type: "fill",
-          source: "countries",
-        },
-        firstSymbolId
-      );
-
-      mapRef.current.setPaintProperty("countries", "fill-color", {
-        property: active.property,
-        stops: active.stops,
-      });
-    });
-
-    // Render custom marker components
-    geoJson.features.forEach((feature) => {
-      // Create a React ref
-      const ref = React.createRef();
-      // Create a new DOM node and save it to the React ref
-      ref.current = document.createElement("div");
-      // Render a Marker Component on our new DOM node
-      createRoot(ref.current).render(
-        <Marker onClick={markerClicked} feature={feature} />
-      );
-
-      // Create a Mapbox Marker at our new DOM node
-      new mapboxgl.Marker(ref.current)
-        .setLngLat(feature.geometry.coordinates)
-        .addTo(mapRef.current);
-    });
-
+    }
     // Add navigation control (the +/- zoom buttons)
     mapRef.current.addControl(new mapboxgl.NavigationControl(), "top-right");
 
