@@ -7,6 +7,8 @@ import { APP_ROUTES } from "../../constants/appConstants";
 import { useSelector } from "react-redux";
 import { LineChart } from "../../components/LineChart";
 import Sankey from "../../components/Sankey";
+import ImpactTracking from "./ImpactTracking";
+import InstitutionalVariation from "./InstituitonalVariation";
 
 const options = {
   indexAxis: "y",
@@ -20,8 +22,11 @@ const options = {
     y: {
       display: false,
       ticks: {
+        stepSize: 1,
+        min: 0,
+        autoSkip: false,
         font: {
-          size: 8,
+          size: 10,
           weight: 700,
         },
       },
@@ -80,7 +85,7 @@ const Output = () => {
   const { currentMenu } = useSelector((state) => state.menu);
 
   return (
-    <div className="px-2 py-4">
+    <>
       {currentMenu === APP_ROUTES.patient_journey && <Sankey />}
       {currentMenu == APP_ROUTES.patient_opportunity_mapping_and_strategy && (
         <>
@@ -88,20 +93,24 @@ const Output = () => {
           <div className="text-md font-medium mt-4">
             Summary of nation suboptimal treatment and trends over time
           </div>
-          <div className="grid grid-cols-2 ">
+          <div className="grid pb-40 grid-cols-2 ">
             <BarChart />
             <BarChart data={data} options={options} />
           </div>
         </>
       )}
-      {currentMenu === APP_ROUTES.hcp_segmentaion && (
-        <div className="grid grid-cols-2">
+      {currentMenu === APP_ROUTES.hcp_segmentation && (
+        <div className="flex flex-col items-center ">
           <RadarChart />
-          <LineChart />
+          <LineChart height={100} />
         </div>
       )}
       {currentMenu === APP_ROUTES.eligible_patient_locator && <Table />}
-    </div>
+      {currentMenu === APP_ROUTES.insitutional_variation && (
+        <InstitutionalVariation />
+      )}
+      {currentMenu === APP_ROUTES.impact_tracking && <ImpactTracking />}
+    </>
   );
 };
 

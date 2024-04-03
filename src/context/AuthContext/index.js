@@ -39,7 +39,12 @@ const AuthProvider = () => {
       const res = await response.json();
 
       if (res.message == "Login successful") {
-        setUser({ ...data });
+        setUser({
+          ...data,
+          region: res.region,
+          company: res.company,
+          admin: res.admin,
+        });
         setAccessToken(res.access_token);
         setRefreshToken(res.refresh_token);
         localStorage.setItem("accessToken", res.access_token);

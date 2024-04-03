@@ -84,3 +84,9 @@ th {
   border-left-color: #3498db;
   animation: spin 1s linear infinite;
 }
+
+.popup-content {
+  width: auto !important;
+  padding-left: 3rem !important;
+  padding-right: 3rem !important;
+}

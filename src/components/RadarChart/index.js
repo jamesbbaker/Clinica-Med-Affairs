@@ -9,6 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { Radar } from "react-chartjs-2";
+import { breakString } from "../../utils/StringUtils";
 
 ChartJS.register(
   RadialLinearScale,
@@ -98,39 +99,45 @@ export function RadarChart() {
   };
 
   return (
-    <div className="h-46 px-4 py-6 border rounded-xl shadow-box">
+    <div className="w-full flex flex-col items-left gap-2 py-2">
       <div className="text-sm font-medium">
         Al-based HCP segments and top features (potential drivers) of each
         segment
       </div>
-      <div className="relative w-1/2 mb-10">
-        <label className="text-xs" for="labels-range-input">
-          Number of clusters
-        </label>
-        <input
-          id="labels-range-input"
-          type="range"
-          onChange={handleChange}
-          defaultValue={0}
-          min={1}
-          max={4}
-          step={1}
-          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-        />
-        <span className="text-sm text-gray-500 dark:text-gray-400 absolute start-0 -bottom-6">
-          1
-        </span>
-        <span className="text-sm text-gray-500 dark:text-gray-400 absolute start-1/3 -translate-x-1/2 rtl:translate-x-1/2 -bottom-6">
-          2
-        </span>
-        <span className="text-sm text-gray-500 dark:text-gray-400 absolute start-2/3 -translate-x-1/2 rtl:translate-x-1/2 -bottom-6">
-          3
-        </span>
-        <span className="text-sm text-gray-500 dark:text-gray-400 absolute end-0 -bottom-6">
-          4
-        </span>
+      <div className="relative mt-2 flex items-center gap-5 mb-10">
+        <div>
+          <label className="text-xs" for="labels-range-input">
+            Number of clusters
+          </label>
+        </div>
+        <div className="relative">
+          <input
+            id="labels-range-input"
+            type="range"
+            onChange={handleChange}
+            defaultValue={0}
+            min={1}
+            max={4}
+            step={1}
+            className="w-40 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+          />
+          <span className="text-sm text-gray-500 dark:text-gray-400 absolute start-0 -bottom-6">
+            1
+          </span>
+          <span className="text-sm text-gray-500 dark:text-gray-400 absolute start-1/3 -translate-x-1/2 rtl:translate-x-1/2 -bottom-6">
+            2
+          </span>
+          <span className="text-sm text-gray-500 dark:text-gray-400 absolute start-2/3 -translate-x-1/2 rtl:translate-x-1/2 -bottom-6">
+            3
+          </span>
+          <span className="text-sm text-gray-500 dark:text-gray-400 absolute end-0 -bottom-6">
+            4
+          </span>
+        </div>
       </div>
-      <Radar ref={chartRef} width={50} data={chartData} />
+      <div className="w-1/3 self-center">
+        <Radar ref={chartRef} data={chartData} />
+      </div>
     </div>
   );
 }

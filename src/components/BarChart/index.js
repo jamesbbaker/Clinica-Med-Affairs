@@ -30,8 +30,11 @@ export const _options = {
   scales: {
     y: {
       ticks: {
+        stepSize: 1,
+        min: 0,
+        autoSkip: false,
         font: {
-          size: 8,
+          size: 9,
           weight: 700,
         },
       },
@@ -62,8 +65,8 @@ export const _options = {
 const labels = [
   "Improper CV risk testing",
   "Incomplete comorbidity testing",
-  "Continued AF without treatment escalation",
-  "Repeated cardioversions without treatment escalation",
+  ["Continued AF without", "treatment escalation"],
+  ["Repeated cardioversions without", "treatment escalation"],
   "Improper calcium channel blocker",
   "Off-label treatment",
   "High AF stroke risk without anticoagulant",
@@ -71,7 +74,7 @@ const labels = [
   "Failure to manage AEs",
   "Lack of monitoring by CV specialist",
   "Non-adherence to anticoagulants",
-  "Non-adherence to other AF drug treatments",
+  ["Non-adherence to other", "AF drug treatments"],
   "Failure to complete follow-up testing",
 ];
 
@@ -89,7 +92,7 @@ export const _data = {
   ],
 };
 
-const BarChart = ({ height = 90, data = _data, options = _options }) => {
+const BarChart = ({ height = 250, data = _data, options = _options }) => {
   const chartRef = useRef(null);
   const [selectedValue, setSelectedValue] = useState(0);
 
