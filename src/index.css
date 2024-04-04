@@ -90,3 +90,14 @@ th {
   padding-left: 3rem !important;
   padding-right: 3rem !important;
 }
+
+.rmsc .dropdown-heading {
+  height: auto !important;
+  padding: 0.35rem 0.5rem !important;
+  max-width: 11.5rem !important;
+  overflow-x: auto;
+}
+
+.rmsc .dropdown-container {
+  border: 1px solid #3498db4a !important;
+}

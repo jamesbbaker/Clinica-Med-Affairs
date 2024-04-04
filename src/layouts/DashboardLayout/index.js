@@ -2,13 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 import { AuthContext } from "../../context/AuthContext";
-import { useDispatch } from "react-redux";
-import { addMultipleUsers } from "../../features/admin/adminSlice";
+
 import TopBar from "../../components/TopBar";
 
 const DashboardLayout = () => {
-  const { accessToken, refreshToken } = useContext(AuthContext);
-  const dispatch = useDispatch();
+  const { accessToken, refreshToken, fetchUserData } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,32 +16,8 @@ const DashboardLayout = () => {
   }, []);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch(
-          "https://clinica-server.replit.app/get_all_users",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        if (response.ok) {
-          const userData = await response.json();
-
-          dispatch(addMultipleUsers(userData));
-        } else {
-          console.error("Failed to fetch user data:", response.statusText);
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    if (accessToken) {
-      fetchUserData();
-    }
-  }, [accessToken]);
+    fetchUserData(accessToken, refreshToken);
+  }, []);
 
   return (
     <div className="flex font-primary justify-center items-center w-screen h-screen">
