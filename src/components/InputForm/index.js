@@ -5,6 +5,8 @@ import { addUser } from "../../features/admin/adminSlice";
 import { useDispatch } from "react-redux";
 import SelectBox from "../SelectBox";
 import { AuthContext } from "../../context/AuthContext";
+import { MultiSelect } from "react-multi-select-component";
+import { menuList } from "../Sidebar";
 
 const inputs = [
   {
@@ -30,7 +32,17 @@ const inputs = [
     placeholder: "Enter Password",
     id: "password",
     label: "Password",
-    type: "text",
+    type: "password",
+    required: true,
+  },
+  {
+    name: "Pages",
+    id: "page_view",
+    label: "Page Access",
+    type: "multiSelect",
+    options: menuList
+      .find((item) => item.name === "outputs")
+      .children.map((item) => ({ label: item.name, value: item.id })),
     required: true,
   },
   {
@@ -57,6 +69,7 @@ const inputs = [
     type: "text",
     required: true,
   },
+
   {
     name: "role",
     id: "role",
@@ -131,8 +144,9 @@ const InputForm = ({ handleClose }) => {
     }
     let data = {
       ...state.formData,
-      code: Math.floor(1000 + Math.random() * 9000),
+      page_view: state.formData.page_view.map((item) => item.value),
     };
+    console.log(data);
     const response = await fetch(
       "https://clinica-server.replit.app/create_user",
       {
@@ -168,6 +182,16 @@ const InputForm = ({ handleClose }) => {
     });
   };
 
+  const handleMultipleSelect = (val, input) => {
+    console.log(val);
+    dispatch({
+      type: ActionTypes.SET_FIELD_VALUE,
+      payload: {
+        [input.id]: val,
+      },
+    });
+  };
+
   return (
     <div className="flex flex-col items-center bg-slate-50 gap-6 px-4 py-12">
       <h1 className="text-2xl font-medium">Add New User</h1>
@@ -179,6 +203,17 @@ const InputForm = ({ handleClose }) => {
               handleSelect={handleSelect}
               input={input}
             />
+          ) : input.type === "multiSelect" ? (
+            <div className="w-full mt-2">
+              <div className={`font-medium text-sm`}>{input.label}</div>
+              <MultiSelect
+                options={input.options}
+                className="mt-2 w-full"
+                value={state.formData[input.id] || []}
+                onChange={(val) => handleMultipleSelect(val, input)}
+                labelledBy={input.label}
+              />
+            </div>
           ) : (
             <InputField
               error={state.errors[input.name]}

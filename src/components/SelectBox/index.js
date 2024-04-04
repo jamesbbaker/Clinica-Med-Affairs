@@ -12,11 +12,12 @@ const SelectBox = ({ error, input, handleSelect }) => {
       <select
         name={input.name}
         onChange={handleSelect}
+        sle
         id={input.id}
         className="bg-gray-50 focus:outline-none  px-4 py-2 border border-primary border-opacity-25 text-gray-900 text-sm rounded-lg block w-full"
       >
         <option selected disabled>
-          Choose an option
+          Select...
         </option>
         {input.options.map((option) => (
           <option value={option.id}>{option.name}</option>

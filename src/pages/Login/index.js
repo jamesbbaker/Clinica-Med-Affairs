@@ -80,7 +80,8 @@ const Login = () => {
     return Object.values(errors).length == 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     setLoading(true);
     if (!validateForm(inputs)) {
       setLoading(false);
@@ -120,7 +121,10 @@ const Login = () => {
         </h4>
       </div>
       <div className="w-1/2 bg-slate-50 h-full flex justify-center items-center">
-        <div className="w-1/2 flex flex-col justify-center items-center gap-8">
+        <form
+          onSubmit={handleSubmit}
+          className="w-1/2 flex flex-col justify-center items-center gap-8"
+        >
           <img src={logo} className="w-40" />
           <div className="flex w-full flex-col gap-2">
             {inputs.map((input) => (
@@ -136,13 +140,13 @@ const Login = () => {
               {state.errors.global || ""}
             </div>
             <PrimaryBtn
+              type="submit"
               disabled={loading}
               className={"w-full text-slate-50"}
               text={"Log In"}
-              onClick={handleSubmit}
             />
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
