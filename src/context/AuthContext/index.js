@@ -12,7 +12,9 @@ const AuthProvider = () => {
   const [accessToken, setAccessToken] = useState(
     localStorage.getItem("accessToken")
   );
-  const [refreshToken, setRefreshToken] = useState();
+  const [refreshToken, setRefreshToken] = useState(
+    localStorage.getItem("refreshToken")
+  );
 
   const dispatch = useDispatch();
 
@@ -53,6 +55,7 @@ const AuthProvider = () => {
         setAccessToken(res.access_token);
         setRefreshToken(res.refresh_token);
         localStorage.setItem("accessToken", res.access_token);
+        localStorage.setItem("refreshToken", res.refresh_token);
         localStorage.setItem("user", JSON.stringify(userData));
         if (res.admin) {
           dispatch(
@@ -69,7 +72,7 @@ const AuthProvider = () => {
             })
           );
         }
-        navigate("/");
+        navigate("/dashboard");
         return;
       } else {
         throw new Error();
@@ -127,6 +130,7 @@ const AuthProvider = () => {
           // Unauthorized error
           // Refresh the token
           const refreshedToken = await refreshTokenFunction(refreshToken);
+          console.log(refreshToken, "refr");
           if (refreshedToken) {
             // Retry fetching with the new token
             await fetchUserData(refreshedToken, refreshToken);

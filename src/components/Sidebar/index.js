@@ -16,19 +16,19 @@ import { AuthContext } from "../../context/AuthContext";
 
 export const menuList = [
   {
-    name: "root",
+    name: "dashboard",
     label: "",
     children: [
       {
         name: APP_ROUTES_LABEL.users,
         id: APP_ROUTES.users,
-        route: "/",
+        route: "/dashboard",
         icon: () => <AiOutlineTeam />,
       },
       {
         name: APP_ROUTES_LABEL.home,
         id: "home",
-        route: "/",
+        route: "/dashboard",
         icon: () => <AiOutlineHome />,
       },
     ],
@@ -112,7 +112,11 @@ const Sidebar = () => {
   return (
     <div className="w-1/5 h-full bg-primary">
       <div className="w-full border h-14 grid place-content-center border-primary bg-slate-50 py-2">
-        <img src={logo} alt="logo" className="w-1/2 mx-auto" />
+        <img
+          src={logo}
+          alt="logo"
+          className="w-2/3 h-full max-h-full mx-auto"
+        />
       </div>
       <div className="flex flex-col mt-8">
         {user &&
@@ -139,7 +143,7 @@ const Sidebar = () => {
                       return;
                     }
                     if (
-                      item.name === "root" &&
+                      item.name === "dashboard" &&
                       subItem.id === APP_ROUTES.users &&
                       !user.admin
                     ) {
