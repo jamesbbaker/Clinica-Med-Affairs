@@ -3,9 +3,10 @@ import { AuthContext } from "../../context/AuthContext";
 import { useSelector } from "react-redux";
 
 const TopBar = () => {
-  const { logOut } = useContext(AuthContext);
+  const { logOut, user } = useContext(AuthContext);
   const [openDialog, setOpenDialog] = useState(false);
   const { currentMenuLabel } = useSelector((state) => state.menu);
+  
 
   const toggleDialog = () => {
     setOpenDialog((prev) => !prev);
@@ -14,13 +15,13 @@ const TopBar = () => {
     <>
       <div className="w-full h-14 px-6 py-4 flex justify-between items-center shadow-md">
         <div className="font-semibold">
-          <span className="font-medium">Welcome,</span> Vishal
+          <span className="font-medium">Welcome,</span> {user &&user.name && user.name.split(" ")[0]}
         </div>
         <div
           onClick={toggleDialog}
           className="w-6  h-6 text-slate-50 cursor-pointer hover:scale-110  shadow-box-2 transition-scale duration-200 ease-in-out bg-primary rounded-full grid place-content-center"
         >
-          V
+        {user && user.name && user.name.split(" ")[0].charAt(0)}
         </div>
         {openDialog && (
           <>

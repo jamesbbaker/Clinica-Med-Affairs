@@ -66,6 +66,7 @@ export const APP_ROUTES = {
   patient_journey: "patient_journey",
   impact_tracking: "impact_tracking",
   insitutional_variation: "institutional_variation",
+  data_quality: "data_quality"
 };
 
 export const APP_ROUTES_LABEL = {
@@ -78,7 +79,8 @@ export const APP_ROUTES_LABEL = {
   eligible_patient_locator: "Eligible Patient Locator",
   hcp_profiles: "HCP Profiles",
   lead_indicators: "Leading Indicators",
-  patient_journey: "Patient Journey",
+  patient_journey: "Patient Trajectory",
   impact_tracking: "Impact Tracking",
   insitutional_variation: "Institutional Variation",
+  data_quality: "Data Quality",
 };

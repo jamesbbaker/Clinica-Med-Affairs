@@ -9,6 +9,7 @@ import { LineChart } from "../../components/LineChart";
 import Sankey from "../../components/Sankey";
 import ImpactTracking from "./ImpactTracking";
 import InstitutionalVariation from "./InstituitonalVariation";
+import DataQuality from "./DataQuality";
 
 const options = {
   indexAxis: "y",
@@ -105,6 +106,7 @@ const Output = () => {
           <LineChart height={100} />
         </div>
       )}
+      {currentMenu === APP_ROUTES.data_quality && <DataQuality />}
       {currentMenu === APP_ROUTES.eligible_patient_locator && <Table />}
       {currentMenu === APP_ROUTES.insitutional_variation && (
         <InstitutionalVariation />

@@ -146,7 +146,7 @@ const InputForm = ({ handleClose }) => {
       ...state.formData,
       page_view: state.formData.page_view.map((item) => item.value),
     };
-    console.log(data);
+   
     const response = await fetch(
       "https://clinica-server.replit.app/create_user",
       {
@@ -183,7 +183,7 @@ const InputForm = ({ handleClose }) => {
   };
 
   const handleMultipleSelect = (val, input) => {
-    console.log(val);
+  
     dispatch({
       type: ActionTypes.SET_FIELD_VALUE,
       payload: {
@@ -193,7 +193,7 @@ const InputForm = ({ handleClose }) => {
   };
 
   return (
-    <div className="flex flex-col items-center bg-slate-50 gap-6 px-4 py-12">
+    <div className="flex flex-col items-center  gap-6 px-4 py-12">
       <h1 className="text-2xl font-medium">Add New User</h1>
       <div className="grid gap-4 grid-cols-2">
         {inputs.map((input) =>

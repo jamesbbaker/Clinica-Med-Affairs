@@ -50,6 +50,7 @@ const AuthProvider = () => {
           company: res.company,
           admin: res.admin,
           page_view: res.page_view,
+          name: res.name
         };
         setUser(userData);
         setAccessToken(res.access_token);
@@ -82,33 +83,7 @@ const AuthProvider = () => {
     }
   };
 
-  const refreshTokenFunction = async (refreshToken) => {
-    try {
-      const response = await fetch(
-        "https://clinica-server.replit.app/token/refresh",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            refresh_token: refreshToken,
-          }),
-        }
-      );
-      console.log(response);
-      if (response.ok) {
-        const data = await response.json();
-        return data.access_token;
-      } else {
-        console.error("Failed to refresh token:", response.statusText);
-        return null;
-      }
-    } catch (error) {
-      console.error("Error refreshing token:", error);
-      return null;
-    }
-  };
+ 
 
   const fetchUserData = async (token, refreshToken) => {
     try {
@@ -130,7 +105,6 @@ const AuthProvider = () => {
           // Unauthorized error
           // Refresh the token
           const refreshedToken = await refreshTokenFunction(refreshToken);
-          console.log(refreshToken, "refr");
           if (refreshedToken) {
             // Retry fetching with the new token
             await fetchUserData(refreshedToken, refreshToken);
@@ -180,3 +154,35 @@ const AuthProvider = () => {
 };
 
 export default AuthProvider;
+
+
+export const refreshTokenFunction = async (refreshToken) => {
+  console.log(refreshToken,"refres")
+  try {
+    const response = await fetch(
+      "https://clinica-server.replit.app/token/refresh",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+            Authorization: `Bearer ${refreshToken}`,
+          
+        },
+        body: JSON.stringify({
+          refresh_token: refreshToken,
+    
+        }),
+      }
+    );
+    if (response.ok) {
+      const data = await response.json();
+      return data.access_token;
+    } else {
+      console.error("Failed to refresh token:", response.statusText);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error refreshing token:", error);
+    return null;
+  }
+};

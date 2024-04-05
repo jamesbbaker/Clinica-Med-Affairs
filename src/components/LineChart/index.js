@@ -144,11 +144,11 @@ export function LineChart({
   return (
     <div className="w-full h-full px-2 py-4 pb-20">
       {!loading && (
-        <div className="pointer-events-none">
+        <div className={`${arbitrary && "pointer-events-none"}`}>
           <Line
             height={height}
             ref={lineRef}
-            plugins={[intersectDataVerticalLine]}
+            plugins={arbitrary && [intersectDataVerticalLine]}
             options={options}
             data={chartData}
           />

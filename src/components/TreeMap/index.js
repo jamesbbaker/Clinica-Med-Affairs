@@ -96,11 +96,24 @@ export const defaultData = [
 
 export const options = {
   minColor: "#ffef96",
+  minColorValue: 0,
   midColor: "#ff6e73",
   maxColor: "#d2177a",
   headerHeight: 15,
   fontColor: "black",
+  title: "Number of Asthma Patients in Each State",
+  titleTextStyle: {
+    color: '#888',
+    textAlign: 'center',
+  },
   showScale: true,
+  generateTooltip: (_row, _size, value) => {
+    return (
+      '<div style="background:rgb(0 141 218); color:#fff; padding:10px; border-style:solid, zIndex: 10"> ' +
+      _size +
+      "</div>"
+    );
+  },
 };
 
 const BarChartOptions = {
@@ -155,7 +168,7 @@ const BarChartOptions = {
   },
 };
 
-const TreeMap = ({ data = defaultData }) => {
+const TreeMap = ({ needCallbacks=true, data = defaultData }) => {
   const [openPopup, setOpenPopup] = useState(false);
 
   const [barChartConfig, setBarChartConfig] = useState(null);
@@ -186,13 +199,16 @@ const TreeMap = ({ data = defaultData }) => {
       <Chart
         chartType="TreeMap"
         width="100%"
-        height="400px"
+        height="800px"
         data={data}
         options={options}
         chartEvents={[
           {
             eventName: "ready",
             callback: ({ chartWrapper, google }) => {
+              if (!needCallbacks) {
+                return
+              }
               const chart = chartWrapper.getChart();
               const data = chartWrapper.getDataTable();
               google.visualization.events.addListener(
@@ -200,7 +216,6 @@ const TreeMap = ({ data = defaultData }) => {
                 "select",
                 function () {
                   var selection = chart.getSelection();
-                  console.log("Selected ", selection);
                   if (selection.length > 0) {
                     if (data.getValue(selection[0].row, 0).length > 2) {
                       let column = data
