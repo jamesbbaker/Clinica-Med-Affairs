@@ -5,8 +5,18 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import AuthProvider from "./context/AuthContext";
 import Output from "./pages/Output";
 import "mapbox-gl/dist/mapbox-gl.css";
+import Landing from "./pages/Landing";
+import About from "./pages/About";
 
 const router = createBrowserRouter([
+  {
+    element: <Landing />,
+    path: "/",
+  },
+  {
+    element: <About />,
+    path: "/about",
+  },
   {
     element: <AuthProvider />,
     children: [
@@ -14,7 +24,7 @@ const router = createBrowserRouter([
         element: <DashboardLayout />,
         children: [
           {
-            path: "/",
+            path: "/dashboard",
             element: <Home />,
           },
           {
