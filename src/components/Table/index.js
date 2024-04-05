@@ -2,7 +2,7 @@ import fakeData from "./table-data.json";
 import * as React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { useTable } from "react-table";
+import { useTable,usePagination, useSortBy  } from "react-table";
 import Popup from "reactjs-popup";
 import BarChart from "../BarChart";
 import { EPL_TABLE_COLUMNS } from "../../constants/appConstants";
@@ -62,27 +62,51 @@ const BarChartOptions = {
 };
 
 const Table = ({
+  ShowPagination = false,
+  activeCells= true,
+  Title="",
   UserTable = false,
+  initialState={
+    pageSize: 10,
+    pageIndex: 0,
+    sortBy: [
+      {
+          id: 'Total_Claims',
+          desc: true
+      }
+  ]
+  },
+  showSelectionBtns = true,
   TableData = fakeData,
   TableColummns = EPL_TABLE_COLUMNS,
 }) => {
   const data = React.useMemo(() => TableData, [TableData]);
-  const columns = React.useMemo(() => TableColummns, []);
+  const columns = React.useMemo(() => TableColummns, [TableColummns]);
+  
 
   const {
     getTableProps,
     allColumns,
     getTableBodyProps,
     headerGroups,
-    rows,
     prepareRow,
-  } = useTable({ columns, data });
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize }
+  } = useTable({ columns, data,initialState}, useSortBy,usePagination);
   const [openPopup, setOpenPopup] = useState(false);
   const [barChartConfig, setBarChartConfig] = useState(null);
 
   useEffect(() => {
     allColumns.map(
-      (column, index) => !UserTable && index % 2 && column.toggleHidden()
+      (column, index) => !UserTable && showSelectionBtns && index % 2 && column.toggleHidden()
     );
   }, []);
 
@@ -113,8 +137,9 @@ const Table = ({
   };
 
   return (
-    <div className="w-screen max-w-full overflow-auto">
-      {!UserTable && (
+    <div className="w-screen mt-14 max-w-full overflow-auto">
+      {Title && <div className="text-xs text-gray-500 font-semibold">{Title}</div>}
+      {!UserTable &&showSelectionBtns && (
         <SelectionButtons
           data={allColumns}
           visibleKey={"isVisible"}
@@ -126,18 +151,21 @@ const Table = ({
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+                <th {...column.getHeaderProps(column.getSortByToggleProps())}>{column.render("Header")}
+                 <span>
+               {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
+                </th>
               ))}
             </tr>
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
+          {page.map((row) => {
             prepareRow(row);
             return (
               <tr
                 className="hover:bg-slate-300 cursor-pointer"
-                onClick={() => handleClick(row)}
+                onClick={() =>activeCells && handleClick(row)}
                 {...row.getRowProps()}
               >
                 {row.cells.map((cell) => {
@@ -150,6 +178,51 @@ const Table = ({
           })}
         </tbody>
       </table>
+      <div className="mt-4">
+        <button className="hover:bg-primary hover:text-slate-50 cursor-pointer p-1" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+          {"<<"}
+        </button>{" "}
+        <button className="hover:bg-primary hover:text-slate-50 cursor-pointer p-1" onClick={() => previousPage()} disabled={!canPreviousPage}>
+          {"<"}
+        </button>{" "}
+        <button className="hover:bg-primary hover:text-slate-50 cursor-pointer p-1" onClick={() => nextPage()} disabled={!canNextPage}>
+          {">"}
+        </button>{" "}
+        <button className="hover:bg-primary hover:text-slate-50 cursor-pointer p-1" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+          {">>"}
+        </button>{" "}
+        <span>
+          Page{" "}
+          <strong>
+            {pageIndex + 1} of {pageOptions.length}
+          </strong>{" "}
+        </span>
+        {/* <span>
+          | Go to page:{" "}
+          <input
+            type="number"
+            value={pageIndex+1}
+            defaultValue={pageIndex + 1}
+            onChange={(e) => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0;
+              gotoPage(page);
+            }}
+            style={{ width: "100px" }}
+          />
+        </span>{" "} */}
+        <select
+          value={pageSize}
+          onChange={(e) => {
+            setPageSize(Number(e.target.value));
+          }}
+        >
+          {[10, 20, 30, 40, 50].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
       <Popup
         onClose={handleClose}
         modal

@@ -1,8 +1,10 @@
 import mapboxgl from "mapbox-gl";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import geoJson from "./map-data.json";
-import data from "./data.json";
+import mapData from "./data.json";
+import { getDataStats } from "../../API/Outputs";
+import { AuthContext } from "../../context/AuthContext";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
@@ -23,6 +25,61 @@ const defaultActive = {
     [100000, "#6e40e6"],
   ],
 };
+
+const stateAbbreviations = {
+  "Alabama": "AL",
+  "Alaska": "AK",
+  "Arizona": "AZ",
+  "Arkansas": "AR",
+  "California": "CA",
+  "Colorado": "CO",
+  "Connecticut": "CT",
+  "Delaware": "DE",
+  "Florida": "FL",
+  "Georgia": "GA",
+  "Hawaii": "HI",
+  "Idaho": "ID",
+  "Illinois": "IL",
+  "Indiana": "IN",
+  "Iowa": "IA",
+  "Kansas": "KS",
+  "Kentucky": "KY",
+  "Louisiana": "LA",
+  "Maine": "ME",
+  "Maryland": "MD",
+  "Massachusetts": "MA",
+  "Michigan": "MI",
+  "Minnesota": "MN",
+  "Mississippi": "MS",
+  "Missouri": "MO",
+  "Montana": "MT",
+  "Nebraska": "NE",
+  "Nevada": "NV",
+  "New Hampshire": "NH",
+  "New Jersey": "NJ",
+  "New Mexico": "NM",
+  "New York": "NY",
+  "North Carolina": "NC",
+  "North Dakota": "ND",
+  "Ohio": "OH",
+  "Oklahoma": "OK",
+  "Oregon": "OR",
+  "Pennsylvania": "PA",
+  "Rhode Island": "RI",
+  "South Carolina": "SC",
+  "South Dakota": "SD",
+  "Tennessee": "TN",
+  "Texas": "TX",
+  "Utah": "UT",
+  "Vermont": "VT",
+  "Virginia": "VA",
+  "Washington": "WA",
+  "West Virginia": "WV",
+  "Wisconsin": "WI",
+  "Wyoming": "WY"
+};
+
+
 
 function MapAddLayer(map, data) {
   map.on("load", () => {
@@ -75,11 +132,42 @@ function MapAddLayer(map, data) {
 }
 
 const Map = ({ LayerFn = MapAddLayer, markersEnabled = true }) => {
+  const [data, setData] = useState(mapData)
+  const {accessToken, refreshToken} = useContext(AuthContext)
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const [latitude, setLatitude] = useState(-90);
   const [longitude, setLongitude] = useState(40);
   const [zoom, setZoom] = useState(3.5);
+
+  useEffect(() => {
+    getDataStats("data_stats_2",accessToken, refreshToken).then(res => {
+      if (res) {
+        console.log(res)
+        let newObj = {}
+        res.data.forEach(item => {
+          newObj[item.State] = item
+        })
+        
+        console.log(newObj)
+          const responseData = res.data
+          let newArr = mapData.features.map(feature => {
+            if (newObj.hasOwnProperty(stateAbbreviations[feature.properties.name])) {
+              return {
+                ...feature,
+                properties: {
+                  ...feature.properties,
+                  density: newObj[stateAbbreviations[feature.properties.name]].Asthma_Claims
+                }
+              }
+            }
+          })
+          console.log(newArr)
+  }
+  }).catch(err => {
+      console.log(err,"err")
+  })
+  },[])
 
   const Marker = ({ onClick, children, feature }) => {
     const _onClick = () => {

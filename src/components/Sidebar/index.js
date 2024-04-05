@@ -73,6 +73,12 @@ export const menuList = [
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.impact_tracking}`,
         icon: () => <AiOutlineFundProjectionScreen />,
       },
+      {
+        name: APP_ROUTES_LABEL.data_quality,
+        id: APP_ROUTES.data_quality,
+        route: `${APP_ROUTES.outputs}/${APP_ROUTES.data_quality}`,
+        icon: () => <AiOutlineFundProjectionScreen />,
+      },
     ],
   },
 ];
@@ -107,7 +113,18 @@ const Sidebar = () => {
     }
   }, []);
 
-  console.log(user);
+  useEffect(() => {
+    if (user && !id) {
+      dispatch(
+        updateMenu({
+          currentMenu: user.admin ? "users" : "home",
+          currentMenuLabel: user.admin ? "Users" : "Home",
+        })
+      );
+    }
+  },[user])
+
+  
 
   return (
     <div className="w-1/5 h-full bg-primary">
