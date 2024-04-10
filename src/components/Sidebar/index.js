@@ -128,7 +128,7 @@ const Sidebar = () => {
 
   return (
     <div className="w-1/5 h-full bg-primary">
-      <div className="w-full border h-14 grid place-content-center border-primary bg-slate-50 py-2">
+      <div className="w-full border h-14 grid place-content-center border-primary bg-white py-2">
         <img
           src={logo}
           alt="logo"

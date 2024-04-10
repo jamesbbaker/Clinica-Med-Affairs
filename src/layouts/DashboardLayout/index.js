@@ -12,11 +12,9 @@ const DashboardLayout = () => {
   useEffect(() => {
     if (!accessToken) {
       navigate("/auth");
-    }
-  }, []);
-
-  useEffect(() => {
+    } else {
     fetchUserData(accessToken, refreshToken);
+    }
   }, []);
 
   return (

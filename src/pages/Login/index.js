@@ -4,6 +4,7 @@ import PrimaryBtn from "../../components/PrimaryBtn";
 import InputField from "../../components/InputField";
 import { AuthContext } from "../../context/AuthContext";
 import { useState } from "react";
+import Navbar from "../../components/Navbar";
 
 const inputs = [
   {
@@ -111,8 +112,10 @@ const Login = () => {
   };
 
   return (
+    <>
+       <Navbar />
     <div className="w-screen font-primary h-screen flex justify-center items-center">
-      <div className="w-1/2 bg-primary rounded-tr-2xl rounded-br-2xl h-full flex flex-col justify-center items-center gap-2">
+      <div className="w-[40%] rounded-xl bg-primary  h-[80%] flex flex-col justify-center items-center gap-2">
         <h1 className="text-4xl relative text-slate-50 font-semibold before:absolute before:w-large before:h-large before:rounded-full before:bg-blue-200 before:opacity-15  before:-translate-x-1/2 before:-translate-y-1/2  before:left-1/2 before:top-1/2 after:absolute after:w-extraLarge after:h-extraLarge after:rounded-full after:bg-blue-200 after:opacity-25  after:-translate-x-1/2 after:-translate-y-1/2  after:left-1/2 after:top-1/2">
           Welcome to Clinica AI
         </h1>
@@ -120,7 +123,7 @@ const Login = () => {
           AI & RWD for better patient care
         </h4>
       </div>
-      <div className="w-1/2 bg-slate-50 h-full flex justify-center items-center">
+      <div className="w-1/2 bg-#fff h-full flex justify-center items-center">
         <form
           onSubmit={handleSubmit}
           className="w-1/2 flex flex-col justify-center items-center gap-8"
@@ -149,6 +152,7 @@ const Login = () => {
         </form>
       </div>
     </div>
+    </>
   );
 };
 

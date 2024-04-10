@@ -73,7 +73,9 @@ const AuthProvider = () => {
             })
           );
         }
-        navigate("/dashboard");
+        navigate("/dashboard", {
+          replace: true
+        });
         return;
       } else {
         throw new Error();
@@ -127,13 +129,14 @@ const AuthProvider = () => {
     setRefreshToken(null);
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
     dispatch(
       updateMenu({
         currentMenu: "users",
         currentMenuLabel: "Users",
       })
     );
-    navigate("/auth");
+    navigate("/", {replace: true});
   };
 
   return (
