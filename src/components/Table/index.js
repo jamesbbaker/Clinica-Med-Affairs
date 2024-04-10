@@ -137,7 +137,7 @@ const Table = ({
   };
 
   return (
-    <div className="w-screen mt-14 max-w-full overflow-auto">
+    <div className="w-full mt-14 max-w-full overflow-auto">
       {Title && <div className="text-xs text-gray-500 font-semibold">{Title}</div>}
       {!UserTable &&showSelectionBtns && (
         <SelectionButtons

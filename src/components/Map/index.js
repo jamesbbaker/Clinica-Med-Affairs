@@ -2,7 +2,7 @@ import mapboxgl from "mapbox-gl";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import geoJson from "./map-data.json";
-import mapData from "./data.json";
+import mapDataJson from "./data.json";
 import { getDataStats } from "../../API/Outputs";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -14,16 +14,10 @@ const defaultActive = {
   description: "Estimate total GDP in millions of dollars",
   property: "density",
   stops: [
-    [0, "#f8d5cc"],
-    [10, "#f4bfb6"],
-    [50, "#f1a8a5"],
-    [100, "#ee8f9a"],
-    [500, "#ec739b"],
-    [1000, "#dd5ca8"],
-    [2500, "#c44cc0"],
-    [50000, "#9f43d7"],
-    [100000, "#6e40e6"],
-  ],
+    [2740504, '#ffef96'],
+    [13103255, '#ff6e73'],
+    [29285938, '#d2177a']
+  ]
 };
 
 const stateAbbreviations = {
@@ -131,8 +125,8 @@ function MapAddLayer(map, data) {
   // Render custom marker components
 }
 
-const Map = ({ LayerFn = MapAddLayer, markersEnabled = true }) => {
-  const [data, setData] = useState(mapData)
+const Map = ({ mapData, LayerFn = MapAddLayer, markersEnabled = true }) => {
+  const [data, setData] = useState(mapDataJson)
   const {accessToken, refreshToken} = useContext(AuthContext)
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
@@ -141,33 +135,18 @@ const Map = ({ LayerFn = MapAddLayer, markersEnabled = true }) => {
   const [zoom, setZoom] = useState(3.5);
 
   useEffect(() => {
-    getDataStats("data_stats_2",accessToken, refreshToken).then(res => {
-      if (res) {
-        console.log(res)
-        let newObj = {}
-        res.data.forEach(item => {
-          newObj[item.State] = item
+    if (mapData) {
+      console.log(mapData)
+      setData(prev => {
+        let _prev = {...prev}
+        _prev.features.forEach((feature) => {
+          feature.properties.density = mapData[feature.properties.name] ? mapData[feature.properties.name].Asthma_Claims : 0
         })
         
-        console.log(newObj)
-          const responseData = res.data
-          let newArr = mapData.features.map(feature => {
-            if (newObj.hasOwnProperty(stateAbbreviations[feature.properties.name])) {
-              return {
-                ...feature,
-                properties: {
-                  ...feature.properties,
-                  density: newObj[stateAbbreviations[feature.properties.name]].Asthma_Claims
-                }
-              }
-            }
-          })
-          console.log(newArr)
-  }
-  }).catch(err => {
-      console.log(err,"err")
-  })
-  },[])
+        return _prev
+      })
+    }
+  },[mapData])
 
   const Marker = ({ onClick, children, feature }) => {
     const _onClick = () => {

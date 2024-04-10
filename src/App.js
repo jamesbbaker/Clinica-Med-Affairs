@@ -9,17 +9,18 @@ import Landing from "./pages/Landing";
 import About from "./pages/About";
 
 const router = createBrowserRouter([
-  {
-    element: <Landing />,
-    path: "/",
-  },
-  {
-    element: <About />,
-    path: "/about",
-  },
+ 
   {
     element: <AuthProvider />,
     children: [
+      {
+        element: <Landing />,
+        path: "/",
+      },
+      {
+        element: <About />,
+        path: "/about",
+      },
       {
         element: <DashboardLayout />,
         children: [
