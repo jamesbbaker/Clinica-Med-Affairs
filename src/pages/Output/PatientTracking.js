@@ -10,7 +10,7 @@ const PatientTracking = () => {
     to: 'To_Specialty',
     count: "Patient_Count"
    }} />
-   <Sankey API={"sankey_data_9"} height='800px' OPTIONS={{
+   <Sankey API={"sankey_data_9"} title={"Patient Transitions through Therapies"} height='800px' OPTIONS={{
     from: 'From_Therapy',
     to: 'To_Therapy',
     count: "Patient_Count"

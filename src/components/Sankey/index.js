@@ -58,7 +58,7 @@ const colorsOutput = [
 
 
 
-const Sankey = ({API,height="500px", OPTIONS}) => {
+const Sankey = ({API, title,height="500px", OPTIONS}) => {
   const {accessToken, refreshToken} = useContext(AuthContext)
   const [SankeyData, setSankeyData] = useState(null)
   const [sankeyOptions, setSankeyOptions] = useState(null)
@@ -143,6 +143,7 @@ const Sankey = ({API,height="500px", OPTIONS}) => {
 
   return (
     <div className="px-2 pb-40">
+      {title && <div className="py-4 font-700">{title}</div>}
       {sankeyOptions && sankeyOptions.data && <Chart
         chartType="Sankey"
         width="100%"
