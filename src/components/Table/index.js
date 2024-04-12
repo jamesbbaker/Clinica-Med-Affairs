@@ -169,8 +169,10 @@ const Table = ({
                 {...row.getRowProps()}
               >
                 {row.cells.map((cell) => {
+                  let cellValue = cell.render("Cell").props.value
+    
                   return (
-                    <td {...cell.getCellProps()}> {cell.render("Cell")} </td>
+                    <td {...cell.getCellProps()}>{typeof cellValue === "number" ? cellValue.toLocaleString() : cell.render("Cell")} </td>
                   );
                 })}
               </tr>

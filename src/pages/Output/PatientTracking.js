@@ -1,0 +1,22 @@
+import React from 'react'
+import Sankey from '../../components/Sankey'
+
+const PatientTracking = () => {
+    console.log("snake")
+  return (
+    <div className='px-12 py-10'>
+   <Sankey API={"sankey_data_6"} OPTIONS={{
+    from: 'From_Specialty',
+    to: 'To_Specialty',
+    count: "Patient_Count"
+   }} />
+   <Sankey API={"sankey_data_9"} height='800px' OPTIONS={{
+    from: 'From_Therapy',
+    to: 'To_Therapy',
+    count: "Patient_Count"
+   }} />
+   </div>
+  )
+}
+
+export default PatientTracking

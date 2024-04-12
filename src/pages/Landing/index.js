@@ -98,7 +98,7 @@ export default function Index() {
                     <p className="text-xl py-6 text-gray-600  px-10">Significant disparities in patient care across physicians, institutions, payers, and regions</p>
                   </div>
                   <div className="text-white h-100 shadow-md mt-6 rounded-xl">
-                    <h3 className="text-4xl py-4 bg-[#f78da7] rounded-tr-xl rounded-tl-xl bg-circle font-bold ">Solution</h3>
+                    <h3 className="text-4xl py-4 bg-[#87CEEB] rounded-tr-xl rounded-tl-xl bg-circle font-bold ">Solution</h3>
                     <p className="text-xl py-6 text-gray-600  px-10">Best-in-class mapping of clinical patient need, understanding of HCP care patterns, and care “fingerprints” of stakeholders to guide initiatives</p>
                   </div>
                 </div>
@@ -115,7 +115,7 @@ export default function Index() {
           {/* Section header */}
           <div className="max-w-3xl mx-auto text-center pb-12 md:pb-16">
             <h1 className="h2 mb-4">Explore the solutions</h1>
-            <p className="text-xl text-gray-600">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat.</p>
+            <p className="text-xl text-gray-600">The Clinica AI Suite enables healthcare organizations to measure and maximize the patient impact</p>
           </div>
 
           {/* Section content */}

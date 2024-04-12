@@ -41,13 +41,27 @@ var options = {
 };
 
 
+const colorsOutput = [
+  "#3AAB9D",
+  "#D65FDB",
+  "#65C5E3",
+  "#FC8A71",
+  "#7C53A6",
+  "#E3B505",
+  "#1BB83C",
+  "#FDE84D",
+  "#8CB3E3",
+  "#FF72A5"
+]
 
-const Sankey = () => {
+
+
+
+
+const Sankey = ({API,height="500px", OPTIONS}) => {
   const {accessToken, refreshToken} = useContext(AuthContext)
   const [SankeyData, setSankeyData] = useState(null)
-
   const [sankeyOptions, setSankeyOptions] = useState(null)
-
 
   useEffect(() => {
     if ( SankeyData) {
@@ -61,63 +75,78 @@ const Sankey = () => {
         "Hospital Services":"#87CEEB"
       }; 
 
+      const otherColors = {
+        "ICS-LABA-LAMA + SABA-SAMA": '#00796B',
+        "PDE4 Inhibitor + SABA-SAMA": '#FF6F61',
+        "ICS-LABA + Monoclonal Antibody": '#A2DED0',
+        "3+ Therapies": '#FFB347',
+        "LTRA + SABA-SAMA": '#6A0572',
+      }; 
+
     
       // Process data to include color information
-      const processedData = SankeyData.map(({ From_Specialty, To_Specialty, Patient_Count }) => {
-        const prefix = From_Specialty.match(/^([^_]+)/)[0] // Extract the prefix before "_"
+      const processedData = SankeyData.map((ITEM, index) => {
+        
+        const FROM = ITEM[OPTIONS.from]
+        const TO = ITEM[OPTIONS.to]
+        const COUNT = ITEM[OPTIONS.count]
+        const prefix = FROM.match(/^([^_]+)/)[0] // Extract the prefix before "_"
         // Use predefined color if found, otherwise use default color
-        const color = colors[prefix] || defaultColor;
+        let color ;
+        if (colors[prefix]) {
+      color = colors[prefix] ;
+        } else{ 
+          colors[prefix] = colorsOutput[Math.floor(Math.random() * colorsOutput.length)] 
+          color = colors[prefix] ;
+        }
         // Assign color to the link
-        return [From_Specialty, To_Specialty, Patient_Count, color];
+        return [FROM, TO, COUNT, color];
       });
 
       
       const options = {
       
         sankey: {  node: { label: { 
-        fontSize: 16,
+        fontSize: 12,
         color: '#000',
         bold: true,
-        italic: true },width: 3 },
-      
-          link: { colorMode: 'source' }, // Set color mode to 'source' to apply colors directly
+        italic: true },width: 3,    minNodeHeight: 20, height: 10 },
+        
+          link: { colorMode: 'source',        minLinkLength: 50, }, // Set color mode to 'source' to apply colors directly
         },
       };
 
       setSankeyOptions({
-        data: [["From_Specialty", "To_Specialty", "Patient_Count", { role: "style" }], ...processedData],
+        data: [[OPTIONS.from, OPTIONS.to, OPTIONS.count, { role: "style" }], ...processedData],
         options: options
       });
     }
   }, [SankeyData]);
-
-  // Function to generate a random color
-  const getRandomColor = () => {
-    return '#' + Math.floor(Math.random() * 16777215).toString(16);
-  };
-  
  
   useEffect(() => {
-    getDataStats("sankey_data_6",accessToken, refreshToken ).then(res => {
-      if (res) {
-      
-        let dataArr = res.map(item => [item.From_Specialty,item.To_Specialty, item.Patient_Count])
-        dataArr.unshift(["Source", "Target", "Value"])
-        setSankeyData(res)
-      }
-    }).catch(err => {
-      console.log(err,"err")
-    })
-  }, [])
+    if (API) {
+      getDataStats(API,accessToken, refreshToken ).then(res => {
+        if (res) {
+          console.log(res)
+            let dataArr = res.map(item => [item[OPTIONS.from],item[OPTIONS.to], item[OPTIONS.count]])
+            console.log(dataArr[0])
+            dataArr.unshift(["Source", "Target", "Value"])
+            setSankeyData(res)
+        }
+      }).catch(err => {
+        console.log(err,"err")
+      })
+    }
+  }, [API])
 
 
 
   return (
-    <div className="px-2 py-4">
+    <div className="px-2 pb-40">
       {sankeyOptions && sankeyOptions.data && <Chart
         chartType="Sankey"
         width="100%"
-        height="500px"
+        height={height}
         data={sankeyOptions.data }
         options={sankeyOptions ? sankeyOptions.options : {}}
       />}

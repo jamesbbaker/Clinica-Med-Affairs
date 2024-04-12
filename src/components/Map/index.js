@@ -120,6 +120,86 @@ function MapAddLayer(map, data) {
       property: defaultActive.property,
       stops: defaultActive.stops,
     });
+
+     map.addLayer({
+        id: 'country-fills-hover',
+        type: 'fill',
+        source: 'countries',
+        layout: {},
+        paint: {
+          'fill-color': '#000000',
+          'fill-opacity': 0.2,
+        },
+        filter: ['==', 'name', ''],
+      }, );
+
+      let popup;
+      let lastFeature;
+
+      // Add country hover effect
+      map.on('mousemove', (e) => {
+        const features = map.queryRenderedFeatures(e.point, {
+          layers: ['countries'],
+        });
+          const feature =features[0]
+    
+    
+
+        if (features.length) {
+          map.getCanvas().style.cursor = 'pointer';
+          map.setFilter('country-fills-hover', [
+            '==',
+            'name',
+            features[0].properties.name,
+          ]);
+          if (lastFeature !== features[0].properties.name )  {
+            lastFeature=features[0].properties.name
+        //     popup = new mapboxgl.Popup().setLngLat(e.lngLat)
+        // .setHTML('<p>' + features[0].properties.density.toLocaleString() + '</p>')
+        // .addTo(map);
+          } else {
+            if (popup) {
+
+              popup = null;
+              // popup.remove()
+           
+             
+        
+            }
+          }
+        } else {
+          map.setFilter('country-fills-hover', ['==', 'name', '']);
+          map.getCanvas().style.cursor = '';
+        }
+      });
+
+      // Add country un-hover effect
+      map.on('mouseout', () => {
+  if (popup) {
+
+    popup = null;
+ 
+             popup.remove()
+   
+ 
+  }
+      
+        map.getCanvas().style.cursor = 'auto';
+        map.getCanvas().style.cursor = '';
+        map.setFilter('country-fills-hover', ['==', 'name', '']);
+      });
+
+      // Add country onclick effect
+      map.on('click', (e) => {
+        const features = map.queryRenderedFeatures(e.point, {
+          layers: ['country-fills'],
+        });
+        if (!features.length) return;
+        const { properties } = features[0];
+        const { property, description } = defaultActive;
+        alert(`(${properties.name}) ${properties[property]} ${description}`);
+      });
+
   });
 
   // Render custom marker components

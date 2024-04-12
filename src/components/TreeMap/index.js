@@ -110,7 +110,7 @@ export const options = {
   generateTooltip: (_row, _size, value) => {
     return (
       '<div style="background:rgb(0 141 218); color:#fff; padding:10px; border-style:solid, zIndex: 10"> ' +
-      _size +
+      _size.toLocaleString() +
       "</div>"
     );
   },
