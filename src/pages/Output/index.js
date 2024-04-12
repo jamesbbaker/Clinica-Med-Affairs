@@ -10,6 +10,7 @@ import Sankey from "../../components/Sankey";
 import ImpactTracking from "./ImpactTracking";
 import InstitutionalVariation from "./InstituitonalVariation";
 import DataQuality from "./DataQuality";
+import PatientTracking from "./PatientTracking";
 
 const options = {
   indexAxis: "y",
@@ -87,7 +88,7 @@ const Output = () => {
 
   return (
     <>
-      {currentMenu === APP_ROUTES.patient_journey && <Sankey />}
+      {currentMenu === APP_ROUTES.patient_journey && <PatientTracking />}
       {currentMenu == APP_ROUTES.patient_opportunity_mapping_and_strategy && (
         <>
           <Map />

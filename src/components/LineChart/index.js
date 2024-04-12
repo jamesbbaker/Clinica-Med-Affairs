@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -93,6 +93,7 @@ export const defaultData = {
 };
 
 export function LineChart({
+  key=null,
   arbitrary = true,
   options = defaultOptions,
   data = defaultData,
@@ -106,6 +107,7 @@ export function LineChart({
     beforeDatasetsDraw(chart, args, pluginOptions) {},
   };
 
+  
   const intersectDataVerticalLine = {
     id: "intersectDataVerticalLine",
     afterDraw: (chart) => {
@@ -142,10 +144,11 @@ export function LineChart({
   };
 
   return (
-    <div className="w-full h-full px-2 py-4 pb-20">
+    <div className="w-full h-full px-2 py-4 pb-10">
       {!loading && (
         <div className={`${arbitrary && "pointer-events-none"}`}>
           <Line
+          key={key}
             height={height}
             ref={lineRef}
             plugins={arbitrary && [intersectDataVerticalLine]}
