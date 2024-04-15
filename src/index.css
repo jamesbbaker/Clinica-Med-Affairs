@@ -104,24 +104,17 @@ th {
 }
 
 .hero-card-1 {
-  background: linear-gradient(135deg, rgb(122, 220, 180) 0%, rgb(0, 208, 130) 100%);
-  clip-path: inset(0% 0 100% 0);
-  animation: clipAnimation 600ms  cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
+  background: linear-gradient(to bottom right, #2980b9, #1abc9c);
+ 
 }
 .hero-card-2 {
-  background: linear-gradient(90deg, #f78da7 0%, #cf2e2e 100%);
- clip-path: inset(0% 0 100% 0);
-  animation: clipAnimation 600ms  cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
+  background: linear-gradient(to bottom, #0074d9, #4ea8de, #8acae7, #c4efff);
 }
 .hero-card-3 {
-  background: linear-gradient(23deg, #8ed1fc 0%, #9b51e0 66%);
- clip-path: inset(0% 0 100% 0);
-  animation: clipAnimation 600ms  cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
+  background: linear-gradient(to bottom, #3498db, #9b59b6);
 }
 .hero-card-4 {
-  background: linear-gradient(10deg, #8ed1fc 0%, #0693e3 100%);
- clip-path: inset(0% 0 100% 0);
-animation: clipAnimation 600ms  cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
+  background: linear-gradient(to bottom, #1abc9c, #3498db);
 }
 
 

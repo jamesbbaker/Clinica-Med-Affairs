@@ -14,66 +14,64 @@ const defaultActive = {
   description: "Estimate total GDP in millions of dollars",
   property: "density",
   stops: [
-    [2740504, '#ffef96'],
-    [13103255, '#ff6e73'],
-    [29285938, '#d2177a']
-  ]
+    [2740504, "#ffef96"],
+    [13103255, "#ff6e73"],
+    [29285938, "#d2177a"],
+  ],
 };
 
 const stateAbbreviations = {
-  "Alabama": "AL",
-  "Alaska": "AK",
-  "Arizona": "AZ",
-  "Arkansas": "AR",
-  "California": "CA",
-  "Colorado": "CO",
-  "Connecticut": "CT",
-  "Delaware": "DE",
-  "Florida": "FL",
-  "Georgia": "GA",
-  "Hawaii": "HI",
-  "Idaho": "ID",
-  "Illinois": "IL",
-  "Indiana": "IN",
-  "Iowa": "IA",
-  "Kansas": "KS",
-  "Kentucky": "KY",
-  "Louisiana": "LA",
-  "Maine": "ME",
-  "Maryland": "MD",
-  "Massachusetts": "MA",
-  "Michigan": "MI",
-  "Minnesota": "MN",
-  "Mississippi": "MS",
-  "Missouri": "MO",
-  "Montana": "MT",
-  "Nebraska": "NE",
-  "Nevada": "NV",
+  Alabama: "AL",
+  Alaska: "AK",
+  Arizona: "AZ",
+  Arkansas: "AR",
+  California: "CA",
+  Colorado: "CO",
+  Connecticut: "CT",
+  Delaware: "DE",
+  Florida: "FL",
+  Georgia: "GA",
+  Hawaii: "HI",
+  Idaho: "ID",
+  Illinois: "IL",
+  Indiana: "IN",
+  Iowa: "IA",
+  Kansas: "KS",
+  Kentucky: "KY",
+  Louisiana: "LA",
+  Maine: "ME",
+  Maryland: "MD",
+  Massachusetts: "MA",
+  Michigan: "MI",
+  Minnesota: "MN",
+  Mississippi: "MS",
+  Missouri: "MO",
+  Montana: "MT",
+  Nebraska: "NE",
+  Nevada: "NV",
   "New Hampshire": "NH",
   "New Jersey": "NJ",
   "New Mexico": "NM",
   "New York": "NY",
   "North Carolina": "NC",
   "North Dakota": "ND",
-  "Ohio": "OH",
-  "Oklahoma": "OK",
-  "Oregon": "OR",
-  "Pennsylvania": "PA",
+  Ohio: "OH",
+  Oklahoma: "OK",
+  Oregon: "OR",
+  Pennsylvania: "PA",
   "Rhode Island": "RI",
   "South Carolina": "SC",
   "South Dakota": "SD",
-  "Tennessee": "TN",
-  "Texas": "TX",
-  "Utah": "UT",
-  "Vermont": "VT",
-  "Virginia": "VA",
-  "Washington": "WA",
+  Tennessee: "TN",
+  Texas: "TX",
+  Utah: "UT",
+  Vermont: "VT",
+  Virginia: "VA",
+  Washington: "WA",
   "West Virginia": "WV",
-  "Wisconsin": "WI",
-  "Wyoming": "WY"
+  Wisconsin: "WI",
+  Wyoming: "WY",
 };
-
-
 
 function MapAddLayer(map, data) {
   map.on("load", () => {
@@ -121,93 +119,72 @@ function MapAddLayer(map, data) {
       stops: defaultActive.stops,
     });
 
-     map.addLayer({
-        id: 'country-fills-hover',
-        type: 'fill',
-        source: 'countries',
-        layout: {},
-        paint: {
-          'fill-color': '#000000',
-          'fill-opacity': 0.2,
-        },
-        filter: ['==', 'name', ''],
-      }, );
+    map.addLayer({
+      id: "country-fills-hover",
+      type: "fill",
+      source: "countries",
+      layout: {},
+      paint: {
+        "fill-color": "#000000",
+        "fill-opacity": 0.2,
+      },
+      filter: ["==", "name", ""],
+    });
 
-      let popup;
-      let lastFeature;
+    const popup = new mapboxgl.Popup({
+      closeButton: false,
+      closeOnClick: false,
+    });
 
-      // Add country hover effect
-      map.on('mousemove', (e) => {
-        const features = map.queryRenderedFeatures(e.point, {
-          layers: ['countries'],
-        });
-          const feature =features[0]
+    // Add country hover effect
+    map.on("mousemove", (e) => {
+      const features = map.queryRenderedFeatures(e.point, {
+        layers: ["countries"],
+      });
+      const feature = features[0];
+      if (features.length) {
+        map.getCanvas().style.cursor = "pointer";
+        map.setFilter("country-fills-hover", [
+          "==",
+          "name",
+          features[0].properties.name,
+        ]);
+        popup.setHTML(`<strong>${feature.properties.density.toLocaleString()}</strong>`);
     
-    
+        // Display the popup at the mouse pointer's location
+        popup.setLngLat(e.lngLat).addTo(map);
+      } else {
+        map.setFilter("country-fills-hover", ["==", "name", ""]);
+        map.getCanvas().style.cursor = "";
+        popup.remove();
+      }
+    });
 
-        if (features.length) {
-          map.getCanvas().style.cursor = 'pointer';
-          map.setFilter('country-fills-hover', [
-            '==',
-            'name',
-            features[0].properties.name,
-          ]);
-          if (lastFeature !== features[0].properties.name )  {
-            lastFeature=features[0].properties.name
-        //     popup = new mapboxgl.Popup().setLngLat(e.lngLat)
-        // .setHTML('<p>' + features[0].properties.density.toLocaleString() + '</p>')
-        // .addTo(map);
-          } else {
-            if (popup) {
+    // Add country un-hover effect
+    map.on("mouseout", () => {
+      map.getCanvas().style.cursor = "auto";
+      // map.getCanvas().style.cursor = '';
+      map.setFilter("country-fills-hover", ["==", "name", ""]);
+    });
 
-              popup = null;
-              // popup.remove()
-           
-             
-        
-            }
-          }
-        } else {
-          map.setFilter('country-fills-hover', ['==', 'name', '']);
-          map.getCanvas().style.cursor = '';
-        }
+    // Add country onclick effect
+    map.on("click", (e) => {
+      const features = map.queryRenderedFeatures(e.point, {
+        layers: ["country-fills"],
       });
-
-      // Add country un-hover effect
-      map.on('mouseout', () => {
-  if (popup) {
-
-    popup = null;
- 
-             popup.remove()
-   
- 
-  }
-      
-        map.getCanvas().style.cursor = 'auto';
-        map.getCanvas().style.cursor = '';
-        map.setFilter('country-fills-hover', ['==', 'name', '']);
-      });
-
-      // Add country onclick effect
-      map.on('click', (e) => {
-        const features = map.queryRenderedFeatures(e.point, {
-          layers: ['country-fills'],
-        });
-        if (!features.length) return;
-        const { properties } = features[0];
-        const { property, description } = defaultActive;
-        alert(`(${properties.name}) ${properties[property]} ${description}`);
-      });
-
+      if (!features.length) return;
+      const { properties } = features[0];
+      const { property, description } = defaultActive;
+      alert(`(${properties.name}) ${properties[property]} ${description}`);
+    });
   });
 
   // Render custom marker components
 }
 
 const Map = ({ mapData, LayerFn = MapAddLayer, markersEnabled = true }) => {
-  const [data, setData] = useState(mapDataJson)
-  const {accessToken, refreshToken} = useContext(AuthContext)
+  const [data, setData] = useState(mapDataJson);
+  const { accessToken, refreshToken } = useContext(AuthContext);
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const [latitude, setLatitude] = useState(-90);
@@ -216,17 +193,19 @@ const Map = ({ mapData, LayerFn = MapAddLayer, markersEnabled = true }) => {
 
   useEffect(() => {
     if (mapData) {
-      console.log(mapData)
-      setData(prev => {
-        let _prev = {...prev}
+      console.log(mapData);
+      setData((prev) => {
+        let _prev = { ...prev };
         _prev.features.forEach((feature) => {
-          feature.properties.density = mapData[feature.properties.name] ? mapData[feature.properties.name].Asthma_Claims : 0
-        })
-        
-        return _prev
-      })
+          feature.properties.density = mapData[feature.properties.name]
+            ? mapData[feature.properties.name].Asthma_Claims
+            : 0;
+        });
+
+        return _prev;
+      });
     }
-  },[mapData])
+  }, [mapData]);
 
   const Marker = ({ onClick, children, feature }) => {
     const _onClick = () => {

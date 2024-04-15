@@ -1,9 +1,69 @@
 /*eslint-disable*/
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import AOS from 'aos';
+import 'aos/dist/aos.css'
+
+
+
+gsap.registerPlugin(ScrollTrigger);
+
+
+const SolutionsList = [
+  {
+    id: 1,
+    title: "Real-time map of patient need across clinical journey",
+    description:
+      "Track impact of initiatives on patient need (across all stakeholders",
+    cardText: "HQ",
+  },
+  {
+    id: 2,
+    title:"HCPs by actionability and patient need (MSL ready)",
+    description:"HCP segmentation, prioritization, and profiles based on >1k features",
+    cardText: "HCP",
+  },
+  {
+    id: 3,
+    title:"Institutions by actionability and patient need",
+    description:"Profiles on institutions including comparison to others and variability in care",
+    cardText: "Institution",
+  },
+  {
+    id: 4,
+    title:"Payers by actionability and patient need",
+    description:"Profiles on payers including comparison to others and variability in care",
+    cardText: "Payers",
+  },
+]
 
 export default function Index() {
   const [currentTab, setCurrentTab] = useState(0)
+
+  useEffect(() => {
+    AOS.init();
+    SolutionsList.forEach(item => {
+      gsap.fromTo(`#solution-${item.id}`, {
+        clipPath: "inset(0% 0% 100% 0)"
+      }, {
+        clipPath: "inset(0% 0% 0% 0)",
+        ease: "power2.inOut",
+        scrollTrigger: {
+          trigger: `#solution-${item.id}`,
+          start: "top 70%",
+          end: "top 100%",
+          scrub: 1,
+          pin: false,
+          pinSpacing: false,
+          repeat: 0
+          
+        }
+      })
+    })
+  }, [])
+
   return (
     <>
       <Navbar />
@@ -49,25 +109,26 @@ export default function Index() {
               >
                 The first real-time Medical Affairs intelligence suite driven by
               </h1>
-              <h1 className="mt-8 text-5xl md:text-6xl font-extrabold leading-tighter tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
+              <h1      data-aos="zoom-y-out"
+                  data-aos-delay="150" className="mt-8 text-5xl md:text-6xl font-extrabold leading-tighter tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
                 AI + RWD
               </h1>
               <div className="max-w-3xl mt-12 mx-auto">
                 <p
                   className="text-xl text-gray-600 mb-4"
                   data-aos="zoom-y-out"
-                  data-aos-delay="150"
+                  data-aos-delay="250"
                 >
                 Digital, AI, and RWD have enabled a new frontier of Medical Affairs patient impact (A Vision for Medical Affairs in 2025, McKinsey)
                 </p>
                 <p  className="text-xl text-gray-600 mb-4"
                   data-aos="zoom-y-out"
-                  data-aos-delay="150">
+                  data-aos-delay="300">
                 Our apps empower Medical Affairs to measure and optimize the impact of initiatives across functions focusing on patient need.
                 </p>
                 <p  className="text-xl text-gray-600 mb-4"
                   data-aos="zoom-y-out"
-                  data-aos-delay="150">
+                  data-aos-delay="350">
                 The app suite includes a real-time mapping of patient care across the clinical treatment journey and deep profiles on stakeholders including HCPs, institutions, and payers
                 </p>
                 {/* <div
@@ -93,11 +154,13 @@ export default function Index() {
                   </div>
                 </div> */}
                 <div className="grid grid-cols-2 mt-12 gap-8">
-                  <div className="text-whit shadow-md mt-6 rounded-xl">
+                  <div  data-aos="zoom-y-out"
+                  data-aos-delay="400" className="text-whit shadow-md mt-6 rounded-xl">
                     <h3 className="text-4xl text-white h-100  py-4 bg-[#7bdcb5] rounded-tr-xl rounded-tl-xl bg-circle font-bold ">Problem</h3>
                     <p className="text-xl py-6 text-gray-600  px-10">Significant disparities in patient care across physicians, institutions, payers, and regions</p>
                   </div>
-                  <div className="text-white h-100 shadow-md mt-6 rounded-xl">
+                  <div  data-aos="zoom-y-out"
+                  data-aos-delay="400" className="text-white h-100 shadow-md mt-6 rounded-xl">
                     <h3 className="text-4xl py-4 bg-[#87CEEB] rounded-tr-xl rounded-tl-xl bg-circle font-bold ">Solution</h3>
                     <p className="text-xl py-6 text-gray-600  px-10">Best-in-class mapping of clinical patient need, understanding of HCP care patterns, and care “fingerprints” of stakeholders to guide initiatives</p>
                   </div>
@@ -108,31 +171,27 @@ export default function Index() {
           </div>
         </div>
       </section>
-      <section className="relative before:w-screen before:h-[10rem] overflow-hidden before:bg-white before:absolute before:bottom-0 before:-left-18 bg-gray-100">
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
+      <section className="relative overflow-hidden  bg-gray-100">
+      <div className=" max-w-6xl mx-auto px-4 sm:px-6">
         <div className="pt-12 md:pt-20">
-
           {/* Section header */}
-          <div className="max-w-3xl mx-auto text-center pb-12 md:pb-16">
-            <h1 className="h2 mb-4">Explore the solutions</h1>
+          <div  data-aos="zoom-y-out"
+                  data-aos-delay="150" className="max-w-3xl mx-auto text-center pb-12 md:pb-16">
+            <h1  className="h2 mb-4">Explore the solutions</h1>
             <p className="text-xl text-gray-600">The Clinica AI Suite enables healthcare organizations to measure and maximize the patient impact</p>
           </div>
-
           {/* Section content */}
-          <div className="md:grid md:grid-cols-12 md:gap-6">
-
             {/* Content */}
-            <div className="max-w-xl md:max-w-none md:w-full mx-auto md:col-span-7 lg:col-span-6 md:mt-6" data-aos="fade-right">
-
-              <div className="mb-8 md:mb-0">
-                <a
-                  className={`flex items-center  ${currentTab == 0 ? "bg-gray-300" : "bg-white"} text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 `}
+            <div className="max-w-xl h-[200vh] md:max-w-none md:w-full mx-auto">
+              <div  id={`solution-wrapper`} className="mb-8 overflow-hidden md:mb-0">
+                {SolutionsList.map(item => {
+                  return <div  id={`solution-${item.id}`} className="grid min-w-[50%] grid-cols-2 gap-10 mb-10"><a
+                  className={`flex items-center  h-[10rem] text-lg p-5 rounded border transition duration-300 ease-in-out `}
                   href="#0"
-                  onClick={(e) => { e.preventDefault(); setCurrentTab(0); }}
                 >
-                  <div>
-                    <div className="font-bold leading-snug tracking-tight mb-1">Real-time map of patient need across clinical journey</div>
-                    <div className="text-gray-600">Track impact of initiatives on patient need (across all stakeholders)</div>
+                  <div className="flex items-center flex-col"> 
+                    <div className="font-bold leading-snug tracking-tight mb-1">{item.title}</div>
+                    <div className="text-gray-600">{item.description}</div>
                   </div>
                   <div className="flex justify-center items-center w-8 h-8 bg-white rounded-full shadow flex-shrink-0 ml-3">
                     <svg className="w-3 h-3 fill-current" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
@@ -140,73 +199,12 @@ export default function Index() {
                     </svg>
                   </div>
                 </a>
-                <a
-                  className={`flex items-center ${currentTab == 1 ? "bg-gray-300" : "bg-white"} text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 `}
-                  href="#0"
-                  onClick={(e) => { e.preventDefault(); setCurrentTab(1); }}
-                >
-                  <div>
-                    <div className="font-bold leading-snug tracking-tight mb-1">HCPs by actionability and patient need (MSL ready)</div>
-                    <div className="text-gray-600">{`HCP segmentation, prioritization, and profiles based on >1k features`}</div>
+                <div className={`h-[100%] w-[100%] grid place-content-center hero-card-${item.id}`}>
+                  <h1 className={`text-5xl font-extrabold  text-white`}>{item.cardText}</h1>
                   </div>
-                  <div className="flex justify-center items-center w-8 h-8 bg-white rounded-full shadow flex-shrink-0 ml-3">
-                    <svg className="w-3 h-3 fill-current" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M11.854.146a.5.5 0 00-.525-.116l-11 4a.5.5 0 00-.015.934l4.8 1.921 1.921 4.8A.5.5 0 007.5 12h.008a.5.5 0 00.462-.329l4-11a.5.5 0 00-.116-.525z" fillRule="nonzero" />
-                    </svg>
-                  </div>
-                </a>
-                <a
-                  className={`flex items-center ${currentTab == 2 ? "bg-gray-300" : "bg-white"}  text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 `}
-                  href="#0"
-                  onClick={(e) => { e.preventDefault(); setCurrentTab(2); }}
-                >
-                  <div>
-                    <div className="font-bold leading-snug tracking-tight mb-1">Institutions by actionability and patient need</div>
-                    <div className="text-gray-600">Profiles on institutions including comparison to others and variability in care </div>
-                  </div>
-                  <div className="flex justify-center items-center w-8 h-8 bg-white rounded-full shadow flex-shrink-0 ml-3">
-                    <svg className="w-3 h-3 fill-current" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M11.334 8.06a.5.5 0 00-.421-.237 6.023 6.023 0 01-5.905-6c0-.41.042-.82.125-1.221a.5.5 0 00-.614-.586 6 6 0 106.832 8.529.5.5 0 00-.017-.485z" fill="#191919" fillRule="nonzero" />
-                    </svg>
-                  </div>
-                </a>
-                <a
-                  className={`flex items-center ${currentTab == 3 ? "bg-gray-300" : "bg-white"}  text-lg p-5 rounded border transition duration-300 ease-in-out mb-3 `}
-                  href="#0"
-                  onClick={(e) => { e.preventDefault(); setCurrentTab(3); }}
-                >
-                  <div>
-                    <div className="font-bold leading-snug tracking-tight mb-1">Payers by actionability and patient need</div>
-                    <div className="text-gray-600">Profiles on payers including comparison to others and variability in care</div>
-                  </div>
-                  <div className="flex justify-center items-center w-8 h-8 bg-white rounded-full shadow flex-shrink-0 ml-3">
-                    <svg className="w-3 h-3 fill-current" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M11.334 8.06a.5.5 0 00-.421-.237 6.023 6.023 0 01-5.905-6c0-.41.042-.82.125-1.221a.5.5 0 00-.614-.586 6 6 0 106.832 8.529.5.5 0 00-.017-.485z" fill="#191919" fillRule="nonzero" />
-                    </svg>
-                  </div>
-                </a>
+                </div>
+                })}
               </div>
-            </div>
-
-            {/* Tabs items */}
-            <div className="max-w-xl md:max-w-none md:w-full mx-auto md:col-span-5 lg:col-span-6 mb-8 md:mb-0 md:order-1">
-              <div className="transition-all">
-                {currentTab == 0 && <div className="w-[25rem] h-[25rem] grid place-content-center rounded-xl hero-card-1">
-                  <h1 className="text-5xl font-extrabold text-white">HQ</h1>
-                  </div>}
-                  {currentTab == 1 && <div className="w-[25rem] h-[25rem] grid place-content-center rounded-xl hero-card-2">
-                  <h1 className="text-5xl font-extrabold text-white">HCP</h1>
-                  </div>}
-                  {currentTab == 2 && <div className="w-[25rem] h-[25rem] grid place-content-center rounded-xl hero-card-3">
-                  <h1 className="text-5xl font-extrabold text-white">Institution</h1>
-                  </div>}
-                  {currentTab == 3 && <div className="w-[25rem] h-[25rem] grid place-content-center rounded-xl hero-card-4">
-                  <h1 className="text-5xl font-extrabold text-white">Payer</h1>
-                  </div>}
-                
-              </div>
-            </div>
-
           </div>
 
         </div>
