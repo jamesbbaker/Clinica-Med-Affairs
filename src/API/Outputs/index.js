@@ -17,7 +17,6 @@ export async function getDataStats(endPoint,token, refreshToken) {
           if (response.status === 401) {
             // Unauthorized error
             // Refresh the token
-            console.log(refreshToken)
             const refreshedToken = await refreshTokenFunction(refreshToken);
             if (refreshedToken) {
               // Retry fetching with the new token

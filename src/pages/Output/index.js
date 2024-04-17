@@ -11,6 +11,7 @@ import ImpactTracking from "./ImpactTracking";
 import InstitutionalVariation from "./InstituitonalVariation";
 import DataQuality from "./DataQuality";
 import PatientTracking from "./PatientTracking";
+import UnmetNeedDefinition from "./UnmetNeedDefinition";
 
 const options = {
   indexAxis: "y",
@@ -113,6 +114,7 @@ const Output = () => {
         <InstitutionalVariation />
       )}
       {currentMenu === APP_ROUTES.impact_tracking && <ImpactTracking />}
+      {currentMenu === APP_ROUTES.unmet_need_definition && <UnmetNeedDefinition />}
     </>
   );
 };

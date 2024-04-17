@@ -3,14 +3,7 @@ import logo from "../../assets/images/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { updateMenu } from "../../features/menu/menuSlice";
 import { useNavigate, useParams } from "react-router-dom";
-import { AiOutlineTeam } from "react-icons/ai";
-import { AiOutlineHome } from "react-icons/ai";
-import { AiOutlineTable } from "react-icons/ai";
-import { AiOutlineGlobal } from "react-icons/ai";
-import { AiOutlineBarChart } from "react-icons/ai";
-import { AiOutlineFundProjectionScreen } from "react-icons/ai";
-import { AiOutlineRise } from "react-icons/ai";
-import { AiOutlineProject } from "react-icons/ai";
+import { AiOutlineTeam, AiOutlineHome, AiOutlineTable, AiOutlineGlobal, AiOutlineBarChart, AiOutlineFundProjectionScreen, AiOutlineRise, AiOutlineProject, AiOutlineQuestionCircle } from "react-icons/ai";
 import { APP_ROUTES, APP_ROUTES_LABEL } from "../../constants/appConstants";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -79,9 +72,15 @@ export const menuList = [
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.data_quality}`,
         icon: () => <AiOutlineFundProjectionScreen />,
       },
+      {
+        name: APP_ROUTES_LABEL.unmet_need_definition,
+        id: APP_ROUTES.unmet_need_definition,
+        route: `${APP_ROUTES.outputs}/${APP_ROUTES.unmet_need_definition}`,
+        icon: () => <AiOutlineQuestionCircle />,
+      },
     ],
   },
-];
+]; 
 
 const Sidebar = () => {
   const { currentMenu } = useSelector((state) => state.menu);
@@ -123,12 +122,22 @@ const Sidebar = () => {
       );
     }
   },[user])
+  
+  const handelHome = () => {
+    navigate("/dashboard")
+    dispatch(
+      updateMenu({
+        currentMenu: user.admin ? "users" : "home",
+        currentMenuLabel: user.admin ? "Users" : "Home",
+      })
+    );
+  }
 
   
 
   return (
     <div className="w-1/5 h-full bg-primary">
-      <div className="w-full border h-14 grid place-content-center border-primary bg-white py-2">
+      <div onClick={handelHome} className="w-full cursor-pointer border h-14 grid place-content-center border-primary bg-white py-2">
         <img
           src={logo}
           alt="logo"

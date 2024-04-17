@@ -24,15 +24,18 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', scrollHandler)
   }, [top])
 
+  const handleHome = () => {
+    navigate("/")
+  }
+
 
   return (
     <header className={`fixed w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out ${!top ? 'bg-white backdrop-blur-sm shadow-lg' : ''}`}>
     <div className="max-w-6xl mx-auto px-5 sm:px-6">
       <div className="flex items-center justify-between h-16 md:h-20">
-
         {/* Site branding */}
-        <div className="shrink-0 mr-4 flex items-center gap-2">
-        <img src={logo} alt="logo" className="w-[150px] object-contain" />
+        <div  className="shrink-0 mr-4 flex items-center gap-2">
+        <img onClick={handleHome} src={logo} alt="logo" className="w-[150px] cursor-pointer  object-contain" />
         <p>AI & RWD for better patient care</p>
         </div>
 
