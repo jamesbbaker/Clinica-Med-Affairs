@@ -16,6 +16,7 @@ const AuthProvider = () => {
     localStorage.getItem("refreshToken")
   );
 
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -85,6 +86,8 @@ const AuthProvider = () => {
     }
   };
 
+
+
  
 
   const fetchUserData = async (token, refreshToken) => {
@@ -123,6 +126,7 @@ const AuthProvider = () => {
     }
   };
 
+
   const logOut = () => {
     setUser(null);
     setAccessToken(null);
@@ -159,8 +163,9 @@ const AuthProvider = () => {
 export default AuthProvider;
 
 
+
+
 export const refreshTokenFunction = async (refreshToken) => {
-  console.log(refreshToken,"refres")
   try {
     const response = await fetch(
       "https://clinica-server.replit.app/token/refresh",
