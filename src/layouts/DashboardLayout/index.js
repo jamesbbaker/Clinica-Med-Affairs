@@ -20,10 +20,14 @@ const DashboardLayout = () => {
   return (
     <div className="flex font-primary justify-center items-center w-screen h-screen">
       <Sidebar />
-      <div className="w-4/5 h-screen overflow-hidden mh-screen">
+      <div className="w-4/5 h-screen overflow-scroll md:overflow-hidden mh-screen">
+        <div className="fixed w-4/5 z-20">
         <TopBar />
-        <div className="px-4 h-screen py-6 overflow-y-auto">
+        </div>
+        <div className="px-4 min-w-[800px] h-screen md:py-6 overflow-y-auto mt-32">
+          <div className="overflow-scroll md:overflow-hidden">
           <Outlet />
+          </div>
         </div>
       </div>
     </div>

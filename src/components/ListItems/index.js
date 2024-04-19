@@ -25,12 +25,14 @@ const ListItems = ({ items }) => {
         position="center center"
       >
         <DialogBox
+        id={itemId}
           handleDelete={handleDelete}
           handleReject={closeModal}
           text={"Do you want to delete this user?"}
         />
       </Popup>
       <Table
+      setItemId={setItemId}
         TableData={items}
         TableColummns={USERS_TABLE_COLUMNS}
         UserTable={true}

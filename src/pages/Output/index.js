@@ -110,7 +110,7 @@ const Output = () => {
       )}
       {currentMenu === APP_ROUTES.data_quality && <DataQuality />}
       {currentMenu === APP_ROUTES.eligible_patient_locator && <Table />}
-      {currentMenu === APP_ROUTES.insitutional_variation && (
+      {currentMenu === APP_ROUTES.institutional_variation && (
         <InstitutionalVariation />
       )}
       {currentMenu === APP_ROUTES.impact_tracking && <ImpactTracking />}

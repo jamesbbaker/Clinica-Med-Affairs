@@ -114,21 +114,21 @@ const Login = () => {
   return (
     <>
        <Navbar />
-    <div className="mx-auto max-w-[80%] font-primary h-screen flex justify-center items-center">
-      <div className="w-[40%] rounded-xl bg-primary  h-[80%] flex flex-col justify-center items-center gap-2">
-        <h1 className="text-3xl relative text-slate-50 font-semibold before:absolute before:w-[20rem] before:h-[20rem] before:rounded-full before:bg-blue-200 before:opacity-15  before:-translate-x-1/2 before:-translate-y-1/2  before:left-1/2 before:top-1/2 after:absolute after:w-[25rem] after:h-[25rem] after:rounded-full after:bg-blue-200 after:opacity-25  after:-translate-x-1/2 after:-translate-y-1/2  after:left-1/2 after:top-1/2">
+    <div className="mx-auto max-w-[80%] font-primary h-screen flex md:flex-row flex-col justify-center items-center">
+      <div className=" w-[100%]  mt-20 md:mt-0  md:w-[40%] rounded-xl bg-primary  h-[80%] flex flex-col justify-center items-center gap-2">
+        <h1 className="text-mdmd:text-3xl relative text-slate-50 font-semibold before:absolute before:w-[60vw] before:h-[60vw] md:before:w-[20rem] md:before:h-[20rem] before:rounded-full before:bg-blue-200 before:opacity-15  before:-translate-x-1/2 before:-translate-y-1/2  before:left-1/2 before:top-1/2 after:absolute after:w-[70vw] after:h-[70vw]  md:after:w-[25rem] md:after:h-[25rem] after:rounded-full after:bg-blue-200 after:opacity-25  after:-translate-x-1/2 after:-translate-y-1/2  after:left-1/2 after:top-1/2">
           Welcome to Clinica AI
         </h1>
-        <h4 className="text-lg font-regular text-slate-50">
+        <h4 className="text-sm md:text-lg font-regular text-slate-50">
           AI & RWD for better patient care
         </h4>
       </div>
-      <div className="w-1/2 bg-#fff h-full flex justify-end items-center">
+      <div className="w-[100%] md:w-1/2 bg-#fff h-full flex justify-center md:justify-end items-center">
         <form
           onSubmit={handleSubmit}
-          className="w-1/2 flex flex-col justify-center items-center gap-8"
+          className="md:w-1/2 flex flex-col justify-center items-center gap-2 md:gap-8"
         >
-          <img src={logo} className="w-40" />
+          <img src={logo} className="hidden md:block w-40" />
           <div className="flex w-full flex-col gap-2">
             {inputs.map((input) => (
               <InputField

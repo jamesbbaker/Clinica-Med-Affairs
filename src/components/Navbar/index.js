@@ -35,12 +35,12 @@ const Navbar = () => {
       <div className="flex items-center justify-between h-16 md:h-20">
         {/* Site branding */}
         <div  className="shrink-0 mr-4 flex items-center gap-2">
-        <img onClick={handleHome} src={logo} alt="logo" className="w-[150px] cursor-pointer  object-contain" />
-        <p>AI & RWD for better patient care</p>
+        <img onClick={handleHome} src={logo} alt="logo" className="w-[6rem] md:w-[150px] cursor-pointer  object-contain" />
+        <p className="hidden md:block">AI & RWD for better patient care</p>
         </div>
 
         {/* Desktop navigation */}
-        <nav className="hidden md:flex md:grow">
+        <nav className="md:flex md:grow">
           {/* Desktop sign in divs */}
           <ul className="flex grow justify-end flex-wrap items-center">
             <li>

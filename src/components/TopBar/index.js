@@ -13,7 +13,7 @@ const TopBar = () => {
   };
   return (
     <>
-      <div className="w-full h-14 px-6 py-4 flex justify-between items-center shadow-md">
+      <div className="w-full bg-white h-14 px-6 py-4 flex justify-between items-center shadow-md">
         <div className="font-semibold">
           <span className="font-medium">Welcome,</span> {user &&user.name && user.name.split(" ")[0]}
         </div>
@@ -40,8 +40,10 @@ const TopBar = () => {
           </>
         )}
       </div>
-      <div className="px-4 text-sm py-2 opacity-70 font-medium">
+      <div className="bg-white border-t-2 border-opacity-50">
+      <div className="px-4  text-sm py-2 opacity-70 font-medium">
         {currentMenuLabel}
+      </div>
       </div>
     </>
   );

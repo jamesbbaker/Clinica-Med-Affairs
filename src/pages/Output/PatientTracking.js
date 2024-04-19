@@ -2,9 +2,9 @@ import React from "react";
 import Sankey from "../../components/Sankey";
 
 const PatientTracking = () => {
-  console.log("snake");
+ 
   return (
-    <div className="px-12 py-10">
+    <div className="px-2 py-10">
       <Sankey
         API={"sankey_data_6"}
         title={"Patient Transitions through HCP Specialty by Asthma Visit"}

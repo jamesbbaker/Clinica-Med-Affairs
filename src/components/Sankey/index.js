@@ -127,9 +127,14 @@ const Sankey = ({API, title,height="500px", OPTIONS}) => {
     if (API) {
       getDataStats(API,accessToken, refreshToken ).then(res => {
         if (res) {
-          console.log(res)
+       
             let dataArr = res.map(item => [item[OPTIONS.from],item[OPTIONS.to], item[OPTIONS.count]])
-            console.log(dataArr[0])
+            dataArr.forEach(item => {
+            if (item[0] == "ICS_1") {
+            console.log(item)
+            }
+            })
+            
             dataArr.unshift(["Source", "Target", "Value"])
             setSankeyData(res)
         }
