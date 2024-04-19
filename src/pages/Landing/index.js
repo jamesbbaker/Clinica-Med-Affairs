@@ -67,7 +67,7 @@ export default function Index() {
   return (
     <>
       <Navbar />
-      <section className="relative">
+      <section className="relative overflow-hidden">
         <div
           className="absolute left-1/2 transform -translate-x-1/2 bottom-0 pointer-events-none z-[-1]"
           aria-hidden="true"
@@ -104,29 +104,29 @@ export default function Index() {
             {/* Section header */}
             <div className="text-center pb-14 md:pb-16">
               <h1
-                className="text-5xl md:text-6xl font-extrabold leading-tighter mb-4"
+                className="text-2xl md:text-6xl font-extrabold leading-tighter mb-4"
                 data-aos="zoom-y-out"
               >
                 The first real-time Medical Affairs intelligence suite driven by
               </h1>
               <h1      data-aos="zoom-y-out"
-                  data-aos-delay="150" className="mt-8 text-5xl md:text-6xl font-extrabold leading-tighter tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
+                  data-aos-delay="150" className="mt-8 text-3xl md:text-6xl font-extrabold leading-tighter tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
                 AI + RWD
               </h1>
               <div className="max-w-3xl mt-12 mx-auto">
                 <p
-                  className="text-xl text-gray-600 mb-4"
+                  className="text-md md:text-xl text-gray-600 mb-4"
                   data-aos="zoom-y-out"
                   data-aos-delay="250"
                 >
                 Digital, AI, and RWD have enabled a new frontier of Medical Affairs patient impact (A Vision for Medical Affairs in 2025, McKinsey)
                 </p>
-                <p  className="text-xl text-gray-600 mb-4"
+                <p  className="text-md md:text-xl text-gray-600 mb-4"
                   data-aos="zoom-y-out"
                   data-aos-delay="300">
                 Our apps empower Medical Affairs to measure and optimize the impact of initiatives across functions focusing on patient need.
                 </p>
-                <p  className="text-xl text-gray-600 mb-4"
+                <p  className="text-md md:text-xl text-gray-600 mb-4"
                   data-aos="zoom-y-out"
                   data-aos-delay="350">
                 The app suite includes a real-time mapping of patient care across the clinical treatment journey and deep profiles on stakeholders including HCPs, institutions, and payers
@@ -153,16 +153,16 @@ export default function Index() {
                     </a>
                   </div>
                 </div> */}
-                <div className="grid grid-cols-2 mt-12 gap-8">
+                <div className="grid md:grid-cols-2 mt-12 gap-8">
                   <div  data-aos="zoom-y-out"
                   data-aos-delay="400" className="text-whit shadow-md mt-6 rounded-xl">
-                    <h3 className="text-4xl text-white h-100  py-4 bg-[#7bdcb5] rounded-tr-xl rounded-tl-xl bg-circle font-bold ">Problem</h3>
-                    <p className="text-xl py-6 text-gray-600  px-10">Significant disparities in patient care across physicians, institutions, payers, and regions</p>
+                    <h3 className="text-2xl text-white h-100  py-4 bg-[#7bdcb5] rounded-tr-xl rounded-tl-xl bg-circle font-bold ">Problem</h3>
+                    <p className="text-lg py-6 text-gray-600  px-10">Significant disparities in patient care across physicians, institutions, payers, and regions</p>
                   </div>
                   <div  data-aos="zoom-y-out"
                   data-aos-delay="400" className="text-white h-100 shadow-md mt-6 rounded-xl">
-                    <h3 className="text-4xl py-4 bg-[#87CEEB] rounded-tr-xl rounded-tl-xl bg-circle font-bold ">Solution</h3>
-                    <p className="text-xl py-6 text-gray-600  px-10">Best-in-class mapping of clinical patient need, understanding of HCP care patterns, and care “fingerprints” of stakeholders to guide initiatives</p>
+                    <h3 className="text-2xl py-4 bg-[#87CEEB] rounded-tr-xl rounded-tl-xl bg-circle font-bold ">Solution</h3>
+                    <p className="text-lg py-6 text-gray-600  px-10">Best-in-class mapping of clinical patient need, understanding of HCP care patterns, and care “fingerprints” of stakeholders to guide initiatives</p>
                   </div>
                 </div>
                 
@@ -177,8 +177,8 @@ export default function Index() {
           {/* Section header */}
           <div  data-aos="zoom-y-out"
                   data-aos-delay="150" className="max-w-3xl mx-auto text-center pb-12 md:pb-16">
-            <h1  className="h2 mb-4">Explore the solutions</h1>
-            <p className="text-xl text-gray-600">The Clinica AI Suite enables healthcare organizations to measure and maximize the patient impact</p>
+            <h1  className="text-md md:text-2xl h2 mb-4">Explore the solutions</h1>
+            <p className="text-sm md:text-xl text-gray-600">The Clinica AI Suite enables healthcare organizations to measure and maximize the patient impact</p>
           </div>
           {/* Section content */}
             {/* Content */}
@@ -186,21 +186,21 @@ export default function Index() {
               <div  id={`solution-wrapper`} className="mb-8 overflow-hidden md:mb-0">
                 {SolutionsList.map(item => {
                   return <div  id={`solution-${item.id}`} className="grid min-w-[50%] grid-cols-2 gap-10 mb-10"><a
-                  className={`flex items-center  h-[10rem] text-lg p-5 rounded border transition duration-300 ease-in-out `}
+                  className={`flex flex-col-reverse justify-between md:flex-row items-center  md:h-[10rem] text-lg p-5 rounded border transition duration-300 ease-in-out `}
                   href="#0"
                 >
                   <div className="flex items-center flex-col"> 
-                    <div className="font-bold leading-snug tracking-tight mb-1">{item.title}</div>
-                    <div className="text-gray-600">{item.description}</div>
+                    <h4 className="font-bold text-sm md:text-xl leading-snug tracking-tight mb-1">{item.title}</h4>
+                    <p className="text-xs md:text-md text-gray-600">{item.description}</p>
                   </div>
-                  <div className="flex justify-center items-center w-8 h-8 bg-white rounded-full shadow flex-shrink-0 ml-3">
-                    <svg className="w-3 h-3 fill-current" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+                  <div className="flex justify-center items-center w-4 h-4 md:w-8 md:h-8 bg-white rounded-full shadow flex-shrink-0 mb-4 md:ml-3">
+                    <svg className="w-2 h-2 md:w-3 md:h-3 fill-current" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
                       <path d="M11.953 4.29a.5.5 0 00-.454-.292H6.14L6.984.62A.5.5 0 006.12.173l-6 7a.5.5 0 00.379.825h5.359l-.844 3.38a.5.5 0 00.864.445l6-7a.5.5 0 00.075-.534z" />
                     </svg>
                   </div>
                 </a>
                 <div className={`h-[100%] w-[100%] grid place-content-center hero-card-${item.id}`}>
-                  <h1 className={`text-5xl font-extrabold  text-white`}>{item.cardText}</h1>
+                  <h1 className={`text-xl md:text-5xl font-extrabold  text-white`}>{item.cardText}</h1>
                   </div>
                 </div>
                 })}

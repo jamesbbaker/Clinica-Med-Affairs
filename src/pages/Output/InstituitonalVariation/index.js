@@ -128,7 +128,6 @@ const InstitutionalVariation = () => {
     EPL_TABLE_COLUMNS.map((col) => col.accessor)
   );
 
-  console.log(selectedValues);
 
   const filterItem = (col) => {
     let accessor = col.accessor;

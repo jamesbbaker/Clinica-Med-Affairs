@@ -65,7 +65,7 @@ export const APP_ROUTES = {
   lead_indicators: "lead_indicators",
   patient_journey: "patient_journey",
   impact_tracking: "impact_tracking",
-  insitutional_variation: "institutional_variation",
+  institutional_variation: "institutional_variation",
   data_quality: "data_quality",
   unmet_need_definition: "unmet_need_definition",
 };
@@ -82,7 +82,7 @@ export const APP_ROUTES_LABEL = {
   lead_indicators: "Leading Indicators",
   patient_journey: "Patient Trajectory",
   impact_tracking: "Impact Tracking",
-  insitutional_variation: "Institutional Variation",
+  institutional_variation: "Institutional Variation",
   data_quality: "Data Quality",
   unmet_need_definition: "Unmet Need Definition",
 };

@@ -49,9 +49,9 @@ export const menuList = [
         icon: () => <AiOutlineTable />,
       },
       {
-        name: APP_ROUTES_LABEL.insitutional_variation,
-        id: APP_ROUTES.insitutional_variation,
-        route: `${APP_ROUTES.outputs}/${APP_ROUTES.insitutional_variation}`,
+        name: APP_ROUTES_LABEL.institutional_variation,
+        id: APP_ROUTES.institutional_variation,
+        route: `${APP_ROUTES.outputs}/${APP_ROUTES.institutional_variation}`,
         icon: () => <AiOutlineProject />,
       },
       {
@@ -90,6 +90,7 @@ const Sidebar = () => {
   const { id } = useParams();
 
   const handleClick = (item) => {
+    console.log(APP_ROUTES_LABEL[item.id])
     navigate(item.route, {
       replace: true,
     });
@@ -141,7 +142,7 @@ const Sidebar = () => {
         <img
           src={logo}
           alt="logo"
-          className="w-2/3 h-full max-h-full mx-auto"
+          className="w-full px-[0.25rem] md:px-0 md:w-2/3 h-full max-h-full mx-auto"
         />
       </div>
       <div className="flex flex-col mt-8">
@@ -153,7 +154,7 @@ const Sidebar = () => {
               {item.label && (
                 <div
                   style={{ fontSize: "0.6rem" }}
-                  className={`text-slate-50 mt-3 px-4 py-2 w-full text-left`}
+                  className={`text-slate-50 hidden md:block mt-3 px-4 py-2 w-full text-left`}
                 >
                   {item.label}
                 </div>
@@ -187,8 +188,10 @@ const Sidebar = () => {
                             : "hover:bg-slate-200 hover:bg-opacity-40 "
                         } flex cursor-pointer rounded-md transition-all ease-in-out duration-200 px-2 py-2 font-semibold items-center gap-2  w-full text-left`}
                       >
+                        <div className="w-full md:w-auto grid place-content-center">
                         <subItem.icon />
-                        <div className="w-full">{subItem.name}</div>
+                        </div>
+                        <div className="w-full hidden md:block">{subItem.name}</div>
                       </div>
                     );
                   })}
