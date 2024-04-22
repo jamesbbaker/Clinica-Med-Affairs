@@ -1,6 +1,10 @@
-import React, { useState } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import unmetChart from "../../../assets/images/unmetChart.png"
 import Popup from "reactjs-popup";
+import { getDataStats } from '../../../API/Outputs';
+import { AuthContext } from '../../../context/AuthContext';
+import { generateStatsOptions, setLineData } from '../../../utils/ChartUtils';
+import { LineChart } from '../../../components/LineChart';
 
 const UnmetNeedDefinitionData = {
     id1: {
@@ -103,6 +107,12 @@ const UnmetNeedDefinitionData = {
 
 const UnmetNeedDefinition = () => {
     const [modalId, setModalId] = useState(null)
+    const [statsData1, setStatsData1] = useState(null)
+    const { accessToken, refreshToken } = useContext(AuthContext);
+
+    const Line_options_2 = useMemo(() => {
+        return generateStatsOptions("Escalation from double therapies",);
+      }, []);
 
     const handleClose = () => {
         setModalId(null)
@@ -110,6 +120,86 @@ const UnmetNeedDefinition = () => {
 
     const handleClick = (key) => {
         setModalId(key)
+        if (UnmetNeedDefinitionData[key].id == "id8") { 
+            getDataStats("data_stats_12", accessToken, refreshToken)
+            .then((res) => {
+              if (res) {
+                const responseData = res.data;
+                const labels = [];
+                const New_ICS_LABA_PatientsData = [];
+                const Receive_BiologicData = [];
+                const Receive_Closed_TripleData = [];
+                const Receive_LAMAData = [];
+                const Receive_LTRAData = []
+                responseData.sort((a, b) => {
+                    return new Date(a.date) - new Date(b.date);
+                });
+      
+      
+                responseData.forEach((entry) => {
+                    console.log(entry)
+                  const Date = entry["Date"];
+                  const New_ICS_LABA_Patients = entry["New_ICS_LABA_Patients"];
+                  const Receive_Biologic = entry["Receive_Biologic"];
+                  const Receive_Closed_Triple = entry["Receive_Closed_Triple"];
+                  const Receive_LAMA = entry["Receive_LAMA"];
+                const Receive_LTRA = entry["Receive_LTRA"]
+                  labels.push(`${Date}`);
+                  New_ICS_LABA_PatientsData.push(New_ICS_LABA_Patients);
+                  Receive_BiologicData.push(Receive_Biologic);
+                  Receive_Closed_TripleData.push(Receive_Closed_Triple)
+                  Receive_LAMAData.push(Receive_LAMA)
+                  Receive_LTRAData.push(Receive_LTRA)
+                });
+                console.log(New_ICS_LABA_PatientsData)
+                
+                const data = {
+                  labels: labels,
+                  datasets: [
+                    {
+                      label: "New ICS LABA Patients",
+                      data: New_ICS_LABA_PatientsData,
+                      borderColor: "rgb(255, 99, 132)",
+                      borderWidth: 2,
+                      fill: false,
+                    },
+                    {
+                      label: "Receive Biologic",
+                      data: Receive_BiologicData,
+                      borderColor: "rgb(54, 162, 235)",
+                      borderWidth: 2,
+                      fill: false,
+                    },
+                    {
+                        label: "Receive Closed Triple",
+                        data: Receive_Closed_TripleData,
+                        borderColor: "rgb(542, 62, 35)",
+                        borderWidth: 2,
+                        fill: false,
+                      },
+                      {
+                        label: "Receive LAMA",
+                        data: Receive_LAMAData,
+                        borderColor: "rgb(142, 162, 35)",
+                        borderWidth: 2,
+                        fill: false,
+                      },
+                      {
+                        label: "Receive LTRA",
+                        data: Receive_LTRAData,
+                        borderColor: "rgb(42, 262, 195)",
+                        borderWidth: 2,
+                        fill: false,
+                      },
+                  ],
+                };
+                setStatsData1(data);
+              }
+            })
+            .catch((err) => {
+              console.log(err, "err");
+            });
+        }
     }
 
   return (
@@ -140,9 +230,10 @@ const UnmetNeedDefinition = () => {
         open={modalId != null}
         position="center center"
       >
-       {modalId && <div className="w-extraLarge h-extraLarge flex flex-col gap-2 items-center justify-center bg-white">
-          <div className='text-lg font-semibold'>{UnmetNeedDefinitionData[modalId].patientNeed}</div>
-          <div className='text-sm'>{UnmetNeedDefinitionData[modalId].treatmentDecision}</div>
+       {modalId && <div className="w-[70vw] h-[70vh] flex flex-col gap-2 items-center justify-center bg-white">
+       {statsData1 && (
+         <LineChart height={140} arbitrary={false} data={statsData1} options={Line_options_2} />
+      )}
         </div>}
       </Popup>
     </div>

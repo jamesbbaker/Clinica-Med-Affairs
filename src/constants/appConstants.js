@@ -84,5 +84,5 @@ export const APP_ROUTES_LABEL = {
   impact_tracking: "Impact Tracking",
   institutional_variation: "Institutional Variation",
   data_quality: "Data Quality",
-  unmet_need_definition: "Unmet Need Definition",
+  unmet_need_definition: "Unmet Need Definitions",
 };

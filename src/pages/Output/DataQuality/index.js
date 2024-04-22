@@ -6,6 +6,7 @@ import TreeMap from "../../../components/TreeMap";
 import Table from "../../../components/Table";
 import Map from "../../../components/Map"
 import { color } from "chart.js/helpers";
+import { generateStatsOptions, setLineData } from "../../../utils/ChartUtils";
 
 const DataQuality = () => {
   const { accessToken, refreshToken } = useContext(AuthContext);
@@ -14,10 +15,12 @@ const DataQuality = () => {
   const [statsData3, setStatsData3] = useState(null);
   const [statsData4, setStatsData4] = useState(null);
   const [statsData5, setStatsData5] = useState(null);
+  const [statsData6, setStatsData6] = useState(null);
+  const [statsData7, setStatsData7] = useState(null);
   const [selectedType, setSelectedType]  = useState(null)
    const [mapData, setMapData] = useState(null);
   const[typeOptions, setTypeOptions] = useState([])
-  const lineChartRawData = useRef(null)
+
  
 
   const TableColummns = useMemo(() => {
@@ -85,20 +88,15 @@ const DataQuality = () => {
     };
     return statsOptions;
   }, []);
-
-
-  const Line_options = useMemo(() => {
+  const options_line_2 = useMemo(() => {
     const statsOptions = {
       responsive: true,
       scales: {
         x: {
-          grid: {
-            display: false,
-          },
           display: true,
           title: {
             display: true,
-            text: "Date",
+            text: "Month/Year",
           },
           ticks: {
             font: {
@@ -107,14 +105,12 @@ const DataQuality = () => {
             },
             callback: function (value, index, ticks) {
               let label = this.getLabelForValue(value);
-              return label
-              // let month = parseInt(label && label.split("/")[0]);
-              // return month % 6 === 0 ? label : null;
+              let month = parseInt(label && label.split("/")[0]);
+              return month % 6 === 0 ? label : null;
             },
           },
         },
         y: {
-          
           display: true,
           title: {
             display: true,
@@ -125,7 +121,7 @@ const DataQuality = () => {
       plugins: {
         title: {
           display: true,
-          text: "Treatment Types over Time",
+          text: "Asthma Incidence",
         },
       },
     };
@@ -133,73 +129,15 @@ const DataQuality = () => {
   }, []);
 
 
-  function setLineData(res, _type) {
-    const responseData = res.data;
-  
-    const dataByType = {};
-    const distinctRowsData = [];
-    responseData.sort((a, b) => {
-      // Turn your strings into dates, and then subtract them
-      // to get a value that is either negative, positive, or zero.
-      return new Date(a.Date) - new Date(b.Date);
-    });
+  const Line_options = useMemo(() => {
+    return generateStatsOptions("Treatment Types over Time",);
+  }, []);
 
-    const colorsOutput = [
-      "#3AAB9D",
-      "#D65FDB",
-      "#65C5E3",
-      "#FC8A71",
-      "#7C53A6",
-      "#E3B505",
-      "#1BB83C",
-      "#FDE84D",
-      "#8CB3E3",
-      "#FF72A5"
-    ]
+  const Line_options_2 = useMemo(() => {
+    return generateStatsOptions("Patient Starts by Therapy Type",);
+  }, []);
 
 
-    const organizedData = {};
-    responseData.forEach(({ NumberOfPatients, Type, Date }) => {
-      if (!organizedData[Type]) {
-        organizedData[Type] = {};
-      }
-      if (!organizedData[Type][Date]) {
-        organizedData[Type][Date] = [];
-      }
-      organizedData[Type][Date].push(NumberOfPatients);
-    });
-  
-    // Create datasets from organized data
-    const datasets = Object.keys(organizedData).map((Type, index) => {
-      const data = Object.keys(organizedData[Type]).map((Date) => {
-        return {
-          x: Date,
-          y: organizedData[Type][Date].reduce((a, b) => a + b, 0), // Sum patients for each Date
-        };
-      });
-  
-      return {
-        label: Type,
-        data: data,
-        borderColor:colorsOutput[index], // Random color for each type
-        fill: false,
-      };
-    });
-  
-    // Extract labels from organized data
-   const labels = Object.keys(responseData.reduce((acc, { Date }) => ({ ...acc, [Date]: true }), {}));
-  
-    // Chart.js data object
-    const chartData = {
-      labels: labels,
-      datasets: datasets,
-    };
-    setStatsData5(chartData);
-  }
-
-  const handleType = (type) => {
-    setLineData(lineChartRawData.current, type)
-  }
 
   useEffect(() => {
     getDataStats("data_stats_1", accessToken, refreshToken)
@@ -253,23 +191,83 @@ const DataQuality = () => {
       .catch((err) => {
         console.log(err, "err");
       });
-      getDataStats("data_stats_10", accessToken, refreshToken)
+
+      getDataStats("data_stats_11", accessToken, refreshToken)
       .then((res) => {
         if (res) {
-          let Types = []
-          lineChartRawData.current = res
           const responseData = res.data;
-          responseData.forEach(entry => {
-            return   Types.push(entry["Type"])
-          })
-          setTypeOptions([...new Set(Types)])
-          setLineData(res,Types[0])
+          const labels = [];
+          const distinctPatientsData = []
+          responseData.sort((a, b) => {
+            if (a.Year !== b.Year) {
+              return a.Year - b.Year;
+            } else {
+              return a.Month - b.Month;
+            }
+          });
+
+
+          responseData.forEach((entry) => {
+            const month = entry["Month"];
+            const year = entry["Year"];
+            const NumberOfPatients = entry["NumberOfPatients"];
+  
+            labels.push(`${month}/${year}`);
+            distinctPatientsData.push(NumberOfPatients);
+          });
+          const data = {
+            labels: labels,
+            datasets: [
+              {
+                label: "Number of Patients",
+                data: distinctPatientsData,
+                borderColor: "rgb(25, 99, 132)",
+                borderWidth: 2,
+                fill: false,
+              }
+            ],
+          };
+          setStatsData6(data);
         }
       })
       .catch((err) => {
         console.log(err, "err");
       });
 
+      getDataStats("data_stats_13", accessToken, refreshToken)
+      .then((res) => {
+        if (res) {
+          let Types = []
+          const responseData = res.data;
+          responseData.forEach(entry => {
+            return Types.push(entry["Type"])
+          })
+         let _data = setLineData(res,Types[0], "Patients")
+         setStatsData7(_data)
+        }
+      })
+      .catch((err) => {
+        console.log(err, "err");
+      });
+
+      getDataStats("data_stats_10", accessToken, refreshToken)
+      .then((res) => {
+        if (res) {
+          let Types = []
+          const responseData = res.data;
+          responseData.forEach(entry => {
+            return   Types.push(entry["Type"])
+          })
+         let _data = setLineData(res,Types[0], "NumberOfPatients")
+         setStatsData5(_data)
+        }
+      })
+      .catch((err) => {
+        console.log(err, "err");
+      });
+
+
+      
     getDataStats("data_stats_2", accessToken, refreshToken)
       .then((res) => {
         if (res) {
@@ -325,6 +323,9 @@ const DataQuality = () => {
       {statsData1 && (
         <LineChart arbitrary={false} data={statsData1} options={options} />
       )}
+      {statsData6 && 
+        <LineChart arbitrary={false} data={statsData6} options={options_line_2} />
+      }
       {statsData2 && <div className="flex w-full flex-col gap-12">
         <Map markersEnabled={false} mapData={mapData} />
         <TreeMap needCallbacks={false} data={statsData2} /></div> }
@@ -346,10 +347,10 @@ const DataQuality = () => {
           TableColummns={secondTableColummns}
         />)}
          {statsData5 && (
-          <>
-        <LineChart height={150} key={selectedType} arbitrary={false} data={statsData5} options={Line_options} />
-         
-        </>
+          <><LineChart height={150} key={selectedType} arbitrary={false} data={statsData5} options={Line_options} /></>
+      )}
+      {statsData7 && (
+          <><LineChart height={150} key={selectedType} arbitrary={false} data={statsData7} options={Line_options_2} /></>
       )}
         
     </div>
