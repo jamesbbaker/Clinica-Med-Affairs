@@ -125,6 +125,7 @@ const UnmetNeedDefinition = () => {
             .then((res) => {
               if (res) {
                 const responseData = res.data;
+               
                 const labels = [];
                 const New_ICS_LABA_PatientsData = [];
                 const Receive_BiologicData = [];
@@ -132,12 +133,13 @@ const UnmetNeedDefinition = () => {
                 const Receive_LAMAData = [];
                 const Receive_LTRAData = []
                 responseData.sort((a, b) => {
-                    return new Date(a.date) - new Date(b.date);
+                    return new Date(a.Date) - new Date(b.Date);
                 });
+                
       
       
                 responseData.forEach((entry) => {
-                    console.log(entry)
+                 
                   const Date = entry["Date"];
                   const New_ICS_LABA_Patients = entry["New_ICS_LABA_Patients"];
                   const Receive_Biologic = entry["Receive_Biologic"];
@@ -151,7 +153,6 @@ const UnmetNeedDefinition = () => {
                   Receive_LAMAData.push(Receive_LAMA)
                   Receive_LTRAData.push(Receive_LTRA)
                 });
-                console.log(New_ICS_LABA_PatientsData)
                 
                 const data = {
                   labels: labels,
@@ -230,7 +231,7 @@ const UnmetNeedDefinition = () => {
         open={modalId != null}
         position="center center"
       >
-       {modalId && <div className="w-[70vw] h-[70vh] flex flex-col gap-2 items-center justify-center bg-white">
+       {modalId && <div className="w-[70vw] h-[auto] flex flex-col gap-2 items-center justify-center bg-white">
        {statsData1 && (
          <LineChart height={140} arbitrary={false} data={statsData1} options={Line_options_2} />
       )}

@@ -72,7 +72,7 @@ const inputs = [
 
   {
     name: "role",
-    id: "role",
+    id: "admin",
     label: "Admin",
     type: "checkbox",
     required: false,
@@ -146,6 +146,7 @@ const InputForm = ({ handleClose }) => {
       ...state.formData,
       page_view: state.formData.page_view.map((item) => item.value),
     };
+
    
     const response = await fetch(
       "https://clinica-server.replit.app/create_user",
@@ -165,10 +166,11 @@ const InputForm = ({ handleClose }) => {
   };
 
   const handleChange = (e) => {
+    let value = e.target.id == "admin" ? e.target.checked: e.target.value
     dispatch({
       type: ActionTypes.SET_FIELD_VALUE,
       payload: {
-        [e.target.id]: e.target.value,
+        [e.target.id]: value
       },
     });
   };
