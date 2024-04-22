@@ -193,7 +193,7 @@ const Map = ({ mapData, LayerFn = MapAddLayer, markersEnabled = true }) => {
 
   useEffect(() => {
     if (mapData) {
-      console.log(mapData);
+      
       setData((prev) => {
         let _prev = { ...prev };
         _prev.features.forEach((feature) => {

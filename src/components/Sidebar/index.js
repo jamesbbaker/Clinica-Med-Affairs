@@ -90,7 +90,7 @@ const Sidebar = () => {
   const { id } = useParams();
 
   const handleClick = (item) => {
-    console.log(APP_ROUTES_LABEL[item.id])
+   
     navigate(item.route, {
       replace: true,
     });
