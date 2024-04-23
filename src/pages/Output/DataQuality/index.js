@@ -4,7 +4,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import { LineChart } from "../../../components/LineChart";
 import TreeMap from "../../../components/TreeMap";
 import Table from "../../../components/Table";
-import Map from "../../../components/Map"
+import Map from "../../../components/Map";
 import { color } from "chart.js/helpers";
 import { generateStatsOptions, setLineData } from "../../../utils/ChartUtils";
 
@@ -17,11 +17,22 @@ const DataQuality = () => {
   const [statsData5, setStatsData5] = useState(null);
   const [statsData6, setStatsData6] = useState(null);
   const [statsData7, setStatsData7] = useState(null);
-  const [selectedType, setSelectedType]  = useState(null)
-   const [mapData, setMapData] = useState(null);
-  const[typeOptions, setTypeOptions] = useState([])
+  const [statsData8, setStatsData8] = useState(null);
+  const [mapData, setMapData] = useState(null);
 
- 
+  const Table_Columns_3 = useMemo(() => {
+    const USERS_TABLE_COLUMNS = [
+      {
+        Header: "Metric",
+        accessor: "Metric",
+      },
+      {
+        Header: "Value",
+        accessor: "Value",
+      },
+    ];
+    return USERS_TABLE_COLUMNS;
+  }, []);
 
   const TableColummns = useMemo(() => {
     const USERS_TABLE_COLUMNS = [
@@ -38,7 +49,6 @@ const DataQuality = () => {
     ];
     return USERS_TABLE_COLUMNS;
   }, []);
-
 
   const secondTableColummns = useMemo(() => {
     const USERS_TABLE_COLUMNS = [
@@ -82,7 +92,7 @@ const DataQuality = () => {
       plugins: {
         title: {
           display: true,
-          text: "Number of Asthma Patients and Claims By Month",
+          text: "Asthma Patients and Claims By Month",
         },
       },
     };
@@ -128,16 +138,13 @@ const DataQuality = () => {
     return statsOptions;
   }, []);
 
-
   const Line_options = useMemo(() => {
-    return generateStatsOptions("Treatment Types over Time",);
+    return generateStatsOptions("Treatment Types over Time");
   }, []);
 
   const Line_options_2 = useMemo(() => {
-    return generateStatsOptions("Patient Starts by Therapy Type",);
+    return generateStatsOptions("Patient Starts by Therapy Type");
   }, []);
-
-
 
   useEffect(() => {
     getDataStats("data_stats_1", accessToken, refreshToken)
@@ -154,8 +161,6 @@ const DataQuality = () => {
               return a.Month - b.Month;
             }
           });
-
-
           responseData.forEach((entry) => {
             const month = entry["Month"];
             const year = entry["Year"];
@@ -170,14 +175,14 @@ const DataQuality = () => {
             labels: labels,
             datasets: [
               {
-                label: "Distinct Patients",
+                label: "Patients",
                 data: distinctPatientsData,
                 borderColor: "rgb(255, 99, 132)",
                 borderWidth: 2,
                 fill: false,
               },
               {
-                label: "Distinct Claims",
+                label: "Claims",
                 data: distinctRowsData,
                 borderColor: "rgb(54, 162, 235)",
                 borderWidth: 2,
@@ -192,12 +197,12 @@ const DataQuality = () => {
         console.log(err, "err");
       });
 
-      getDataStats("data_stats_11", accessToken, refreshToken)
+    getDataStats("data_stats_11", accessToken, refreshToken)
       .then((res) => {
         if (res) {
           const responseData = res.data;
           const labels = [];
-          const distinctPatientsData = []
+          const distinctPatientsData = [];
           responseData.sort((a, b) => {
             if (a.Year !== b.Year) {
               return a.Year - b.Year;
@@ -205,13 +210,11 @@ const DataQuality = () => {
               return a.Month - b.Month;
             }
           });
-
-
           responseData.forEach((entry) => {
             const month = entry["Month"];
             const year = entry["Year"];
             const NumberOfPatients = entry["NumberOfPatients"];
-  
+
             labels.push(`${month}/${year}`);
             distinctPatientsData.push(NumberOfPatients);
           });
@@ -219,12 +222,12 @@ const DataQuality = () => {
             labels: labels,
             datasets: [
               {
-                label: "Number of Patients",
+                label: "Patients",
                 data: distinctPatientsData,
                 borderColor: "rgb(25, 99, 132)",
                 borderWidth: 2,
                 fill: false,
-              }
+              },
             ],
           };
           setStatsData6(data);
@@ -234,52 +237,51 @@ const DataQuality = () => {
         console.log(err, "err");
       });
 
-      getDataStats("data_stats_13", accessToken, refreshToken)
+    getDataStats("data_stats_13", accessToken, refreshToken)
       .then((res) => {
         if (res) {
-          let Types = []
+          let Types = [];
           const responseData = res.data;
-          responseData.forEach(entry => {
-            return Types.push(entry["Type"])
-          })
-         let _data = setLineData(res,Types[0], "Patients")
-         setStatsData7(_data)
+          responseData.forEach((entry) => {
+            return Types.push(entry["Type"]);
+          });
+          let _data = setLineData(res, Types[0], "Patients");
+          setStatsData7(_data);
         }
       })
       .catch((err) => {
         console.log(err, "err");
       });
 
-      getDataStats("data_stats_10", accessToken, refreshToken)
+    getDataStats("data_stats_10", accessToken, refreshToken)
       .then((res) => {
         if (res) {
-          let Types = []
+          let Types = [];
           const responseData = res.data;
-          responseData.forEach(entry => {
-            return   Types.push(entry["Type"])
-          })
-         let _data = setLineData(res,Types[0], "NumberOfPatients")
-         setStatsData5(_data)
+          responseData.forEach((entry) => {
+            return Types.push(entry["Type"]);
+          });
+          let _data = setLineData(res, Types[0], "NumberOfPatients");
+          setStatsData5(_data);
         }
       })
       .catch((err) => {
         console.log(err, "err");
       });
 
-
-      
     getDataStats("data_stats_2", accessToken, refreshToken)
       .then((res) => {
         if (res) {
           const responseData = res.data;
-          let response = {}
-           responseData.forEach(data => {
-            response[data.State] =
-            {  State: data.State,
+          let response = {};
+          responseData.forEach((data) => {
+            response[data.State] = {
+              State: data.State,
               Asthma_Claims: data.Asthma_Claims,
-             Distinct_Patients: data.Distinct_Patients}
-           })
-          setMapData(response)
+              Distinct_Patients: data.Distinct_Patients,
+            };
+          });
+          setMapData(response);
           let heatmapData = [
             ["State", "Parent", "Number of Asthma Patients"],
             ["USA", null, 0],
@@ -299,14 +301,24 @@ const DataQuality = () => {
       .then((res) => {
         if (res) {
           const responseData = res.data;
-       
+
           setStatsData3(responseData);
         }
       })
       .catch((err) => {
         console.log(err, "err");
       });
-      getDataStats("data_stats_8", accessToken, refreshToken)
+      getDataStats("data_stats_15", accessToken, refreshToken)
+      .then((res) => {
+        if (res) {
+          const responseData = res.data;
+          setStatsData8(responseData);
+        }
+      })
+      .catch((err) => {
+        console.log(err, "err");
+      });
+    getDataStats("data_stats_8", accessToken, refreshToken)
       .then((res) => {
         if (res) {
           const responseData = res.data;
@@ -320,15 +332,34 @@ const DataQuality = () => {
 
   return (
     <div className="pb-44">
+      {statsData8 && 
+       <Table
+       Title="Asthma HCP Specialties by Patient Interactions"
+       activeCells={false}
+       showSelectionBtns={false}
+       TableData={statsData8}
+       TableColummns={Table_Columns_3}
+     />
+      }
       {statsData1 && (
         <LineChart arbitrary={false} data={statsData1} options={options} />
       )}
-      {statsData6 && 
-        <LineChart arbitrary={false} data={statsData6} options={options_line_2} />
-      }
-      {statsData2 && <div className="flex w-full flex-col gap-12">
-        <Map markersEnabled={false} mapData={mapData} />
-        <TreeMap needCallbacks={false} data={statsData2} /></div> }
+      {statsData6 && (
+        <LineChart
+          arbitrary={false}
+          data={statsData6}
+          options={options_line_2}
+        />
+      )}
+      {statsData2 && (
+        <div className="flex w-full flex-col gap-12">
+          <div className="flex w-full flex-col gap-2">
+          <p className="text-[#888888] font-bold text-xs">Asthma Patients by States</p>
+          <Map markersEnabled={false} mapData={mapData} />
+          </div>
+          <TreeMap needCallbacks={false} data={statsData2} />
+        </div>
+      )}
       {statsData3 && (
         <Table
           Title="Asthma HCP Specialties by Patient Interactions"
@@ -345,14 +376,28 @@ const DataQuality = () => {
           showSelectionBtns={false}
           TableData={statsData4}
           TableColummns={secondTableColummns}
-        />)}
-         {statsData5 && (
-          <><LineChart height={150} key={selectedType} arbitrary={false} data={statsData5} options={Line_options} /></>
+        />
+      )}
+      {statsData5 && (
+        <>
+          <LineChart
+            height={150}
+            arbitrary={false}
+            data={statsData5}
+            options={Line_options}
+          />
+        </>
       )}
       {statsData7 && (
-          <><LineChart height={150} key={selectedType} arbitrary={false} data={statsData7} options={Line_options_2} /></>
+        <>
+          <LineChart
+            height={150}
+            arbitrary={false}
+            data={statsData7}
+            options={Line_options_2}
+          />
+        </>
       )}
-        
     </div>
   );
 };

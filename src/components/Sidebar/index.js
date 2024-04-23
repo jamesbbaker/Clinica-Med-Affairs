@@ -137,12 +137,12 @@ const Sidebar = () => {
   
 
   return (
-    <div className="w-1/5 h-full bg-primary">
+    <div className="w-1/5 h-full md:overflow-hidden bg-primary">
       <div onClick={handelHome} className="w-full cursor-pointer border h-14 grid place-content-center border-primary bg-white py-2">
         <img
           src={logo}
           alt="logo"
-          className="w-full px-[0.25rem] md:px-0 md:w-2/3 h-full max-h-full mx-auto"
+          className="w-full px-[0.25rem] md:px-0 md:h-12 h-full max-h-full mx-auto"
         />
       </div>
       <div className="flex flex-col mt-8">
