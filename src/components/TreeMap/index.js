@@ -96,17 +96,20 @@ export const defaultData = [
 
 export const options = {
   minColor: "#ffef96",
-  minColorValue: 0,
   midColor: "#ff6e73",
   maxColor: "#d2177a",
   headerHeight: 15,
   fontColor: "black",
-  title: "Number of Asthma Patients in Each State",
+  title: "Asthma Patients by States",
   titleTextStyle: {
     color: '#888',
     textAlign: 'center',
   },
-  showScale: true,
+  colorAxis: {
+    values: [0, 1000, 10000, 100005, 1000000], // Define custom values for the color axis
+    colors: ['#ffef96', '#ff6e73', 'white', 'white', '#d2177a'], // Define colors for the color axis
+  },
+  showScale: false,
   generateTooltip: (_row, _size, value) => {
     return (
       '<div style="background:rgb(0 141 218); color:#fff; padding:10px; border-style:solid, zIndex: 10"> ' +
@@ -194,8 +197,10 @@ const TreeMap = ({ needCallbacks=true, data = defaultData }) => {
     setBarChartConfig(null);
   };
 
+  console.log(data)
+
   return (
-    <div className=" pb-60">
+    <div className="pb-60 md:pb-20">
       <Chart
         chartType="TreeMap"
         width="100%"
@@ -231,6 +236,28 @@ const TreeMap = ({ needCallbacks=true, data = defaultData }) => {
           },
         ]}
       />
+      {/* <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: '20px' }}>
+          <div style={{ width: '20px', height: '20px', backgroundColor: '#ffef96', marginRight: '5px' }}></div>
+          <span>0</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: '20px' }}>
+          <div style={{ width: '20px', height: '20px', backgroundColor: '#ff6e73', marginRight: '5px' }}></div>
+          <span>25</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: '20px' }}>
+          <div style={{ width: '20px', height: '20px', backgroundColor: 'white', border: '1px solid black', marginRight: '5px' }}></div>
+          <span>50</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: '20px' }}>
+          <div style={{ width: '20px', height: '20px', backgroundColor: 'white', border: '1px solid black', marginRight: '5px' }}></div>
+          <span>75</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          <div style={{ width: '20px', height: '20px', backgroundColor: '#d2177a', marginRight: '5px' }}></div>
+          <span>100</span>
+        </div>
+      </div> */}
       <Popup
         onClose={handleClose}
         modal

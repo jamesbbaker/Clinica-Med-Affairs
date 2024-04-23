@@ -179,7 +179,7 @@ const Table = ({
                     <td {...cell.getCellProps()}>{typeof cellValue === "number" ? cellValue.toLocaleString() : cell.render("Cell")} </td>
                   );
                 })}
-                <div onClick={() => setItemId(row.values.email)} className="absolute w-[1rem] z-[4] h-[100%] hover:scale-[1.2] transition-all ease-in-out duration-300 right-4 grid place-content-center"><AiOutlineDelete /></div>
+                {UserTable && <div onClick={() => setItemId(row.values.email)} className="absolute w-[1rem] z-[4] h-[100%] hover:scale-[1.2] transition-all ease-in-out duration-300 right-4 grid place-content-center"><AiOutlineDelete /></div>}
               </tr>
             );
           })}
