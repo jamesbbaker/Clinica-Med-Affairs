@@ -119,15 +119,16 @@ const UnmetNeedDefinitionData = {
     id: "id16",
     treatmentDecision: "Therapy support and adherence",
     patientNeed: "No specific patient need mentioned",
-    color: "#7DD892"
-}
-  
+    color: "#7DD892",
+  },
 };
 
 const UnmetNeedDefinition = () => {
   const [modalId, setModalId] = useState(null);
   const [statsData1, setStatsData1] = useState(null);
   const [statsData2, setStatsData2] = useState(null);
+  const [statsData3, setStatsData3] = useState(null);
+  const [statsData4, setStatsData4] = useState(null);
   const { accessToken, refreshToken } = useContext(AuthContext);
 
   const _options = useMemo(() => {
@@ -143,13 +144,98 @@ const UnmetNeedDefinition = () => {
         y: {
           title: {
             display: true,
-            text: "Patient Years",
+            text: "Asthma Visits per Year",
           },
         },
         x: {
           title: {
             display: true,
-            text: "Asthma Visits per Year",
+            text: "Patient Years",
+          },
+          grid: {
+            display: false, // Turn off grid lines for x-axis
+          },
+          ticks: {
+            font: {
+              size: 10,
+            },
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+    };
+  }, []);
+
+  const chart_2_options = useMemo(() => {
+    return {
+      indexAxis: "x",
+      elements: {
+        bar: {
+          borderWidth: 1,
+        },
+      },
+      responsive: true,
+      scales: {
+        y: {
+          // min: 0, // Set minimum value for the x-axis
+          // max: 2000,
+          title: {
+            display: true,
+            text: "Patients",
+    
+          },
+        },
+        x: {
+          title: {
+            display: true,
+            text: "Max Monthly Steroid MGs",
+          },
+          grid: {
+            display: false, // Turn off grid lines for x-axis
+          },
+          ticks: {
+            font: {
+              size: 10,
+            },
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+    };
+  }, []);
+
+  const chart_3_options = useMemo(() => {
+    return {
+      indexAxis: "x",
+      elements: {
+        bar: {
+          borderWidth: 1,
+        },
+      },
+      responsive: true,
+      scales: {
+        y: {
+          // min: 0, // Set minimum value for the x-axis
+          // max: 2000,
+          title: {
+            display: true,
+            text: "Patients",
+          },
+        },
+        x: {
+          //   min: 0, // Set minimum value for the x-axis
+          // max: 2500,
+          title: {
+            display: true,
+            text: "Max Yearly Steroid MGs",
           },
           grid: {
             display: false, // Turn off grid lines for x-axis
@@ -176,6 +262,8 @@ const UnmetNeedDefinition = () => {
   const handleClose = () => {
     setStatsData1(null);
     setStatsData2(null);
+    setStatsData3(null);
+    setStatsData4(null);
     setModalId(null);
   };
 
@@ -191,8 +279,17 @@ const UnmetNeedDefinition = () => {
     responseData.sort((a, b) => {
       return new Date(a.Date) - new Date(b.Date);
     });
-
-    responseData.forEach((entry) => {
+    const filteredData =responseData.filter(item => {
+      // Convert Date string to Date object
+      const date = new Date(item.Date);
+      
+      // Create a Date object for January 2016
+      const jan2016 = new Date(2016, 0, 1); // January is month 0
+      
+      // Check if the date is after January 2016
+      return date >= jan2016;
+  });
+  filteredData.forEach((entry) => {
       const Date = entry["Date"];
       const New_ICS_LABA_Patients = entry["New_ICS_LABA_Patients"];
       const Receive_Biologic = entry["Receive_Biologic"];
@@ -250,22 +347,23 @@ const UnmetNeedDefinition = () => {
     setStatsData1(data);
   }
 
-  function getBarChart(res) {
+  function getBarChart(res, type1, type2) {
     const responseData = res.data;
-    responseData.sort((a,b) => a.Asthma_Visits_per_Year - b.Asthma_Visits_per_Year)
+    responseData.sort((a, b) => a[type1] - b[type1]);
 
     let _data = {
-      labels: responseData.map((item) => item.Asthma_Visits_per_Year),
+      labels: responseData.map((item) => item[type1]),
       datasets: [
         {
-          data: responseData.map((item) => item.Patient_Years),
-          borderColor: "rgb(255, 99, 132)",
-          backgroundColor: "rgba(255, 99, 132, 0.5)",
+          data: responseData.map((item) => item[type2]),
+          borderColor: "rgb(542, 62, 35,0.8)",
+          backgroundColor: "rgb(542, 62, 35)",
           borderWidth: 2,
         },
       ],
     };
-    setStatsData2(_data);
+    console.log(_data);
+    return _data;
   }
 
   const handleClick = (key) => {
@@ -284,13 +382,42 @@ const UnmetNeedDefinition = () => {
       getDataStats("data_stats_14", accessToken, refreshToken)
         .then((res) => {
           if (res) {
-            getBarChart(res);
+            let _data = getBarChart(
+              res,
+              "Asthma_Visits_per_Year",
+              "Patient_Years"
+            );
+            setStatsData2(_data);
           }
         })
         .catch((err) => {
           console.log(err, "err");
         });
-    }
+    } else if (UnmetNeedDefinitionData[key].id === "id18") {
+      getDataStats("data_stats_16", accessToken, refreshToken)
+        .then((res) => {
+          if (res) {
+            console.log(res, "res _ 16")
+            let _data = getBarChart(res, res.headers[0], res.headers[1]);
+            setStatsData3(_data);
+          }
+        })
+        .catch((err) => {
+          console.log(err, "err");
+        });
+      getDataStats("data_stats_17", accessToken, refreshToken)
+        .then((res) => {
+          if (res) {
+            console.log(res, "res _ 17")
+
+            let _data = getBarChart(res, res.headers[0], res.headers[1]);
+            setStatsData4(_data);
+          }
+        })
+        .catch((err) => {
+          console.log(err, "err");
+        });
+    } 
   };
 
   return (
@@ -368,6 +495,20 @@ const UnmetNeedDefinition = () => {
             )}
             {statsData2 && (
               <BarChart height={150} data={statsData2} options={_options} />
+            )}
+            {statsData3 && (
+              <BarChart
+                height={window.innerWidth > 1400 ? 60 : 80}
+                data={statsData3}
+                options={chart_2_options}
+              />
+            )}
+            {statsData4 && (
+              <BarChart
+                height={window.innerWidth > 1400 ? 60 : 80}
+                data={statsData4}
+                options={chart_3_options}
+              />
             )}
           </div>
         )}
