@@ -160,8 +160,11 @@ const DataQuality = () => {
             } else {
               return a.Month - b.Month;
             }
+          })
+          const filteredData = responseData.filter(item => {
+            return (item.Year > 2016 || (item.Year === 2016 && item.Month >= 1));
           });
-          responseData.forEach((entry) => {
+          filteredData.forEach((entry) => {
             const month = entry["Month"];
             const year = entry["Year"];
             const distinctPatients = entry["Distinct_Patients"];
@@ -210,7 +213,10 @@ const DataQuality = () => {
               return a.Month - b.Month;
             }
           });
-          responseData.forEach((entry) => {
+          const filteredData = responseData.filter(item => {
+            return (item.Year > 2016 || (item.Year === 2016 && item.Month >= 1));
+          });
+          filteredData.forEach((entry) => {
             const month = entry["Month"];
             const year = entry["Year"];
             const NumberOfPatients = entry["NumberOfPatients"];
@@ -334,7 +340,7 @@ const DataQuality = () => {
     <div className="pb-44">
       {statsData8 && 
        <Table
-       Title="Asthma HCP Specialties by Patient Interactions"
+       Title="Summary Table"
        activeCells={false}
        showSelectionBtns={false}
        TableData={statsData8}
