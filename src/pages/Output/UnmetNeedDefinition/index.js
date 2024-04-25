@@ -413,7 +413,7 @@ const UnmetNeedDefinition = () => {
       getDataStats("data_stats_18", accessToken, refreshToken)
         .then((res) => {
           if (res) {
-            const responseData = res.data;
+            const responseData = [...res.data]
             setStatsData5(responseData);
           }
         })
@@ -447,8 +447,8 @@ const UnmetNeedDefinition = () => {
       getDataStats("data_stats_18_b", accessToken, refreshToken)
       .then((res) => {
         if (res) {
-          const responseData = res.data;
-          setStatsData5(responseData);
+          const responseData = [...res.data]
+          setStatsData6(responseData);
         }
       })
       .catch((err) => {
@@ -467,7 +467,6 @@ const UnmetNeedDefinition = () => {
       getDataStats("data_stats_17", accessToken, refreshToken)
         .then((res) => {
           if (res) {
-            console.log(res, "res _ 17");
 
             let _data = getBarChart(res, res.headers[0], res.headers[1]);
             setStatsData4(_data);
@@ -550,6 +549,7 @@ const UnmetNeedDefinition = () => {
             {statsData6 && (
               <div className="h-[30rem] flex items-center justify-center w-full">
                 <Table
+                initialState={{pageSize: 10,pageIndex: 0}}
                   marginTop={0}
                   Title="Summary Table"
                   activeCells={false}
@@ -562,6 +562,7 @@ const UnmetNeedDefinition = () => {
             {statsData5 && (
               <div className="h-[30rem] flex items-center justify-center w-full">
                 <Table
+                  initialState={{pageSize: 10,pageIndex: 0}}
                   marginTop={0}
                   Title="Summary Table"
                   activeCells={false}
