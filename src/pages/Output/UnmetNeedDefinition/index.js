@@ -6,120 +6,131 @@ import { AuthContext } from "../../../context/AuthContext";
 import { generateStatsOptions, setLineData } from "../../../utils/ChartUtils";
 import { LineChart } from "../../../components/LineChart";
 import BarChart from "../../../components/BarChart";
+import Table from "../../../components/Table";
 
 const UnmetNeedDefinitionData = {
   id1: {
     id: "id1",
-    treatmentDecision: "Key treatment decisions",
-    patientNeed: "",
+    title: "Key treatment decisions",
+    buttonText: "",
+    description: "Lorem Ipsum",
     color: "#8CC9E6",
   },
   id2: {
     id: "id2",
-    treatmentDecision:
+    title:
       "After diagnosis, do patients receive a spirometry test?",
-    patientNeed: "Incomplete initial asthma testing",
+    buttonText: "Incomplete initial asthma testing",
+    description: "Lorem Ipsum",
     color: "#8CC9E6",
   },
   id3: {
     id: "id3",
-    treatmentDecision:
+    title:
       "Do severe or uncontrolled asthma patients receive IGE and EOS/CBC testing?",
-    patientNeed: "Improper severe asthma testing",
+    buttonText: "Improper severe asthma testing",
+    description: "Lorem Ipsum",
     color: "#8CC9E6",
   },
   id4: {
     id: "id4",
-    treatmentDecision: "Treatment (all lines of therapy)",
-    patientNeed: "",
+    title: "Treatment (all lines of therapy)",
+    description: "Lorem Ipsum",
+    buttonText: "",
     color: "#6FA9D9",
   },
   id5: {
     id: "id5",
-    treatmentDecision:
+    title:
       "Do patients diagnosed with asthma receive any treatment at all?",
-    patientNeed: "Untreated patients",
+    buttonText: "Untreated patients",
+    description: "Lorem Ipsum",
     color: "#6FA9D9",
   },
   id6: {
     id: "id6",
-    treatmentDecision:
+    title:
       "Are uncontrolled or severe patients receiving ICS/beta-agonists escalated to double therapy?",
-    patientNeed:
+    buttonText:
       "Failure to escalate uncontrolled/severe patients to double therapy",
+      description: "Lorem Ipsum",
     color: "#6FA9D9",
   },
   id17: {
     id: "id17",
-    treatmentDecision:
+    title:
       "Do patients receive excessive OCS by either consistency or quantity of use when receiving ICS/beta-agonists?",
-    patientNeed: "Excessive steroid usage on ICS/beta-agonist",
+    buttonText: "Excessive steroid usage on ICS/beta-agonist",
+    description: "Lorem Ipsum",
     color: "#6FA9D9",
   },
   id7: {
     id: "id7",
-    treatmentDecision:
+    title:
       "How long does it take from demonstrating severe/uncontrolled asthma to treatment escalation?",
-    patientNeed: "Delay in escalating patients to double therapy",
+    buttonText: "Delay in escalating patients to double therapy",
+    description: "Lorem Ipsum",
     color: "#6FA9D9",
   },
   id8: {
     id: "id8",
-    treatmentDecision:
+    title:
       "Are uncontrolled or severe patients receiving double therapies escalated to triple therapy?",
-    patientNeed:
+    buttonText:
       "Failure to escalate uncontrolled/severe patients to triple therapy",
+    description: "Lorem Ipsum",
     color: "#6FA9D9",
   },
   id18: {
     id: "id18",
-    treatmentDecision:
+    title:
       "Do patients receive excessive OCS by either consistency or quantity of use when receiving double therapies?",
-    patientNeed: "Excessive steroid usage on double therapy",
+    buttonText: "Excessive steroid usage on double therapy",
+    description: "Lorem Ipsum",
     color: "#6FA9D9",
   },
   id9: {
     id: "id9",
-    treatmentDecision:
+    title:
       "How long does it take from demonstrating severe/uncontrolled asthma to treatment escalation?",
-    patientNeed: "Delay in escalating patients from double to triple therapy",
+    buttonText: "Delay in escalating patients from double to triple therapy",
+    description: "Lorem Ipsum",
     color: "#6FA9D9",
   },
   id10: {
     id: "id10",
-    treatmentDecision: "Do patients receive open triple therapies?",
-    patientNeed: "Suboptimal use of open triple therapy",
+    title: "Do patients receive open triple therapies?",
+    buttonText: "Suboptimal use of open triple therapy",
+    description: "Lorem Ipsum",
     color: "#6FA9D9",
   },
   id12: {
     id: "id12",
-    treatmentDecision: "Therapy support and adherence",
-    patientNeed: "",
+    title: "Therapy support and adherence",
+    description: "Lorem Ipsum",
+    buttonText: "",
     color: "#94D3A2",
   },
   id13: {
     id: "id13",
-    treatmentDecision: "Are patients adherent to their double treatments?",
-    patientNeed: "Non-adherence to double therapies",
+    title: "Are patients adherent to their double treatments?",
+    buttonText: "Non-adherence to double therapies",
+    description: "Lorem Ipsum",
     color: "#94D3A2",
   },
   id14: {
     id: "id14",
-    treatmentDecision: "Are patients adherent to open triple treatments?",
-    patientNeed: "Non-adherence to open triple therapies",
+    title: "Are patients adherent to open triple treatments?",
+    buttonText: "Non-adherence to open triple therapies",
+    description: "Lorem Ipsum",
     color: "#94D3A2",
   },
   id15: {
     id: "id15",
-    treatmentDecision: "Are patients adherence to closed triple treatments?",
-    patientNeed: "Non-adherence to closed triple therapies",
+    title: "Are patients adherence to closed triple treatments?",
+    buttonText: "Non-adherence to closed triple therapies",
+    description: "Lorem Ipsum",
     color: "#94D3A2",
-  },
-  id16: {
-    id: "id16",
-    treatmentDecision: "Therapy support and adherence",
-    patientNeed: "No specific patient need mentioned",
-    color: "#7DD892",
   },
 };
 
@@ -129,7 +140,23 @@ const UnmetNeedDefinition = () => {
   const [statsData2, setStatsData2] = useState(null);
   const [statsData3, setStatsData3] = useState(null);
   const [statsData4, setStatsData4] = useState(null);
+  const [statsData5, setStatsData5] = useState(null);
+  const [statsData6, setStatsData6] = useState(null);
   const { accessToken, refreshToken } = useContext(AuthContext);
+
+  const Table_Columns_3 = useMemo(() => {
+    const USERS_TABLE_COLUMNS = [
+      {
+        Header: "Metric",
+        accessor: "Metric",
+      },
+      {
+        Header: "Value",
+        accessor: "Value",
+      },
+    ];
+    return USERS_TABLE_COLUMNS;
+  }, []);
 
   const _options = useMemo(() => {
     return {
@@ -186,7 +213,6 @@ const UnmetNeedDefinition = () => {
           title: {
             display: true,
             text: "Patients",
-    
           },
         },
         x: {
@@ -207,6 +233,13 @@ const UnmetNeedDefinition = () => {
       plugins: {
         legend: {
           display: false,
+        },
+        title: {
+          display: true,
+          text: "Max Monthly Steroid Dosage for ICS-LABA patients", // Chart title
+          font: {
+            size: 14, // Increase font size
+          },
         },
       },
     };
@@ -251,6 +284,13 @@ const UnmetNeedDefinition = () => {
         legend: {
           display: false,
         },
+        title: {
+            display: true,
+            text:'Max Yearly Steroid Dosage for ICS-LABA patients',
+            font: {
+              size: 14, // Increase font size
+            },
+        }
       },
     };
   }, []);
@@ -264,6 +304,8 @@ const UnmetNeedDefinition = () => {
     setStatsData2(null);
     setStatsData3(null);
     setStatsData4(null);
+    setStatsData5(null);
+    setStatsData6(null);
     setModalId(null);
   };
 
@@ -279,17 +321,17 @@ const UnmetNeedDefinition = () => {
     responseData.sort((a, b) => {
       return new Date(a.Date) - new Date(b.Date);
     });
-    const filteredData =responseData.filter(item => {
+    const filteredData = responseData.filter((item) => {
       // Convert Date string to Date object
       const date = new Date(item.Date);
-      
+
       // Create a Date object for January 2016
       const jan2016 = new Date(2016, 0, 1); // January is month 0
-      
+
       // Check if the date is after January 2016
       return date >= jan2016;
-  });
-  filteredData.forEach((entry) => {
+    });
+    filteredData.forEach((entry) => {
       const Date = entry["Date"];
       const New_ICS_LABA_Patients = entry["New_ICS_LABA_Patients"];
       const Receive_Biologic = entry["Receive_Biologic"];
@@ -362,13 +404,22 @@ const UnmetNeedDefinition = () => {
         },
       ],
     };
-    console.log(_data);
     return _data;
   }
 
   const handleClick = (key) => {
     setModalId(key);
-    if (UnmetNeedDefinitionData[key].id === "id6") {
+    if (UnmetNeedDefinitionData[key].id === "id8") {
+      getDataStats("data_stats_18", accessToken, refreshToken)
+        .then((res) => {
+          if (res) {
+            const responseData = res.data;
+            setStatsData5(responseData);
+          }
+        })
+        .catch((err) => {
+          console.log(err, "err");
+        });
       getDataStats("data_stats_12", accessToken, refreshToken)
         .then((res) => {
           if (res) {
@@ -378,7 +429,6 @@ const UnmetNeedDefinition = () => {
         .catch((err) => {
           console.log(err, "err");
         });
-    } else if (UnmetNeedDefinitionData[key].id === "id8") {
       getDataStats("data_stats_14", accessToken, refreshToken)
         .then((res) => {
           if (res) {
@@ -394,10 +444,19 @@ const UnmetNeedDefinition = () => {
           console.log(err, "err");
         });
     } else if (UnmetNeedDefinitionData[key].id === "id18") {
+      getDataStats("data_stats_18_b", accessToken, refreshToken)
+      .then((res) => {
+        if (res) {
+          const responseData = res.data;
+          setStatsData5(responseData);
+        }
+      })
+      .catch((err) => {
+        console.log(err, "err");
+      });
       getDataStats("data_stats_16", accessToken, refreshToken)
         .then((res) => {
           if (res) {
-            console.log(res, "res _ 16")
             let _data = getBarChart(res, res.headers[0], res.headers[1]);
             setStatsData3(_data);
           }
@@ -408,7 +467,7 @@ const UnmetNeedDefinition = () => {
       getDataStats("data_stats_17", accessToken, refreshToken)
         .then((res) => {
           if (res) {
-            console.log(res, "res _ 17")
+            console.log(res, "res _ 17");
 
             let _data = getBarChart(res, res.headers[0], res.headers[1]);
             setStatsData4(_data);
@@ -417,7 +476,7 @@ const UnmetNeedDefinition = () => {
         .catch((err) => {
           console.log(err, "err");
         });
-    } 
+    }
   };
 
   return (
@@ -437,32 +496,32 @@ const UnmetNeedDefinition = () => {
             <div className="col-span-2" key={key}>
               <div
                 className={`bg-white px-4 ${
-                  UnmetNeedDefinitionData[key].patientNeed ? "py-2" : "py-1"
+                  UnmetNeedDefinitionData[key].buttonText ? "py-2" : "py-1"
                 } gap-6 grid grid-cols-2 items-center rounded`}
               >
                 <div className="flex col-span-1 items-center justify-between">
                   <h2
                     style={
-                      UnmetNeedDefinitionData[key].patientNeed
+                      UnmetNeedDefinitionData[key].buttonText
                         ? {}
                         : { color: `${UnmetNeedDefinitionData[key].color}` }
                     }
                     className={`text-sm ${
-                      UnmetNeedDefinitionData[key].patientNeed
+                      UnmetNeedDefinitionData[key].buttonText
                         ? `font-medium text-gray-700`
                         : `font-bold`
                     } `}
                   >
-                    {UnmetNeedDefinitionData[key].treatmentDecision}
+                    {UnmetNeedDefinitionData[key].title}
                   </h2>
                 </div>
-                {UnmetNeedDefinitionData[key].patientNeed && (
+                {UnmetNeedDefinitionData[key].buttonText && (
                   <button
                     onClick={() => handleClick(key)}
                     style={{ borderColor: UnmetNeedDefinitionData[key].color }}
                     className={`text-gray-700 hover:scale-105 transition-all ease-linear border-2 px-4 py-2`}
                   >
-                    {UnmetNeedDefinitionData[key].patientNeed}
+                    {UnmetNeedDefinitionData[key].buttonText}
                   </button>
                 )}
               </div>
@@ -484,32 +543,65 @@ const UnmetNeedDefinition = () => {
         position="center center"
       >
         {modalId && (
-          <div className="w-[70vw] h-[auto] flex flex-col gap-2 items-center justify-center bg-white">
+          <div className="w-[70vw] max-h-[80vh] pb-10 overflow-auto h-[auto] flex flex-col gap-2 items-center bg-white">
+            <div className="w-[100%] px-2 text-lg text-left py-8 font-[600] text-[#808080]">
+              {UnmetNeedDefinitionData[modalId].buttonText}
+            </div>
+            {statsData6 && (
+              <div className="h-[30rem] flex items-center justify-center w-full">
+                <Table
+                  marginTop={0}
+                  Title="Summary Table"
+                  activeCells={false}
+                  showSelectionBtns={false}
+                  TableData={statsData6}
+                  TableColummns={Table_Columns_3}
+                />
+              </div>
+            )}
+            {statsData5 && (
+              <div className="h-[30rem] flex items-center justify-center w-full">
+                <Table
+                  marginTop={0}
+                  Title="Summary Table"
+                  activeCells={false}
+                  showSelectionBtns={false}
+                  TableData={statsData5}
+                  TableColummns={Table_Columns_3}
+                />
+              </div>
+            )}
             {statsData1 && (
               <LineChart
-                height={140}
+                height={window.innerWidth > 1400 ? 120 : 80}
                 arbitrary={false}
                 data={statsData1}
                 options={Line_options_2}
               />
             )}
             {statsData2 && (
-              <BarChart height={150} data={statsData2} options={_options} />
+              <BarChart
+                height={window.innerWidth > 1400 ? 120 : 80}
+                data={statsData2}
+                options={_options}
+              />
+            )}
+            {statsData4 && (
+              <div className="my-10 w-full h-auto"><BarChart
+                height={window.innerWidth > 1400 ? 80 : 90}
+                data={statsData4}
+                options={chart_3_options}
+              />
+              </div>
             )}
             {statsData3 && (
               <BarChart
-                height={window.innerWidth > 1400 ? 60 : 80}
+                height={window.innerWidth > 1400 ? 80 : 90}
                 data={statsData3}
                 options={chart_2_options}
               />
             )}
-            {statsData4 && (
-              <BarChart
-                height={window.innerWidth > 1400 ? 60 : 80}
-                data={statsData4}
-                options={chart_3_options}
-              />
-            )}
+            <p className="px-4 py-14 w-full text-left text-sm">{UnmetNeedDefinitionData[modalId].description}</p>
           </div>
         )}
       </Popup>

@@ -64,9 +64,11 @@ const BarChartOptions = {
 };
 
 const Table = ({
+  marginTop="3.5rem",
   ShowPagination = false,
   activeCells= true,
   Title="",
+  height="auto",
   UserTable = false,
   initialState={
     pageSize: 10,
@@ -140,8 +142,8 @@ const Table = ({
   };
 
   return (
-    <div className="w-full mt-14 max-w-full overflow-auto">
-      {Title && <div className="text-xs text-gray-500 font-semibold">{Title}</div>}
+    <div style={{marginTop}} className="w-full mb-10 max-w-full overflow-auto">
+      {Title && <div className="text-md text-gray-500 font-semibold">{Title}</div>}
       {!UserTable &&showSelectionBtns && (
         <SelectionButtons
           data={allColumns}
