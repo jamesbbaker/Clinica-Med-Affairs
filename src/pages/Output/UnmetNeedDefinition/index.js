@@ -480,7 +480,7 @@ const UnmetNeedDefinition = () => {
   };
 
   return (
-    <div className="grid grid-cols-3 items-center pb-32">
+    <div className="grid grid-cols-3 items-center">
       <div className="px-4 py-2 font-semibold text-lg">
         Key Treatment Decisions
       </div>

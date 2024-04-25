@@ -21,7 +21,7 @@ const HCPTable = () => {
             >
               {item.heading}
             </div>
-          );
+          )
         })}
       </div>
       <div className="w-2/3 ml-4 border-2 border-primary p-2 rounded-lg">
@@ -31,7 +31,7 @@ const HCPTable = () => {
               <div>{item.text}</div>
               <div>{item.value}</div>
             </div>
-          );
+          )
         })}
       </div>
     </div>

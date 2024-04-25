@@ -196,7 +196,7 @@ function MapAddLayerFn(map, data) {
 
 const ImpactTracking = () => {
   return (
-    <div className="pb-20 flex flex-col gap-8 h-34">
+    <div className="flex flex-col gap-8">
       <LineChart options={options} data={data} arbitrary={false} />
       <Map LayerFn={MapAddLayerFn} markersEnabled={false} />
       <TreeMap />
