@@ -38,7 +38,7 @@ const Home = () => {
       ) : (
         <>
           <RealTimeBox />
-          <HCPTable />;
+          <HCPTable />
         </>
       )}
     </div>

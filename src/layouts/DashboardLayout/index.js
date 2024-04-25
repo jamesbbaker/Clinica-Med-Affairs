@@ -3,7 +3,9 @@ import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 import { AuthContext } from "../../context/AuthContext";
 
-import TopBar from "../../components/TopBar";
+import Header from "../../components/Header";
+
+import "./index.css";
 
 const DashboardLayout = () => {
   const { accessToken, refreshToken, fetchUserData } = useContext(AuthContext);
@@ -18,8 +20,8 @@ const DashboardLayout = () => {
   }, []);
 
   return (
-    <div className="flex md:overflow-hidden font-primary justify-center items-center w-screen h-screen">
-      <Sidebar />
+    <div id="app__layout" className="grid overflow-x-hidden overflow-y-scroll font-primary justify-center items-center w-screen h-screen relative">
+      {/* <Sidebar />
       <div className="w-4/5 h-screen overflow-scroll md:overflow-hidden mh-screen">
         <div className="fixed w-4/5 z-20">
         <TopBar />
@@ -29,7 +31,10 @@ const DashboardLayout = () => {
           <Outlet />
           </div>
         </div>
-      </div>
+      </div> */}
+      <Header />
+      <div className="page__content py-8 px-8"><Outlet /></div>
+      <Sidebar />
     </div>
   );
 };

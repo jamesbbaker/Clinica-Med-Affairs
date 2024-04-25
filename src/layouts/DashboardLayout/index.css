@@ -1,0 +1,24 @@
+#app__layout header {
+  grid-area: header;
+}
+#app__layout #page__container {
+  grid-area: content;
+}
+#app__layout aside {
+  grid-area: sidebar;
+  top: 56px;
+  height: calc(100vh - 58px);
+}
+#app__layout {
+  align-items: flex-start;
+  justify-content: flex-start;
+  grid-template-columns: 1fr 5fr;
+  grid-template-areas: 
+    "header  header"
+    "sidebar content";
+}
+
+#app__layout header .app__logo {
+  display: block;
+  width: 126px;
+}

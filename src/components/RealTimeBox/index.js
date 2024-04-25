@@ -40,11 +40,11 @@ const RealTimeBox = () => {
                 </svg>
               </div>
             </div>
-          );
+          )
         })}
       </div>
     </div>
-  );
+  )
 };
 
 export default RealTimeBox;

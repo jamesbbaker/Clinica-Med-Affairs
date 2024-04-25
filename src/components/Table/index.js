@@ -64,7 +64,7 @@ const BarChartOptions = {
 };
 
 const Table = ({
-  marginTop="3.5rem",
+  marginTop="0rem",
   ShowPagination = false,
   activeCells= true,
   Title="",
@@ -142,7 +142,7 @@ const Table = ({
   };
 
   return (
-    <div style={{marginTop}} className="w-full mb-10 max-w-full overflow-auto">
+    <div style={{marginTop}} className="w-full max-w-full overflow-auto">
       {Title && <div className="text-md text-gray-500 font-semibold">{Title}</div>}
       {!UserTable &&showSelectionBtns && (
         <SelectionButtons
