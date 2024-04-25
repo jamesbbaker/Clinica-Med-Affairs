@@ -144,7 +144,7 @@ export function LineChart({
   };
 
   return (
-    <div className="w-full h-full px-2 py-4 pb-10">
+    <div className="w-full h-full px-2 py-4 pb-[7.5rem]">
       {!loading && (
         <div className={`${arbitrary && "pointer-events-none"}`}>
           <Line

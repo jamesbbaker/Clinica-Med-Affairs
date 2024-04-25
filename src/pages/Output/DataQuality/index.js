@@ -340,6 +340,7 @@ const DataQuality = () => {
     <div className="pb-44">
       {statsData8 && 
        <Table
+       marginTop="0"
        Title="Summary Table"
        activeCells={false}
        showSelectionBtns={false}

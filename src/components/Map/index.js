@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import geoJson from "./map-data.json";
 import mapDataJson from "./data.json";
-import { getDataStats } from "../../API/Outputs";
 import { AuthContext } from "../../context/AuthContext";
 
 mapboxgl.accessToken =
@@ -20,58 +19,6 @@ const defaultActive = {
   ],
 };
 
-const stateAbbreviations = {
-  Alabama: "AL",
-  Alaska: "AK",
-  Arizona: "AZ",
-  Arkansas: "AR",
-  California: "CA",
-  Colorado: "CO",
-  Connecticut: "CT",
-  Delaware: "DE",
-  Florida: "FL",
-  Georgia: "GA",
-  Hawaii: "HI",
-  Idaho: "ID",
-  Illinois: "IL",
-  Indiana: "IN",
-  Iowa: "IA",
-  Kansas: "KS",
-  Kentucky: "KY",
-  Louisiana: "LA",
-  Maine: "ME",
-  Maryland: "MD",
-  Massachusetts: "MA",
-  Michigan: "MI",
-  Minnesota: "MN",
-  Mississippi: "MS",
-  Missouri: "MO",
-  Montana: "MT",
-  Nebraska: "NE",
-  Nevada: "NV",
-  "New Hampshire": "NH",
-  "New Jersey": "NJ",
-  "New Mexico": "NM",
-  "New York": "NY",
-  "North Carolina": "NC",
-  "North Dakota": "ND",
-  Ohio: "OH",
-  Oklahoma: "OK",
-  Oregon: "OR",
-  Pennsylvania: "PA",
-  "Rhode Island": "RI",
-  "South Carolina": "SC",
-  "South Dakota": "SD",
-  Tennessee: "TN",
-  Texas: "TX",
-  Utah: "UT",
-  Vermont: "VT",
-  Virginia: "VA",
-  Washington: "WA",
-  "West Virginia": "WV",
-  Wisconsin: "WI",
-  Wyoming: "WY",
-};
 
 function MapAddLayer(map, data) {
   map.on("load", () => {
@@ -88,22 +35,6 @@ function MapAddLayer(map, data) {
         break;
       }
     }
-
-    map.setLayoutProperty("country-label", "text-field", [
-      "format",
-      ["get", "name_en"],
-      { "font-scale": 1.2 },
-      "\n",
-      {},
-      ["get", "name"],
-      {
-        "font-scale": 0.8,
-        "text-font": [
-          "literal",
-          ["DIN Offc Pro Italic", "Arial Unicode MS Regular"],
-        ],
-      },
-    ]);
 
     map.addLayer(
       {
