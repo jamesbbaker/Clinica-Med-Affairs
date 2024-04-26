@@ -33,7 +33,7 @@ const DashboardLayout = () => {
         </div>
       </div> */}
       <Header />
-      <div className="page__content py-8 px-8"><Outlet /></div>
+      <div className="page__content pt-8 pb-16 px-8"><Outlet /></div>
       <Sidebar />
     </div>
   );

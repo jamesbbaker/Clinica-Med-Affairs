@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from "react";
-import logo from "../../assets/images/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { updateMenu } from "../../features/menu/menuSlice";
 import { useNavigate, useParams } from "react-router-dom";
@@ -124,24 +123,23 @@ const Sidebar = () => {
     }
   },[user])
   
-  const handelHome = () => {
-    navigate("/dashboard")
-    dispatch(
-      updateMenu({
-        currentMenu: user.admin ? "users" : "home",
-        currentMenuLabel: user.admin ? "Users" : "Home",
-      })
-    );
-  }
-
-  
+  // const handelHome = () => {
+  //   navigate("/dashboard")
+  //   dispatch(
+  //     updateMenu({
+  //       currentMenu: user.admin ? "users" : "home",
+  //       currentMenuLabel: user.admin ? "Users" : "Home",
+  //     })
+  //   );
+  // }
 
   return (
     <aside className="w-full bg-primary sticky overflow-y-auto">
       <div className="flex flex-col py-4">
         {user &&
-          menuList.map((item) => (
+          menuList.map((item, index) => (
             <div
+              key={`menu-item-${index}`}
               className={`flex text-left flex-col justify-center items-center`}
             >
               {item.label && (
@@ -154,29 +152,30 @@ const Sidebar = () => {
               )}
               {item.children && (
                 <div className="flex pl-4  justify-center px-2 flex-col items-center w-full">
-                  {item.children.map((subItem) => {
+                  {item.children.map((subItem, index) => {
                     if (
                       item.name === "outputs" &&
                       user.page_view &&
                       !user.page_view.includes(subItem.id)
                     ) {
-                      return;
+                      return false;
                     }
                     if (
                       item.name === "dashboard" &&
                       subItem.id === APP_ROUTES.users &&
                       !user.admin
                     ) {
-                      return;
+                      return false;
                     }
                     return (
                       <div
+                        key={`menu-subitem-${index}`}
                         style={{ fontSize: "0.75rem" }}
                         onClick={() => handleClick(subItem)}
                         className={`${
                           currentMenu !== subItem.id && "text-slate-50"
                         } ${
-                          currentMenu == subItem.id
+                          currentMenu === subItem.id
                             ? "bg-slate-50"
                             : "hover:bg-slate-200 hover:bg-opacity-40 "
                         } flex cursor-pointer rounded-md transition-all ease-in-out duration-200 px-2 py-2 font-semibold items-center gap-2  w-full text-left`}

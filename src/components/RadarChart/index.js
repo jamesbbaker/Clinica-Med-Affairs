@@ -106,7 +106,7 @@ export function RadarChart() {
       </div>
       <div className="relative mt-2 flex items-center gap-5 mb-10">
         <div>
-          <label className="text-xs" for="labels-range-input">
+          <label className="text-xs" htmlFor="labels-range-input">
             Number of clusters
           </label>
         </div>
