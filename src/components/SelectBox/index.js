@@ -4,7 +4,7 @@ const SelectBox = ({ error, input, handleSelect }) => {
   return (
     <div className={`w-full mt-2`}>
       <label
-        for={input.id}
+        htmlFor={input.id}
         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
       >
         {input.label}

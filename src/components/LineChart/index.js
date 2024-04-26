@@ -144,7 +144,7 @@ export function LineChart({
   };
 
   return (
-    <div className="w-full h-full px-2 py-4 pb-[7.5rem]">
+    <div className="w-full h-full px-2 pt-4">
       {!loading && (
         <div className={`${arbitrary && "pointer-events-none"}`}>
           <Line
@@ -163,7 +163,7 @@ export function LineChart({
             {selectedValue}
           </div>
           <div>
-            <label className="text-xs" for="labels-range-input">
+            <label className="text-xs" htmlFor="labels-range-input">
               Number of HCPs to prioritize
             </label>
             <input
@@ -171,7 +171,6 @@ export function LineChart({
               type="range"
               min={0}
               max={2500}
-              value={selectedValue}
               onChange={handleChange}
               defaultValue={0}
               className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-500"

@@ -200,7 +200,7 @@ const TreeMap = ({ needCallbacks=true, data = defaultData }) => {
   console.log(data)
 
   return (
-    <div className="pb-60 md:pb-20">
+    <div>
       <Chart
         chartType="TreeMap"
         width="100%"

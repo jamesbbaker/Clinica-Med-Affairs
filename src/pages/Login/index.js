@@ -130,8 +130,9 @@ const Login = () => {
         >
           <img src={logo} className="hidden md:block w-40" />
           <div className="flex w-full flex-col gap-2">
-            {inputs.map((input) => (
+            {inputs.map((input, index) => (
               <InputField
+                key={`login-input-${index}`}
                 onChange={handleChange}
                 error={state.errors[input.id]}
                 input={input}
