@@ -14,9 +14,10 @@ const HCPTable = () => {
         {HCP_DATA.map((item, index) => {
           return (
             <div
+              key={`hcp-data-row-${index}`}
               onClick={() => handleSelect(index)}
               className={`${
-                index == selectedTable && "bg-violet-300"
+                index === selectedTable && "bg-violet-300"
               } rounded-sm p-2 cursor-pointer`}
             >
               {item.heading}
@@ -25,9 +26,9 @@ const HCPTable = () => {
         })}
       </div>
       <div className="w-2/3 ml-4 border-2 border-primary p-2 rounded-lg">
-        {HCP_DATA[selectedTable].table.map((item) => {
+        {HCP_DATA[selectedTable].table.map((item, index) => {
           return (
-            <div className="w-full grid text-sm grid-cols-2 py-1">
+            <div key={`hcp-data-value-${index}`} className="w-full grid text-sm grid-cols-2 py-1">
               <div>{item.text}</div>
               <div>{item.value}</div>
             </div>
