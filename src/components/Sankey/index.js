@@ -147,8 +147,8 @@ const Sankey = ({API, title,height="500px", OPTIONS}) => {
 
 
   return (
-    <div className="px-2 pb-40">
-      {title && <div className="py-4 font-700">{title}</div>}
+    <div>
+      {title && <div className="pb-4 font-700">{title}</div>}
       {sankeyOptions && sankeyOptions.data && <Chart
         chartType="Sankey"
         width="100%"

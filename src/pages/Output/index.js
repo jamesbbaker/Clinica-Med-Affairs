@@ -96,7 +96,7 @@ const Output = () => {
           <div className="text-md font-medium mt-4">
             Summary of nation suboptimal treatment and trends over time
           </div>
-          <div className="grid pb-40 grid-cols-2 ">
+          <div className="grid grid-cols-2 ">
             <BarChart />
             <BarChart data={data} options={options} />
           </div>

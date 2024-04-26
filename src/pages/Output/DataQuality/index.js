@@ -337,7 +337,7 @@ const DataQuality = () => {
   }, []);
 
   return (
-    <div className="pb-44">
+    <div>
       {statsData8 && 
        <Table
        marginTop="0"
