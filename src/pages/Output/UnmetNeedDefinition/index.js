@@ -18,8 +18,7 @@ const UnmetNeedDefinitionData = {
   },
   id2: {
     id: "id2",
-    title:
-      "After diagnosis, do patients receive a spirometry test?",
+    title: "After diagnosis, do patients receive a spirometry test?",
     buttonText: "Incomplete initial asthma testing",
     description: "Lorem Ipsum",
     color: "#8CC9E6",
@@ -41,8 +40,7 @@ const UnmetNeedDefinitionData = {
   },
   id5: {
     id: "id5",
-    title:
-      "Do patients diagnosed with asthma receive any treatment at all?",
+    title: "Do patients diagnosed with asthma receive any treatment at all?",
     buttonText: "Untreated patients",
     description: "Lorem Ipsum",
     color: "#6FA9D9",
@@ -53,7 +51,7 @@ const UnmetNeedDefinitionData = {
       "Are uncontrolled or severe patients receiving ICS/beta-agonists escalated to double therapy?",
     buttonText:
       "Failure to escalate uncontrolled/severe patients to double therapy",
-      description: "Lorem Ipsum",
+    description: "Lorem Ipsum",
     color: "#6FA9D9",
   },
   id17: {
@@ -78,7 +76,8 @@ const UnmetNeedDefinitionData = {
       "Are uncontrolled or severe patients receiving double therapies escalated to triple therapy?",
     buttonText:
       "Failure to escalate uncontrolled/severe patients to triple therapy",
-    description: "Lorem Ipsum",
+    description:
+      "Exacerbations are defined as patients going to the ED / ER WITH a primary asthma diagnosis code or a specific asthma treatment (e.g. insert emergency airway, airway inhaltion treatment, or nebulizer with compression.)",
     color: "#6FA9D9",
   },
   id18: {
@@ -86,7 +85,8 @@ const UnmetNeedDefinitionData = {
     title:
       "Do patients receive excessive OCS by either consistency or quantity of use when receiving double therapies?",
     buttonText: "Excessive steroid usage on double therapy",
-    description: "Lorem Ipsum",
+    description:
+      "OCS converted to prednisone equivalent milligrams. Dose per month and year calculated using prescribed dose, quantity, and days supply.",
     color: "#6FA9D9",
   },
   id9: {
@@ -171,13 +171,13 @@ const UnmetNeedDefinition = () => {
         y: {
           title: {
             display: true,
-            text: "Asthma Visits per Year",
+            text: "Patient Years",
           },
         },
         x: {
           title: {
             display: true,
-            text: "Patient Years",
+            text: "Asthma Visits per Year",
           },
           grid: {
             display: false, // Turn off grid lines for x-axis
@@ -285,12 +285,12 @@ const UnmetNeedDefinition = () => {
           display: false,
         },
         title: {
-            display: true,
-            text:'Max Yearly Steroid Dosage for ICS-LABA patients',
-            font: {
-              size: 14, // Increase font size
-            },
-        }
+          display: true,
+          text: "Max Yearly Steroid Dosage for ICS-LABA patients",
+          font: {
+            size: 14, // Increase font size
+          },
+        },
       },
     };
   }, []);
@@ -413,7 +413,7 @@ const UnmetNeedDefinition = () => {
       getDataStats("data_stats_18", accessToken, refreshToken)
         .then((res) => {
           if (res) {
-            const responseData = [...res.data]
+            const responseData = [...res.data];
             setStatsData5(responseData);
           }
         })
@@ -435,7 +435,7 @@ const UnmetNeedDefinition = () => {
             let _data = getBarChart(
               res,
               "Asthma_Visits_per_Year",
-              "Patient_Years"
+              "Patient_Years",
             );
             setStatsData2(_data);
           }
@@ -445,15 +445,15 @@ const UnmetNeedDefinition = () => {
         });
     } else if (UnmetNeedDefinitionData[key].id === "id18") {
       getDataStats("data_stats_18_b", accessToken, refreshToken)
-      .then((res) => {
-        if (res) {
-          const responseData = [...res.data]
-          setStatsData6(responseData);
-        }
-      })
-      .catch((err) => {
-        console.log(err, "err");
-      });
+        .then((res) => {
+          if (res) {
+            const responseData = [...res.data];
+            setStatsData6(responseData);
+          }
+        })
+        .catch((err) => {
+          console.log(err, "err");
+        });
       getDataStats("data_stats_16", accessToken, refreshToken)
         .then((res) => {
           if (res) {
@@ -467,7 +467,6 @@ const UnmetNeedDefinition = () => {
       getDataStats("data_stats_17", accessToken, refreshToken)
         .then((res) => {
           if (res) {
-
             let _data = getBarChart(res, res.headers[0], res.headers[1]);
             setStatsData4(_data);
           }
@@ -549,7 +548,7 @@ const UnmetNeedDefinition = () => {
             {statsData6 && (
               <div className="h-[30rem] flex items-center justify-center w-full">
                 <Table
-                initialState={{pageSize: 10,pageIndex: 0}}
+                  initialState={{ pageSize: 10, pageIndex: 0 }}
                   marginTop={0}
                   Title="Summary Table"
                   activeCells={false}
@@ -562,7 +561,7 @@ const UnmetNeedDefinition = () => {
             {statsData5 && (
               <div className="h-[30rem] flex items-center justify-center w-full">
                 <Table
-                  initialState={{pageSize: 10,pageIndex: 0}}
+                  initialState={{ pageSize: 10, pageIndex: 0 }}
                   marginTop={0}
                   Title="Summary Table"
                   activeCells={false}
@@ -580,19 +579,20 @@ const UnmetNeedDefinition = () => {
                 options={Line_options_2}
               />
             )}
-            {statsData2 && (
+            {/* {statsData2 && (
               <BarChart
                 height={window.innerWidth > 1400 ? 120 : 80}
                 data={statsData2}
                 options={_options}
               />
-            )}
+            )} */}
             {statsData4 && (
-              <div className="my-10 w-full h-auto"><BarChart
-                height={window.innerWidth > 1400 ? 80 : 90}
-                data={statsData4}
-                options={chart_3_options}
-              />
+              <div className="my-10 w-full h-auto">
+                <BarChart
+                  height={window.innerWidth > 1400 ? 80 : 90}
+                  data={statsData4}
+                  options={chart_3_options}
+                />
               </div>
             )}
             {statsData3 && (
@@ -602,7 +602,9 @@ const UnmetNeedDefinition = () => {
                 options={chart_2_options}
               />
             )}
-            <p className="px-4 py-14 w-full text-left text-sm">{UnmetNeedDefinitionData[modalId].description}</p>
+            <p className="px-4 py-14 w-full text-left text-sm">
+              {UnmetNeedDefinitionData[modalId].description}
+            </p>
           </div>
         )}
       </Popup>
