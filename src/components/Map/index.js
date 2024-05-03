@@ -194,6 +194,9 @@ const Map = ({
   const [mapMarkers, setMapMarkers] = useState([]);
   const [stateMapMarkers, setStateMapMarkers] = useState([]);
   const [popups, setPopups] = useState([]);
+  const [detailsItem, setDetailsItem] = useState(null);
+  const [detailsPosition, setDetailsPosition] = useState(null);
+
 
   useEffect(() => {
     if (markers && stateData) {
@@ -337,24 +340,29 @@ const Map = ({
         if (!stateFeature) {
           const coordinates = e.features[0].geometry.coordinates.slice();
           const item = e.features[0].properties;
+          const pixel = mapRef.current.project(coordinates);
+          setDetailsPosition({ left: pixel.x, top: pixel.y });
 
-          _popup = new mapboxgl.Popup()
-            .setLngLat(coordinates)
-            .setHTML(
-              `<div className"flex flex-col items-center">  
-            <h4>Name: ${item["First Name"]} ${item["Last Name"]}</h4>
-            <h4>Primary Specialty Description: ${item["Primary Specialty Description"]}</h4>
-            <h4>${currentToggle}: ${item[currentToggle]}</h4>
-          </div>`
-            )
-            .addTo(mapRef.current);
-          setPopups((prev) => [...prev, _popup]);
+          setDetailsItem(item);
+
+          // _popup = new mapboxgl.Popup()
+          //   .setLngLat(coordinates)
+          //   .setHTML(
+          //     `<div className"flex flex-col items-center">  
+          //   <h4>Name: ${item["First Name"]} ${item["Last Name"]}</h4>
+          //   <h4>Primary Specialty Description: ${item["Primary Specialty Description"]}</h4>
+          //   <h4>${currentToggle}: ${item[currentToggle]}</h4>
+          // </div>`
+          //   )
+          //   .addTo(mapRef.current);
+          // setPopups((prev) => [...prev, _popup]);
         }
       }
     };
 
     let hoverOutListener = () => {
-      _popup.remove()
+      // _popup.remove()
+      setDetailsItem(null);
     };
 
     // mapRef.current.on("click", "unclustered-point", clickListener);
@@ -481,6 +489,19 @@ const Map = ({
   };
   return (
     <div className="relative">
+       {detailsItem && (
+      <div
+      className="bg-white px-2 py-2"
+        style={{
+          position: 'absolute',
+          left: detailsPosition.left,
+          top: detailsPosition.top,
+          zIndex: 9999, // Ensure details appear above the map
+        }}
+      >
+        <DetailsComponent item={detailsItem} currentToggle={currentToggle} />
+      </div>
+    )}
       <div
         className="map-container relative w-full h-large"
         ref={mapContainerRef}
@@ -490,3 +511,15 @@ const Map = ({
 };
 
 export default Map;
+
+
+const DetailsComponent = ({ item, currentToggle }) => {
+  return (
+    <div className="flex flex-col items-start">
+      <h4>Name: <span className="font-bold">{item["First Name"]} {item["Last Name"]}</span></h4>
+      <h4>Primary Specialty Description: <span className="font-bold">{item["Primary Specialty Description"]}</span></h4>
+      <h4>{currentToggle}: <span className="font-bold">{item[currentToggle]}</span></h4>
+    </div>
+  );
+};
+
