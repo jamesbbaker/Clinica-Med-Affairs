@@ -246,8 +246,10 @@ const DataQuality = () => {
     getDataStats("data_stats_13", accessToken, refreshToken)
       .then((res) => {
         if (res) {
+          
           let Types = [];
           const responseData = res.data;
+
           responseData.forEach((entry) => {
             return Types.push(entry["Type"]);
           });
@@ -340,6 +342,16 @@ const DataQuality = () => {
     <div>
       {statsData8 && 
        <Table
+       initialState={{
+        pageSize: 10,
+        pageIndex: 0,
+        sortBy: [
+          {
+              id: 'Value',
+              desc: true
+          }
+      ]
+      }}
        marginTop="0"
        Title="Summary Table"
        activeCells={false}
