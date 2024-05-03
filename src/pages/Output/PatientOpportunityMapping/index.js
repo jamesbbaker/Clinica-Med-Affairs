@@ -206,7 +206,7 @@ const PatientOpportunityMapping = () => {
     // } else {
       try {
         const res = await getDataStats(
-          `hcp_map_data?state=${clickedState}`,
+          `hcp_map_data?state=${clickedState.trim()}`,
           accessToken,
           refreshToken
         );
