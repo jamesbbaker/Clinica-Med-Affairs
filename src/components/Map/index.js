@@ -27,7 +27,7 @@ function MapAddLayer(
   removeOldLayer = false,
   layerId = "countries",
   _layerAdded,
-  markersAdd=false
+  markersAdd = false
 ) {
   function LayerAddition() {
     // Remove all layers
@@ -90,12 +90,12 @@ function MapAddLayer(
           "name",
           features[0].properties.name,
         ]);
-        popup.setHTML(
-          `<strong>${feature.properties.density.toLocaleString()}</strong>`
-        );
+        // popup.setHTML(
+        //   `<strong>${feature.properties.density.toLocaleString()}</strong>`
+        // );
 
-        // Display the popup at the mouse pointer's location
-        popup.setLngLat(e.lngLat).addTo(map);
+        // // Display the popup at the mouse pointer's location
+        // popup.setLngLat(e.lngLat).addTo(map);
       } else {
         map.setFilter("country-fills-hover", ["==", "name", ""]);
         map.getCanvas().style.cursor = "";
@@ -109,10 +109,6 @@ function MapAddLayer(
       // map.getCanvas().style.cursor = '';
       map.setFilter("country-fills-hover", ["==", "name", ""]);
     });
-
-    if (!markersAdd) {
-      return
-    }
 
     map.addSource("markers", {
       type: "geojson",
@@ -207,6 +203,7 @@ const Map = ({
 
   useEffect(() => {
     if (markedStates) {
+      console.log(markedStates);
       handleStateLevelMarkers(markedStates, "marker1");
     }
   }, [markedStates]);
@@ -256,9 +253,9 @@ const Map = ({
 
   useEffect(() => {
     if (currentToggle && mapRef.current) {
-      mapRef.current.off("click", "unclustered-point");
-      mapRef.current.off("mouseenter", "unclustered-point");
-      mapRef.current.off("mouseleave", "unclustered-point");
+      // mapRef.current.off("click", "unclustered-point");
+      // mapRef.current.off("mouseenter", "unclustered-point");
+      // mapRef.current.off("mouseleave", "unclustered-point");
       handleToggleData(currentToggle);
     }
   }, [currentToggle]);
@@ -267,30 +264,45 @@ const Map = ({
     popups.forEach((popup) => popup.remove());
     setPopups([]);
 
-    let clickListener = (e) => {
-      e.preventDefault();
-      const coordinates = e.features[0].geometry.coordinates.slice();
-      const item = e.features[0].properties;
+    // let clickListener = (e) => {
+    //   e.preventDefault();
+    //   const coordinates = e.features[0].geometry.coordinates.slice();
+    //   const item = e.features[0].properties;
 
-      let _popup = new mapboxgl.Popup()
-        .setLngLat(coordinates)
-        .setHTML(
-          `<div className"flex flex-col items-center">
-            <h4>Name: ${item["First Name"]} ${item["Last Name"]}</h4>
-            <h4>${toggleId}: ${item[toggleId]}</h4>
-          </div>`
-        )
-        .addTo(mapRef.current);
-      setPopups((prev) => [...prev, _popup]);
-    };
+    //   let _popup = new mapboxgl.Popup()
+    //     .setLngLat(coordinates)
+    //     .setHTML(
+    //       `<div className"flex flex-col items-center">
+    //         <h4>Name: ${item["First Name"]} ${item["Last Name"]}</h4>
+    //         <h4>${toggleId}: ${item[toggleId]}</h4>
+    //       </div>`
+    //     )
+    //     .addTo(mapRef.current);
+    //   setPopups((prev) => [...prev, _popup]);
+    // };
 
-    let hoverListener = () => {
-      mapRef.current.getCanvas().style.cursor = "pointer";
-    };
+    // let hoverOutListener = () => {
+    //   mapRef.current.getCanvas().style.cursor = "pointer";
+    // };
+    // // mapRef.current.on("click", "unclustered-point", clickListener);
+    // mapRef.current.on("mouseenter", "unclustered-point", clickListener);
+    // mapRef.current.on("mouseleave", "unclustered-point", hoverOutListener);
 
-    mapRef.current.on("click", "unclustered-point", clickListener);
-    mapRef.current.on("mouseenter", "unclustered-point", hoverListener);
-    mapRef.current.on("mouseleave", "unclustered-point", hoverListener);
+    if (toggleId == "Number of High Steroid Usage Patients") {
+      mapRef.current.setPaintProperty(
+        "unclustered-point",
+        "circle-color",
+        "#11b4da"
+      ); // Change marker color to red
+      mapRef.current.setPaintProperty("unclustered-point", "circle-radius", 8); // Change marker radius to 12 pixels
+    } else {
+      mapRef.current.setPaintProperty(
+        "unclustered-point",
+        "circle-color",
+        "#f28cb1"
+      ); // Change marker color to red
+      mapRef.current.setPaintProperty("unclustered-point", "circle-radius", 12); // Change marker radius to 12 pixels
+    }
   };
 
   const handleStateLevelMarkers = (data, markerClass) => {
@@ -312,38 +324,42 @@ const Map = ({
     };
 
     mapRef.current.getSource("markers").setData(geojson);
+    let _popup = null
 
     // Add event listeners for marker clicks and hover
     let clickListener = (e) => {
       e.preventDefault();
+      if (e.features && e.features.length > 0) {
+        const stateFeature = e.features.find(
+          (feature) => feature.layer.id === "countries"
+        );
 
-      const stateFeature = e.features.find(
-        (feature) => feature.layer.id === "countries"
-      );
-      if (!stateFeature) {
-        const coordinates = e.features[0].geometry.coordinates.slice();
-        const item = e.features[0].properties;
+        if (!stateFeature) {
+          const coordinates = e.features[0].geometry.coordinates.slice();
+          const item = e.features[0].properties;
 
-        const _popup = new mapboxgl.Popup()
-          .setLngLat(coordinates)
-          .setHTML(
-            `<div className"flex flex-col items-center">  
+          _popup = new mapboxgl.Popup()
+            .setLngLat(coordinates)
+            .setHTML(
+              `<div className"flex flex-col items-center">  
             <h4>Name: ${item["First Name"]} ${item["Last Name"]}</h4>
+            <h4>Primary Specialty Description: ${item["Primary Specialty Description"]}</h4>
             <h4>${currentToggle}: ${item[currentToggle]}</h4>
           </div>`
-          )
-          .addTo(mapRef.current);
-        setPopups((prev) => [...prev, _popup]);
+            )
+            .addTo(mapRef.current);
+          setPopups((prev) => [...prev, _popup]);
+        }
       }
     };
 
-    let hoverListener = () => {
-      mapRef.current.getCanvas().style.cursor = "pointer";
+    let hoverOutListener = () => {
+      _popup.remove()
     };
 
-    mapRef.current.on("click", "unclustered-point", clickListener);
-    mapRef.current.on("mouseenter", "unclustered-point", hoverListener);
-    mapRef.current.on("mouseleave", "unclustered-point", hoverListener);
+    // mapRef.current.on("click", "unclustered-point", clickListener);
+    mapRef.current.on("mouseenter", "unclustered-point", clickListener);
+    mapRef.current.on("mouseleave", "unclustered-point", hoverOutListener);
   };
 
   const handleRegionMarkers = (data, markerClass) => {
@@ -428,9 +444,9 @@ const Map = ({
       center: [latitude, longitude],
       zoom: zoom,
     });
-    mapRef.current.on("load", () => {
-      LayerFn(mapRef.current, data, true, true, true, `countries`, true);
-    })
+    // mapRef.current.on("load", () => {
+    //   LayerFn(mapRef.current, data, true, true, true, `countries`, true);
+    // })
     if (markersEnabled) {
       handleAddMarker(geoJson, "marker1");
     }
