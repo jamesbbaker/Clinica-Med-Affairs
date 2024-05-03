@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useReducer, useRef, useState } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import BarChart from "../../../components/BarChart";
 import Map from "../../../components/Map";
 import { AuthContext } from "../../../context/AuthContext";
@@ -97,14 +103,14 @@ const reducer = (state, action) => {
 
 const toggleBtns = [
   {
-    label: 'Number of High Steroid Usage Patients',
-    id: "Number of High Steroid Usage Patients"
+    label: "Number of High Steroid Usage Patients",
+    id: "Number of High Steroid Usage Patients",
   },
   {
-    label: 'Number of Severe Exacerbations',
-    id: "Number of Severe Exacerbations"
+    label: "Number of Severe Exacerbations",
+    id: "Number of Severe Exacerbations",
   },
-]
+];
 
 const PatientOpportunityMapping = () => {
   const [region, setRegion] = useState(null);
@@ -115,7 +121,7 @@ const PatientOpportunityMapping = () => {
   const [mapStateData, setMapStateData] = useState(null);
   const [markedStates, setMarkedStates] = useState(null);
   const [allStateMarkers, setAllStateMarkers] = useState(null);
-  const currentStateClicked = useRef(null)
+  const currentStateClicked = useRef(null);
   const [currentToggle, setCurrentToggle] = useState(toggleBtns[0].id);
 
   const [loading, setLoading] = useState(true);
@@ -191,13 +197,13 @@ const PatientOpportunityMapping = () => {
   };
 
   const handleStateLevelData = async (_state, clickedState) => {
-    if (
-      _state.states &&
-      _state.states[_state.currentRegion] &&
-      _state.states[_state.currentRegion][clickedState]
-    ) {
-      setMarkedStates(_state.states[_state.currentRegion][clickedState]);
-    } else {
+    // if (
+    //   _state.states &&
+    //   _state.states[_state.currentRegion] &&
+    //   _state.states[_state.currentRegion][clickedState]
+    // ) {
+    //   setMarkedStates(_state.states[_state.currentRegion][clickedState]);
+    // } else {
       try {
         const res = await getDataStats(
           `hcp_map_data?state=${clickedState}`,
@@ -210,13 +216,13 @@ const PatientOpportunityMapping = () => {
             type: action_types.HandleUpdateStates,
             payload: { [clickedState]: _data.data },
           });
-          console.log(_data.data)
+     
           setMarkedStates(_data.data);
         }
       } catch (err) {
         console.log(err, "err");
       }
-    }
+    // }
   };
 
   const markerClicked = async (e) => {
@@ -259,11 +265,11 @@ const PatientOpportunityMapping = () => {
 
     if (features.length > 0) {
       const clickedState = features[0].properties;
-      if (currentStateClicked.current ==clickedState.name) {
-        return
+      if (currentStateClicked.current == clickedState.name) {
+        return;
       }
-      console.log("heree ")
-      currentStateClicked.current = clickedState.name
+      console.log("heree ");
+      currentStateClicked.current = clickedState.name;
       handleStateLevelData(state, clickedState.name);
     }
 
@@ -275,7 +281,7 @@ const PatientOpportunityMapping = () => {
   };
 
   const handleToggle = (id) => {
-   setCurrentToggle(id)
+    setCurrentToggle(id);
   };
 
   return (
@@ -284,19 +290,27 @@ const PatientOpportunityMapping = () => {
         style={{ display: loading ? "grid" : "none" }}
         className="w-full h-[400px] grid place-content-center"
       >
-        <div>Loading....</div>
+        <div class="flex justify-center items-center h-24">
+          <div class="w-6 h-6 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
+        </div>
       </div>
       <div style={{ opacity: loading ? 0 : 1 }}>
         <div className="gap-5 cursor-pointer flex py-2">
-          {toggleBtns.map(btn => {
-            return   <div onClick={() => handleToggle(btn.id)} className={`${btn.id == currentToggle ? "bg-[#c3c3c3]" : 'bg-[transparent]'} hover:bg-[#c3c3c3] px-1`}>
-            {btn.label}
-          </div>
+          {toggleBtns.map((btn) => {
+            return (
+              <div
+                onClick={() => handleToggle(btn.id)}
+                className={`${
+                  btn.id == currentToggle ? "bg-[#c3c3c3]" : "bg-[transparent]"
+                } hover:bg-[#c3c3c3] px-1`}
+              >
+                {btn.label}
+              </div>
+            );
           })}
- 
         </div>
         <Map
-        currentToggle={currentToggle}
+          currentToggle={currentToggle}
           stateClicked={stateClicked}
           stateData={stateData}
           markedStates={markedStates}
