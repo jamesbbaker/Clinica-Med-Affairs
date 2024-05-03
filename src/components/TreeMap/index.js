@@ -197,8 +197,6 @@ const TreeMap = ({ needCallbacks=true, data = defaultData }) => {
     setBarChartConfig(null);
   };
 
-  console.log(data)
-
   return (
     <div>
       <Chart

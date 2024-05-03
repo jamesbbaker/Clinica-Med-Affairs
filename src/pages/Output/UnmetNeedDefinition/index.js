@@ -431,12 +431,14 @@ const UnmetNeedDefinition = () => {
         });
       getDataStats("data_stats_14", accessToken, refreshToken)
         .then((res) => {
-          if (res) {
+          if (res && res.headers) {
+            console.log(res, "responsee")
             let _data = getBarChart(
               res,
-              "Asthma_Visits_per_Year",
-              "Patient_Years",
+              res.headers[0],
+              res.headers[1],
             );
+            
             setStatsData2(_data);
           }
         })
@@ -456,7 +458,7 @@ const UnmetNeedDefinition = () => {
         });
       getDataStats("data_stats_16", accessToken, refreshToken)
         .then((res) => {
-          if (res) {
+          if (res && res.headers) {
             let _data = getBarChart(res, res.headers[0], res.headers[1]);
             setStatsData3(_data);
           }
@@ -541,10 +543,11 @@ const UnmetNeedDefinition = () => {
         position="center center"
       >
         {modalId && (
-          <div className="w-[70vw] max-h-[80vh] pb-10 overflow-auto h-[auto] flex flex-col gap-2 items-center bg-white">
-            <div className="w-[100%] px-2 text-lg text-left py-8 font-[600] text-[#808080]">
+          <>
+           <div className="w-[100%] sticky top-0 bg-white z-20 px-2 text-lg text-left py-8 font-[600] text-[#808080]">
               {UnmetNeedDefinitionData[modalId].buttonText}
             </div>
+          <div className="w-[70vw] max-h-[80vh] pb-10 overflow-auto h-[auto] flex flex-col gap-2 items-center bg-white">
             {statsData6 && (
               <div className="h-[30rem] flex items-center justify-center w-full">
                 <Table
@@ -579,13 +582,13 @@ const UnmetNeedDefinition = () => {
                 options={Line_options_2}
               />
             )}
-            {/* {statsData2 && (
+            {statsData2 && (
               <BarChart
                 height={window.innerWidth > 1400 ? 120 : 80}
                 data={statsData2}
                 options={_options}
               />
-            )} */}
+            )} 
             {statsData4 && (
               <div className="my-10 w-full h-auto">
                 <BarChart
@@ -606,6 +609,7 @@ const UnmetNeedDefinition = () => {
               {UnmetNeedDefinitionData[modalId].description}
             </p>
           </div>
+          </>
         )}
       </Popup>
     </div>

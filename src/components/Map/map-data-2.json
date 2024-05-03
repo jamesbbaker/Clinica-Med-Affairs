@@ -1,0 +1,61 @@
+{
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "title": "Central Park",
+          "description": "A large urban park in New York City"
+        },
+        "geometry": {
+          "coordinates": [-73.9701, 40.7851],
+          "type": "Point"
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "title": "Golden Gate Park",
+          "description": "A large park in San Francisco known for its gardens, museums, and recreational facilities"
+        },
+        "geometry": {
+          "coordinates": [-122.4904, 37.7694],
+          "type": "Point"
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "title": "Yosemite National Park",
+          "description": "A national park in California's Sierra Nevada mountains, famed for its granite cliffs, waterfalls, and biodiversity"
+        },
+        "geometry": {
+          "coordinates": [-119.5383, 37.8651],
+          "type": "Point"
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "title": "Zion National Park",
+          "description": "A national park in Utah renowned for its steep red cliffs, canyons, and stunning views"
+        },
+        "geometry": {
+          "coordinates": [-113.0263, 37.2982],
+          "type": "Point"
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "title": "Yellowstone National Park",
+          "description": "A national park in Wyoming, Montana, and Idaho, known for its geothermal features, wildlife, and expansive wilderness"
+        },
+        "geometry": {
+          "coordinates": [-110.5885, 44.4279],
+          "type": "Point"
+        }
+      }
+    ],
+    "type": "FeatureCollection"
+  }
+  

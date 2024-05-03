@@ -1,9 +1,9 @@
 import mapboxgl from "mapbox-gl";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import geoJson from "./map-data.json";
+import geoJson2 from "./map-data-2.json";
 import mapDataJson from "./data.json";
-import { AuthContext } from "../../context/AuthContext";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
@@ -19,10 +19,20 @@ const defaultActive = {
   ],
 };
 
+function MapAddLayer(
+  map,
+  data,
+  markerClicked,
+  loaded = false,
+  removeOldLayer = false,
+  layerId = "countries",
+  _layerAdded,
+  markersAdd=false
+) {
+  function LayerAddition() {
+    // Remove all layers
 
-function MapAddLayer(map, data) {
-  map.on("load", () => {
-    map.addSource("countries", {
+    map.addSource(layerId, {
       type: "geojson",
       data: data,
     });
@@ -38,14 +48,14 @@ function MapAddLayer(map, data) {
 
     map.addLayer(
       {
-        id: "countries",
+        id: layerId,
         type: "fill",
-        source: "countries",
+        source: layerId,
       },
       firstSymbolId
     );
 
-    map.setPaintProperty("countries", "fill-color", {
+    map.setPaintProperty(layerId, "fill-color", {
       property: defaultActive.property,
       stops: defaultActive.stops,
     });
@@ -53,7 +63,7 @@ function MapAddLayer(map, data) {
     map.addLayer({
       id: "country-fills-hover",
       type: "fill",
-      source: "countries",
+      source: layerId,
       layout: {},
       paint: {
         "fill-color": "#000000",
@@ -70,7 +80,7 @@ function MapAddLayer(map, data) {
     // Add country hover effect
     map.on("mousemove", (e) => {
       const features = map.queryRenderedFeatures(e.point, {
-        layers: ["countries"],
+        layers: [layerId],
       });
       const feature = features[0];
       if (features.length) {
@@ -80,8 +90,10 @@ function MapAddLayer(map, data) {
           "name",
           features[0].properties.name,
         ]);
-        popup.setHTML(`<strong>${feature.properties.density.toLocaleString()}</strong>`);
-    
+        popup.setHTML(
+          `<strong>${feature.properties.density.toLocaleString()}</strong>`
+        );
+
         // Display the popup at the mouse pointer's location
         popup.setLngLat(e.lngLat).addTo(map);
       } else {
@@ -98,33 +110,290 @@ function MapAddLayer(map, data) {
       map.setFilter("country-fills-hover", ["==", "name", ""]);
     });
 
-    // Add country onclick effect
-    map.on("click", (e) => {
-      const features = map.queryRenderedFeatures(e.point, {
-        layers: ["country-fills"],
-      });
-      if (!features.length) return;
-      const { properties } = features[0];
-      const { property, description } = defaultActive;
-      alert(`(${properties.name}) ${properties[property]} ${description}`);
+    if (!markersAdd) {
+      return
+    }
+
+    map.addSource("markers", {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: [], // Initial empty array of features
+      },
     });
-  });
+
+    map.addLayer({
+      id: "clusters",
+      type: "circle",
+      source: "markers",
+      filter: ["has", "point_count"],
+      paint: {
+        "circle-color": [
+          "step",
+          ["get", "point_count"],
+          "#51bbd6",
+          100,
+          "#f1f075",
+          750,
+          "#f28cb1",
+        ],
+        "circle-radius": ["step", ["get", "point_count"], 20, 100, 30, 750, 40],
+      },
+    });
+
+    map.addLayer({
+      id: "cluster-count",
+      type: "symbol",
+      source: "markers",
+      filter: ["has", "point_count"],
+      layout: {
+        "text-field": "{point_count_abbreviated}",
+        "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+        "text-size": 12,
+      },
+    });
+
+    map.addLayer({
+      id: "unclustered-point",
+      type: "circle",
+      source: "markers",
+      filter: ["!", ["has", "point_count"]],
+      paint: {
+        "circle-color": "#11b4da",
+        "circle-radius": 8,
+        "circle-stroke-width": 1,
+        "circle-stroke-color": "#fff",
+      },
+    });
+
+    // Add country onclick effect
+  }
+  if (loaded) {
+    LayerAddition();
+  } else {
+    map.on("load", () => LayerAddition);
+  }
 
   // Render custom marker components
 }
 
-const Map = ({ mapData, LayerFn = MapAddLayer, markersEnabled = true }) => {
+const Map = ({
+  stateData,
+  currentToggle,
+  mapStateData,
+  stateClicked,
+  markedStates,
+  markers,
+  markerClickedFn,
+  mapData,
+  LayerFn = MapAddLayer,
+  markersEnabled = true,
+}) => {
   const [data, setData] = useState(mapDataJson);
-  const { accessToken, refreshToken } = useContext(AuthContext);
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const [latitude, setLatitude] = useState(-90);
   const [longitude, setLongitude] = useState(40);
   const [zoom, setZoom] = useState(3.5);
+  const [mapMarkers, setMapMarkers] = useState([]);
+  const [stateMapMarkers, setStateMapMarkers] = useState([]);
+  const [popups, setPopups] = useState([]);
+
+  useEffect(() => {
+    if (markers && stateData) {
+      handleRegionMarkers(markers, "marker2");
+    }
+  }, [markers, stateData]);
+
+  useEffect(() => {
+    if (markedStates) {
+      handleStateLevelMarkers(markedStates, "marker1");
+    }
+  }, [markedStates]);
+
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.on("load", () => {
+        mapRef.current.on("click", "countries", (e) => {
+          stateClicked(e, mapRef);
+        });
+      });
+
+      window.mapRemoveLayer = () => {
+        if (
+          mapRef.current &&
+          mapRef.current.getStyle() &&
+          mapRef.current.getStyle().layers
+        ) {
+          mapRef.current.getStyle().layers.forEach(function (layer) {
+            if (
+              layer.id == "country-fills-hover" ||
+              layer.id == "countries" ||
+              layer.id == "markers"
+            ) {
+              // Keep the background layer if needed
+              mapRef.current.removeLayer(layer.id);
+            }
+          });
+        }
+
+        var sources = mapRef.current.getStyle().sources;
+        for (var sourceId in sources) {
+          if (sourceId == "countries") {
+            mapRef.current.removeSource(sourceId);
+          }
+        }
+      };
+    }
+  }, [mapRef.current]);
+
+  useEffect(() => {
+    if (mapStateData) {
+      window.mapRemoveLayer();
+      LayerFn(mapRef.current, mapStateData, true, true, true, `countries`);
+    }
+  }, [mapStateData]);
+
+  useEffect(() => {
+    if (currentToggle && mapRef.current) {
+      mapRef.current.off("click", "unclustered-point");
+      mapRef.current.off("mouseenter", "unclustered-point");
+      mapRef.current.off("mouseleave", "unclustered-point");
+      handleToggleData(currentToggle);
+    }
+  }, [currentToggle]);
+
+  const handleToggleData = (toggleId) => {
+    popups.forEach((popup) => popup.remove());
+    setPopups([]);
+
+    let clickListener = (e) => {
+      e.preventDefault();
+      const coordinates = e.features[0].geometry.coordinates.slice();
+      const item = e.features[0].properties;
+
+      let _popup = new mapboxgl.Popup()
+        .setLngLat(coordinates)
+        .setHTML(
+          `<div className"flex flex-col items-center">
+            <h4>Name: ${item["First Name"]} ${item["Last Name"]}</h4>
+            <h4>${toggleId}: ${item[toggleId]}</h4>
+          </div>`
+        )
+        .addTo(mapRef.current);
+      setPopups((prev) => [...prev, _popup]);
+    };
+
+    let hoverListener = () => {
+      mapRef.current.getCanvas().style.cursor = "pointer";
+    };
+
+    mapRef.current.on("click", "unclustered-point", clickListener);
+    mapRef.current.on("mouseenter", "unclustered-point", hoverListener);
+    mapRef.current.on("mouseleave", "unclustered-point", hoverListener);
+  };
+
+  const handleStateLevelMarkers = (data, markerClass) => {
+    mapRef.current.off("click", "unclustered-point");
+    mapRef.current.off("mouseenter", "unclustered-point");
+    mapRef.current.off("mouseleave", "unclustered-point");
+    stateMapMarkers.forEach((marker) => marker.remove());
+    setStateMapMarkers([]);
+    const geojson = {
+      type: "FeatureCollection",
+      features: data.map((marker) => ({
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [marker.LONG, marker.LAT],
+        },
+        properties: { ...marker }, // You can add additional properties if needed
+      })),
+    };
+
+    mapRef.current.getSource("markers").setData(geojson);
+
+    // Add event listeners for marker clicks and hover
+    let clickListener = (e) => {
+      e.preventDefault();
+
+      const stateFeature = e.features.find(
+        (feature) => feature.layer.id === "countries"
+      );
+      if (!stateFeature) {
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        const item = e.features[0].properties;
+
+        const _popup = new mapboxgl.Popup()
+          .setLngLat(coordinates)
+          .setHTML(
+            `<div className"flex flex-col items-center">  
+            <h4>Name: ${item["First Name"]} ${item["Last Name"]}</h4>
+            <h4>${currentToggle}: ${item[currentToggle]}</h4>
+          </div>`
+          )
+          .addTo(mapRef.current);
+        setPopups((prev) => [...prev, _popup]);
+      }
+    };
+
+    let hoverListener = () => {
+      mapRef.current.getCanvas().style.cursor = "pointer";
+    };
+
+    mapRef.current.on("click", "unclustered-point", clickListener);
+    mapRef.current.on("mouseenter", "unclustered-point", hoverListener);
+    mapRef.current.on("mouseleave", "unclustered-point", hoverListener);
+  };
+
+  const handleRegionMarkers = (data, markerClass) => {
+    const newMapMarkers = data.map((feature) => {
+      let coordinates = [feature.LONG, feature.LAT];
+      if (feature.Region != 0) {
+        const ref = React.createRef();
+        ref.current = document.createElement("div");
+        createRoot(ref.current).render(
+          <Marker
+            markerClass={markerClass}
+            onClick={regionClicked}
+            feature={feature}
+            coordinates={feature}
+          />
+        );
+        const marker = new mapboxgl.Marker(ref.current)
+          .setLngLat(coordinates)
+          .addTo(mapRef.current);
+
+        return marker;
+      }
+    });
+    setMapMarkers(newMapMarkers);
+  };
+
+  const handleAddMarker = (data, markerClass) => {
+    mapMarkers.forEach((marker) => marker.remove());
+    setMapMarkers([]);
+    const newMapMarkers = data.features.map((feature) => {
+      const ref = React.createRef();
+      ref.current = document.createElement("div");
+      createRoot(ref.current).render(
+        <Marker
+          markerClass={markerClass}
+          onClick={markerClicked}
+          feature={feature}
+        />
+      );
+      const marker = new mapboxgl.Marker(ref.current)
+        .setLngLat(feature.geometry.coordinates)
+        .addTo(mapRef.current);
+
+      return marker;
+    });
+    setMapMarkers(newMapMarkers);
+  };
 
   useEffect(() => {
     if (mapData) {
-      
       setData((prev) => {
         let _prev = { ...prev };
         _prev.features.forEach((feature) => {
@@ -138,13 +407,12 @@ const Map = ({ mapData, LayerFn = MapAddLayer, markersEnabled = true }) => {
     }
   }, [mapData]);
 
-  const Marker = ({ onClick, children, feature }) => {
+  const Marker = ({ markerClass = "marker1", onClick, children, feature }) => {
     const _onClick = () => {
-      onClick(feature.geometry.coordinates);
+      onClick(feature);
     };
-
     return (
-      <button onClick={_onClick} className="marker">
+      <button onClick={_onClick} className={`${markerClass} animate-fade-in`}>
         {children}
       </button>
     );
@@ -160,23 +428,11 @@ const Map = ({ mapData, LayerFn = MapAddLayer, markersEnabled = true }) => {
       center: [latitude, longitude],
       zoom: zoom,
     });
-    LayerFn(mapRef.current, data);
+    mapRef.current.on("load", () => {
+      LayerFn(mapRef.current, data, true, true, true, `countries`, true);
+    })
     if (markersEnabled) {
-      geoJson.features.forEach((feature) => {
-        // Create a React ref
-        const ref = React.createRef();
-        // Create a new DOM node and save it to the React ref
-        ref.current = document.createElement("div");
-        // Render a Marker Component on our new DOM node
-        createRoot(ref.current).render(
-          <Marker onClick={markerClicked} feature={feature} />
-        );
-
-        // Create a Mapbox Marker at our new DOM node
-        new mapboxgl.Marker(ref.current)
-          .setLngLat(feature.geometry.coordinates)
-          .addTo(mapRef.current);
-      });
+      handleAddMarker(geoJson, "marker1");
     }
     // Add navigation control (the +/- zoom buttons)
     mapRef.current.addControl(new mapboxgl.NavigationControl(), "top-right");
@@ -189,20 +445,31 @@ const Map = ({ mapData, LayerFn = MapAddLayer, markersEnabled = true }) => {
     };
   }, []);
 
-  const markerClicked = (coordinates) => {
+  const markerClicked = (feature) => {
     mapRef.current.flyTo({
-      center: coordinates,
+      center: feature.geometry.coordinates,
       zoom: 10,
-      essential: true, // this animation is considered essential with respect to prefers-reduced-motion
+      essential: true,
     });
-    // window.alert(title);
   };
 
+  const regionClicked = (feature) => {
+    let coordinates = [feature.LONG, feature.LAT];
+
+    mapRef.current.flyTo({
+      center: coordinates,
+      zoom: 4,
+      essential: true,
+    });
+    markerClickedFn(feature);
+  };
   return (
-    <div
-      className="map-container relative w-full h-large"
-      ref={mapContainerRef}
-    />
+    <div className="relative">
+      <div
+        className="map-container relative w-full h-large"
+        ref={mapContainerRef}
+      />
+    </div>
   );
 };
 

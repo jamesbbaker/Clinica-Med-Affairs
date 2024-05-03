@@ -9,18 +9,27 @@ export function setLineData(res, _type, dataKey) {
     });
 
     const colorsOutput = [
-        "#3AAB9D",
-        "#D65FDB",
-        "#65C5E3",
-        "#FC8A71",
-        "#7C53A6",
-        "#E3B505",
-        "#1BB83C",
-        "#FDE84D",
-        "#8CB3E3",
-        "#FF72A5"
-    ]
-
+      "#3AAB9D",
+      "#D65FDB",
+      "#65C5E3",
+      "#FC8A71",
+      "#7C53A6",
+      "#E3B505",
+      "#1BB83C",
+      "#FDE84D",
+      "#8CB3E3",
+      "#FF72A5",
+      "#FF9F1C",
+      "#00B159",
+      "#00AEEF",
+      "#F37735",
+      "#8E44AD",
+      "#F1C40F",
+      "#3498DB",
+      "#2C3E50",
+      "#E74C3C",
+      "#9B59B6"
+  ];
     const organizedData = {};
     responseData.forEach((item) => {
         let Type = item.Type;
