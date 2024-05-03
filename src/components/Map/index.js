@@ -156,7 +156,7 @@ const Map = ({
 
   useEffect(() => {
     if (markedStates) {
-      console.log(markedStates);
+  
       handleStateLevelMarkers(markedStates, "marker1");
     }
   }, [markedStates]);
@@ -165,6 +165,7 @@ const Map = ({
     if (mapRef.current) {
       mapRef.current.on("load", () => {
         mapRef.current.on("click", "countries", (e) => {
+         
           stateClicked(e, mapRef);
         });
         mapRef.current.addSource("markers", {
@@ -479,6 +480,10 @@ const Map = ({
   };
 
   const regionClicked = (feature) => {
+    if (  mapRef.current.getSource("markers")) { 
+      mapRef.current.getSource("markers").setData({});
+    }
+  
     let coordinates = [feature.LONG, feature.LAT];
 
     mapRef.current.flyTo({
