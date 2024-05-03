@@ -110,57 +110,7 @@ function MapAddLayer(
       map.setFilter("country-fills-hover", ["==", "name", ""]);
     });
 
-    map.addSource("markers", {
-      type: "geojson",
-      data: {
-        type: "FeatureCollection",
-        features: [], // Initial empty array of features
-      },
-    });
-
-    map.addLayer({
-      id: "clusters",
-      type: "circle",
-      source: "markers",
-      filter: ["has", "point_count"],
-      paint: {
-        "circle-color": [
-          "step",
-          ["get", "point_count"],
-          "#51bbd6",
-          100,
-          "#f1f075",
-          750,
-          "#f28cb1",
-        ],
-        "circle-radius": ["step", ["get", "point_count"], 20, 100, 30, 750, 40],
-      },
-    });
-
-    map.addLayer({
-      id: "cluster-count",
-      type: "symbol",
-      source: "markers",
-      filter: ["has", "point_count"],
-      layout: {
-        "text-field": "{point_count_abbreviated}",
-        "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-        "text-size": 12,
-      },
-    });
-
-    map.addLayer({
-      id: "unclustered-point",
-      type: "circle",
-      source: "markers",
-      filter: ["!", ["has", "point_count"]],
-      paint: {
-        "circle-color": "#11b4da",
-        "circle-radius": 8,
-        "circle-stroke-width": 1,
-        "circle-stroke-color": "#fff",
-      },
-    });
+  
 
     // Add country onclick effect
   }
@@ -216,6 +166,57 @@ const Map = ({
       mapRef.current.on("load", () => {
         mapRef.current.on("click", "countries", (e) => {
           stateClicked(e, mapRef);
+        });
+        mapRef.current.addSource("markers", {
+          type: "geojson",
+          data: {
+            type: "FeatureCollection",
+            features: [], // Initial empty array of features
+          },
+        });
+    
+        mapRef.current.addLayer({
+          id: "clusters",
+          type: "circle",
+          source: "markers",
+          filter: ["has", "point_count"],
+          paint: {
+            "circle-color": [
+              "step",
+              ["get", "point_count"],
+              "#51bbd6",
+              100,
+              "#f1f075",
+              750,
+              "#f28cb1",
+            ],
+            "circle-radius": ["step", ["get", "point_count"], 20, 100, 30, 750, 40],
+          },
+        });
+    
+        mapRef.current.addLayer({
+          id: "cluster-count",
+          type: "symbol",
+          source: "markers",
+          filter: ["has", "point_count"],
+          layout: {
+            "text-field": "{point_count_abbreviated}",
+            "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+            "text-size": 12,
+          },
+        });
+    
+        mapRef.current.addLayer({
+          id: "unclustered-point",
+          type: "circle",
+          source: "markers",
+          filter: ["!", ["has", "point_count"]],
+          paint: {
+            "circle-color": "#11b4da",
+            "circle-radius": 8,
+            "circle-stroke-width": 1,
+            "circle-stroke-color": "#fff",
+          },
         });
       });
 
