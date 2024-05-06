@@ -1,9 +1,11 @@
 import mapboxgl from "mapbox-gl";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import geoJson from "./map-data.json";
 import geoJson2 from "./map-data-2.json";
 import mapDataJson from "./data.json";
+import { AuthContext } from "../../context/AuthContext";
+import { getDataStats } from "../../API/Outputs";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
@@ -110,8 +112,6 @@ function MapAddLayer(
       map.setFilter("country-fills-hover", ["==", "name", ""]);
     });
 
-  
-
     // Add country onclick effect
   }
   if (loaded) {
@@ -145,18 +145,18 @@ const Map = ({
   const [stateMapMarkers, setStateMapMarkers] = useState([]);
   const [popups, setPopups] = useState([]);
   const [detailsItem, setDetailsItem] = useState(null);
+  const { accessToken, refreshToken } = useContext(AuthContext);
+  const [stateMarkers, setStateMarkers] = useState([]);
   const [detailsPosition, setDetailsPosition] = useState(null);
-
 
   useEffect(() => {
     if (markers && stateData) {
       handleRegionMarkers(markers, "marker2");
     }
-  }, [markers, stateData]);
+  }, [markers, stateData, stateMarkers]);
 
   useEffect(() => {
     if (markedStates) {
-  
       handleStateLevelMarkers(markedStates, "marker1");
     }
   }, [markedStates]);
@@ -164,10 +164,6 @@ const Map = ({
   useEffect(() => {
     if (mapRef.current) {
       mapRef.current.on("load", () => {
-        mapRef.current.on("click", "countries", (e) => {
-         
-          stateClicked(e, mapRef);
-        });
         mapRef.current.addSource("markers", {
           type: "geojson",
           data: {
@@ -175,7 +171,7 @@ const Map = ({
             features: [], // Initial empty array of features
           },
         });
-    
+
         mapRef.current.addLayer({
           id: "clusters",
           type: "circle",
@@ -191,10 +187,18 @@ const Map = ({
               750,
               "#f28cb1",
             ],
-            "circle-radius": ["step", ["get", "point_count"], 20, 100, 30, 750, 40],
+            "circle-radius": [
+              "step",
+              ["get", "point_count"],
+              20,
+              100,
+              30,
+              750,
+              40,
+            ],
           },
         });
-    
+
         mapRef.current.addLayer({
           id: "cluster-count",
           type: "symbol",
@@ -206,7 +210,7 @@ const Map = ({
             "text-size": 12,
           },
         });
-    
+
         mapRef.current.addLayer({
           id: "unclustered-point",
           type: "circle",
@@ -258,9 +262,6 @@ const Map = ({
 
   useEffect(() => {
     if (currentToggle && mapRef.current) {
-      // mapRef.current.off("click", "unclustered-point");
-      // mapRef.current.off("mouseenter", "unclustered-point");
-      // mapRef.current.off("mouseleave", "unclustered-point");
       handleToggleData(currentToggle);
     }
   }, [currentToggle]);
@@ -269,44 +270,20 @@ const Map = ({
     popups.forEach((popup) => popup.remove());
     setPopups([]);
 
-    // let clickListener = (e) => {
-    //   e.preventDefault();
-    //   const coordinates = e.features[0].geometry.coordinates.slice();
-    //   const item = e.features[0].properties;
-
-    //   let _popup = new mapboxgl.Popup()
-    //     .setLngLat(coordinates)
-    //     .setHTML(
-    //       `<div className"flex flex-col items-center">
-    //         <h4>Name: ${item["First Name"]} ${item["Last Name"]}</h4>
-    //         <h4>${toggleId}: ${item[toggleId]}</h4>
-    //       </div>`
-    //     )
-    //     .addTo(mapRef.current);
-    //   setPopups((prev) => [...prev, _popup]);
-    // };
-
-    // let hoverOutListener = () => {
-    //   mapRef.current.getCanvas().style.cursor = "pointer";
-    // };
-    // // mapRef.current.on("click", "unclustered-point", clickListener);
-    // mapRef.current.on("mouseenter", "unclustered-point", clickListener);
-    // mapRef.current.on("mouseleave", "unclustered-point", hoverOutListener);
-
     if (toggleId == "Number of High Steroid Usage Patients") {
       mapRef.current.setPaintProperty(
         "unclustered-point",
         "circle-color",
         "#11b4da"
-      ); // Change marker color to red
-      mapRef.current.setPaintProperty("unclustered-point", "circle-radius", 8); // Change marker radius to 12 pixels
+      );
+      mapRef.current.setPaintProperty("unclustered-point", "circle-radius", 8);
     } else {
       mapRef.current.setPaintProperty(
         "unclustered-point",
         "circle-color",
         "#f28cb1"
-      ); // Change marker color to red
-      mapRef.current.setPaintProperty("unclustered-point", "circle-radius", 12); // Change marker radius to 12 pixels
+      );
+      mapRef.current.setPaintProperty("unclustered-point", "circle-radius", 12);
     }
   };
 
@@ -324,14 +301,12 @@ const Map = ({
           type: "Point",
           coordinates: [marker.LONG, marker.LAT],
         },
-        properties: { ...marker }, // You can add additional properties if needed
+        properties: { ...marker },
       })),
     };
 
     mapRef.current.getSource("markers").setData(geojson);
-    let _popup = null
 
-    // Add event listeners for marker clicks and hover
     let clickListener = (e) => {
       e.preventDefault();
       if (e.features && e.features.length > 0) {
@@ -344,32 +319,50 @@ const Map = ({
           const item = e.features[0].properties;
           const pixel = mapRef.current.project(coordinates);
           setDetailsPosition({ left: pixel.x, top: pixel.y });
-
           setDetailsItem(item);
-
-          // _popup = new mapboxgl.Popup()
-          //   .setLngLat(coordinates)
-          //   .setHTML(
-          //     `<div className"flex flex-col items-center">  
-          //   <h4>Name: ${item["First Name"]} ${item["Last Name"]}</h4>
-          //   <h4>Primary Specialty Description: ${item["Primary Specialty Description"]}</h4>
-          //   <h4>${currentToggle}: ${item[currentToggle]}</h4>
-          // </div>`
-          //   )
-          //   .addTo(mapRef.current);
-          // setPopups((prev) => [...prev, _popup]);
         }
       }
     };
 
     let hoverOutListener = () => {
-      // _popup.remove()
       setDetailsItem(null);
     };
 
-    // mapRef.current.on("click", "unclustered-point", clickListener);
     mapRef.current.on("mouseenter", "unclustered-point", clickListener);
     mapRef.current.on("mouseleave", "unclustered-point", hoverOutListener);
+  };
+
+  const handleClick = (feature) => {
+    console.log(feature)
+    stateClicked(feature, mapRef);
+  };
+
+
+  const handleStateMarkers = (data, markerClass) => {
+      stateMarkers.forEach((marker) => marker.remove());
+      setStateMarkers([]);
+  
+    const newStateMarkers = data.map((feature) => {
+      let coordinates = [feature.LONG, feature.LAT];
+      if (feature.Region != 0) {
+        const ref = React.createRef();
+        ref.current = document.createElement("div");
+        createRoot(ref.current).render(
+          <Marker
+            markerClass={markerClass}
+            onClick={handleClick}
+            feature={feature}
+            coordinates={feature}
+          />
+        );
+        const marker = new mapboxgl.Marker(ref.current)
+          .setLngLat(coordinates)
+          .addTo(mapRef.current);
+
+        return marker;
+      }
+    });
+    setStateMarkers(newStateMarkers);
   };
 
   const handleRegionMarkers = (data, markerClass) => {
@@ -479,12 +472,13 @@ const Map = ({
     });
   };
 
-  const regionClicked = (feature) => {
-    if (  mapRef.current.getSource("markers")) { 
+  const regionClicked = async (feature) => {
+    if (mapRef.current.getSource("markers")) {
       mapRef.current.getSource("markers").setData({});
     }
-  
     let coordinates = [feature.LONG, feature.LAT];
+
+    handleStateMarkers(stateData[feature.Region], "marker1");
 
     mapRef.current.flyTo({
       center: coordinates,
@@ -495,19 +489,19 @@ const Map = ({
   };
   return (
     <div className="relative">
-       {detailsItem && (
-      <div
-      className="bg-white px-2 py-2"
-        style={{
-          position: 'absolute',
-          left: detailsPosition.left,
-          top: detailsPosition.top,
-          zIndex: 9999, // Ensure details appear above the map
-        }}
-      >
-        <DetailsComponent item={detailsItem} currentToggle={currentToggle} />
-      </div>
-    )}
+      {detailsItem && (
+        <div
+          className="bg-white px-2 py-2"
+          style={{
+            position: "absolute",
+            left: detailsPosition.left,
+            top: detailsPosition.top,
+            zIndex: 9999,
+          }}
+        >
+          <DetailsComponent item={detailsItem} currentToggle={currentToggle} />
+        </div>
+      )}
       <div
         className="map-container relative w-full h-large"
         ref={mapContainerRef}
@@ -518,14 +512,25 @@ const Map = ({
 
 export default Map;
 
-
 const DetailsComponent = ({ item, currentToggle }) => {
   return (
     <div className="flex flex-col items-start">
-      <h4>Name: <span className="font-bold">{item["First Name"]} {item["Last Name"]}</span></h4>
-      <h4>Primary Specialty Description: <span className="font-bold">{item["Primary Specialty Description"]}</span></h4>
-      <h4>{currentToggle}: <span className="font-bold">{item[currentToggle]}</span></h4>
+      <h4>
+        Name:{" "}
+        <span className="font-bold">
+          {item["First Name"]} {item["Last Name"]}
+        </span>
+      </h4>
+      <h4>
+        Primary Specialty Description:{" "}
+        <span className="font-bold">
+          {item["Primary Specialty Description"]}
+        </span>
+      </h4>
+      <h4>
+        {currentToggle}:{" "}
+        <span className="font-bold">{item[currentToggle]}</span>
+      </h4>
     </div>
   );
 };
-
