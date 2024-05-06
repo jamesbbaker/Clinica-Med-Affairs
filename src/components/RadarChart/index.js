@@ -51,6 +51,15 @@ const datasets = [
   },
 ];
 
+const options = {
+  layout: {
+    padding: {
+      left: 100, // Adjust the left padding as needed
+      right: 100, // Adjust the right padding as needed
+    },
+  },
+};
+
 export const data = {
   labels: [
     "Failure to escalate therapy",
@@ -135,8 +144,8 @@ export function RadarChart() {
           </span>
         </div>
       </div>
-      <div className="w-1/3 self-center">
-        <Radar ref={chartRef} data={chartData} />
+      <div className="w-1/2 self-center">
+        <Radar ref={chartRef} options={options} data={chartData} />
       </div>
     </div>
   );

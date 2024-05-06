@@ -113,17 +113,14 @@ const toggleBtns = [
 ];
 
 const PatientOpportunityMapping = () => {
-  const [region, setRegion] = useState(null);
   const [state, dispatch] = useReducer(reducer, Initial_State);
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [regionData, setRegionData] = useState(null);
   const [stateData, setStateData] = useState(null);
   const [mapStateData, setMapStateData] = useState(null);
   const [markedStates, setMarkedStates] = useState(null);
-  const [allStateMarkers, setAllStateMarkers] = useState(null);
   const currentStateClicked = useRef(null);
   const [currentToggle, setCurrentToggle] = useState(toggleBtns[0].id);
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -197,13 +194,7 @@ const PatientOpportunityMapping = () => {
   };
 
   const handleStateLevelData = async (_state, clickedState) => {
-    // if (
-    //   _state.states &&
-    //   _state.states[_state.currentRegion] &&
-    //   _state.states[_state.currentRegion][clickedState]
-    // ) {
-    //   setMarkedStates(_state.states[_state.currentRegion][clickedState]);
-    // } else {
+    
       try {
         const res = await getDataStats(
           `hcp_map_data?state=${clickedState.trim()}`,
@@ -222,7 +213,7 @@ const PatientOpportunityMapping = () => {
       } catch (err) {
         console.log(err, "err");
       }
-    // }
+  
   };
 
   const markerClicked = async (e) => {
@@ -243,13 +234,6 @@ const PatientOpportunityMapping = () => {
       return _statesId.hasOwnProperty(feature.properties.name);
     });
 
-    var newFilteredArray = filteredFeatures.map((item) => {
-      return {
-        ...item,
-        ..._statesId[item.properties.name],
-      };
-    });
-
     // Create a new GeoJSON FeatureCollection with the filtered features
     var filteredFeatureCollection = {
       type: "FeatureCollection",
@@ -258,27 +242,23 @@ const PatientOpportunityMapping = () => {
     setMapStateData(filteredFeatureCollection);
   };
 
-  const stateClicked = (e, mapRef) => {
-    const features = mapRef.current.queryRenderedFeatures(e.point, {
-      layers: ["countries"],
-    });
-
-    if (features.length > 0) {
-      const clickedState = features[0].properties;
-      if (currentStateClicked.current == clickedState.name) {
+  const stateClicked = (feature, mapRef) => {
+      const clickedState = feature["State Name"];
+      if (currentStateClicked.current == clickedState) {
         return;
       }
-      console.log("heree ");
-      currentStateClicked.current = clickedState.name;
-      handleStateLevelData(state, clickedState.name);
-    }
+      currentStateClicked.current = clickedState;
+      handleStateLevelData(state, clickedState);
+  
 
     mapRef.current.flyTo({
-      center: e.lngLat,
+      center: [feature.LONG, feature.LAT],
       zoom: 5,
       essential: true,
     });
-  };
+    
+  }
+  
 
   const handleToggle = (id) => {
     setCurrentToggle(id);

@@ -21,17 +21,6 @@ const DashboardLayout = () => {
 
   return (
     <div id="app__layout" className="grid overflow-x-hidden overflow-y-scroll font-primary justify-center items-center w-screen h-screen relative">
-      {/* <Sidebar />
-      <div className="w-4/5 h-screen overflow-scroll md:overflow-hidden mh-screen">
-        <div className="fixed w-4/5 z-20">
-        <TopBar />
-        </div>
-        <div className="px-4 min-w-[800px] h-screen md:py-6 overflow-y-auto mt-32">
-          <div className=" md:overflow-hidden">
-          <Outlet />
-          </div>
-        </div>
-      </div> */}
       <Header />
       <div className="page__content pt-8 pb-16 px-8"><Outlet /></div>
       <Sidebar />
