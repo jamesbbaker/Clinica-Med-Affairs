@@ -5,6 +5,7 @@ import InputField from "../../components/InputField";
 import { AuthContext } from "../../context/AuthContext";
 import { useState } from "react";
 import Navbar from "../../components/Navbar";
+import { Bounce, ToastContainer, toast } from "react-toastify";
 
 const inputs = [
   {
@@ -94,11 +95,22 @@ const Login = () => {
         setLoading(false);
       })
       .catch((err) => {
+        toast.error('Invalid Email or Password', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+          });
         setLoading(false);
-        dispatch({
-          type: ActionTypes.SUBMIT_FORM,
-          payload: { ["errors"]: { global: "Invalid Email or Password" } },
-        });
+        // dispatch({
+        //   type: ActionTypes.SUBMIT_FORM,
+        //   payload: { ["errors"]: { global: "Invalid Email or Password" } },
+        // });
       });
   };
 
@@ -116,7 +128,7 @@ const Login = () => {
        <Navbar />
     <div className="mx-auto max-w-[80%] font-primary h-screen flex md:flex-row flex-col justify-center items-center">
       <div className=" w-[100%]  mt-20 md:mt-0  md:w-[40%] rounded-xl bg-primary  h-[80%] flex flex-col justify-center items-center gap-2">
-        <h1 className="text-mdmd:text-3xl relative text-slate-50 font-semibold before:absolute before:w-[60vw] before:h-[60vw] md:before:w-[20rem] md:before:h-[20rem] before:rounded-full before:bg-blue-200 before:opacity-15  before:-translate-x-1/2 before:-translate-y-1/2  before:left-1/2 before:top-1/2 after:absolute after:w-[70vw] after:h-[70vw]  md:after:w-[25rem] md:after:h-[25rem] after:rounded-full after:bg-blue-200 after:opacity-25  after:-translate-x-1/2 after:-translate-y-1/2  after:left-1/2 after:top-1/2">
+        <h1 className="text-md md:text-3xl relative text-slate-50 font-semibold before:absolute before:w-[60vw] before:h-[60vw] md:before:w-[20rem] md:before:h-[20rem] before:rounded-full before:bg-blue-200 before:opacity-15  before:-translate-x-1/2 before:-translate-y-1/2  before:left-1/2 before:top-1/2 after:absolute after:w-[70vw] after:h-[70vw]  md:after:w-[25rem] md:after:h-[25rem] after:rounded-full after:bg-blue-200 after:opacity-25  after:-translate-x-1/2 after:-translate-y-1/2  after:left-1/2 after:top-1/2">
           Welcome to Clinica AI
         </h1>
         <h4 className="text-sm md:text-lg font-regular text-slate-50">
@@ -150,6 +162,7 @@ const Login = () => {
               text={"Log In"}
             />
           </div>
+          <ToastContainer />
         </form>
       </div>
     </div>

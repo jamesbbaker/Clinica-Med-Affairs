@@ -7,6 +7,7 @@ import Output from "./pages/Output";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Landing from "./pages/Landing";
 import About from "./pages/About";
+import 'react-toastify/dist/ReactToastify.css';
 
 const router = createBrowserRouter([
  

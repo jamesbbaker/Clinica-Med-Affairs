@@ -155,12 +155,12 @@ export default function Index() {
                 </div> */}
                 <div className="grid md:grid-cols-2 mt-12 gap-8">
                   <div  data-aos="zoom-y-out"
-                  data-aos-delay="400" className="text-whit shadow-md mt-6 rounded-xl">
+                  data-aos-delay="400" className="text-whit shadow-box mt-6 rounded-xl">
                     <h3 className="text-2xl text-white h-100  py-4 bg-[#7bdcb5] rounded-tr-xl rounded-tl-xl bg-circle font-bold ">Problem</h3>
                     <p className="text-lg py-6 text-gray-600  px-10">Significant disparities in patient care across physicians, institutions, payers, and regions</p>
                   </div>
                   <div  data-aos="zoom-y-out"
-                  data-aos-delay="400" className="text-white h-100 shadow-md mt-6 rounded-xl">
+                  data-aos-delay="400" className="text-white h-100 shadow-box mt-6 rounded-xl">
                     <h3 className="text-2xl py-4 bg-[#87CEEB] rounded-tr-xl rounded-tl-xl bg-circle font-bold ">Solution</h3>
                     <p className="text-lg py-6 text-gray-600  px-10">Best-in-class mapping of clinical patient need, understanding of HCP care patterns, and care “fingerprints” of stakeholders to guide initiatives</p>
                   </div>

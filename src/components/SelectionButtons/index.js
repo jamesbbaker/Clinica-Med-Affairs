@@ -1,9 +1,11 @@
 import React from "react";
 
 const SelectionButtons = ({ selectedValues, data, onClick, visibleKey }) => {
+ 
   return (
     <div className="flex flex-wrap items-center gap-2">
       {data.map((column) => {
+  
         return (
           <div
             onClick={() => onClick(column)}
