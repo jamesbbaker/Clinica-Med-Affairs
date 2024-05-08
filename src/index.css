@@ -22,13 +22,14 @@
   border:1px solid #3498db;
   border: 1px solid blue;
   color: white;
-  padding: 10px;
+
   background: #fff;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  margin: 4px 2px;
+ width: 20px;
+ height: 20px;
   border-radius: 50%;
 }
 
@@ -36,12 +37,13 @@
   background-color: #4caf50;
   border: 1px solid blue;
   color: white;
-  padding: 6px;
+
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  margin: 4px 2px;
+ width: 20px;
+ height: 20px;
   border-radius: 50%;
 }
 
