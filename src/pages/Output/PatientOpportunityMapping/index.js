@@ -113,15 +113,20 @@ const toggleBtns = [
 ];
 
 const PatientOpportunityMapping = () => {
+  const [currentLevel, setCurrentLevel] = useState("region");
   const [state, dispatch] = useReducer(reducer, Initial_State);
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [regionData, setRegionData] = useState(null);
+  const [data1, setData1] = useState();
+  const [data2, setData2] = useState();
   const [stateData, setStateData] = useState(null);
   const [mapStateData, setMapStateData] = useState(null);
   const [markedStates, setMarkedStates] = useState(null);
   const currentStateClicked = useRef(null);
   const [currentToggle, setCurrentToggle] = useState(toggleBtns[0].id);
   const [loading, setLoading] = useState(true);
+
+
 
   useEffect(() => {
     getDataStats("region_level_data", accessToken, refreshToken)
@@ -166,54 +171,25 @@ const PatientOpportunityMapping = () => {
     }
   }, [stateData]);
 
-  const labels = [
-    "Improper CV risk testing",
-    "Incomplete comorbidity testing",
-    "Continued AF without treatment escalation",
-    "Repeated cardioversions without treatment escalation",
-    "Improper calcium channel blocker",
-    "Off-label treatment",
-    "High AF stroke risk without anticoagulant",
-    "Improper support of therapy",
-    "Failure to manage AEs",
-    "Lack of monitoring by CV specialist",
-    "Non-adherence to anticoagulants",
-    "Non-adherence to other AF drug treatments",
-    "Failure to complete follow-up testing",
-  ];
-
-  const data = {
-    labels,
-    datasets: [
-      {
-        data: [10, 12, 30, 42, 23, 34, 56, 21, 46, 69, 69, 39, 29],
-        borderColor: "rgb(255, 99, 132)",
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
-      },
-    ],
-  };
-
   const handleStateLevelData = async (_state, clickedState) => {
-    
-      try {
-        const res = await getDataStats(
-          `hcp_map_data?state=${clickedState.trim()}`,
-          accessToken,
-          refreshToken
-        );
-        if (res) {
-          let _data = JSON.parse(res.replaceAll("NaN", 0));
-          dispatch({
-            type: action_types.HandleUpdateStates,
-            payload: { [clickedState]: _data.data },
-          });
-     
-          setMarkedStates(_data.data);
-        }
-      } catch (err) {
-        console.log(err, "err");
+    try {
+      const res = await getDataStats(
+        `hcp_map_data?state=${clickedState.trim()}`,
+        accessToken,
+        refreshToken
+      );
+      if (res) {
+        let _data = JSON.parse(res.replaceAll("NaN", 0));
+        dispatch({
+          type: action_types.HandleUpdateStates,
+          payload: { [clickedState]: _data.data },
+        });
+
+        setMarkedStates(_data.data);
       }
-  
+    } catch (err) {
+      console.log(err, "err");
+    }
   };
 
   const markerClicked = async (e) => {
@@ -239,26 +215,69 @@ const PatientOpportunityMapping = () => {
       type: "FeatureCollection",
       features: filteredFeatures,
     };
+    
+      let _filteredArray = regionData.filter(
+      (item) => item["Region"] === _region
+    );
+    let data_1_labels = [
+      "Total High Steroid Usage",
+      "Total Severe Exacerbations",
+    ];
+    let data_2_labels = [
+      "Percent High Steroid Usage",
+      "Percent Severe Exacerbations",
+    ];
+    setChartDataValue(setData1, data_1_labels, _filteredArray);
+    setChartDataValue(setData2, data_2_labels, _filteredArray);
     setMapStateData(filteredFeatureCollection);
   };
 
+  function setChartDataValue(setValue, API_labels, data) {
+    let _value = [];
+    API_labels.forEach((item) => {
+      _value.push(data[0][item]);
+    });
+    let chartData = {
+      labels: API_labels,
+      datasets: [
+        {
+          data: _value,
+          borderColor: "rgb(255, 99, 132)",
+          backgroundColor: "rgba(255, 99, 132, 0.5)",
+        },
+      ],
+    };
+    setValue(chartData);
+  }
+
   const stateClicked = (feature, mapRef) => {
-      const clickedState = feature["State Name"];
-      if (currentStateClicked.current == clickedState) {
-        return;
-      }
-      currentStateClicked.current = clickedState;
-      handleStateLevelData(state, clickedState);
-  
+    const clickedState = feature["State Name"];
+    const _Region = feature["Region"];
+    let _filteredArray = stateData[_Region].filter(
+      (item) => item["State Name"] === clickedState
+    );
+    let data_1_labels = [
+      "Total High Steroid Usage",
+      "Total Severe Exacerbations",
+    ];
+    let data_2_labels = [
+      "Percent High Steroid Usage",
+      "Percent Severe Exacerbations",
+    ];
+    setChartDataValue(setData1, data_1_labels, _filteredArray);
+    setChartDataValue(setData2, data_2_labels, _filteredArray);
+    if (currentStateClicked.current == clickedState) {
+      return;
+    }
+    currentStateClicked.current = clickedState;
+    handleStateLevelData(state, clickedState);
 
     mapRef.current.flyTo({
       center: [feature.LONG, feature.LAT],
       zoom: 5,
       essential: true,
     });
-    
-  }
-  
+  };
 
   const handleToggle = (id) => {
     setCurrentToggle(id);
@@ -290,6 +309,8 @@ const PatientOpportunityMapping = () => {
           })}
         </div>
         <Map
+          currentLevel={currentLevel}
+          setCurrentLevel={setCurrentLevel}
           currentToggle={currentToggle}
           stateClicked={stateClicked}
           stateData={stateData}
@@ -304,8 +325,8 @@ const PatientOpportunityMapping = () => {
           Summary of nation suboptimal treatment and trends over time
         </div>
         <div className="grid grid-cols-2 ">
-          <BarChart />
-          <BarChart data={data} options={options} />
+          {data1 && <BarChart data={data1} />}
+          {data2 && <BarChart data={data2} options={options} />}
         </div>
       </div>
     </div>

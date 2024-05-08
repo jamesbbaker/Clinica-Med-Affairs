@@ -2,14 +2,13 @@ import fakeData from "./table-data.json";
 import * as React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { useTable,usePagination, useSortBy  } from "react-table";
+import { useTable, usePagination, useSortBy } from "react-table";
 import Popup from "reactjs-popup";
 import BarChart from "../BarChart";
 import { EPL_TABLE_COLUMNS } from "../../constants/appConstants";
 import SelectionButtons from "../SelectionButtons";
 import { breakString, removeCommasFromString } from "../../utils/StringUtils";
-import { AiOutlineDelete } from 'react-icons/ai';
-
+import { AiOutlineDelete } from "react-icons/ai";
 
 const BarChartOptions = {
   indexAxis: "y",
@@ -64,30 +63,33 @@ const BarChartOptions = {
 };
 
 const Table = ({
-  marginTop="0rem",
+  currentSize,
+  currentPage,
+  totalPage,
+  marginTop = "0rem",
   ShowPagination = false,
-  activeCells= true,
-  Title="",
-  height="auto",
+  activeCells = true,
+  Title = "",
+  height = "auto",
   UserTable = false,
-  initialState={
+  initialState = {
     pageSize: 10,
     pageIndex: 0,
     sortBy: [
       {
-          id: 'Total_Claims',
-          desc: true
-      }
-  ]
+        id: "Total_Claims",
+        desc: true,
+      },
+    ],
   },
   setItemId,
+  setCurrentPage = () => {},
   showSelectionBtns = true,
   TableData = fakeData,
   TableColummns = EPL_TABLE_COLUMNS,
 }) => {
   const data = React.useMemo(() => TableData, [TableData]);
   const columns = React.useMemo(() => TableColummns, [TableColummns]);
-  
 
   const {
     getTableProps,
@@ -96,6 +98,7 @@ const Table = ({
     headerGroups,
     prepareRow,
     page,
+    setCurrentSize,
     canPreviousPage,
     canNextPage,
     pageOptions,
@@ -104,16 +107,16 @@ const Table = ({
     nextPage,
     previousPage,
     setPageSize,
-    state: { pageIndex, pageSize }
-  } = useTable({ columns, data,initialState}, useSortBy,usePagination);
+    state: { pageIndex, pageSize },
+  } = useTable({ columns, data, initialState }, useSortBy, usePagination);
   const [openPopup, setOpenPopup] = useState(false);
   const [barChartConfig, setBarChartConfig] = useState(null);
 
-  useEffect(() => {
-    allColumns.map(
-      (column, index) => !UserTable && showSelectionBtns && index % 2 && column.toggleHidden()
-    );
-  }, []);
+  // useEffect(() => {
+  //   allColumns.map(
+  //     (column, index) => !UserTable && showSelectionBtns && index % 2 && column.toggleHidden()
+  //   );
+  // }, []);
 
   const handleClick = (row) => {
     setOpenPopup((o) => !o);
@@ -141,10 +144,28 @@ const Table = ({
     return col.toggleHidden();
   };
 
+  const handleNext = () => {
+    if (totalPage) {
+      setCurrentPage((prev) => (prev == totalPage ? prev : prev + 1));
+    } else {
+      nextPage();
+    }
+  };
+
+  const handlePrev = () => {
+    if (totalPage) {
+      setCurrentPage((prev) => (prev == 0 ? prev : prev - 1));
+    } else {
+      previousPage();
+    }
+  };
+
   return (
-    <div style={{marginTop}} className="w-full max-w-full overflow-auto">
-      {Title && <div className="text-md text-gray-500 font-semibold">{Title}</div>}
-      {!UserTable &&showSelectionBtns && (
+    <div style={{ marginTop }} className="w-full max-w-full overflow-auto">
+      {Title && (
+        <div className="text-md text-gray-500 font-semibold">{Title}</div>
+      )}
+      {!UserTable && showSelectionBtns && (
         <SelectionButtons
           data={allColumns}
           visibleKey={"isVisible"}
@@ -156,9 +177,15 @@ const Table = ({
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>{column.render("Header")}
-                 <span>
-               {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
+                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  {column.render("Header")}
+                  <span>
+                    {column.isSorted
+                      ? column.isSortedDesc
+                        ? " 🔽"
+                        : " 🔼"
+                      : ""}
+                  </span>
                 </th>
               ))}
             </tr>
@@ -167,43 +194,74 @@ const Table = ({
         <tbody {...getTableBodyProps()}>
           {page.map((row) => {
             prepareRow(row);
-     
+
             return (
               <tr
                 className="hover:bg-slate-300 relative cursor-pointer pr-20"
-                onClick={() =>activeCells && handleClick(row)}
+                onClick={() => activeCells && handleClick(row)}
                 {...row.getRowProps()}
               >
                 {row.cells.map((cell) => {
-                  let cellValue = cell.render("Cell").props.value
-            
+                  let cellValue = cell.render("Cell").props.value;
+
                   return (
-                    <td {...cell.getCellProps()}>{typeof cellValue === "number" ? cellValue.toLocaleString() : cell.render("Cell")} </td>
+                    <td {...cell.getCellProps()}>
+                      {typeof cellValue === "number"
+                        ? cellValue.toLocaleString()
+                        : cell.render("Cell")}{" "}
+                    </td>
                   );
                 })}
-                {UserTable && <div onClick={() => setItemId(row.values.email)} className="absolute w-[1rem] z-[4] h-[100%] hover:scale-[1.2] transition-all ease-in-out duration-300 right-4 grid place-content-center"><AiOutlineDelete /></div>}
+                {UserTable && (
+                  <div
+                    onClick={() => setItemId(row.values.email)}
+                    className="absolute w-[1rem] z-[4] h-[100%] hover:scale-[1.2] transition-all ease-in-out duration-300 right-4 grid place-content-center"
+                  >
+                    <AiOutlineDelete />
+                  </div>
+                )}
               </tr>
             );
           })}
         </tbody>
       </table>
       <div className="mt-4">
-        <button className="hover:bg-primary hover:text-slate-50 cursor-pointer p-1" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {"<<"}
-        </button>{" "}
-        <button className="hover:bg-primary hover:text-slate-50 cursor-pointer p-1" onClick={() => previousPage()} disabled={!canPreviousPage}>
+        {!totalPage && (
+          <button
+            className="hover:bg-primary hover:text-slate-50 cursor-pointer p-1"
+            onClick={() => gotoPage(0)}
+            disabled={!canPreviousPage}
+          >
+            {"<<"}
+          </button>
+        )}{" "}
+        <button
+          className="hover:bg-primary hover:text-slate-50 cursor-pointer p-1"
+          onClick={handlePrev}
+          disabled={!totalPage && !canPreviousPage}
+        >
           {"<"}
         </button>{" "}
-        <button className="hover:bg-primary hover:text-slate-50 cursor-pointer p-1" onClick={() => nextPage()} disabled={!canNextPage}>
+        <button
+          className="hover:bg-primary hover:text-slate-50 cursor-pointer p-1"
+          onClick={handleNext}
+          disabled={!totalPage && !canNextPage}
+        >
           {">"}
         </button>{" "}
-        <button className="hover:bg-primary hover:text-slate-50 cursor-pointer p-1" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {">>"}
-        </button>{" "}
+        {!totalPage && (
+          <button
+            className="hover:bg-primary hover:text-slate-50 cursor-pointer p-1"
+            onClick={() => gotoPage(totalPage ? totalPage - 1 : pageCount - 1)}
+            disabled={!canNextPage}
+          >
+            {">>"}
+          </button>
+        )}{" "}
         <span>
           Page{" "}
           <strong>
-            {pageIndex + 1} of {pageOptions.length}
+            {currentPage ? currentPage :pageIndex + 1} of {totalPage ? totalPage : pageOptions.length}
           </strong>{" "}
         </span>
         {/* <span>
@@ -222,12 +280,16 @@ const Table = ({
         <select
           value={pageSize}
           onChange={(e) => {
-            setPageSize(Number(e.target.value));
+            if(totalPage) {
+              setCurrentSize(Number(e.target.value))
+            } else {
+              setPageSize(Number(e.target.value));
+            }
           }}
         >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
+          {[5,10, 20, 30, 40, 50].map((pageSize) => (
+            <option key={pageSize} value={currentSize ? currentSize :  pageSize}>
+              Show { pageSize}
             </option>
           ))}
         </select>

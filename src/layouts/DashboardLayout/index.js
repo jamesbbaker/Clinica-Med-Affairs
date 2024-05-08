@@ -20,9 +20,9 @@ const DashboardLayout = () => {
   }, []);
 
   return (
-    <div id="app__layout" className="grid overflow-x-hidden overflow-y-scroll font-primary justify-center items-center w-screen h-screen relative">
+    <div id="app__layout" className="grid md:overflow-x-hidden overflow-y-scroll font-primary justify-center items-center w-screen h-screen relative">
       <Header />
-      <div className="page__content pt-8 pb-16 px-8"><Outlet /></div>
+      <div className="page__content min-w-[800px] pt-8 pb-16 px-8"><Outlet /></div>
       <Sidebar />
     </div>
   );

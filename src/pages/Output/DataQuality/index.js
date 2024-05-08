@@ -374,7 +374,7 @@ const DataQuality = () => {
         <div className="flex w-full flex-col gap-12">
           <div className="flex w-full flex-col gap-2">
           <p className="text-[#888888] font-bold text-xs">Asthma Patients by States</p>
-          <Map markersEnabled={false} mapData={mapData} />
+          <Map dataQuality={true} markersEnabled={false} mapData={mapData} />
           </div>
           <TreeMap needCallbacks={false} data={statsData2} />
         </div>
