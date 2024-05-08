@@ -7,6 +7,7 @@ import mapDataJson from "./data.json";
 import { AuthContext } from "../../context/AuthContext";
 import { getDataStats } from "../../API/Outputs";
 import Popup from "reactjs-popup";
+import { highestValue } from "../../utils/MathUtils";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
@@ -322,6 +323,9 @@ const Map = ({
   const handleToggleData = (toggleId) => {
     popups.forEach((popup) => popup.remove());
     setPopups([]);
+    if (markedStates) {
+      handleStateLevelMarkers(markedStates, "marker1", "#f28cb1");
+    }
 
     if (toggleId == "Number of High Steroid Usage Patients") {
       mapRef.current.setPaintProperty(
@@ -329,14 +333,12 @@ const Map = ({
         "circle-color",
         "#11b4da"
       );
-      mapRef.current.setPaintProperty("unclustered-point", "circle-radius", 8);
     } else {
       mapRef.current.setPaintProperty(
         "unclustered-point",
         "circle-color",
         "#f28cb1"
       );
-      mapRef.current.setPaintProperty("unclustered-point", "circle-radius", 12);
     }
   };
 
@@ -344,7 +346,11 @@ const Map = ({
     setModalDetails(null);
   };
 
-  const handleStateLevelMarkers = (data, markerClass) => {
+  const handleStateLevelMarkers = (
+    data,
+    markerClass,
+    circleColor = "#f28cb1"
+  ) => {
     mapRef.current.off("click", "unclustered-point");
     mapRef.current.off("mouseenter", "unclustered-point");
     mapRef.current.off("mouseleave", "unclustered-point");
@@ -453,6 +459,8 @@ const Map = ({
       setDetailsItem(null);
     };
 
+    const maxValue = highestValue(data, levelToggles.state[currentToggle]);
+
     const newStateMarkers = data.map((feature) => {
       let coordinates = [feature.LONG, feature.LAT];
       if (feature.Region != 0) {
@@ -460,6 +468,8 @@ const Map = ({
         ref.current = document.createElement("div");
         createRoot(ref.current).render(
           <Marker
+            currentToggle={currentToggle}
+            maxValue={maxValue}
             handleMouseEnter={hoverListener}
             handleMouseLeave={hoverOutListener}
             markerClass={markerClass}
@@ -492,6 +502,8 @@ const Map = ({
       setDetailsItem(null);
     };
 
+    const maxValue = highestValue(data, levelToggles.region[currentToggle]);
+
     const newMapMarkers = data.map((feature) => {
       let coordinates = [feature.LONG, feature.LAT];
       if (feature.Region != 0) {
@@ -499,6 +511,8 @@ const Map = ({
         ref.current = document.createElement("div");
         createRoot(ref.current).render(
           <Marker
+            currentToggle={currentToggle}
+            maxValue={maxValue}
             handleMouseEnter={hoverListener}
             handleMouseLeave={hoverOutListener}
             markerClass={markerClass}
@@ -553,8 +567,11 @@ const Map = ({
       });
     }
   }, [mapData]);
+  
 
   const Marker = ({
+    currentToggle,
+    maxValue = 3000000,
     markerClass = "marker1",
     onClick,
     handleMouseEnter,
@@ -566,8 +583,32 @@ const Map = ({
       onClick(feature);
     };
 
+    function interpolateRadius(value) {
+      const minRadius = 0;
+      const maxRadius = 100;
+      // Maximum value
+
+      // Ensure value is within range [0, maxValue]
+      const clampedValue = Math.min(Math.max(value, 0), maxValue);
+
+      // Linear interpolation formula
+      const radius =
+        (clampedValue / maxValue) * (maxRadius - minRadius) + minRadius;
+
+      return radius;
+    }
+
+    console.log(currentToggle)
     return (
       <button
+        style={{
+          width: interpolateRadius(
+            feature[levelToggles["region"][currentToggle]]
+          ),
+          height: interpolateRadius(
+            feature[levelToggles["region"][currentToggle]]
+          ),
+        }}
         onMouseEnter={() => handleMouseEnter(feature)}
         onMouseLeave={handleMouseLeave}
         onClick={_onClick}
