@@ -65,6 +65,7 @@ const BarChartOptions = {
 };
 
 const Table = ({
+  setcurrentSize,
   selectionBtnsArray,
   specialityList,
   speciality,
@@ -103,6 +104,8 @@ const Table = ({
   const data = React.useMemo(() => TableData, [TableData]);
   const columns = React.useMemo(() => TableColummns, [TableColummns]);
 
+
+
   const {
     getTableProps,
     allColumns,
@@ -110,7 +113,6 @@ const Table = ({
     headerGroups,
     prepareRow,
     page,
-    setCurrentSize,
     canPreviousPage,
     canNextPage,
     pageOptions,
@@ -124,6 +126,12 @@ const Table = ({
   const [openPopup, setOpenPopup] = useState(false);
   const [barChartConfig, setBarChartConfig] = useState(null);
   const [filters, setFilters] = useState(false);
+
+  useEffect(() => {
+    if (currentSize) {
+      setPageSize(currentSize)
+    }
+  },[currentSize])
 
   const handleClick = (row) => {
     setOpenPopup((o) => !o);
@@ -193,6 +201,8 @@ const Table = ({
     setSpeciality(val)
    
   };
+
+
 
 
 
@@ -358,10 +368,11 @@ const Table = ({
           />
         </span>{" "} */}
           <select
-            value={pageSize}
+            value={currentSize ? currentSize : pageSize}
             onChange={(e) => {
               if (totalPage) {
-                setCurrentSize(Number(e.target.value));
+                setcurrentSize(Number(e.target.value));
+                setPageSize(Number(e.target.value));
               } else {
                 setPageSize(Number(e.target.value));
               }
@@ -370,7 +381,7 @@ const Table = ({
             {[5, 10, 20, 30, 40, 50].map((pageSize) => (
               <option
                 key={pageSize}
-                value={currentSize ? currentSize : pageSize}
+                value={pageSize}
               >
                 Show {pageSize}
               </option>

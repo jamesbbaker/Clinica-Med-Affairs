@@ -197,6 +197,7 @@ const EligiblePatientLocator = () => {
         TableColummns={tableColumns}
       />
       <Table
+      setcurrentSize={setcurrentSize}
         speciality={speciality}
         setSpeciality={setSpeciality}
         specialityList={specialityList}
