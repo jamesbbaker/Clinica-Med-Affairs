@@ -7,9 +7,6 @@
 
 .sidebarStyle {
   display: inline-block;
-  position: absolute;
-  top: 0;
-  left: 0;
   margin: 12px;
   background-color: #404040;
   color: #ffffff;
@@ -19,11 +16,10 @@
 }
 
 .marker2 {
-  border:1px solid #3498db;
+  border:1px solid #fff;
   border: 1px solid blue;
   color: white;
-
-  background: #fff;
+  background: #3498db;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -34,18 +30,18 @@
 }
 
 .marker1 {
-  background-color: #4caf50;
-  border: 1px solid blue;
+  background-color: #f28cb1;
+  /* border: 1px solid blue;
   color: white;
-
   text-align: center;
   text-decoration: none;
-  display: inline-block;
+  display: inline-block; */
   font-size: 16px;
  width: 20px;
  height: 20px;
   border-radius: 50%;
 }
+
 
 table {
   width: 100%;

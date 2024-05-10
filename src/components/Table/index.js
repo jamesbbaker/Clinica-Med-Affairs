@@ -9,6 +9,8 @@ import { EPL_TABLE_COLUMNS } from "../../constants/appConstants";
 import SelectionButtons from "../SelectionButtons";
 import { breakString, removeCommasFromString } from "../../utils/StringUtils";
 import { AiOutlineDelete } from "react-icons/ai";
+import MinMaxSlider from "../MinMaxSlider";
+import { MultiSelect } from "react-multi-select-component";
 
 const BarChartOptions = {
   indexAxis: "y",
@@ -63,14 +65,24 @@ const BarChartOptions = {
 };
 
 const Table = ({
+  selectionBtnsArray,
+  specialityList,
+  speciality,
+  setSpeciality,
+  icsNumber,
+  setIcsNumber,
+  steroidPercent,
+  setsteroidPercent,
   currentSize,
+  handleFilter,
+  sortBy,
+  sortOrder,
+  handleSort,
   currentPage,
   totalPage,
   marginTop = "0rem",
-  ShowPagination = false,
   activeCells = true,
   Title = "",
-  height = "auto",
   UserTable = false,
   initialState = {
     pageSize: 10,
@@ -111,12 +123,7 @@ const Table = ({
   } = useTable({ columns, data, initialState }, useSortBy, usePagination);
   const [openPopup, setOpenPopup] = useState(false);
   const [barChartConfig, setBarChartConfig] = useState(null);
-
-  // useEffect(() => {
-  //   allColumns.map(
-  //     (column, index) => !UserTable && showSelectionBtns && index % 2 && column.toggleHidden()
-  //   );
-  // }, []);
+  const [filters, setFilters] = useState(false);
 
   const handleClick = (row) => {
     setOpenPopup((o) => !o);
@@ -160,34 +167,103 @@ const Table = ({
     }
   };
 
+  const handelIcsValueChange = (min, max) => {
+    setIcsNumber({
+      min,
+      max,
+    });
+  };
+
+  const handleSteroidPercent = (min, max) => {
+    setsteroidPercent({
+      min,
+      max,
+    });
+  };
+
+  const handleApplyFilters = () => {
+    if (icsNumber.max > 0 || steroidPercent.max > 0 || speciality.length> 0) {
+      handleFilter(icsNumber, steroidPercent,speciality)
+    }
+  }
+
+
+  const handleMultipleSelect = (val) => {
+ 
+    setSpeciality(val)
+   
+  };
+
+
+
   return (
     <div style={{ marginTop }} className="w-full max-w-full overflow-auto">
       {Title && (
         <div className="text-md text-gray-500 font-semibold">{Title}</div>
       )}
+
       {!UserTable && showSelectionBtns && (
         <SelectionButtons
-          data={allColumns}
+          data={selectionBtnsArray ? allColumns.filter(item => selectionBtnsArray.includes(item.id))  :allColumns}
           visibleKey={"isVisible"}
           onClick={handleFilterClick}
         />
+      )}
+      {totalPage && (
+        <div className="flex items-center gap-2">
+          <MinMaxSlider
+            handleValueChange={handelIcsValueChange}
+            minValue={icsNumber.min}
+            maxValue={icsNumber.max}
+            label={"Number of ICS-LABA Patients"}
+          />
+          <MinMaxSlider
+            handleValueChange={handleSteroidPercent}
+            minValue={steroidPercent.min}
+            maxValue={steroidPercent.max}
+            label={"Percent of High Steroid Usage Patients"}
+          />
+          <div className="flex items-start flex-col gap-8">
+            <label className="font-[600]">Primary Specialty Description</label>
+           <MultiSelect
+                labelledBy=""
+                options={specialityList.map(item =>isNaN(item) && ({label: item, value: item})).filter(item => typeof item !== "boolean")}
+                className="w-[10rem]"
+                value={speciality || []}
+                onChange={(val) => handleMultipleSelect(val)}
+              />
+              </div>
+        </div>
       )}
       <table className="text-sm mt-4" {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                  {column.render("Header")}
-                  <span>
-                    {column.isSorted
-                      ? column.isSortedDesc
-                        ? " 🔽"
-                        : " 🔼"
-                      : ""}
-                  </span>
-                </th>
-              ))}
+              {headerGroup.headers.map((column) =>
+                totalPage ? (
+                  <th onClick={() => handleSort(column)}>
+                    {column.render("Header")}
+                    <span>
+                      {sortBy === column.id
+                        ? sortOrder == "desc"
+                          ? " 🔽"
+                          : " 🔼"
+                        : ""}
+                    </span>
+                  </th>
+                ) : (
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render("Header")}
+                    <span>
+                      {column.isSorted
+                        ? column.isSortedDesc
+                          ? " 🔽"
+                          : " 🔼"
+                        : ""}
+                    </span>
+                  </th>
+                )
+              )}
             </tr>
           ))}
         </thead>
@@ -225,46 +301,50 @@ const Table = ({
           })}
         </tbody>
       </table>
-      <div className="mt-4">
-        {!totalPage && (
+      <div className="mt-4 flex items-center justify-between">
+        <div>
+          {!totalPage && (
+            <button
+              className="hover:bg-primary hover:text-slate-50 cursor-pointer p-1"
+              onClick={() => gotoPage(0)}
+              disabled={!canPreviousPage}
+            >
+              {"<<"}
+            </button>
+          )}{" "}
           <button
             className="hover:bg-primary hover:text-slate-50 cursor-pointer p-1"
-            onClick={() => gotoPage(0)}
-            disabled={!canPreviousPage}
+            onClick={handlePrev}
+            disabled={!totalPage && !canPreviousPage}
           >
-            {"<<"}
-          </button>
-        )}{" "}
-        <button
-          className="hover:bg-primary hover:text-slate-50 cursor-pointer p-1"
-          onClick={handlePrev}
-          disabled={!totalPage && !canPreviousPage}
-        >
-          {"<"}
-        </button>{" "}
-        <button
-          className="hover:bg-primary hover:text-slate-50 cursor-pointer p-1"
-          onClick={handleNext}
-          disabled={!totalPage && !canNextPage}
-        >
-          {">"}
-        </button>{" "}
-        {!totalPage && (
+            {"<"}
+          </button>{" "}
           <button
             className="hover:bg-primary hover:text-slate-50 cursor-pointer p-1"
-            onClick={() => gotoPage(totalPage ? totalPage - 1 : pageCount - 1)}
-            disabled={!canNextPage}
+            onClick={handleNext}
+            disabled={!totalPage && !canNextPage}
           >
-            {">>"}
-          </button>
-        )}{" "}
-        <span>
-          Page{" "}
-          <strong>
-            {currentPage ? currentPage :pageIndex + 1} of {totalPage ? totalPage : pageOptions.length}
-          </strong>{" "}
-        </span>
-        {/* <span>
+            {">"}
+          </button>{" "}
+          {!totalPage && (
+            <button
+              className="hover:bg-primary hover:text-slate-50 cursor-pointer p-1"
+              onClick={() =>
+                gotoPage(totalPage ? totalPage - 1 : pageCount - 1)
+              }
+              disabled={!canNextPage}
+            >
+              {">>"}
+            </button>
+          )}{" "}
+          <span>
+            Page{" "}
+            <strong>
+              {currentPage ? currentPage : pageIndex + 1} of{" "}
+              {totalPage ? totalPage : pageOptions.length}
+            </strong>{" "}
+          </span>
+          {/* <span>
           | Go to page:{" "}
           <input
             type="number"
@@ -277,23 +357,64 @@ const Table = ({
             style={{ width: "100px" }}
           />
         </span>{" "} */}
-        <select
-          value={pageSize}
-          onChange={(e) => {
-            if(totalPage) {
-              setCurrentSize(Number(e.target.value))
-            } else {
-              setPageSize(Number(e.target.value));
-            }
-          }}
+          <select
+            value={pageSize}
+            onChange={(e) => {
+              if (totalPage) {
+                setCurrentSize(Number(e.target.value));
+              } else {
+                setPageSize(Number(e.target.value));
+              }
+            }}
+          >
+            {[5, 10, 20, 30, 40, 50].map((pageSize) => (
+              <option
+                key={pageSize}
+                value={currentSize ? currentSize : pageSize}
+              >
+                Show {pageSize}
+              </option>
+            ))}
+          </select>
+        </div>
+      {totalPage  && <h2
+          onClick={handleApplyFilters}
+          className="text-[0.95rem] self-center px-3 py-1 border w-[8rem] grid place-content-center border-[#000] cursor-pointer hover:scale-[1.025] transition-all ease-linear duration-200 mr-3"
         >
-          {[5,10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={currentSize ? currentSize :  pageSize}>
-              Show { pageSize}
-            </option>
-          ))}
-        </select>
+          Apply Filters
+        </h2>}
       </div>
+      <Popup
+        onClose={() => setFilters(false)}
+        modal
+        open={filters}
+        position="center center"
+      >
+        <div className="px-2 py-3 flex flex-col items-center gap-2 h-[50hvh] bg-#fff">
+          <h2 className="text-[1.25rem]">Filters</h2>
+          <div className="grid mt-10 grid-cols-2">
+            <div className="flex gap-2 items-center">
+              <label className="font-[600]">Sort By</label>
+              <select className="w-[200px]">
+                {columns.map((item) => (
+                  <option>{item.Header}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex gap-2 items-center">
+              <label className="font-[600]">Sort Order</label>
+              <select className="w-[200px]">
+                {["Ascending", "Descending"].map((item) => (
+                  <option>{item}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <button className="border border-black px-6 rounded-3xl mt-8 text-[0.875rem] font-[600] py-2 grid place-content-center">
+            Submit
+          </button>
+        </div>
+      </Popup>
       <Popup
         onClose={handleClose}
         modal
