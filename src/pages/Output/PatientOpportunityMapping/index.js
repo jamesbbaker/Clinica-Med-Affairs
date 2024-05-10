@@ -120,11 +120,12 @@ const PatientOpportunityMapping = () => {
   const [data1, setData1] = useState();
   const [data2, setData2] = useState();
   const [stateData, setStateData] = useState(null);
-  const [mapStateData, setMapStateData] = useState(null);
   const [markedStates, setMarkedStates] = useState(null);
   const currentStateClicked = useRef(null);
   const [currentToggle, setCurrentToggle] = useState(toggleBtns[0].id);
   const [loading, setLoading] = useState(true);
+  const [resetMap,setResetMap] = useState(false)
+  const [summaryData, setSummaryData] = useState(null)
 
 
 
@@ -163,6 +164,21 @@ const PatientOpportunityMapping = () => {
       .catch((err) => {
         console.log(err, "err");
       });
+    getDataStats("national_data", accessToken, refreshToken).then(async (res) => {
+      if (res) { 
+        let data_1_labels = [
+          "Total High Steroid Usage",
+          "Total Severe Exacerbations",
+        ];
+        let data_2_labels = [
+          "Percent High Steroid Usage",
+          "Percent Severe Exacerbations",
+        ];
+        setChartDataValue(setData1, data_1_labels, [res.summary_data]);
+        setChartDataValue(setData2, data_2_labels, [res.summary_data]);
+        setSummaryData([res.summary_data])
+      }
+    })
   }, []);
 
   useEffect(() => {
@@ -229,7 +245,6 @@ const PatientOpportunityMapping = () => {
     ];
     setChartDataValue(setData1, data_1_labels, _filteredArray);
     setChartDataValue(setData2, data_2_labels, _filteredArray);
-    setMapStateData(filteredFeatureCollection);
   };
 
   function setChartDataValue(setValue, API_labels, data) {
@@ -252,6 +267,10 @@ const PatientOpportunityMapping = () => {
 
   const stateClicked = (feature, mapRef) => {
     const clickedState = feature["State Name"];
+    if (currentStateClicked.current == clickedState) {
+      return;
+    }
+    currentStateClicked.current = clickedState;
     const _Region = feature["Region"];
     let _filteredArray = stateData[_Region].filter(
       (item) => item["State Name"] === clickedState
@@ -266,10 +285,7 @@ const PatientOpportunityMapping = () => {
     ];
     setChartDataValue(setData1, data_1_labels, _filteredArray);
     setChartDataValue(setData2, data_2_labels, _filteredArray);
-    if (currentStateClicked.current == clickedState) {
-      return;
-    }
-    currentStateClicked.current = clickedState;
+  
     handleStateLevelData(state, clickedState);
 
     mapRef.current.flyTo({
@@ -278,6 +294,27 @@ const PatientOpportunityMapping = () => {
       essential: true,
     });
   };
+
+  const handleReset = () => {
+    setResetMap(true)
+    setTimeout(() => {
+      setResetMap(false)
+      setCurrentLevel("region");
+      setCurrentToggle(toggleBtns[0].id);
+      setMarkedStates(null)
+      currentStateClicked.current = null
+      let data_1_labels = [
+        "Total High Steroid Usage",
+        "Total Severe Exacerbations",
+      ];
+      let data_2_labels = [
+        "Percent High Steroid Usage",
+        "Percent Severe Exacerbations",
+      ];
+      setChartDataValue(setData1, data_1_labels, summaryData);
+      setChartDataValue(setData2, data_2_labels, summaryData);
+    }, 100)
+  }
 
   const handleToggle = (id) => {
     setCurrentToggle(id);
@@ -293,7 +330,8 @@ const PatientOpportunityMapping = () => {
           <div class="w-6 h-6 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
         </div>
       </div>
-      <div style={{ opacity: loading ? 0 : 1 }}>
+      <div style={{ opacity: loading ? 0 : 1 }} >
+        <div className="flex items-center justify-between"><div onClick={handleReset} className="font-500 cursor-pointer hover:bg-[#c3c3c3] p-1 border border-[#000]">RESET MAP</div>
         <div className="gap-5 cursor-pointer flex py-2">
           {toggleBtns.map((btn) => {
             return (
@@ -301,28 +339,37 @@ const PatientOpportunityMapping = () => {
                 onClick={() => handleToggle(btn.id)}
                 className={`${
                   btn.id == currentToggle ? "bg-[#c3c3c3]" : "bg-[transparent]"
-                } hover:bg-[#c3c3c3] px-1`}
+                } hover:bg-[#c3c3c3] p-1`}
               >
                 {btn.label}
               </div>
             );
           })}
         </div>
-        <Map
+        </div>
+       {resetMap ? <div
+        style={{ display: loading ? "grid" : "none" }}
+        className="w-full h-[400px] grid place-content-center"
+      >
+        <div class="flex justify-center items-center h-24">
+          <div class="w-6 h-6 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
+        </div>
+      </div> : <Map
+      title="Summary of Asthma Medical Unmet Need"
+      // resetMap={resetMap}
           currentLevel={currentLevel}
           setCurrentLevel={setCurrentLevel}
           currentToggle={currentToggle}
           stateClicked={stateClicked}
           stateData={stateData}
           markedStates={markedStates}
-          mapStateData={mapStateData}
           markerClickedFn={markerClicked}
           markers={regionData}
           handleStateLevelData={handleStateLevelData}
           markersEnabled={false}
-        />
+        />}
         <div className="text-md font-medium mt-4">
-          Summary of nation suboptimal treatment and trends over time
+        Summary of Asthma Medical Unmet Need
         </div>
         <div className="grid grid-cols-2 ">
           {data1 && <BarChart data={data1} />}
