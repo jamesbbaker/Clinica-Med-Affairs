@@ -97,6 +97,7 @@ const EligiblePatientLocator = () => {
         console.log(err, "err");
       });
   };
+  const filteredArr = ["Percent Severe Exacerbations","Percent High Steroid Usage", "Percent With High Steroid Usage"]
 
   useEffect(() => {
     getDataStats("data_stats_23", accessToken, refreshToken)
@@ -105,7 +106,7 @@ const EligiblePatientLocator = () => {
           let _data = JSON.parse(responseData.replaceAll("NaN", 0));
           setStatsData2(_data.data);
           setTableColumns(
-            _data.headers.map((item) => ({ Header: item, accessor: item }))
+          _data.headers.filter(item => !filteredArr.includes(item.trim())).map((item) => ({ Header: item, accessor: item }))
           );
         }
       })
