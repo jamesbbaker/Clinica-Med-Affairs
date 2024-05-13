@@ -254,7 +254,7 @@ const Table = ({
                   <th onClick={() => handleSort(column)}>
                     {column.render("Header")}
                     <span>
-                      {sortBy === column.id
+                      {sortBy === column.id || (column.id == "Name" && sortBy === "First Name")
                         ? sortOrder == "desc"
                           ? " 🔽"
                           : " 🔼"
