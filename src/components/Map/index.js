@@ -1,14 +1,11 @@
 import mapboxgl from "mapbox-gl";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import geoJson from "./map-data.json";
-import geoJson2 from "./map-data-2.json";
 import mapDataJson from "./data.json";
-import { AuthContext } from "../../context/AuthContext";
-import { getDataStats } from "../../API/Outputs";
 import Popup from "reactjs-popup";
-import { highestValue } from "../../utils/MathUtils";
 import CustomMarker from "./Marker";
+import Spiderfy from '@nazka/map-gl-js-spiderfy';
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
@@ -155,14 +152,10 @@ const levelToggles = {
 };
 
 const Map = ({
-  title,
   currentLevel,
   setCurrentLevel,
   stateData,
   currentToggle,
-  mapStateData,
-  resetMap,
-  setResetMap,
   dataQuality,
   stateClicked,
   markedStates,
@@ -198,7 +191,7 @@ const Map = ({
   useEffect(() => {
     if (markers && stateData && layerAdded) {
       let _itemValues = [];
-      let colorMaker = Object.values(stateData).map((item) => {
+    Object.values(stateData).map((item) => {
         item.forEach((_state) => {
           if (regionColors[_state.Region]) {
             _itemValues.push([
@@ -210,6 +203,7 @@ const Map = ({
           }
         });
       });
+      window.mapRemoveLayer()
 
       handleRegionMarkers(markers, "marker2");
       mapRef.current.setPaintProperty("countries", "fill-color", {
@@ -218,7 +212,7 @@ const Map = ({
         stops: _itemValues,
       });
     }
-  }, [markers, layerAdded]);
+  }, [markers,stateData, layerAdded]);
 
   useEffect(() => {
     if (markedStates) {
@@ -227,99 +221,31 @@ const Map = ({
     }
   }, [markedStates]);
 
-  // useEffect(() => {
-  //   if (mapRef.current) {
-  //     mapRef.current.on("load", () => {
-  //       console.log("load againnnn")
-  //       mapRef.current.addSource("markers", {
-  //         type: "geojson",
-  //         data: {
-  //           type: "FeatureCollection",
-  //           features: [], // Initial empty array of features
-  //         },
-  //       });
+  useEffect(() => {
+    if (mapRef.current) {
 
-  //       mapRef.current.addLayer({
-  //         id: "clusters",
-  //         type: "circle",
-  //         source: "markers",
-  //         filter: ["has", "point_count"],
-  //         paint: {
-  //           "circle-color": [
-  //             "step",
-  //             ["get", "point_count"],
-  //             "#51bbd6",
-  //             100,
-  //             "#f1f075",
-  //             750,
-  //             "#f28cb1",
-  //           ],
-  //           "circle-radius": [
-  //             "step",
-  //             ["get", "point_count"],
-  //             20,
-  //             100,
-  //             30,
-  //             750,
-  //             40,
-  //           ],
-  //         },
-  //       });
+      window.mapRemoveLayer = () => {
+        if (
+          mapRef.current &&
+          mapRef.current.getStyle() &&
+          mapRef.current.getStyle().layers
+        ) {
+          mapRef.current.getStyle().layers.forEach(function (layer) {
+            console.log(layer)
+            if (layer.id == "country-label" || layer.id == "settlement-label") {
+              mapRef.current.removeLayer(layer.id);
+            }
+          });
+        }
 
-  //       mapRef.current.addLayer({
-  //         id: "cluster-count",
-  //         type: "symbol",
-  //         source: "markers",
-  //         filter: ["has", "point_count"],
-  //         layout: {
-  //           "text-field": "{point_count_abbreviated}",
-  //           "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-  //           "text-size": 12,
-  //         },
-  //       });
-
-  //       mapRef.current.addLayer({
-  //         id: "unclustered-point",
-  //         type: "circle",
-  //         source: "markers",
-  //         filter: ["!", ["has", "point_count"]],
-  //         paint: {
-  //           "circle-color": "#11b4da",
-  //           "circle-radius": ["get", "size"], // Assuming 'size' is a property in your marker data
-  //           "circle-stroke-width": 1,
-  //           "circle-stroke-color": "#fff",
-  //         },
-  //       });
-  //     });
-
-  //     window.mapRemoveLayer = () => {
-  //       if (
-  //         mapRef.current &&
-  //         mapRef.current.getStyle() &&
-  //         mapRef.current.getStyle().layers
-  //       ) {
-  //         mapRef.current.getStyle().layers.forEach(function (layer) {
-  //           if (
-  //             layer.id == "country-fills-hover" ||
-  //             layer.id == "countries" ||
-  //             layer.id == "markers"
-  //           ) {
-  //             // Keep the background layer if needed
-  //             mapRef.current.removeLayer(layer.id);
-  //           }
-  //         });
-  //       }
-
-  //       var sources = mapRef.current.getStyle().sources;
-  //       for (var sourceId in sources) {
-  //         if (sourceId == "countries") {
-  //           mapRef.current.removeSource(sourceId);
-  //         }
-  //       }
-  //     };
-  //   }
+        var sources = mapRef.current.getStyle().sources;
+        for (var sourceId in sources) {
+          console.log(sourceId)
+        }
+      };
+    }
    
-  // }, [mapRef.current]);
+  }, [mapRef.current]);
 
   // useEffect(() => {
   //   if (mapStateData) {
@@ -398,6 +324,11 @@ const Map = ({
       40,
       48,
     ]);
+    const spiderfy = new Spiderfy(mapRef.current, {
+      onLeafClick: f => console.log(f),
+      minZoomLevel: 12,
+      zoomIncrement: 2,
+    });
 
     let hoverListener = (e) => {
       e.preventDefault();
@@ -420,7 +351,7 @@ const Map = ({
 
     const clickListener = (e) => {
       e.preventDefault();
-      if (e.features && e.features.length > 0) {
+      if (e.features && e.features.length > 0) {  
         const stateFeature = e.features.find(
           (feature) => feature.layer.id === "countries"
         );

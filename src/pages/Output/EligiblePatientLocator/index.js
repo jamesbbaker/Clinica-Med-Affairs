@@ -89,8 +89,14 @@ const EligiblePatientLocator = () => {
           settotalPage(Math.floor(_data.total / currentSize));
           const responseData = _data.data;
           setSpecialityList(_data.specialty_list);
+          const newData = responseData.map(item => {
+            return {
+             ...item,
+              Name: item["First Name"] + " " + item["Last Name"]
+            }
+          })
 
-          setStatsData1(responseData);
+          setStatsData1(newData);
         }
       })
       .catch((err) => {
@@ -117,8 +123,8 @@ const EligiblePatientLocator = () => {
 
   const Table_Columns_1 = useMemo(() => {
     const column_names = [
-      { header: "First Name", accessor: "First Name" },
-      { header: "Last Name", accessor: "Last Name" },
+      { header: "Name", accessor: "Name" },
+      // { header: "Last Name", accessor: "Last Name" },
       {
         header: "Primary Specialty Description",
         accessor: "Primary Specialty Description",
@@ -176,12 +182,15 @@ const EligiblePatientLocator = () => {
 
   const handleSort = (column) => {
     let _sortOrder = "asc";
-    if (sortBy == column.id) {
+    let columnId = column.id == "Name" ? "First Name" : column.id
+    if (sortBy == columnId) {
       setsortOrder("desc");
       _sortOrder = "desc";
     }
-    setSortBy(column.id);
-    fetchData(currentPage, currentSize, column.id, _sortOrder);
+ 
+  
+    setSortBy(columnId);
+    fetchData(currentPage, currentSize, columnId, _sortOrder);
   };
 
   return statsData1 && statsData2 && !loading ? (

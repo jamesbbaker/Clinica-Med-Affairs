@@ -355,8 +355,6 @@ const PatientOpportunityMapping = () => {
           <div class="w-6 h-6 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
         </div>
       </div> : <Map
-      title="Summary of Asthma Medical Unmet Need"
-      // resetMap={resetMap}
           currentLevel={currentLevel}
           setCurrentLevel={setCurrentLevel}
           currentToggle={currentToggle}
@@ -365,7 +363,6 @@ const PatientOpportunityMapping = () => {
           markedStates={markedStates}
           markerClickedFn={markerClicked}
           markers={regionData}
-          handleStateLevelData={handleStateLevelData}
           markersEnabled={false}
         />}
         <div className="text-md font-medium mt-4">
