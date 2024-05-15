@@ -5,7 +5,7 @@ import geoJson from "./map-data.json";
 import mapDataJson from "./data.json";
 import Popup from "reactjs-popup";
 import CustomMarker from "./Marker";
-import Spiderfy from '@nazka/map-gl-js-spiderfy';
+import MapboxglSpiderifier from "mapboxgl-spiderifier";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
@@ -171,6 +171,7 @@ const Map = ({
   const [latitude, setLatitude] = useState(-90);
   const [longitude, setLongitude] = useState(40);
 
+  const spiderifier = useRef(null);
   const [zoom, setZoom] = useState(3.5);
   const [mapMarkers, setMapMarkers] = useState([]);
   const [stateMapMarkers, setStateMapMarkers] = useState([]);
@@ -178,20 +179,17 @@ const Map = ({
   const [detailsItem, setDetailsItem] = useState(null);
   const [regionData, setRegionData] = useState(null);
   const [stateMarkers, setStateMarkers] = useState([]);
-  const [currentRegion, setCurrentRegion] = useState(null)
+  const [currentRegion, setCurrentRegion] = useState(null);
   const [detailsPosition, setDetailsPosition] = useState(null);
   const mapboxglMarker = useRef([]);
   const mapStateboxglMarker = useRef([]);
   const [layerAdded, setLayerAdded] = useState(false);
   const [modalDetails, setModalDetails] = useState(null);
 
-
-
-
   useEffect(() => {
     if (markers && stateData && layerAdded) {
       let _itemValues = [];
-    Object.values(stateData).map((item) => {
+      Object.values(stateData).map((item) => {
         item.forEach((_state) => {
           if (regionColors[_state.Region]) {
             _itemValues.push([
@@ -203,7 +201,7 @@ const Map = ({
           }
         });
       });
-      window.mapRemoveLayer()
+      window.mapRemoveLayer();
 
       handleRegionMarkers(markers, "marker2");
       mapRef.current.setPaintProperty("countries", "fill-color", {
@@ -212,18 +210,16 @@ const Map = ({
         stops: _itemValues,
       });
     }
-  }, [markers,stateData, layerAdded]);
+  }, [markers, stateData, layerAdded]);
 
   useEffect(() => {
     if (markedStates) {
-  
       handleStateLevelMarkers(markedStates, "marker1");
     }
   }, [markedStates]);
 
   useEffect(() => {
     if (mapRef.current) {
-
       window.mapRemoveLayer = () => {
         if (
           mapRef.current &&
@@ -231,20 +227,18 @@ const Map = ({
           mapRef.current.getStyle().layers
         ) {
           mapRef.current.getStyle().layers.forEach(function (layer) {
-            console.log(layer)
-            if (layer.id == "country-label" || layer.id == "settlement-label") {
-              mapRef.current.removeLayer(layer.id);
-            }
+            // if (layer.id == "country-label" || layer.id == "settlement-label") {
+            //   mapRef.current.removeLayer(layer.id);
+            // }
           });
         }
 
         var sources = mapRef.current.getStyle().sources;
         for (var sourceId in sources) {
-          console.log(sourceId)
+          // console.log(sourceId);
         }
       };
     }
-   
   }, [mapRef.current]);
 
   // useEffect(() => {
@@ -266,6 +260,87 @@ const Map = ({
     if (markedStates) {
       handleStateLevelMarkers(markedStates, "marker1", "#f28cb1");
     }
+    spiderifier.current.unspiderfy();
+    spiderifier.current = new MapboxglSpiderifier(mapRef.current, {
+      onClick: function (e, spiderLeg) {
+        console.log("Clicked on ", spiderLeg);
+      },
+      initializeLeg: function initializeSpiderLeg(spiderLeg) {
+        var pinElem = spiderLeg.elements.pin;
+        var feature = spiderLeg.feature;
+        var popup;
+
+        pinElem.className = pinElem.className + "marker1";
+        function interpolateRadius(value) {
+          const minRadius = 10;
+          const maxRadius =
+            currentToggle == "Number of High Steroid Usage Patients" ? 50 : 100;
+          // Maximum value
+
+          // Ensure value is within range [0, maxValue]
+          const clampedValue = Math.min(Math.max(value, 0), 20);
+
+          // Linear interpolation formula
+          const radius =
+            (clampedValue / 40) * (maxRadius - minRadius) + minRadius;
+
+          return radius;
+        }
+
+        pinElem.style.width = `${interpolateRadius(
+          feature.properties[currentToggle]
+        )}px`;
+        pinElem.style.height = `${interpolateRadius(
+          feature.properties[currentToggle]
+        )}px`;
+        pinElem.style.borderRadius = `50%`;
+        pinElem.style.background =
+          currentToggle === "Number of High Steroid Usage Patients"
+            ? "#11b4da"
+            : "#f28cb1";
+        pinElem.style.border = "1px solid #fff";
+
+        pinElem.addEventListener("mouseenter", function () {
+          let newObject = {
+            ...spiderLeg,
+            param: {
+              x: spiderLeg.param.x,
+              y: spiderLeg.param.y - 35,
+            },
+          };
+          popup = new mapboxgl.Popup({
+            closeButton: true,
+            closeOnClick: false,
+            offset: MapboxglSpiderifier.popupOffsetForSpiderLeg(newObject),
+          });
+
+          popup
+            .setHTML(
+              `<div className="text-sm max-w-[10rem]"><h4 className="text-xs">Name: <strong className="font-bold">${
+                feature.properties["First Name"]
+              } ${
+                feature.properties["Last Name"]
+              }</strong></h4><h4 className="text-xs">Primary Specialty Description: <strong className="font-bold">${
+                feature.properties["Primary Specialty Description"]
+              }</strong></h4> <h4 className="text-xs">${currentToggle}: <strong className="font-bold">${
+                feature.properties &&
+                currentToggle &&
+                feature.properties[currentToggle].toLocaleString()
+              }</strong></h4></div>`
+            )
+            .addTo(mapRef.current);
+
+          spiderLeg.mapboxMarker.setPopup(popup);
+        });
+        pinElem.addEventListener("mouseleave", function () {
+          if (popup) {
+            popup.remove();
+          }
+        });
+      },
+      markerWidth: 40,
+      markerHeight: 40,
+    });
 
     if (toggleId == "Number of High Steroid Usage Patients") {
       mapRef.current.setPaintProperty(
@@ -286,20 +361,94 @@ const Map = ({
     setModalDetails(null);
   };
 
+  const createSpiralMarkers = (coordinates, size) => {
+    const spiralMarkers = [];
+    const centerX = coordinates[0];
+    const centerY = coordinates[1];
+    let angle = 0;
+    let radius = 0;
+    const angleIncrement = 0.5; // Adjust the angle increment as needed
+
+    // Iterate through each marker
+    size.forEach((markerSize, index) => {
+      // Calculate position based on spiral pattern
+      const newX = centerX + radius * Math.cos(angle);
+      const newY = centerY + radius * Math.sin(angle);
+
+      // Create GeoJSON feature for the marker
+      const markerFeature = {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [newX, newY],
+        },
+        properties: {
+          size: markerSize[currentToggle] + 10,
+          index: index, // Optional: to keep track of the original index
+        },
+      };
+
+      // Add marker feature to the array
+      spiralMarkers.push(markerFeature);
+
+      // Update angle and radius for the next marker
+      angle += angleIncrement;
+      radius += 0.01; // Adjust the radius increment as needed
+    });
+
+    return spiralMarkers;
+  };
+
   const handleStateLevelMarkers = (
     data,
     markerClass,
     circleColor = "#f28cb1"
   ) => {
+    let groupObj = {};
+    data.map((marker, index) => {
+      let size = marker[currentToggle];
+      const key = `${marker.LONG},${marker.LAT}`;
+      if (groupObj.hasOwnProperty(key)) {
+        let prevObj = groupObj[key];
+        let newSize = prevObj.size > size ? prevObj.size : size;
+        groupObj[key] = {
+          ...prevObj,
+          size: newSize,
+          coordinates: [marker.LONG, marker.LAT],
+          [`marker${index}`]: JSON.stringify({
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [marker.LONG, marker.LAT],
+            },
+            properties: { ...marker, size },
+          }),
+        };
+      } else {
+        groupObj[key] = {
+          size,
+          coordinates: [marker.LONG, marker.LAT],
+          [`marker${index}`]: JSON.stringify({
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [marker.LONG, marker.LAT],
+            },
+            properties: { ...marker, size },
+          }),
+        };
+      }
+    });
+
     const geojson = {
       type: "FeatureCollection",
-      features: data.map((marker) => ({
+      features: Object.values(groupObj).map((marker) => ({
         type: "Feature",
         geometry: {
           type: "Point",
-          coordinates: [marker.LONG, marker.LAT],
+          coordinates: marker.coordinates,
         },
-        properties: { ...marker, size: marker[currentToggle] },
+        properties: { ...marker, size: marker.size },
       })),
     };
 
@@ -324,46 +473,75 @@ const Map = ({
       40,
       48,
     ]);
-    const spiderfy = new Spiderfy(mapRef.current, {
-      onLeafClick: f => console.log(f),
-      minZoomLevel: 12,
-      zoomIncrement: 2,
-    });
 
     let hoverListener = (e) => {
       e.preventDefault();
       if (e.features && e.features.length > 0) {
-        const stateFeature = e.features.find(
-          (feature) => feature.layer.id === "countries"
-        );
-
-        if (!stateFeature) {
-          const coordinates = e.features[0].geometry.coordinates.slice();
-          const item = e.features[0].properties;
-          const pixel = mapRef.current.project(coordinates);
-          setCurrentLevel("hcp");
-          setDetailsPosition({ left: pixel.x, top: pixel.y });
-
-          setDetailsItem(item);
+        const stateFeature = e.features[0].properties;
+        let newArr = [];
+        if (stateFeature) {
+          Object.values(stateFeature).map((item) => {
+            newArr.push(JSON.parse(item));
+          });
         }
+        // newArr.splice(0,2)
+        let filteredArr = [
+          ...newArr.filter(
+            (item) => item.properties && item.properties.size != 0
+          ),
+        ];
+        //   console.log(filteredArr)
+        //   const spiralMarkers = createSpiralMarkers(newArr[1], filteredArr);
+        //   const geojson = {
+        //     type: "FeatureCollection",
+        //     features: spiralMarkers,
+        // };
+
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        const pixel = mapRef.current.project(coordinates);
+        setCurrentLevel("hcp");
+        setDetailsPosition({ left: pixel.x, top: pixel.y });
+
+        setDetailsItem(filteredArr);
       }
     };
 
     const clickListener = (e) => {
       e.preventDefault();
-      if (e.features && e.features.length > 0) {  
-        const stateFeature = e.features.find(
-          (feature) => feature.layer.id === "countries"
-        );
-
-        if (!stateFeature) {
-          const coordinates = e.features[0].geometry.coordinates.slice();
-          const item = e.features[0].properties;
-          const pixel = mapRef.current.project(coordinates);
-          setCurrentLevel("hcp");
-          setDetailsPosition({ left: pixel.x, top: pixel.y });
-          setModalDetails(item);
+      if (e.features && e.features.length > 0) {
+        const stateFeature = e.features[0].properties;
+        let newArr = [];
+        if (stateFeature) {
+          Object.values(stateFeature).map((item) => {
+            newArr.push(JSON.parse(item));
+          });
         }
+        // newArr.splice(0,2)
+        let filteredArr = [
+          ...newArr.filter(
+            (item) => item.properties && item.properties.size != 0
+          ),
+        ];
+        if (filteredArr.length > 1) {
+          spiderifier.current.unspiderfy();
+          spiderifier.current.spiderfy(
+            e.features[0].geometry.coordinates,
+            filteredArr
+          );
+        }
+
+        // const stateFeature = e.features.find(
+        //   (feature) => feature.layer.id === "countries"
+        // );
+
+        // if (!stateFeature) {
+        //   const coordinates = e.features[0].geometry.coordinates.slice();
+        //   const item = e.features[0].properties;
+        //   const pixel = mapRef.current.project(coordinates);
+        //   setCurrentLevel("hcp");
+        //   setDetailsPosition({ left: pixel.x, top: pixel.y });
+        //   setModalDetails(item);
+        // }
       }
     };
 
@@ -377,14 +555,13 @@ const Map = ({
   };
 
   const handleClick = (feature) => {
-    setDetailsItem(null)
+    setDetailsItem(null);
     stateClicked(feature, mapRef);
     mapStateboxglMarker.current.forEach((marker) => marker && marker.remove());
-    mapStateboxglMarker.current=[]
+    mapStateboxglMarker.current = [];
   };
 
   const handleStateMarkers = (data, markerClass) => {
-   
     setCurrentLevel("state");
     const newStateMarkers = data.map((feature) => {
       if (feature.Region != 0) {
@@ -392,8 +569,8 @@ const Map = ({
       }
     });
     setStateMarkers(newStateMarkers);
-     mapboxglMarker.current.forEach((marker) => marker && marker.remove());
-    mapboxglMarker.current=[]
+    mapboxglMarker.current.forEach((marker) => marker && marker.remove());
+    mapboxglMarker.current = [];
   };
 
   const handleRegionMarkers = (data, markerClass) => {
@@ -408,7 +585,7 @@ const Map = ({
   const handleAddMarker = (data, markerClass) => {
     mapMarkers.forEach((marker) => marker.remove());
     setMapMarkers([]);
-    
+
     const newMapMarkers = data.features.map((feature) => {
       const ref = React.createRef();
       ref.current = document.createElement("div");
@@ -498,7 +675,7 @@ const Map = ({
       // maxZoom: 10,
       minZoom: 3.5,
       container: mapContainerRef.current,
-      style: "mapbox://styles/mapbox/streets-v11",
+      style: "mapbox://styles/mapbox/streets-v9",
       center: [latitude, longitude],
       zoom: zoom,
     });
@@ -514,67 +691,144 @@ const Map = ({
         dataQuality,
         setLayerAdded
       );
+      spiderifier.current = new MapboxglSpiderifier(mapRef.current, {
+        onClick: function (e, spiderLeg) {
+          console.log("Clicked on ", spiderLeg);
+        },
+        initializeLeg: function initializeSpiderLeg(spiderLeg) {
+          var pinElem = spiderLeg.elements.pin;
+          var feature = spiderLeg.feature;
+          var popup;
 
-        mapRef.current.addSource("markers", {
-          type: "geojson",
-          data: {
-            type: "FeatureCollection",
-            features: [], // Initial empty array of features
-          },
-        });
+          pinElem.className = pinElem.className + "marker1";
+          function interpolateRadius(value) {
+            const minRadius = 10;
+            const maxRadius = 50;
+            // Maximum value
 
-        mapRef.current.addLayer({
-          id: "clusters",
-          type: "circle",
-          source: "markers",
-          filter: ["has", "point_count"],
-          paint: {
-            "circle-color": [
-              "step",
-              ["get", "point_count"],
-              "#51bbd6",
-              100,
-              "#f1f075",
-              750,
-              "#f28cb1",
-            ],
-            "circle-radius": [
-              "step",
-              ["get", "point_count"],
-              20,
-              100,
-              30,
-              750,
-              40,
-            ],
-          },
-        });
+            // Ensure value is within range [0, maxValue]
+            const clampedValue = Math.min(Math.max(value, 0), 20);
 
-        mapRef.current.addLayer({
-          id: "cluster-count",
-          type: "symbol",
-          source: "markers",
-          filter: ["has", "point_count"],
-          layout: {
-            "text-field": "{point_count_abbreviated}",
-            "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-            "text-size": 12,
-          },
-        });
+            // Linear interpolation formula
+            const radius =
+              (clampedValue / 40) * (maxRadius - minRadius) + minRadius;
 
-        mapRef.current.addLayer({
-          id: "unclustered-point",
-          type: "circle",
-          source: "markers",
-          filter: ["!", ["has", "point_count"]],
-          paint: {
-            "circle-color": "#11b4da",
-            "circle-radius": ["get", "size"], // Assuming 'size' is a property in your marker data
-            "circle-stroke-width": 1,
-            "circle-stroke-color": "#fff",
-          },
-        });
-    
+            return radius;
+          }
+
+          pinElem.style.width = `${interpolateRadius(
+            feature.properties[currentToggle]
+          )}px`;
+          pinElem.style.height = `${interpolateRadius(
+            feature.properties[currentToggle]
+          )}px`;
+          pinElem.style.borderRadius = `50%`;
+          pinElem.style.background =
+            currentToggle === "Number of High Steroid Usage Patients"
+              ? "#11b4da"
+              : "#f28cb1";
+          pinElem.style.border = "1px solid #fff";
+          pinElem.addEventListener("mouseenter", function () {
+            let newObject = {
+              ...spiderLeg,
+              param: {
+                x: spiderLeg.param.x,
+                y: spiderLeg.param.y - 35,
+              },
+            };
+            popup = new mapboxgl.Popup({
+              closeButton: true,
+              closeOnClick: false,
+              offset: MapboxglSpiderifier.popupOffsetForSpiderLeg(newObject),
+            });
+
+            popup
+              .setHTML(
+                `<div className="text-sm max-w-[10rem]"><h4 className="text-xs">Name: <strong className="font-bold">${
+                  feature.properties["First Name"]
+                } ${
+                  feature.properties["Last Name"]
+                }</strong></h4><h4 className="text-xs">Primary Specialty Description: <strong className="font-bold">${
+                  feature.properties["Primary Specialty Description"]
+                }</strong></h4> <h4 className="text-xs">${currentToggle}: <strong className="font-bold">${
+                  feature.properties &&
+                  currentToggle &&
+                  feature.properties[currentToggle].toLocaleString()
+                }</strong></h4></div>`
+              )
+              .addTo(mapRef.current);
+
+            spiderLeg.mapboxMarker.setPopup(popup);
+          });
+          pinElem.addEventListener("mouseleave", function () {
+            if (popup) {
+              popup.remove();
+            }
+          });
+        },
+        markerWidth: 40,
+        markerHeight: 40,
+      });
+
+      mapRef.current.addSource("markers", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: [], // Initial empty array of features
+        },
+      });
+
+      mapRef.current.addLayer({
+        id: "clusters",
+        type: "circle",
+        source: "markers",
+        filter: ["has", "point_count"],
+        paint: {
+          "circle-color": [
+            "step",
+            ["get", "point_count"],
+            "#51bbd6",
+            100,
+            "#f1f075",
+            750,
+            "#f28cb1",
+          ],
+          "circle-radius": [
+            "step",
+            ["get", "point_count"],
+            20,
+            100,
+            30,
+            750,
+            40,
+          ],
+        },
+      });
+
+      mapRef.current.addLayer({
+        id: "cluster-count",
+        type: "symbol",
+        source: "markers",
+        filter: ["has", "point_count"],
+        layout: {
+          "text-field": "{point_count_abbreviated}",
+          "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+          "text-size": 12,
+        },
+      });
+
+      mapRef.current.addLayer({
+        id: "unclustered-point",
+        type: "circle",
+        source: "markers",
+        filter: ["!", ["has", "point_count"]],
+        paint: {
+          "circle-color": "#11b4da",
+          "circle-radius": ["get", "size"], // Assuming 'size' is a property in your marker data
+          "circle-stroke-width": 1,
+          "circle-stroke-color": "#fff",
+        },
+      });
     });
     if (markersEnabled) {
       handleAddMarker(geoJson, "marker1");
@@ -609,7 +863,7 @@ const Map = ({
       essential: true,
     });
 
-    setCurrentRegion(feature.Region)
+    setCurrentRegion(feature.Region);
     markerClickedFn(feature);
     handleStateMarkers(stateData[feature.Region], "marker1");
   };
@@ -626,9 +880,8 @@ const Map = ({
       mapboxglMarker.current = [...mapArr];
     }
   };
-  
+
   const handleCustomAddStateMarkers = (marker) => {
-  
     if (
       mapMarkers &&
       mapStateboxglMarker.current.length !== stateMarkers.length
@@ -644,12 +897,13 @@ const Map = ({
     <div className="relative">
       {mapRef.current &&
         mapMarkers &&
-        mapMarkers.map((marker) => {
+        mapMarkers.map((marker, index) => {
           if (!marker) {
             return;
           }
           return (
             <CustomMarker
+              key={index}
               handleCustomAddMarkers={handleCustomAddMarkers}
               levelToggles={levelToggles}
               currentToggle={currentToggle}
@@ -666,15 +920,17 @@ const Map = ({
           );
         })}
       {mapRef.current &&
-        stateMarkers &&currentRegion &&
-        stateMarkers.map((marker) => {
+        stateMarkers &&
+        currentRegion &&
+        stateMarkers.map((marker, index) => {
           if (!marker) {
             return;
           }
           return (
             <CustomMarker
-            currentLevel={currentLevel}
-            handleCustomAddMarkers={handleCustomAddStateMarkers}
+              key={index}
+              currentLevel={currentLevel}
+              handleCustomAddMarkers={handleCustomAddStateMarkers}
               levelToggles={levelToggles}
               currentToggle={currentToggle}
               markersData={stateData[currentRegion]}
@@ -690,19 +946,26 @@ const Map = ({
         })}
       {detailsItem && (
         <div
-          className="bg-white border shadow-xl border-[#000] px-2 py-2"
+          className="bg-white shadow-xl px-2 py-2"
           style={{
             position: "absolute",
             left: detailsPosition.left,
             top: detailsPosition.top,
-            transform: "translateY(-120%)",
+            transform:
+              currentLevel == "hcp"
+                ? "translateY(-50%) transalteX(-40px)"
+                : "translateY(-120%)",
             zIndex: 9999,
           }}
         >
           <DetailsComponent
             item={detailsItem}
             currentLevel={currentLevel}
-            currentToggle={levelToggles && currentLevel && currentToggle ? levelToggles[currentLevel][currentToggle] : null}
+            currentToggle={
+              levelToggles && currentLevel && currentToggle
+                ? levelToggles[currentLevel][currentToggle]
+                : null
+            }
           />
         </div>
       )}
@@ -719,7 +982,11 @@ const Map = ({
         <DetailsComponent
           item={modalDetails}
           currentLevel={currentLevel}
-          currentToggle={levelToggles && currentLevel && currentToggle ? levelToggles[currentLevel][currentToggle] : null}
+          currentToggle={
+            levelToggles && currentLevel && currentToggle
+              ? levelToggles[currentLevel][currentToggle]
+              : null
+          }
         />
       </Popup>
     </div>
@@ -729,7 +996,68 @@ const Map = ({
 export default Map;
 
 const DetailsComponent = ({ item, currentLevel, currentToggle }) => {
-  return (
+  const [itemValue, setItemValue] = useState(null);
+  useEffect(() => {
+    if (item.length) {
+      let totalValue = item.length;
+
+      let val = 0;
+      item.map((_item) => {
+      
+        val += _item.properties[currentToggle];
+      });
+      let totalCurrentToggles = val
+      console.log(totalValue,totalCurrentToggles)
+      setItemValue({
+        totalValue,
+        totalCurrentToggles,
+      });
+    }
+  }, [item]);
+
+  return currentLevel == "hcp" ? (
+    <div className="flex max-h-[40vh] flex-wrap flex-col items-start">
+      {item.length == 1  ? (
+        item.map((_detail) => {
+          return (
+            <div className="text-sm max-w-[10rem]">
+              <h4 className="text-xs">
+                Name:{" "}
+                <span className="font-bold">
+                  {_detail.properties["First Name"]}{" "}
+                  {_detail.properties["Last Name"]}
+                </span>
+              </h4>
+              <h4 className="text-xs">
+                Primary Specialty Description:{" "}
+                <span className="font-bold">
+                  {_detail.properties["Primary Specialty Description"]}
+                </span>
+              </h4>
+              <h4 className="text-xs">
+                {currentToggle}:{" "}
+                <span className="font-bold">
+                  {_detail.properties &&
+                    currentToggle &&
+                    _detail.properties[currentToggle].toLocaleString()}
+                </span>
+              </h4>
+            </div>
+          );
+        })
+      ) :itemValue ? (
+        <div className="text-sm max-w-[10rem]">
+          <h4 className="text-xs">
+            Total: <span className="font-bold">{itemValue.totalValue}</span>
+          </h4>
+          <h4 className="text-xs">
+           Total {currentToggle}
+            <span className="font-bold"> {itemValue.totalCurrentToggles}</span>
+          </h4>
+        </div>
+      ): null}
+    </div>
+  ) : (
     <div className="flex flex-col items-start">
       {currentLevel == "hcp" && (
         <h4>

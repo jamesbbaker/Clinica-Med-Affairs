@@ -5,12 +5,22 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
 import Logo from "../../assets/images/logo.png";
+import Popup from "reactjs-popup";
+import Login from "../../pages/Login";
 
 const Header = () => {
   const { logOut, user } = useContext(AuthContext);
   const [openDialog, setOpenDialog] = useState(false);
   const { currentMenuLabel } = useSelector((state) => state.menu);
+  const [password, setPassword] = useState(false)
 
+  const handlePassword = () => {
+    setPassword(true)
+  }
+
+  const closeModal = () => {
+    setPassword(false)
+  }
 
   const toggleDialog = () => {
     setOpenDialog((prev) => !prev);
@@ -44,6 +54,12 @@ const Header = () => {
                 className="fixed z-20 left-0 right-0 top-0 bottom-0"
               ></div>
               <div className="absolute right-6 top-10 bg-slate-50 z-20  flex flex-col gap-2 py-2 border border-primary rounded-sm border-opacity-50">
+              <div
+                  onClick={handlePassword}
+                  className="hover:bg-slate-200 px-4 cursor-pointer"
+                >
+                  Update Pasword
+                </div>
                 <div
                   onClick={logOut}
                   className="hover:bg-slate-200 px-4 cursor-pointer"
@@ -55,6 +71,14 @@ const Header = () => {
           )}
         </span>
       </div>
+      <Popup
+        onClose={closeModal}
+        modal
+        open={password}
+        position="center center"
+      >
+        <Login passwordChange={true} />
+      </Popup>
       {/* <div className="bg-white border-t-2 border-opacity-50">
         <div className="px-4  text-sm py-2 opacity-70 font-medium">
           {currentMenuLabel}
