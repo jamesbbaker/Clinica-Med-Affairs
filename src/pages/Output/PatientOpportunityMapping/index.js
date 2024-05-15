@@ -290,7 +290,7 @@ const PatientOpportunityMapping = () => {
 
     mapRef.current.flyTo({
       center: [feature.LONG, feature.LAT],
-      zoom: 5,
+      zoom: 7,
       essential: true,
     });
   };
@@ -326,8 +326,8 @@ const PatientOpportunityMapping = () => {
         style={{ display: loading ? "grid" : "none" }}
         className="w-full h-[400px] grid place-content-center"
       >
-        <div class="flex justify-center items-center h-24">
-          <div class="w-6 h-6 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
+        <div className="flex justify-center items-center h-24">
+          <div className="w-6 h-6 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
         </div>
       </div>
       <div style={{ opacity: loading ? 0 : 1 }} >
@@ -336,6 +336,7 @@ const PatientOpportunityMapping = () => {
           {toggleBtns.map((btn) => {
             return (
               <div
+              key={btn.label}
                 onClick={() => handleToggle(btn.id)}
                 className={`${
                   btn.id == currentToggle ? "bg-[#c3c3c3]" : "bg-[transparent]"
@@ -351,8 +352,8 @@ const PatientOpportunityMapping = () => {
         style={{ display: loading ? "grid" : "none" }}
         className="w-full h-[400px] grid place-content-center"
       >
-        <div class="flex justify-center items-center h-24">
-          <div class="w-6 h-6 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
+        <div className="flex justify-center items-center h-24">
+          <div className="w-6 h-6 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
         </div>
       </div> : <Map
           currentLevel={currentLevel}

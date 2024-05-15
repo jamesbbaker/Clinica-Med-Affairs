@@ -58,7 +58,6 @@ export default function Index() {
           pin: false,
           pinSpacing: false,
           repeat: 0
-          
         }
       })
     })

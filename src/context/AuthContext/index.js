@@ -87,6 +87,25 @@ const AuthProvider = () => {
   };
 
 
+  const updatePassword =async (data) => {
+    try {
+      const response = await fetch("https://clinica-server.replit.app/update_password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          email: user.email,
+          new_password: data.newPassword
+         }),
+      });
+      const res = await response.json();
+      return res
+    } catch (err) {
+      throw new Error();
+    }
+  }
 
  
 
@@ -149,6 +168,7 @@ const AuthProvider = () => {
         accessToken,
         refreshToken,
         user,
+        updatePassword,
         refreshTokenFunction,
         fetchUserData,
         loginAction,

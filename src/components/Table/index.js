@@ -65,6 +65,15 @@ const BarChartOptions = {
 };
 
 const Table = ({
+  stateName,
+  setStateName,
+  stateNameList,
+  organisationList,
+  organisation,
+  setorganisation,
+  regionList,
+  region,
+  setRegion,
   setcurrentSize,
   selectionBtnsArray,
   specialityList,
@@ -104,8 +113,6 @@ const Table = ({
   const data = React.useMemo(() => TableData, [TableData]);
   const columns = React.useMemo(() => TableColummns, [TableColummns]);
 
-
-
   const {
     getTableProps,
     allColumns,
@@ -129,9 +136,9 @@ const Table = ({
 
   useEffect(() => {
     if (currentSize) {
-      setPageSize(currentSize)
+      setPageSize(currentSize);
     }
-  },[currentSize])
+  }, [currentSize]);
 
   const handleClick = (row) => {
     setOpenPopup((o) => !o);
@@ -190,21 +197,33 @@ const Table = ({
   };
 
   const handleApplyFilters = () => {
-    if (icsNumber.max > 0 || steroidPercent.max > 0 || speciality.length> 0) {
-      handleFilter(icsNumber, steroidPercent,speciality)
-    }
-  }
-
-
-  const handleMultipleSelect = (val) => {
- 
-    setSpeciality(val)
-   
+    // if (icsNumber.max > 0 || steroidPercent.max > 0 || speciality) {
+    handleFilter(
+      icsNumber,
+      steroidPercent,
+      speciality,
+      region,
+      stateName,
+      organisation
+    );
+    // }
   };
 
+  const handleMultipleSelect = (val) => {
+    setSpeciality(val);
+  };
 
+  const handleRegionSelect = (val) => {
+    setRegion(val);
+  };
 
+  const handleStateName = (val) => {
+    setStateName(val);
+  };
 
+  const handleOrganisationSelect = (val) => {
+    setorganisation(val);
+  };
 
   return (
     <div style={{ marginTop }} className="w-full max-w-full overflow-auto">
@@ -214,7 +233,13 @@ const Table = ({
 
       {!UserTable && showSelectionBtns && (
         <SelectionButtons
-          data={selectionBtnsArray ? allColumns.filter(item => selectionBtnsArray.includes(item.id))  :allColumns}
+          data={
+            selectionBtnsArray
+              ? allColumns.filter((item) =>
+                  selectionBtnsArray.includes(item.id)
+                )
+              : allColumns
+          }
           visibleKey={"isVisible"}
           onClick={handleFilterClick}
         />
@@ -235,14 +260,52 @@ const Table = ({
           />
           <div className="flex items-start flex-col gap-8">
             <label className="font-[600]">Primary Specialty Description</label>
-           <MultiSelect
-                labelledBy=""
-                options={specialityList.map(item =>isNaN(item) && ({label: item, value: item})).filter(item => typeof item !== "boolean")}
-                className="w-[10rem]"
-                value={speciality || []}
-                onChange={(val) => handleMultipleSelect(val)}
-              />
-              </div>
+            <MultiSelect
+              labelledBy=""
+              options={specialityList
+                .map((item) => isNaN(item) && { label: item, value: item })
+                .filter((item) => typeof item !== "boolean")}
+              className="w-[10rem]"
+              value={speciality || []}
+              onChange={(val) => handleMultipleSelect(val)}
+            />
+          </div>
+          <div className="flex items-start flex-col gap-8">
+            <label className="font-[600]">Region</label>
+            <MultiSelect
+              labelledBy=""
+              options={regionList
+                .map((item) => isNaN(item) && { label: item, value: item })
+                .filter((item) => typeof item !== "boolean")}
+              className="w-[10rem]"
+              value={region || []}
+              onChange={(val) => handleRegionSelect(val)}
+            />
+          </div>
+          <div className="flex items-start flex-col gap-8">
+            <label className="font-[600]">Organization</label>
+            <MultiSelect
+              labelledBy=""
+              options={organisationList
+                .map((item) => isNaN(item) && { label: item, value: item })
+                .filter((item) => typeof item !== "boolean")}
+              className="w-[10rem]"
+              value={organisation || []}
+              onChange={(val) => handleOrganisationSelect(val)}
+            />
+          </div>
+          <div className="flex items-start flex-col gap-8">
+            <label className="font-[600]">State Name</label>
+            <MultiSelect
+              labelledBy=""
+              options={stateNameList
+                .map((item) => isNaN(item) && { label: item, value: item })
+                .filter((item) => typeof item !== "boolean")}
+              className="w-[10rem]"
+              value={stateName || []}
+              onChange={(val) => handleStateName(val)}
+            />
+          </div>
         </div>
       )}
       <table className="text-sm mt-4" {...getTableProps()}>
@@ -254,7 +317,8 @@ const Table = ({
                   <th onClick={() => handleSort(column)}>
                     {column.render("Header")}
                     <span>
-                      {sortBy === column.id || (column.id == "Name" && sortBy === "First Name")
+                      {sortBy === column.id ||
+                      (column.id == "Name" && sortBy === "First Name")
                         ? sortOrder == "desc"
                           ? " 🔽"
                           : " 🔼"
@@ -280,7 +344,6 @@ const Table = ({
         <tbody {...getTableBodyProps()}>
           {page.map((row) => {
             prepareRow(row);
-
             return (
               <tr
                 className="hover:bg-slate-300 relative cursor-pointer pr-20"
@@ -289,11 +352,17 @@ const Table = ({
               >
                 {row.cells.map((cell) => {
                   let cellValue = cell.render("Cell").props.value;
-
+          
                   return (
                     <td {...cell.getCellProps()}>
                       {typeof cellValue === "number"
-                        ? cellValue.toLocaleString()
+                        ? cell.render("Cell").props &&
+                          cell.render("Cell").props.column.Header &&
+                          cell
+                            .render("Cell")
+                            .props.column.Header.includes("Percent")
+                          ? `${cellValue}%`
+                          : cellValue.toLocaleString()
                         : cell.render("Cell")}{" "}
                     </td>
                   );
@@ -379,21 +448,20 @@ const Table = ({
             }}
           >
             {[5, 10, 20, 30, 40, 50].map((pageSize) => (
-              <option
-                key={pageSize}
-                value={pageSize}
-              >
+              <option key={pageSize} value={pageSize}>
                 Show {pageSize}
               </option>
             ))}
           </select>
         </div>
-      {totalPage  && <h2
-          onClick={handleApplyFilters}
-          className="text-[0.95rem] self-center px-3 py-1 border w-[8rem] grid place-content-center border-[#000] cursor-pointer hover:scale-[1.025] transition-all ease-linear duration-200 mr-3"
-        >
-          Apply Filters
-        </h2>}
+        {totalPage && (
+          <h2
+            onClick={handleApplyFilters}
+            className="text-[0.95rem] self-center px-3 py-1 border w-[8rem] grid place-content-center border-[#000] cursor-pointer hover:scale-[1.025] transition-all ease-linear duration-200 mr-3"
+          >
+            Apply Filters
+          </h2>
+        )}
       </div>
       <Popup
         onClose={() => setFilters(false)}

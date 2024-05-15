@@ -11,11 +11,17 @@ const EligiblePatientLocator = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentSize, setcurrentSize] = useState(10);
   const [speciality, setSpeciality] = useState(null);
+  const [region, setRegion] = useState(null);
+  const [stateName, setstateName] = useState(null);
+  const [organisation, setorganisation] = useState(null);
   const [totalPage, settotalPage] = useState(1);
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setsortOrder] = useState("asc");
   const [tableColumns, setTableColumns] = useState([{}]);
   const [specialityList, setSpecialityList] = useState(null);
+  const [regionList, setRegionList] = useState(null);
+  const [stateNameList, setstateNameList] = useState(null);
+  const [organisationList, setorganisationList] = useState(null);
   const [icsNumber, setIcsNumber] = useState({ min: 0, max: 0 });
   const [steroidPercent, setsteroidPercent] = useState({ min: 0, max: 0 });
 
@@ -34,18 +40,34 @@ const EligiblePatientLocator = () => {
     _sortOrder,
     ics_patients,
     steroid_percent,
-    _speciality
+    _speciality,
+    _region,
+    _stateName,
+    _organisation
   ) => {
     setStatsData1(null);
-    const specialties = _speciality; // Assuming specialties come from request arguments
+    const specialties = _speciality;
+    let queryString = `hcp_data?&`; // Start with 'hcp_data?&'
 
-    let queryString = `hcp_data?`;
-
-    // Dynamically add Primary Specialty Description parameters
     if (specialties && specialties.length > 0) {
       queryString += specialties
         .map((specialty) => `Primary Specialty Description=${specialty.value}`)
         .join("&");
+    }
+    if (_region && _region.length > 0) {
+      queryString += `&${_region
+        .map((region) => `Region=${region.value}`)
+        .join("&")}`;
+    }
+    if (_organisation && _organisation.length > 0) {
+      queryString += `&${_organisation
+        .map((organisation) => `Organization Name=${organisation.value}`)
+        .join("&")}`;
+    }
+    if (_stateName && _stateName.length > 0) {
+      queryString += `&${_stateName
+        .map((statename) => `State Name=${statename.value}`)
+        .join("&")}`;
     }
 
     // Add other query parameters as needed
@@ -89,12 +111,15 @@ const EligiblePatientLocator = () => {
           settotalPage(Math.floor(_data.total / currentSize));
           const responseData = _data.data;
           setSpecialityList(_data.specialty_list);
-          const newData = responseData.map(item => {
+          setRegionList(_data.region_list);
+          setorganisationList(_data.organization_list);
+          setstateNameList(_data.state_name_list);
+          const newData = responseData.map((item) => {
             return {
-             ...item,
-              Name: item["First Name"] + " " + item["Last Name"]
-            }
-          })
+              ...item,
+              Name: item["First Name"] + " " + item["Last Name"],
+            };
+          });
 
           setStatsData1(newData);
         }
@@ -103,7 +128,11 @@ const EligiblePatientLocator = () => {
         console.log(err, "err");
       });
   };
-  const filteredArr = ["Percent Severe Exacerbations","Percent High Steroid Usage", "Percent With High Steroid Usage"]
+  const filteredArr = [
+    "Percent Severe Exacerbations",
+    "Percent High Steroid Usage",
+    "Percent With High Steroid Usage",
+  ];
 
   useEffect(() => {
     getDataStats("data_stats_23", accessToken, refreshToken)
@@ -112,14 +141,26 @@ const EligiblePatientLocator = () => {
           let _data = JSON.parse(responseData.replaceAll("NaN", 0));
           setStatsData2(_data.data);
           setTableColumns(
-          _data.headers.filter(item => !filteredArr.includes(item.trim())).map((item) => ({ Header: item, accessor: item }))
+            _data.headers
+              .filter((item) => !filteredArr.includes(item.trim()))
+              .map((item) => ({ Header: item, accessor: item }))
           );
         }
       })
       .catch((err) => console.log(err));
-    fetchData(currentPage, currentSize);
+    fetchData(
+      currentPage,
+      currentSize,
+      sortBy,
+      sortOrder,
+      icsNumber,
+      steroidPercent,
+      speciality,
+      region,
+      stateName,
+      organisation
+    );
   }, [currentPage, currentSize]);
-
 
   const Table_Columns_1 = useMemo(() => {
     const column_names = [
@@ -168,7 +209,14 @@ const EligiblePatientLocator = () => {
     return USERS_TABLE_COLUMNS;
   }, []);
 
-  const handleFilter = (icsNumber, steroidPercent, speciality) => {
+  const handleFilter = (
+    icsNumber,
+    steroidPercent,
+    speciality,
+    region,
+    stateName,
+    organisation
+  ) => {
     fetchData(
       currentPage,
       currentSize,
@@ -176,21 +224,34 @@ const EligiblePatientLocator = () => {
       sortOrder,
       icsNumber,
       steroidPercent,
-      speciality
+      speciality,
+      region,
+      stateName,
+      organisation
     );
   };
 
   const handleSort = (column) => {
     let _sortOrder = "asc";
-    let columnId = column.id == "Name" ? "First Name" : column.id
+    let columnId = column.id == "Name" ? "First Name" : column.id;
     if (sortBy == columnId) {
       setsortOrder("desc");
       _sortOrder = "desc";
     }
- 
-  
+
     setSortBy(columnId);
-    fetchData(currentPage, currentSize, columnId, _sortOrder);
+    fetchData(
+      currentPage,
+      currentSize,
+      columnId,
+      _sortOrder,
+      icsNumber,
+      steroidPercent,
+      speciality,
+      region,
+      stateName,
+      organisation
+    );
   };
 
   return statsData1 && statsData2 && !loading ? (
@@ -207,10 +268,19 @@ const EligiblePatientLocator = () => {
         TableColummns={tableColumns}
       />
       <Table
-      setcurrentSize={setcurrentSize}
+        setcurrentSize={setcurrentSize}
         speciality={speciality}
         setSpeciality={setSpeciality}
         specialityList={specialityList}
+        stateName={stateName}
+        setStateName={setstateName}
+        stateNameList={stateNameList}
+        organisationList={organisationList}
+        organisation={organisation}
+        setorganisation={setorganisation}
+        regionList={regionList}
+        region={region}
+        setRegion={setRegion}
         icsNumber={icsNumber}
         setIcsNumber={setIcsNumber}
         steroidPercent={steroidPercent}
@@ -227,7 +297,7 @@ const EligiblePatientLocator = () => {
         Title="Summary of Unmet Need by HCP"
         activeCells={true}
         initialState={{
-          pageSize: 5,
+          pageSize: 10,
           pageIndex: 0,
         }}
         selectionBtnsArray={[
