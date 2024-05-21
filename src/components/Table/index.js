@@ -65,6 +65,7 @@ const BarChartOptions = {
 };
 
 const Table = ({
+  showTopBtnsToggle = false,
   stateName,
   setStateName,
   stateNameList,
@@ -209,6 +210,9 @@ const Table = ({
     // }
   };
 
+  const [value, setValue] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
+
   const handleMultipleSelect = (val) => {
     setSpeciality(val);
   };
@@ -225,13 +229,46 @@ const Table = ({
     setorganisation(val);
   };
 
+  const handleToggleSelect = (val) => {
+    let newHeadersArr = val.map((header) => ({ [header.col.Header]: header }));
+    if (selectedIds) {
+      selectedIds.map((id) => {
+        if (!newHeadersArr.hasOwnProperty(id)) {
+          value.map((item) => {
+            if (item.col.Header === id) {
+              item.col.toggleHidden();
+            }
+          });
+        }
+      });
+    }
+
+    val.map((item) => {
+      console.log(selectedIds.includes(item.col.Header));
+      if (!selectedIds.includes(item.col.Header)) {
+        item.col.toggleHidden();
+      }
+    });
+    let headersArr = val.map((item) => item.col.Header);
+    setSelectedIds(headersArr);
+    setValue(val);
+  };
+
+  useEffect(() => {
+    if (showTopBtnsToggle) {
+      allColumns
+        .filter((item) => selectionBtnsArray.includes(item.id))
+        .map((item) => item.toggleHidden());
+    }
+  }, [showTopBtnsToggle]);
+
   return (
     <div style={{ marginTop }} className="w-full max-w-full overflow-auto">
       {Title && (
         <div className="text-md text-gray-500 font-semibold">{Title}</div>
       )}
 
-      {!UserTable && showSelectionBtns && (
+      {!showTopBtnsToggle && !UserTable && showSelectionBtns && (
         <SelectionButtons
           data={
             selectionBtnsArray
@@ -245,66 +282,91 @@ const Table = ({
         />
       )}
       {totalPage && (
-        <div className="flex items-center gap-2">
-          <MinMaxSlider
-            handleValueChange={handelIcsValueChange}
-            minValue={icsNumber.min}
-            maxValue={icsNumber.max}
-            label={"Number of ICS-LABA Patients"}
-          />
-          <MinMaxSlider
-            handleValueChange={handleSteroidPercent}
-            minValue={steroidPercent.min}
-            maxValue={steroidPercent.max}
-            label={"Percent of High Steroid Usage Patients"}
-          />
-          <div className="flex items-start flex-col gap-8">
-            <label className="font-[600]">Primary Specialty Description</label>
+        <div className="flex flex-col items-start">
+          <div className="flex items-center mt-2 gap-8">
+            <label className="font-[600]">Select Unmet Needs</label>
             <MultiSelect
               labelledBy=""
-              options={specialityList
-                .map((item) => isNaN(item) && { label: item, value: item })
+              options={allColumns
+                .filter((item) => selectionBtnsArray.includes(item.id))
+                .map(
+                  (item) =>
+                    isNaN(item) && {
+                      col: item,
+                      label: item.Header,
+                      value: item.Header,
+                    }
+                )
                 .filter((item) => typeof item !== "boolean")}
               className="w-[10rem]"
-              value={speciality || []}
-              onChange={(val) => handleMultipleSelect(val)}
+              value={value || []}
+              onChange={(val) => handleToggleSelect(val)}
             />
           </div>
-          <div className="flex items-start flex-col gap-8">
-            <label className="font-[600]">Region</label>
-            <MultiSelect
-              labelledBy=""
-              options={regionList
-                .map((item) => isNaN(item) && { label: item, value: item })
-                .filter((item) => typeof item !== "boolean")}
-              className="w-[10rem]"
-              value={region || []}
-              onChange={(val) => handleRegionSelect(val)}
+          <div className="flex items-center gap-2">
+            <MinMaxSlider
+              handleValueChange={handelIcsValueChange}
+              minValue={icsNumber.min}
+              maxValue={icsNumber.max}
+              label={"Number of ICS-LABA Patients"}
             />
-          </div>
-          <div className="flex items-start flex-col gap-8">
-            <label className="font-[600]">Organization</label>
-            <MultiSelect
-              labelledBy=""
-              options={organisationList
-                .map((item) => isNaN(item) && { label: item, value: item })
-                .filter((item) => typeof item !== "boolean")}
-              className="w-[10rem]"
-              value={organisation || []}
-              onChange={(val) => handleOrganisationSelect(val)}
+            <MinMaxSlider
+              handleValueChange={handleSteroidPercent}
+              minValue={steroidPercent.min}
+              maxValue={steroidPercent.max}
+              label={"Percent of High Steroid Usage Patients"}
             />
-          </div>
-          <div className="flex items-start flex-col gap-8">
-            <label className="font-[600]">State Name</label>
-            <MultiSelect
-              labelledBy=""
-              options={stateNameList
-                .map((item) => isNaN(item) && { label: item, value: item })
-                .filter((item) => typeof item !== "boolean")}
-              className="w-[10rem]"
-              value={stateName || []}
-              onChange={(val) => handleStateName(val)}
-            />
+            <div className="flex items-start flex-col gap-8">
+              <label className="font-[600]">
+                Primary Specialty Description
+              </label>
+              <MultiSelect
+                labelledBy=""
+                options={specialityList
+                  .map((item) => isNaN(item) && { label: item, value: item })
+                  .filter((item) => typeof item !== "boolean")}
+                className="w-[10rem]"
+                value={speciality || []}
+                onChange={(val) => handleMultipleSelect(val)}
+              />
+            </div>
+
+            <div className="flex items-start flex-col gap-8">
+              <label className="font-[600]">Region</label>
+              <MultiSelect
+                labelledBy=""
+                options={regionList
+                  .map((item) => isNaN(item) && { label: item, value: item })
+                  .filter((item) => typeof item !== "boolean")}
+                className="w-[10rem]"
+                value={region || []}
+                onChange={(val) => handleRegionSelect(val)}
+              />
+            </div>
+            <div className="flex items-start flex-col gap-8">
+              <label className="font-[600]">Organization</label>
+              <MultiSelect
+                labelledBy=""
+                options={organisationList
+                  .map((item) => isNaN(item) && { label: item, value: item })
+                  .filter((item) => typeof item !== "boolean")}
+                className="w-[10rem]"
+                value={organisation || []}
+                onChange={(val) => handleOrganisationSelect(val)}
+              />
+            </div>
+            <div className="flex items-start flex-col gap-8">
+              <label className="font-[600]">State Name</label>
+              <MultiSelect
+                labelledBy=""
+                options={stateNameList
+                  .map((item) => isNaN(item) && { label: item, value: item })
+                  .filter((item) => typeof item !== "boolean")}
+                className="w-[10rem]"
+                value={stateName || []}
+                onChange={(val) => handleStateName(val)}
+              />
+            </div>
           </div>
         </div>
       )}
@@ -352,7 +414,7 @@ const Table = ({
               >
                 {row.cells.map((cell) => {
                   let cellValue = cell.render("Cell").props.value;
-          
+
                   return (
                     <td {...cell.getCellProps()}>
                       {typeof cellValue === "number"

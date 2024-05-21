@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateMenu } from "../../features/menu/menuSlice";
 import { useNavigate, useParams } from "react-router-dom";
-import { AiOutlineTeam, AiOutlineHome, AiOutlineTable, AiOutlineGlobal, AiOutlineBarChart, AiOutlineFundProjectionScreen, AiOutlineRise, AiOutlineProject, AiOutlineQuestionCircle } from "react-icons/ai";
+import { AiOutlineTeam, AiOutlineHome, AiOutlineTable, AiOutlineGlobal,AiOutlineContainer, AiOutlineBarChart, AiOutlineFundProjectionScreen, AiOutlineRise, AiOutlineProject, AiOutlineQuestionCircle } from "react-icons/ai";
 import { APP_ROUTES, APP_ROUTES_LABEL } from "../../constants/appConstants";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -40,6 +40,12 @@ export const menuList = [
         id: APP_ROUTES.hcp_segmentation,
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.hcp_segmentation}`,
         icon: () => <AiOutlineBarChart />,
+      },
+      {
+        name: APP_ROUTES_LABEL.hcp_insights,
+        id: APP_ROUTES.hcp_insights,
+        route: `${APP_ROUTES.outputs}/${APP_ROUTES.hcp_insights}`,
+        icon: () => <AiOutlineContainer />,
       },
       {
         name: APP_ROUTES_LABEL.eligible_patient_locator,
@@ -156,7 +162,7 @@ const Sidebar = () => {
                     if (
                       item.name === "outputs" &&
                       user.page_view &&
-                      !user.page_view.includes(subItem.id)
+                      !user.page_view.includes(subItem.id) && subItem.id !== "hcp_insights" //remove hcp_insights
                     ) {
                       return false;
                     }

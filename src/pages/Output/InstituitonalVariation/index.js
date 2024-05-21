@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import SelectionButtons from "../../../components/SelectionButtons";
 import TreeMap from "../../../components/TreeMap";
 import { EPL_TABLE_COLUMNS } from "../../../constants/appConstants";
 import { removeOrAddColumn } from "../../../utils/MapUtils";
+import { getDataStats } from "../../../API/Outputs";
+import { AuthContext } from "../../../context/AuthContext";
+import { MultiSelect } from "react-multi-select-component";
+import Popup from "reactjs-popup";
 
 const data = [
   [
@@ -123,37 +127,136 @@ const data = [
 ];
 
 const InstitutionalVariation = () => {
-  const [TreeData, setTreeData] = useState(data);
+  const [TreeData, setTreeData] = useState(null);
+  const [specialityOptions, setSpecialityOptions] = useState(null);
+  const [rawData, setRawData] = useState(null);
+  const [selectedSpeciality, setSelectedSpeciality] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const [selectedValues, setSelectedValues] = useState(
     EPL_TABLE_COLUMNS.map((col) => col.accessor)
   );
+  const { accessToken, refreshToken } = useContext(AuthContext);
 
+  useEffect(() => {
+    getDataStats("hcp_data", accessToken, refreshToken)
+      .then((res) => {
+        if (res) {
+          let _data = JSON.parse(res.replaceAll("NaN", 0));
+          if (_data) {
+            console.log(_data);
+            setRawData(_data.data);
+            setSpecialityOptions(_data.specialty_list);
+            let _treeData = [
+              [
+                "Region",
+                "Parent",
+                "Number of ICS-LABA Patients (size)",
+                "Number of Severe Exacerbations (color)",
+              ],
+              ["Global", null, 0, 0],
+            ];
+            _data.data.map((item) => {
+              _treeData.push([
+                `${item["First Name"]} ${item["Last Name"]}`,
+                "Global",
+                item["Number of ICS-LABA Patients"],
+                item["Number of High Steroid Usage Patients"],
+              ]);
+            });
+            setTreeData(_treeData);
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
-  const filterItem = (col) => {
-    let accessor = col.accessor;
-    setSelectedValues((prev) => {
-      let _prev = [...prev];
-      if (_prev.includes(accessor)) {
-        _prev = _prev.filter((item) => item != accessor);
-      } else {
-        _prev.push(accessor);
+ 
+
+  const options = {
+    minColor: "#ffef96",
+    midColor: "#ff6e73",
+    maxColor: "#d2177a",
+    headerHeight: 15,
+    fontColor: "black",
+    title: "Asthma Patients by States",
+    titleTextStyle: {
+      color: "#888",
+      textAlign: "center",
+    },
+    colorAxis: {
+      values: [0, 1000, 10000, 100005, 1000000], // Define custom values for the color axis
+      colors: ["#ffef96", "#ff6e73", "white", "white", "#d2177a"], // Define colors for the color axis
+    },
+    showScale: false,
+    generateTooltip: (_row, _size, value) => {
+      let hcpValue = rawData[_row-1] || {
+        "First Name": "",
+        "Last Name": "",
+        "Number of ICS-LABA Patients": 0,
+        "Number of High Steroid Usage Patients": 0,
       }
-      return _prev;
-    });
-    setTreeData((prev) => {
-      let _prev = [...prev];
-      return removeOrAddColumn(_prev, accessor);
-    });
+
+      return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
+      <div><strong>NAME</strong>:  ${hcpValue["First Name"] + " " + hcpValue["Last Name"]}</div>
+      <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue["Number of ICS-LABA Patients"]}</div>
+      <div><strong>Number of High Steroid Usage Patients</strong>:  ${hcpValue["Number of High Steroid Usage Patients"]}</div>
+       </div>`;
+    },
+  };
+
+  const handleOpen = (row, value, data) => {
+    console.log(row, value,data);
+    setShowModal(true)
+  };
+
+  const closeModal = ()=> {
+    setShowModal(false)
+  }
+
+  const handleToggleSelect = (val) => {
+    setSelectedSpeciality(val);
   };
 
   return (
     <div className="w-full flex flex-col gap-4">
-      <SelectionButtons
-        data={EPL_TABLE_COLUMNS}
-        onClick={filterItem}
-        selectedValues={selectedValues}
-      />
-      <TreeMap data={TreeData} />
+      {TreeData ? (
+        <>
+          <div className="flex w-full justify-between items-center">
+            <div className="flex items-center mt-2 gap-8">
+              <label className="font-[600]">Select Unmet Needs</label>
+              <MultiSelect
+                labelledBy=""
+                options={specialityOptions
+                  .map((item) => isNaN(item) && { label: item, value: item })
+                  .filter((item) => typeof item !== "boolean")}
+                className="w-[10rem]"
+                value={selectedSpeciality || []}
+                onChange={(val) => handleToggleSelect(val)}
+              />
+            </div>
+            <button className="border border-[#000] px-4 py-2 rounded-xs">
+              Apply Filters
+            </button>
+          </div>
+          <TreeMap data={TreeData} options={options} handleOpen={handleOpen} />
+          <Popup
+        onClose={closeModal}
+        modal
+        open={showModal}
+        position="center center"
+      >
+      
+      </Popup>
+        </>
+      ) : (
+        <div className="w-full h-[400px] grid place-content-center">
+          <div className="flex justify-center items-center h-24">
+            <div className="w-6 h-6 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

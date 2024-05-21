@@ -22,7 +22,7 @@ const inputs = [
     required: true,
     label: "Password",
     placeholder: "Enter your password",
-    type: "text",
+    type: "password",
   },
 ];
 
@@ -33,7 +33,7 @@ const changePasswordInputs = [
     required: true,
     label: "Password",
     placeholder: "Enter your password",
-    type: "text",
+    type: "password",
   },
   {
     name: "New Password",
@@ -41,7 +41,7 @@ const changePasswordInputs = [
     required: true,
     label: "New Password",
     placeholder: "Enter new password",
-    type: "text",
+    type: "password",
   },
 ];
 

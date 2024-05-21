@@ -94,7 +94,7 @@ export const defaultData = [
   ["Wyoming", "USA", getRandomInt(0, 100), getRandomInt(-50, 50)],
 ];
 
-export const options = {
+export const defaultOptions = {
   minColor: "#ffef96",
   midColor: "#ff6e73",
   maxColor: "#d2177a",
@@ -171,12 +171,14 @@ const BarChartOptions = {
   },
 };
 
-const TreeMap = ({ needCallbacks=true, data = defaultData }) => {
+const TreeMap = ({ needCallbacks=true,options = defaultOptions, data = defaultData, handleOpen = () => {} }) => {
   const [openPopup, setOpenPopup] = useState(false);
 
   const [barChartConfig, setBarChartConfig] = useState(null);
-  const handleClick = (row, value) => {
+  const handleClick = (row, value, data) => {
     setOpenPopup((o) => !o);
+    handleOpen(row, value, data)
+    return
     const barChartData = {
       labels: EPL_TABLE_COLUMNS.map((item) => breakString(item.Header, 40)),
       datasets: [
@@ -225,7 +227,8 @@ const TreeMap = ({ needCallbacks=true, data = defaultData }) => {
                         .getValue(selection[0].row, 0)
                         .split("_")[0];
                       let value = data.getValue(selection[0].row, 2);
-                      handleClick(column, value);
+                      handleClick(column, value,  data
+                        .getValue(selection[0].row, 0));
                     }
                   }
                 }
