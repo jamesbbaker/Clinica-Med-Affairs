@@ -132,13 +132,14 @@ const InstitutionalVariation = () => {
   const [rawData, setRawData] = useState(null);
   const [selectedSpeciality, setSelectedSpeciality] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [modalDetails, setModalDetails] = useState({});
   const [selectedValues, setSelectedValues] = useState(
     EPL_TABLE_COLUMNS.map((col) => col.accessor)
   );
   const { accessToken, refreshToken } = useContext(AuthContext);
 
   useEffect(() => {
-    getDataStats("hcp_data", accessToken, refreshToken)
+    getDataStats("institutional_variation_data", accessToken, refreshToken)
       .then((res) => {
         if (res) {
           let _data = JSON.parse(res.replaceAll("NaN", 0));
@@ -207,8 +208,13 @@ const InstitutionalVariation = () => {
   };
 
   const handleOpen = (row, value, data) => {
-    console.log(row, value,data);
+   if (row === modalDetails.name) {
+    return
+   }
     setShowModal(true)
+    setModalDetails({
+      name: row
+    })
   };
 
   const closeModal = ()=> {
@@ -247,7 +253,9 @@ const InstitutionalVariation = () => {
         open={showModal}
         position="center center"
       >
-      
+      <div className="flex p-10 flex-col items-center">
+        <div><strong>Name:</strong> {modalDetails.name}</div>
+      </div>
       </Popup>
         </>
       ) : (
