@@ -14,6 +14,7 @@ import PatientTracking from "./PatientTracking";
 import UnmetNeedDefinition from "./UnmetNeedDefinition";
 import EligiblePatientLocator from "./EligiblePatientLocator";
 import PatientOpportunityMapping from "./PatientOpportunityMapping";
+import HcpInsight from "./HcpInsights";
 
 
 
@@ -34,6 +35,7 @@ const Output = () => {
         </div>
       )}
       {currentMenu === APP_ROUTES.data_quality && <DataQuality />}
+      {currentMenu === APP_ROUTES.hcp_insights && <HcpInsight />}
       {currentMenu === APP_ROUTES.eligible_patient_locator && <EligiblePatientLocator />}
       {currentMenu === APP_ROUTES.institutional_variation && (
         <InstitutionalVariation />

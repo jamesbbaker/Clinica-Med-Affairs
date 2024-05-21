@@ -60,6 +60,7 @@ export const APP_ROUTES = {
   patient_opportunity_mapping_and_strategy:
     "patient_opportunity_mapping_and_strategy",
   hcp_segmentation: "hcp_segmentation",
+  hcp_insights: "hcp_insights",
   eligible_patient_locator: "eligible_patient_locator",
   hcp_profiles: "hcp_profiles",
   lead_indicators: "lead_indicators",
@@ -78,6 +79,7 @@ export const APP_ROUTES_LABEL = {
     "Patient Opportunity Mapping and Strategy",
   hcp_segmentation: "HCP Segmentation",
   eligible_patient_locator: "Eligible Patient Locator",
+  hcp_insights: "HCP Insights",
   hcp_profiles: "HCP Profiles",
   lead_indicators: "Leading Indicators",
   patient_journey: "Patient Trajectory",

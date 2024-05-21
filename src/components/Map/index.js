@@ -233,7 +233,7 @@ const Map = ({
           });
         }
 
-        var sources = mapRef.current.getStyle().sources;
+        var sources = mapRef.current.getStyle() ? mapRef.current.getStyle().sources : []
         for (var sourceId in sources) {
           // console.log(sourceId);
         }
@@ -528,6 +528,11 @@ const Map = ({
             e.features[0].geometry.coordinates,
             filteredArr
           );
+        } 
+        else {
+          const item = e.features[0];
+          console.log(item)
+          setModalDetails(filteredArr);
         }
 
         // const stateFeature = e.features.find(
@@ -693,7 +698,9 @@ const Map = ({
       );
       spiderifier.current = new MapboxglSpiderifier(mapRef.current, {
         onClick: function (e, spiderLeg) {
-          console.log("Clicked on ", spiderLeg);
+          var feature = spiderLeg.feature;
+   
+          setModalDetails([feature]);
         },
         initializeLeg: function initializeSpiderLeg(spiderLeg) {
           var pinElem = spiderLeg.elements.pin;
@@ -1007,7 +1014,7 @@ const DetailsComponent = ({ item, currentLevel, currentToggle }) => {
         val += _item.properties[currentToggle];
       });
       let totalCurrentToggles = val
-      console.log(totalValue,totalCurrentToggles)
+   
       setItemValue({
         totalValue,
         totalCurrentToggles,

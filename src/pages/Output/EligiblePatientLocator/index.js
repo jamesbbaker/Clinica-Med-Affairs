@@ -5,7 +5,7 @@ import { AuthContext } from "../../../context/AuthContext";
 
 const EligiblePatientLocator = () => {
   const [statsData1, setStatsData1] = useState(null);
-  const [statsData2, setStatsData2] = useState(null);
+
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,7 +17,7 @@ const EligiblePatientLocator = () => {
   const [totalPage, settotalPage] = useState(1);
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setsortOrder] = useState("asc");
-  const [tableColumns, setTableColumns] = useState([{}]);
+
   const [specialityList, setSpecialityList] = useState(null);
   const [regionList, setRegionList] = useState(null);
   const [stateNameList, setstateNameList] = useState(null);
@@ -128,26 +128,10 @@ const EligiblePatientLocator = () => {
         console.log(err, "err");
       });
   };
-  const filteredArr = [
-    "Percent Severe Exacerbations",
-    "Percent High Steroid Usage",
-    "Percent With High Steroid Usage",
-  ];
+ 
 
   useEffect(() => {
-    getDataStats("data_stats_23", accessToken, refreshToken)
-      .then((responseData) => {
-        if (responseData) {
-          let _data = JSON.parse(responseData.replaceAll("NaN", 0));
-          setStatsData2(_data.data);
-          setTableColumns(
-            _data.headers
-              .filter((item) => !filteredArr.includes(item.trim()))
-              .map((item) => ({ Header: item, accessor: item }))
-          );
-        }
-      })
-      .catch((err) => console.log(err));
+   
     fetchData(
       currentPage,
       currentSize,
@@ -254,20 +238,10 @@ const EligiblePatientLocator = () => {
     );
   };
 
-  return statsData1 && statsData2 && !loading ? (
+  return statsData1  && !loading ? (
     <>
       <Table
-        initialState={{
-          pageSize: 10,
-          pageIndex: 0,
-        }}
-        Title="Summary of Unmet Need by Specialty"
-        showSelectionBtns={false}
-        TableData={statsData2}
-        marginTop={0}
-        TableColummns={tableColumns}
-      />
-      <Table
+      showTopBtnsToggle={true}
         setcurrentSize={setcurrentSize}
         speciality={speciality}
         setSpeciality={setSpeciality}
