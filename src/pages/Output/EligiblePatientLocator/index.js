@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import Table from "../../../components/Table";
 import { getDataStats } from "../../../API/Outputs";
 import { AuthContext } from "../../../context/AuthContext";
+import Popup from "reactjs-popup";
 
 const EligiblePatientLocator = () => {
   const [statsData1, setStatsData1] = useState(null);
@@ -18,12 +19,15 @@ const EligiblePatientLocator = () => {
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setsortOrder] = useState("asc");
 
+  const [value, setValue] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
   const [specialityList, setSpecialityList] = useState(null);
   const [regionList, setRegionList] = useState(null);
   const [stateNameList, setstateNameList] = useState(null);
   const [organisationList, setorganisationList] = useState(null);
   const [icsNumber, setIcsNumber] = useState({ min: 0, max: 0 });
   const [steroidPercent, setsteroidPercent] = useState({ min: 0, max: 0 });
+  const [rowDetails, setRowDetails] = useState(null);
 
   useEffect(() => {
     if (!statsData1) {
@@ -126,10 +130,13 @@ const EligiblePatientLocator = () => {
         console.log(err, "err");
       });
   };
- 
+
+  const handleRowClicked = (col) => {
+    console.log(col);
+    setRowDetails(col.original);
+  };
 
   useEffect(() => {
-   
     fetchData(
       currentPage,
       currentSize,
@@ -146,11 +153,14 @@ const EligiblePatientLocator = () => {
 
   const Table_Columns_1 = useMemo(() => {
     const column_names = [
-      { header: "Name", accessor: "Name" },
+      {
+        header: "Assigned Physician Name",
+        accessor: "Assigned Physician Name",
+      },
       // { header: "Last Name", accessor: "Last Name" },
       {
-        header: "Primary Specialty Description",
-        accessor: "Primary Specialty Description",
+        header: "Assigned Specialty",
+        accessor: "Assigned Specialty",
       },
       { header: "Region", accessor: "Region" },
       { header: "State Name", accessor: "State Name" },
@@ -213,6 +223,10 @@ const EligiblePatientLocator = () => {
     );
   };
 
+  const closeModal = () => {
+    setRowDetails(null);
+  };
+
   const handleSort = (column) => {
     let _sortOrder = "asc";
     let columnId = column.id == "Name" ? "First Name" : column.id;
@@ -236,10 +250,17 @@ const EligiblePatientLocator = () => {
     );
   };
 
-  return statsData1  && !loading ? (
+  console.log(rowDetails);
+
+  return statsData1 && !loading ? (
     <>
       <Table
-      showTopBtnsToggle={true}
+        value={value}
+        setValue={setValue}
+        selectedIds={selectedIds}
+        setSelectedIds={setSelectedIds}
+        handleRowClicked={handleRowClicked}
+        showTopBtnsToggle={true}
         setcurrentSize={setcurrentSize}
         speciality={speciality}
         setSpeciality={setSpeciality}
@@ -283,6 +304,29 @@ const EligiblePatientLocator = () => {
         TableData={statsData1}
         TableColummns={Table_Columns_1}
       />
+      <Popup
+        onClose={closeModal}
+        modal
+        open={rowDetails != null}
+        position="center center"
+      >
+        {rowDetails && (
+          <div className="flex p-10 flex-col justify-between min-w-[30vw] items-center">
+            <div className="flex w-full flex-col gap-2">
+              <div className="w-full gap-10 flex items-center">
+                <strong>Name:</strong> {rowDetails["Assigned Physician Name"]}
+              </div>
+              <div className="w-full gap-10 flex items-center">
+                <strong>Specialty:</strong> {rowDetails["Assigned Specialty"]}
+              </div>
+              <div className="w-full gap-10 flex items-center">
+                <strong>Number of ICS-LABA Patients:</strong>{" "}
+                {rowDetails["Number of ICS-LABA Patients"]}
+              </div>
+            </div>
+          </div>
+        )}
+      </Popup>
     </>
   ) : (
     <div role="status" className="grid place-content-center h-[200px]">

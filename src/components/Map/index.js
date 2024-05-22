@@ -233,7 +233,9 @@ const Map = ({
           });
         }
 
-        var sources = mapRef.current.getStyle() ? mapRef.current.getStyle().sources : []
+        var sources = mapRef.current.getStyle()
+          ? mapRef.current.getStyle().sources
+          : [];
         for (var sourceId in sources) {
           // console.log(sourceId);
         }
@@ -263,7 +265,9 @@ const Map = ({
     spiderifier.current.unspiderfy();
     spiderifier.current = new MapboxglSpiderifier(mapRef.current, {
       onClick: function (e, spiderLeg) {
-        console.log("Clicked on ", spiderLeg);
+        var feature = spiderLeg.feature;
+
+        setModalDetails([feature]);
       },
       initializeLeg: function initializeSpiderLeg(spiderLeg) {
         var pinElem = spiderLeg.elements.pin;
@@ -317,11 +321,9 @@ const Map = ({
           popup
             .setHTML(
               `<div className="text-sm max-w-[10rem]"><h4 className="text-xs">Name: <strong className="font-bold">${
-                feature.properties["First Name"]
-              } ${
-                feature.properties["Last Name"]
+                feature.properties["Assigned Physician Name"]
               }</strong></h4><h4 className="text-xs">Primary Specialty Description: <strong className="font-bold">${
-                feature.properties["Primary Specialty Description"]
+                feature.properties["Assigned Specialty"]
               }</strong></h4> <h4 className="text-xs">${currentToggle}: <strong className="font-bold">${
                 feature.properties &&
                 currentToggle &&
@@ -528,10 +530,9 @@ const Map = ({
             e.features[0].geometry.coordinates,
             filteredArr
           );
-        } 
-        else {
+        } else {
           const item = e.features[0];
-          console.log(item)
+       
           setModalDetails(filteredArr);
         }
 
@@ -699,7 +700,7 @@ const Map = ({
       spiderifier.current = new MapboxglSpiderifier(mapRef.current, {
         onClick: function (e, spiderLeg) {
           var feature = spiderLeg.feature;
-   
+
           setModalDetails([feature]);
         },
         initializeLeg: function initializeSpiderLeg(spiderLeg) {
@@ -752,11 +753,9 @@ const Map = ({
             popup
               .setHTML(
                 `<div className="text-sm max-w-[10rem]"><h4 className="text-xs">Name: <strong className="font-bold">${
-                  feature.properties["First Name"]
-                } ${
-                  feature.properties["Last Name"]
+                  feature.properties["Assigned Physician Name"]
                 }</strong></h4><h4 className="text-xs">Primary Specialty Description: <strong className="font-bold">${
-                  feature.properties["Primary Specialty Description"]
+                  feature.properties["Assigned Specialty"]
                 }</strong></h4> <h4 className="text-xs">${currentToggle}: <strong className="font-bold">${
                   feature.properties &&
                   currentToggle &&
@@ -1010,11 +1009,10 @@ const DetailsComponent = ({ item, currentLevel, currentToggle }) => {
 
       let val = 0;
       item.map((_item) => {
-      
         val += _item.properties[currentToggle];
       });
-      let totalCurrentToggles = val
-   
+      let totalCurrentToggles = val;
+
       setItemValue({
         totalValue,
         totalCurrentToggles,
@@ -1024,21 +1022,20 @@ const DetailsComponent = ({ item, currentLevel, currentToggle }) => {
 
   return currentLevel == "hcp" ? (
     <div className="flex max-h-[40vh] flex-wrap flex-col items-start">
-      {item.length == 1  ? (
+      {item.length == 1 ? (
         item.map((_detail) => {
           return (
             <div className="text-sm max-w-[10rem]">
               <h4 className="text-xs">
                 Name:{" "}
                 <span className="font-bold">
-                  {_detail.properties["First Name"]}{" "}
-                  {_detail.properties["Last Name"]}
+                  {_detail.properties["Assigned Physician Name"]}
                 </span>
               </h4>
               <h4 className="text-xs">
                 Primary Specialty Description:{" "}
                 <span className="font-bold">
-                  {_detail.properties["Primary Specialty Description"]}
+                  {_detail.properties["Assigned Specialty"]}
                 </span>
               </h4>
               <h4 className="text-xs">
@@ -1052,26 +1049,24 @@ const DetailsComponent = ({ item, currentLevel, currentToggle }) => {
             </div>
           );
         })
-      ) :itemValue ? (
+      ) : itemValue ? (
         <div className="text-sm max-w-[10rem]">
           <h4 className="text-xs">
             Total: <span className="font-bold">{itemValue.totalValue}</span>
           </h4>
           <h4 className="text-xs">
-           Total {currentToggle}
+            Total {currentToggle}
             <span className="font-bold"> {itemValue.totalCurrentToggles}</span>
           </h4>
         </div>
-      ): null}
+      ) : null}
     </div>
   ) : (
     <div className="flex flex-col items-start">
       {currentLevel == "hcp" && (
         <h4>
           Name:{" "}
-          <span className="font-bold">
-            {item["First Name"]} {item["Last Name"]}
-          </span>
+          <span className="font-bold">{item["Assigned Physician Name"]}</span>
         </h4>
       )}
       {currentLevel == "region" && (
@@ -1083,9 +1078,7 @@ const DetailsComponent = ({ item, currentLevel, currentToggle }) => {
       {currentLevel == "hcp" && (
         <h4>
           Primary Specialty Description:{" "}
-          <span className="font-bold">
-            {item["Primary Specialty Description"]}
-          </span>
+          <span className="font-bold">{item["Assigned Specialty"]}</span>
         </h4>
       )}
       <h4>

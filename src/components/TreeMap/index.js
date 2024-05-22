@@ -227,8 +227,7 @@ const TreeMap = ({ needCallbacks=true,options = defaultOptions, data = defaultDa
                         .getValue(selection[0].row, 0)
                         .split("_")[0];
                       let value = data.getValue(selection[0].row, 2);
-                      handleClick(column, value,  data
-                        .getValue(selection[0].row, 0));
+                      handleClick(column, value, data);
                     }
                   }
                 }

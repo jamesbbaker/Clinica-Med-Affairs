@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import SelectionButtons from "../../../components/SelectionButtons";
 import TreeMap from "../../../components/TreeMap";
 import { EPL_TABLE_COLUMNS } from "../../../constants/appConstants";
@@ -126,56 +126,20 @@ const data = [
   ["failureFollowUp_9", "9", 58, -29],
 ];
 
+const filters = [
+  "Percent of High Steroid Usage Patients",
+  "Percent of Severe Exacerbations",
+];
+
 const InstitutionalVariation = () => {
   const [TreeData, setTreeData] = useState(null);
   const [specialityOptions, setSpecialityOptions] = useState(null);
   const [rawData, setRawData] = useState(null);
   const [selectedSpeciality, setSelectedSpeciality] = useState(null);
+  const [toggleFilter, setToggleFilter] = useState(filters[0]);
   const [showModal, setShowModal] = useState(false);
   const [modalDetails, setModalDetails] = useState({});
-  const [selectedValues, setSelectedValues] = useState(
-    EPL_TABLE_COLUMNS.map((col) => col.accessor)
-  );
-  const { accessToken, refreshToken } = useContext(AuthContext);
-
-  useEffect(() => {
-    getDataStats("institutional_variation_data", accessToken, refreshToken)
-      .then((res) => {
-        if (res) {
-          let _data = JSON.parse(res.replaceAll("NaN", 0));
-          if (_data) {
-            console.log(_data);
-            setRawData(_data.data);
-            setSpecialityOptions(_data.specialty_list);
-            let _treeData = [
-              [
-                "Region",
-                "Parent",
-                "Number of ICS-LABA Patients (size)",
-                "Number of Severe Exacerbations (color)",
-              ],
-              ["Global", null, 0, 0],
-            ];
-            _data.data.map((item) => {
-              _treeData.push([
-                `${item["First Name"]} ${item["Last Name"]}`,
-                "Global",
-                item["Number of ICS-LABA Patients"],
-                item["Number of High Steroid Usage Patients"],
-              ]);
-            });
-            setTreeData(_treeData);
-          }
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
- 
-
-  const options = {
+  const options1 = {
     minColor: "#ffef96",
     midColor: "#ff6e73",
     maxColor: "#d2177a",
@@ -192,33 +156,152 @@ const InstitutionalVariation = () => {
     },
     showScale: false,
     generateTooltip: (_row, _size, value) => {
-      let hcpValue = rawData[_row-1] || {
+      let hcpValue = rawData[_row - 1] || {
         "First Name": "",
         "Last Name": "",
         "Number of ICS-LABA Patients": 0,
-        "Number of High Steroid Usage Patients": 0,
-      }
+        toggleFilter: 0,
+      };
 
       return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
-      <div><strong>NAME</strong>:  ${hcpValue["First Name"] + " " + hcpValue["Last Name"]}</div>
-      <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue["Number of ICS-LABA Patients"]}</div>
-      <div><strong>Number of High Steroid Usage Patients</strong>:  ${hcpValue["Number of High Steroid Usage Patients"]}</div>
-       </div>`;
+    <div><strong>NAME</strong>:  ${hcpValue["Assigned Physician Name"]}</div>
+    <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue["Number of ICS-LABA Patients"]}</div>
+    <div><strong>${filters[0]}</strong>:  ${hcpValue[filters[0]]}</div>
+     </div>`;
     },
   };
+  const options2 = {
+    minColor: "#ffef96",
+    midColor: "#ff6e73",
+    maxColor: "#d2177a",
+    headerHeight: 15,
+    fontColor: "black",
+    title: "Asthma Patients by States",
+    titleTextStyle: {
+      color: "#888",
+      textAlign: "center",
+    },
+    colorAxis: {
+      values: [0, 1000, 10000, 100005, 1000000], // Define custom values for the color axis
+      colors: ["#ffef96", "#ff6e73", "white", "white", "#d2177a"], // Define colors for the color axis
+    },
+    showScale: false,
+    generateTooltip: (_row, _size, value) => {
+      let hcpValue = rawData[_row - 1] || {
+        "First Name": "",
+        "Last Name": "",
+        "Number of ICS-LABA Patients": 0,
+        toggleFilter: 0,
+      };
 
-  const handleOpen = (row, value, data) => {
-   if (row === modalDetails.name) {
-    return
-   }
-    setShowModal(true)
-    setModalDetails({
-      name: row
-    })
+      return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
+    <div><strong>NAME</strong>:  ${hcpValue["Assigned Physician Name"]}</div>
+    <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue["Number of ICS-LABA Patients"]}</div>
+    <div><strong>${filters[1]}</strong>:  ${hcpValue[filters[1]]}</div>
+     </div>`;
+    },
+  };
+  const [selectedValues, setSelectedValues] = useState(
+    EPL_TABLE_COLUMNS.map((col) => col.accessor)
+  );
+  const { accessToken, refreshToken } = useContext(AuthContext);
+
+  const handleTreeData = (data, toggleFilter) => {
+    console.log(toggleFilter);
+    let _treeData = [
+      [
+        "Region",
+        "Parent",
+        "Number of ICS-LABA Patients (size)",
+        "Number of Severe Exacerbations (color)",
+      ],
+      ["Global", null, 0, 0],
+    ];
+    data.map((item) => {
+      _treeData.push([
+        `${item["Assigned Physician Name"]}`,
+        "Global",
+        item["Number of ICS-LABA Patients"],
+        item[toggleFilter],
+      ]);
+    });
+    setTreeData(_treeData);
   };
 
-  const closeModal = ()=> {
-    setShowModal(false)
+  useEffect(() => {
+    getDataStats("institutional_variation_data", accessToken, refreshToken)
+      .then((res) => {
+        if (res) {
+          let _data = JSON.parse(res.replaceAll("NaN", 0));
+          if (_data) {
+            setRawData(_data.data);
+            setSpecialityOptions(_data.specialty_list);
+            handleTreeData(_data.data, toggleFilter);
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  const handleOpen = (row, value, data) => {
+    if (row === modalDetails.name) {
+      return;
+    }
+    setShowModal(true);
+    setModalDetails({
+      name: row,
+    });
+  };
+
+  const handleToggleFilter = (item) => {
+    setToggleFilter(item);
+    handleTreeData(rawData, item);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+  const filterData = () => {
+    const specialties = selectedSpeciality;
+    let queryString = `hcp_data?&`; // Start with 'hcp_data?&'
+
+    if (specialties && specialties.length > 0) {
+      queryString += specialties
+        .map((specialty) => `Primary Specialty Description=${specialty.value}`)
+        .join("&");
+    }
+    // if (_region && _region.length > 0) {
+    //   queryString += `&${_region
+    //     .map((region) => `Region=${region.value}`)
+    //     .join("&")}`;
+    // }
+    // if (_organisation && _organisation.length > 0) {
+    //   queryString += `&${_organisation
+    //     .map((organisation) => `Organization Name=${organisation.value}`)
+    //     .join("&")}`;
+    // }
+    // if (_stateName && _stateName.length > 0) {
+    //   queryString += `&${_stateName
+    //     .map((statename) => `State Name=${statename.value}`)
+    //     .join("&")}`;
+    // }
+
+  
+
+    // Concatenate additional parameters (filter out undefined values)
+    // const urlParams = Object.entries(additionalParams)
+    //   .filter(
+    //     ([key, value]) => value !== undefined && value !== "" && value !== null
+    //   )
+    //   .map(([key, value]) => `${key}=${value}`)
+    //   .join("&");
+
+    // Combine the base URL, dynamic specialties, and additional parameters
+    const finalUrl = `${queryString}`;
+    console.log(finalUrl)
   }
 
   const handleToggleSelect = (val) => {
@@ -246,17 +329,32 @@ const InstitutionalVariation = () => {
               Apply Filters
             </button>
           </div>
-          <TreeMap data={TreeData} options={options} handleOpen={handleOpen} />
+          <div className="flex items-center gap-4 cursor-pointer">
+            {filters.map((item) => (
+              <div
+                className="p-2"
+                onClick={() => handleToggleFilter(item)}
+                style={{
+                  background: item == toggleFilter ? "#c4c4c4" : "transparent",
+                }}
+              >
+                {item}
+              </div>
+            ))}
+          </div>
+          <TreeMap data={TreeData} options={toggleFilter== filters[0] ? options1: options2} handleOpen={handleOpen} />
           <Popup
-        onClose={closeModal}
-        modal
-        open={showModal}
-        position="center center"
-      >
-      <div className="flex p-10 flex-col items-center">
-        <div><strong>Name:</strong> {modalDetails.name}</div>
-      </div>
-      </Popup>
+            onClose={closeModal}
+            modal
+            open={showModal}
+            position="center center"
+          >
+            <div className="flex p-10 flex-col items-center">
+              <div>
+                <strong>Name:</strong> {modalDetails.name}
+              </div>
+            </div>
+          </Popup>
         </>
       ) : (
         <div className="w-full h-[400px] grid place-content-center">

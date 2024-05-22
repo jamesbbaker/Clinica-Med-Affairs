@@ -16,6 +16,7 @@ const MinMaxSlider = ({label,minValue=0,maxValue=0, handleValueChange}) => {
         minValue={minValue ? minValue : 0}
         maxValue={maxValue ? maxValue : 0}
         min={0}
+        canMinMaxValueSame={true}
         max={100}
         label={false}
         ruler={false}
