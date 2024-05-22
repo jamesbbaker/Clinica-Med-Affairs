@@ -68,6 +68,10 @@ const Table = ({
   showTopBtnsToggle = false,
   stateName,
   setStateName,
+  selectedIds,
+  setSelectedIds,
+  value,
+  setValue,
   stateNameList,
   organisationList,
   organisation,
@@ -79,6 +83,7 @@ const Table = ({
   selectionBtnsArray,
   specialityList,
   speciality,
+  handleRowClicked,
   setSpeciality,
   icsNumber,
   setIcsNumber,
@@ -142,20 +147,24 @@ const Table = ({
   }, [currentSize]);
 
   const handleClick = (row) => {
-    setOpenPopup((o) => !o);
-    const barChartData = {
-      labels: row.allCells.map((cell, index) =>
-        breakString(cell.column.Header, 40)
-      ),
-      datasets: [
-        {
-          data: row.allCells.map((cell, index) => cell.value.split("%")[0]),
-          borderColor: "rgb(155, 249, 122)",
-          backgroundColor: "rgb(155, 249, 122, 0.4)",
-        },
-      ],
-    };
-    setBarChartConfig(barChartData);
+    if (totalPage) {
+      handleRowClicked(row);
+    } else {
+      setOpenPopup((o) => !o);
+      const barChartData = {
+        labels: row.allCells.map((cell, index) =>
+          breakString(cell.column.Header, 40)
+        ),
+        datasets: [
+          {
+            data: row.allCells.map((cell, index) => cell.value.split("%")[0]),
+            borderColor: "rgb(155, 249, 122)",
+            backgroundColor: "rgb(155, 249, 122, 0.4)",
+          },
+        ],
+      };
+      setBarChartConfig(barChartData);
+    }
   };
 
   const handleClose = () => {
@@ -210,9 +219,6 @@ const Table = ({
     // }
   };
 
-  const [value, setValue] = useState(null);
-  const [selectedIds, setSelectedIds] = useState([]);
-
   const handleMultipleSelect = (val) => {
     setSpeciality(val);
   };
@@ -230,35 +236,31 @@ const Table = ({
   };
 
   const handleToggleSelect = (val) => {
-    let newHeadersArr = val.map((header) => ({ [header.col.Header]: header }));
-    if (selectedIds) {
-      selectedIds.map((id) => {
-        if (!newHeadersArr.hasOwnProperty(id)) {
-          value.map((item) => {
-            if (item.col.Header === id) {
-              item.col.toggleHidden();
-            }
-          });
-        }
-      });
-    }
-
+    let headerName = selectedIds.map((item) => item.col.Header);
     val.map((item) => {
-      console.log(selectedIds.includes(item.col.Header));
-      if (!selectedIds.includes(item.col.Header)) {
-        item.col.toggleHidden();
-      }
+      !headerName.includes(item.col.Header) && item.col.toggleHidden();
     });
-    let headersArr = val.map((item) => item.col.Header);
-    setSelectedIds(headersArr);
+    let valHeaders = val.map((item) => item.col.Header);
+    selectedIds.map((item) => {
+      !valHeaders.includes(item.col.Header) && item.col.toggleHidden();
+    });
+    setSelectedIds(val);
+
     setValue(val);
   };
 
   useEffect(() => {
     if (showTopBtnsToggle) {
+      let valHeaders = [];
+      if (value) {
+        valHeaders = value.map((item) => item.col.Header);
+      }
+
       allColumns
         .filter((item) => selectionBtnsArray.includes(item.id))
-        .map((item) => item.toggleHidden());
+        .map(
+          (item) => !valHeaders.includes(item.Header) && item.toggleHidden()
+        );
     }
   }, [showTopBtnsToggle]);
 
@@ -298,7 +300,7 @@ const Table = ({
                     }
                 )
                 .filter((item) => typeof item !== "boolean")}
-              className="w-[10rem]"
+              className="w-[10rem] z-[5]"
               value={value || []}
               onChange={(val) => handleToggleSelect(val)}
             />
