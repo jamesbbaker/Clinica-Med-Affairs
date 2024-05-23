@@ -204,7 +204,7 @@ const TreeMap = ({ needCallbacks=true,options = defaultOptions, data = defaultDa
       <Chart
         chartType="TreeMap"
         width="100%"
-        height="800px"
+        height={"800px"}
         data={data}
         options={options}
         chartEvents={[

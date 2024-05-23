@@ -7,6 +7,7 @@ import { getDataStats } from "../../../API/Outputs";
 import { AuthContext } from "../../../context/AuthContext";
 import { MultiSelect } from "react-multi-select-component";
 import Popup from "reactjs-popup";
+import SelectBox from "../../../components/SelectBox";
 
 const data = [
   [
@@ -140,9 +141,9 @@ const InstitutionalVariation = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalDetails, setModalDetails] = useState({});
   const options1 = {
-    minColor: "#ffef96",
-    midColor: "#ff6e73",
-    maxColor: "#d2177a",
+    minColor: "#00FF00",
+    midColor: "#FFA500",
+    maxColor: "#FF0000",
     headerHeight: 15,
     fontColor: "black",
     title: "Asthma Patients by States",
@@ -150,30 +151,37 @@ const InstitutionalVariation = () => {
       color: "#888",
       textAlign: "center",
     },
-    colorAxis: {
-      values: [0, 1000, 10000, 100005, 1000000], // Define custom values for the color axis
-      colors: ["#ffef96", "#ff6e73", "white", "white", "#d2177a"], // Define colors for the color axis
-    },
+
     showScale: false,
     generateTooltip: (_row, _size, value) => {
-      let hcpValue = rawData[_row - 1] || {
+      // console.log(_row, _size, value);
+      // console.log(TreeData[_row])
+      let _value  =rawData.filter(item => item["Number of ICS-LABA Patients"] == _size).filter(item => item[toggleFilter] == value)[0]
+      let hcpValue = _value || {
         "First Name": "",
         "Last Name": "",
         "Number of ICS-LABA Patients": 0,
         toggleFilter: 0,
       };
+  
 
-      return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
+    return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
     <div><strong>NAME</strong>:  ${hcpValue["Assigned Physician Name"]}</div>
-    <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue["Number of ICS-LABA Patients"]}</div>
-    <div><strong>${filters[0]}</strong>:  ${hcpValue[filters[0]]}</div>
+    <div><strong>Number of ICS-LABA Patients</strong>:  ${
+      hcpValue["Number of ICS-LABA Patients"]
+    }</div>
+    <div>row: ${_row}</div>
+    <div>_size: ${_size}</div>
+   
+    <div>value: ${value}</div>
+    <div><strong>${filters[1]}</strong>:  ${hcpValue[filters[1]]}</div>
      </div>`;
     },
   };
   const options2 = {
-    minColor: "#ffef96",
-    midColor: "#ff6e73",
-    maxColor: "#d2177a",
+    minColor: "#00FF00",
+    midColor: "#FFA500",
+    maxColor: "#FF0000",
     headerHeight: 15,
     fontColor: "black",
     title: "Asthma Patients by States",
@@ -181,13 +189,11 @@ const InstitutionalVariation = () => {
       color: "#888",
       textAlign: "center",
     },
-    colorAxis: {
-      values: [0, 1000, 10000, 100005, 1000000], // Define custom values for the color axis
-      colors: ["#ffef96", "#ff6e73", "white", "white", "#d2177a"], // Define colors for the color axis
-    },
+    //  rawData[_row - 1 - Math.floor(rawData.length/100)]
     showScale: false,
     generateTooltip: (_row, _size, value) => {
-      let hcpValue = rawData[_row - 1] || {
+      console.log(_row, _size, value);
+      let hcpValue = TreeData[_row] || {
         "First Name": "",
         "Last Name": "",
         "Number of ICS-LABA Patients": 0,
@@ -196,7 +202,9 @@ const InstitutionalVariation = () => {
 
       return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
     <div><strong>NAME</strong>:  ${hcpValue["Assigned Physician Name"]}</div>
-    <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue["Number of ICS-LABA Patients"]}</div>
+    <div><strong>Number of ICS-LABA Patients</strong>:  ${
+      hcpValue["Number of ICS-LABA Patients"]
+    }</div>
     <div><strong>${filters[1]}</strong>:  ${hcpValue[filters[1]]}</div>
      </div>`;
     },
@@ -206,8 +214,16 @@ const InstitutionalVariation = () => {
   );
   const { accessToken, refreshToken } = useContext(AuthContext);
 
-  const handleTreeData = (data, toggleFilter) => {
-    console.log(toggleFilter);
+  // const loadMoreData = () => {
+  //   const nextPage = currentPage + 1;
+  //   const start = nextPage * PAGE_SIZE + 1;
+  //   const end = start + PAGE_SIZE;
+  //   const newVisibleData = data.slice(0, end);
+  //   setVisibleData(newVisibleData);
+  //   setCurrentPage(nextPage);
+  // };
+
+  const handleTreeData = (data, toggleFilter, page) => {
     let _treeData = [
       [
         "Region",
@@ -217,13 +233,59 @@ const InstitutionalVariation = () => {
       ],
       ["Global", null, 0, 0],
     ];
-    data.map((item) => {
+
+    // for (let i = 0; i <= Math.floor(data.length / 5); i++) {
+    //   const groupId = `group${i + 1}`;
+    //   const startIndex = i * 5;
+    //   const endIndex = startIndex + 5;
+
+    //   // Ensure we don't go out of bounds
+    //   const groupData = data.slice(startIndex, endIndex);
+
+    //   let first100Total = 0;
+    //   let first100TotalValue = 0;
+    //   if (groupData.length < 5) {
+    //     first100Total = groupData.reduce(
+    //       (total, record) => total + record["Number of ICS-LABA Patients"],
+    //       0
+    //     );
+    //     first100TotalValue = groupData.reduce(
+    //       (total, record) => total + record[toggleFilter],
+    //       0
+    //     );
+    //   } else {
+    //     first100Total = groupData
+    //       .slice(0, 5)
+    //       .reduce(
+    //         (total, record) => total + record["Number of ICS-LABA Patients"],
+    //         0
+    //       );
+    //     first100TotalValue = groupData.reduce(
+    //       (total, record) => total + record[toggleFilter],
+    //       0
+    //     );
+    //   }
+
+    //   _treeData.push([groupId, "Global", first100Total, first100TotalValue]);
+    // }
+
+    // Print the results
+
+    let groupId = 1;
+    let groupInterval = 1;
+    data.map((item, index) => {
+      // if (groupInterval > 5) {
+      //   groupId++;
+      //   groupInterval = 1;
+      // }
+      // console.log(groupId)
       _treeData.push([
-        `${item["Assigned Physician Name"]}`,
-        "Global",
+        `${item["Assigned Physician Name"] + index}`,
+        `Global`,
         item["Number of ICS-LABA Patients"],
         item[toggleFilter],
       ]);
+      // groupInterval++;
     });
     setTreeData(_treeData);
   };
@@ -289,8 +351,6 @@ const InstitutionalVariation = () => {
     //     .join("&")}`;
     // }
 
-  
-
     // Concatenate additional parameters (filter out undefined values)
     // const urlParams = Object.entries(additionalParams)
     //   .filter(
@@ -301,8 +361,8 @@ const InstitutionalVariation = () => {
 
     // Combine the base URL, dynamic specialties, and additional parameters
     const finalUrl = `${queryString}`;
-    console.log(finalUrl)
-  }
+    console.log(finalUrl);
+  };
 
   const handleToggleSelect = (val) => {
     setSelectedSpeciality(val);
@@ -314,22 +374,23 @@ const InstitutionalVariation = () => {
         <>
           <div className="flex w-full justify-between items-center">
             <div className="flex items-center mt-2 gap-8">
-              <label className="font-[600]">Select Unmet Needs</label>
-              <MultiSelect
-                labelledBy=""
-                options={specialityOptions
-                  .map((item) => isNaN(item) && { label: item, value: item })
-                  .filter((item) => typeof item !== "boolean")}
-                className="w-[10rem]"
-                value={selectedSpeciality || []}
-                onChange={(val) => handleToggleSelect(val)}
+              <label className="font-[600]"></label>
+              <SelectBox
+                className={"flex items-center"}
+                input={{
+                  label: "Select Unmet Needs",
+                  id: "unmet",
+                  options: filters.map((item) => ({ name: item, value: item })),
+                }}
+                handleSelect={(e) => handleToggleFilter(e)}
+                value={toggleFilter}
               />
             </div>
             <button className="border border-[#000] px-4 py-2 rounded-xs">
               Apply Filters
             </button>
           </div>
-          <div className="flex items-center gap-4 cursor-pointer">
+          {/* <div className="flex items-center gap-4 cursor-pointer">
             {filters.map((item) => (
               <div
                 className="p-2"
@@ -341,8 +402,13 @@ const InstitutionalVariation = () => {
                 {item}
               </div>
             ))}
-          </div>
-          <TreeMap data={TreeData} options={toggleFilter== filters[0] ? options1: options2} handleOpen={handleOpen} />
+          </div> */}
+          <TreeMap
+            needCallbacks={false}
+            data={TreeData}
+            options={toggleFilter == filters[0] ? options1 : options2}
+            handleOpen={handleOpen}
+          />
           <Popup
             onClose={closeModal}
             modal
