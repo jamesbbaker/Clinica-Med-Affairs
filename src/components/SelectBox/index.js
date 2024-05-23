@@ -1,8 +1,8 @@
 import React from "react";
 
-const SelectBox = ({ error, input, handleSelect }) => {
+const SelectBox = ({ className,error,value, input, handleSelect }) => {
   return (
-    <div className={`w-full mt-2`}>
+    <div className={`w-full mt-2 ${className}`}>
       <label
         htmlFor={input.id}
         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -12,7 +12,7 @@ const SelectBox = ({ error, input, handleSelect }) => {
       <select
         name={input.name}
         onChange={handleSelect}
-        sle
+        value={value}
         id={input.id}
         className="bg-gray-50 focus:outline-none  px-4 py-2 border border-primary border-opacity-25 text-gray-900 text-sm rounded-lg block w-full"
       >
