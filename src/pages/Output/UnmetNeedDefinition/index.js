@@ -20,7 +20,23 @@ const UnmetNeedDefinitionData = {
     id: "id2",
     title: "After diagnosis, do patients receive a spirometry test?",
     buttonText: "Incomplete initial asthma testing",
-    description: "Lorem Ipsum",
+    description: (
+      <div>
+        Patients who do not receive one of the following codes that indicate
+        spirometry testing:
+        <ul>
+          <li>94010 - Breathing capacity test (spirometry)</li>
+          <li>
+            94060 - Evaluation of wheezing (spirometry with bronchodilator)
+          </li>
+          <li>
+            94070 - Evaluation of wheezing (bronchospasm evaluation; spirometry
+            as part of the test)
+          </li>
+          <li>94375 - Respiratory flow volume loop (part of spirometry)</li>
+        </ul>
+      </div>
+    ),
     color: "#8CC9E6",
   },
   id3: {
@@ -28,7 +44,24 @@ const UnmetNeedDefinitionData = {
     title:
       "Do severe or uncontrolled asthma patients receive IGE and EOS/CBC testing?",
     buttonText: "Improper severe asthma testing",
-    description: "Lorem Ipsum",
+    description: (
+      <div>
+        Patients who do not receive one of the following codes that indicate EOS
+        testing:
+        <ul>
+          <li>
+            85025 - Complete blood count (CBC) with automated differential WBC
+            count
+          </li>
+          <li>85048 - Leukocyte (WBC), automated</li>
+          <li>85004 - Automated differential WBC count</li>
+        </ul>
+        Additionally, eosinophil-specific tests include:
+        <ul>
+          <li>85013 - Blood count; eosinophil count, direct</li>
+        </ul>
+      </div>
+    ),
     color: "#8CC9E6",
   },
   id4: {
@@ -41,8 +74,9 @@ const UnmetNeedDefinitionData = {
   id5: {
     id: "id5",
     title: "Do patients diagnosed with asthma receive any treatment at all?",
-    buttonText: "Untreated patients",
-    description: "Lorem Ipsum",
+    buttonText: "Exacerbation prior to receiving ICS/beta-agonist",
+    description:
+      "Definition: Patients who have an exacerbation prior to receiving an ICS/beta-agonist treatment after being diagnosed with Asthma. Exacerbations are defined as patients going to the ED / ER WITH a primary asthma diagnosis code or a specific asthma treatment (e.g. insert emergency airway, airway inhaltion treatment, or nebulizer with compression.)",
     color: "#6FA9D9",
   },
   id6: {
@@ -51,7 +85,8 @@ const UnmetNeedDefinitionData = {
       "Are uncontrolled or severe patients receiving ICS/beta-agonists escalated to double therapy?",
     buttonText:
       "Failure to escalate uncontrolled/severe patients to double therapy",
-    description: "Lorem Ipsum",
+    description:
+      "Definition: Patients who receive ICS / beta-agonists with an exacerbation who are not escalated to double therapy. Exacerbations are defined as patients going to the ED / ER WITH a primary asthma diagnosis code or a specific asthma treatment (e.g. insert emergency airway, airway inhaltion treatment, or nebulizer with compression.)",
     color: "#6FA9D9",
   },
   id17: {
@@ -59,7 +94,8 @@ const UnmetNeedDefinitionData = {
     title:
       "Do patients receive excessive OCS by either consistency or quantity of use when receiving ICS/beta-agonists?",
     buttonText: "Excessive steroid usage on ICS/beta-agonist",
-    description: "Lorem Ipsum",
+    description:
+      "Definition: Patients on single therapy who receive >450mg of OCS in a year. OCS converted to prednisone equivalent milligrams. Dose per month and year calculated using prescribed dose, quantity, and days supply.",
     color: "#6FA9D9",
   },
   id7: {
@@ -67,7 +103,8 @@ const UnmetNeedDefinitionData = {
     title:
       "How long does it take from demonstrating severe/uncontrolled asthma to treatment escalation?",
     buttonText: "Delay in escalating patients to double therapy",
-    description: "Lorem Ipsum",
+    description:
+      "Definition: Patients who are escalated from single to double therapy >3 week after their first exacerbation. Exacerbations are defined as patients going to the ED / ER WITH a primary asthma diagnosis code or a specific asthma treatment (e.g. insert emergency airway, airway inhaltion treatment, or nebulizer with compression.)",
     color: "#6FA9D9",
   },
   id8: {
@@ -77,7 +114,7 @@ const UnmetNeedDefinitionData = {
     buttonText:
       "Failure to escalate uncontrolled/severe patients to triple therapy",
     description:
-      "Exacerbations are defined as patients going to the ED / ER WITH a primary asthma diagnosis code or a specific asthma treatment (e.g. insert emergency airway, airway inhaltion treatment, or nebulizer with compression.)",
+      "Definition: Patients who receive double therapy with an exacerbation who are not escalated to triple therapy or biologics. Exacerbations are defined as patients going to the ED / ER WITH a primary asthma diagnosis code or a specific asthma treatment (e.g. insert emergency airway, airway inhaltion treatment, or nebulizer with compression.)",
     color: "#6FA9D9",
   },
   id18: {
@@ -86,7 +123,7 @@ const UnmetNeedDefinitionData = {
       "Do patients receive excessive OCS by either consistency or quantity of use when receiving double therapies?",
     buttonText: "Excessive steroid usage on double therapy",
     description:
-      "OCS converted to prednisone equivalent milligrams. Dose per month and year calculated using prescribed dose, quantity, and days supply.",
+      "Definition: Patients on double therapy who receive >450mg of OCS in a year. OCS converted to prednisone equivalent milligrams. Dose per month and year calculated using prescribed dose, quantity, and days supply.",
     color: "#6FA9D9",
   },
   id9: {
@@ -432,13 +469,9 @@ const UnmetNeedDefinition = () => {
       getDataStats("data_stats_14", accessToken, refreshToken)
         .then((res) => {
           if (res && res.headers) {
-            console.log(res, "responsee")
-            let _data = getBarChart(
-              res,
-              res.headers[0],
-              res.headers[1],
-            );
-            
+            console.log(res, "responsee");
+            let _data = getBarChart(res, res.headers[0], res.headers[1]);
+
             setStatsData2(_data);
           }
         })
@@ -544,71 +577,71 @@ const UnmetNeedDefinition = () => {
       >
         {modalId && (
           <>
-           <div className="w-[100%] sticky top-0 bg-white z-20 px-2 text-lg text-left py-8 font-[600] text-[#808080]">
+            <div className="w-[100%] sticky top-0 bg-white z-20 px-2 text-lg text-left py-8 font-[600] text-[#808080]">
               {UnmetNeedDefinitionData[modalId].buttonText}
             </div>
-          <div className="w-[70vw] max-h-[80vh] pb-10 overflow-auto h-[auto] flex flex-col gap-2 items-center bg-white">
-            {statsData6 && (
-              <div className="h-[30rem] flex items-center justify-center w-full">
-                <Table
-                  initialState={{ pageSize: 10, pageIndex: 0 }}
-                  marginTop={0}
-                  Title="Summary Table"
-                  activeCells={false}
-                  showSelectionBtns={false}
-                  TableData={statsData6}
-                  TableColummns={Table_Columns_3}
+            <div className="w-[70vw] max-h-[80vh] pb-10 overflow-auto h-[auto] flex flex-col gap-2 items-center bg-white">
+              {statsData6 && (
+                <div className="h-[30rem] flex items-center justify-center w-full">
+                  <Table
+                    initialState={{ pageSize: 10, pageIndex: 0 }}
+                    marginTop={0}
+                    Title="Summary Table"
+                    activeCells={false}
+                    showSelectionBtns={false}
+                    TableData={statsData6}
+                    TableColummns={Table_Columns_3}
+                  />
+                </div>
+              )}
+              {statsData5 && (
+                <div className="h-[30rem] flex items-center justify-center w-full">
+                  <Table
+                    initialState={{ pageSize: 10, pageIndex: 0 }}
+                    marginTop={0}
+                    Title="Summary Table"
+                    activeCells={false}
+                    showSelectionBtns={false}
+                    TableData={statsData5}
+                    TableColummns={Table_Columns_3}
+                  />
+                </div>
+              )}
+              {statsData1 && (
+                <LineChart
+                  height={window.innerWidth > 1400 ? 120 : 80}
+                  arbitrary={false}
+                  data={statsData1}
+                  options={Line_options_2}
                 />
-              </div>
-            )}
-            {statsData5 && (
-              <div className="h-[30rem] flex items-center justify-center w-full">
-                <Table
-                  initialState={{ pageSize: 10, pageIndex: 0 }}
-                  marginTop={0}
-                  Title="Summary Table"
-                  activeCells={false}
-                  showSelectionBtns={false}
-                  TableData={statsData5}
-                  TableColummns={Table_Columns_3}
+              )}
+              {statsData2 && (
+                <BarChart
+                  height={window.innerWidth > 1400 ? 120 : 80}
+                  data={statsData2}
+                  options={_options}
                 />
-              </div>
-            )}
-            {statsData1 && (
-              <LineChart
-                height={window.innerWidth > 1400 ? 120 : 80}
-                arbitrary={false}
-                data={statsData1}
-                options={Line_options_2}
-              />
-            )}
-            {statsData2 && (
-              <BarChart
-                height={window.innerWidth > 1400 ? 120 : 80}
-                data={statsData2}
-                options={_options}
-              />
-            )} 
-            {statsData4 && (
-              <div className="my-10 w-full h-auto">
+              )}
+              {statsData4 && (
+                <div className="my-10 w-full h-auto">
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 80 : 90}
+                    data={statsData4}
+                    options={chart_3_options}
+                  />
+                </div>
+              )}
+              {statsData3 && (
                 <BarChart
                   height={window.innerWidth > 1400 ? 80 : 90}
-                  data={statsData4}
-                  options={chart_3_options}
+                  data={statsData3}
+                  options={chart_2_options}
                 />
-              </div>
-            )}
-            {statsData3 && (
-              <BarChart
-                height={window.innerWidth > 1400 ? 80 : 90}
-                data={statsData3}
-                options={chart_2_options}
-              />
-            )}
-            <p className="px-4 py-14 w-full text-left text-sm">
-              {UnmetNeedDefinitionData[modalId].description}
-            </p>
-          </div>
+              )}
+              <p className="px-4 py-14 w-full text-left text-sm">
+                {UnmetNeedDefinitionData[modalId].description}
+              </p>
+            </div>
           </>
         )}
       </Popup>
