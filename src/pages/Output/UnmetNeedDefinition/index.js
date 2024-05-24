@@ -388,18 +388,28 @@ const UnmetNeedDefinition = () => {
     };
     setStatsData1(data);
   }
+  function getIntValue(item) {
+    let value = item
+    if (item.includes("-")) {
+      value = item.split("-")[1]
+    }
+    value = parseInt(value.split("mg")[0])
+    console.log(value)
+    return value
+  }
 
   function getBarChart(res, type1, type2) {
     const responseData = res.data;
     responseData.sort((a, b) => a[type1] - b[type1]);
+   
 
     let _data = {
       labels: responseData.map((item) => item[type1]),
       datasets: [
         {
           data: responseData.map((item) => item[type2]),
-          borderColor: "rgb(542, 62, 35,0.8)",
-          backgroundColor: "rgb(542, 62, 35)",
+          borderColor: responseData.map((item) => getIntValue(item[type1]) <= 450 ? "rgb(542, 62, 35, 0.8)" : "rgb(0,212,100, 0.7)"),
+          backgroundColor: responseData.map((item) => getIntValue(item[type1]) <= 450 ? "rgb(542, 62, 35)" : "rgb(0,212,100)"),
           borderWidth: 2,
         },
       ],
@@ -432,13 +442,9 @@ const UnmetNeedDefinition = () => {
       getDataStats("data_stats_14", accessToken, refreshToken)
         .then((res) => {
           if (res && res.headers) {
-            console.log(res, "responsee")
-            let _data = getBarChart(
-              res,
-              res.headers[0],
-              res.headers[1],
-            );
-            
+            console.log(res, "responsee");
+            let _data = getBarChart(res, res.headers[0], res.headers[1]);
+
             setStatsData2(_data);
           }
         })
@@ -544,71 +550,71 @@ const UnmetNeedDefinition = () => {
       >
         {modalId && (
           <>
-           <div className="w-[100%] sticky top-0 bg-white z-20 px-2 text-lg text-left py-8 font-[600] text-[#808080]">
+            <div className="w-[100%] sticky top-0 bg-white z-20 px-2 text-lg text-left py-8 font-[600] text-[#808080]">
               {UnmetNeedDefinitionData[modalId].buttonText}
             </div>
-          <div className="w-[70vw] max-h-[80vh] pb-10 overflow-auto h-[auto] flex flex-col gap-2 items-center bg-white">
-            {statsData6 && (
-              <div className="h-[30rem] flex items-center justify-center w-full">
-                <Table
-                  initialState={{ pageSize: 10, pageIndex: 0 }}
-                  marginTop={0}
-                  Title="Summary Table"
-                  activeCells={false}
-                  showSelectionBtns={false}
-                  TableData={statsData6}
-                  TableColummns={Table_Columns_3}
+            <div className="w-[70vw] max-h-[80vh] pb-10 overflow-auto h-[auto] flex flex-col gap-2 items-center bg-white">
+              {statsData6 && (
+                <div className="h-[30rem] flex items-center justify-center w-full">
+                  <Table
+                    initialState={{ pageSize: 10, pageIndex: 0 }}
+                    marginTop={0}
+                    Title="Summary Table"
+                    activeCells={false}
+                    showSelectionBtns={false}
+                    TableData={statsData6}
+                    TableColummns={Table_Columns_3}
+                  />
+                </div>
+              )}
+              {statsData5 && (
+                <div className="h-[30rem] flex items-center justify-center w-full">
+                  <Table
+                    initialState={{ pageSize: 10, pageIndex: 0 }}
+                    marginTop={0}
+                    Title="Summary Table"
+                    activeCells={false}
+                    showSelectionBtns={false}
+                    TableData={statsData5}
+                    TableColummns={Table_Columns_3}
+                  />
+                </div>
+              )}
+              {statsData1 && (
+                <LineChart
+                  height={window.innerWidth > 1400 ? 120 : 80}
+                  arbitrary={false}
+                  data={statsData1}
+                  options={Line_options_2}
                 />
-              </div>
-            )}
-            {statsData5 && (
-              <div className="h-[30rem] flex items-center justify-center w-full">
-                <Table
-                  initialState={{ pageSize: 10, pageIndex: 0 }}
-                  marginTop={0}
-                  Title="Summary Table"
-                  activeCells={false}
-                  showSelectionBtns={false}
-                  TableData={statsData5}
-                  TableColummns={Table_Columns_3}
+              )}
+              {statsData2 && (
+                <BarChart
+                  height={window.innerWidth > 1400 ? 120 : 80}
+                  data={statsData2}
+                  options={_options}
                 />
-              </div>
-            )}
-            {statsData1 && (
-              <LineChart
-                height={window.innerWidth > 1400 ? 120 : 80}
-                arbitrary={false}
-                data={statsData1}
-                options={Line_options_2}
-              />
-            )}
-            {statsData2 && (
-              <BarChart
-                height={window.innerWidth > 1400 ? 120 : 80}
-                data={statsData2}
-                options={_options}
-              />
-            )} 
-            {statsData4 && (
-              <div className="my-10 w-full h-auto">
+              )}
+              {statsData4 && (
+                <div className="my-10 w-full h-auto">
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 80 : 90}
+                    data={statsData4}
+                    options={chart_3_options}
+                  />
+                </div>
+              )}
+              {statsData3 && (
                 <BarChart
                   height={window.innerWidth > 1400 ? 80 : 90}
-                  data={statsData4}
-                  options={chart_3_options}
+                  data={statsData3}
+                  options={chart_2_options}
                 />
-              </div>
-            )}
-            {statsData3 && (
-              <BarChart
-                height={window.innerWidth > 1400 ? 80 : 90}
-                data={statsData3}
-                options={chart_2_options}
-              />
-            )}
-            <p className="px-4 py-14 w-full text-left text-sm">
-              {UnmetNeedDefinitionData[modalId].description}
-            </p>
-          </div>
+              )}
+              <p className="px-4 py-14 w-full text-left text-sm">
+                {UnmetNeedDefinitionData[modalId].description}
+              </p>
+            </div>
           </>
         )}
       </Popup>

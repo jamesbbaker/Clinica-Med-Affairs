@@ -1,11 +1,11 @@
 import React from "react";
 
-const SelectBox = ({ className,error,value, input, handleSelect }) => {
+const SelectBox = ({labelClassName, className,error,value, input, handleSelect }) => {
   return (
     <div className={`w-full mt-2 ${className}`}>
       <label
         htmlFor={input.id}
-        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        className={`block mb-2 text-sm font-medium text-gray-900 dark:text-white ${labelClassName}`}
       >
         {input.label}
       </label>

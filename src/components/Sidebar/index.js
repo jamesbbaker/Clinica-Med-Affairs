@@ -2,7 +2,19 @@ import React, { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateMenu } from "../../features/menu/menuSlice";
 import { useNavigate, useParams } from "react-router-dom";
-import { AiOutlineTeam, AiOutlineHome, AiOutlineTable, AiOutlineGlobal,AiOutlineContainer, AiOutlineBarChart, AiOutlineFundProjectionScreen, AiOutlineRise, AiOutlineProject, AiOutlineQuestionCircle } from "react-icons/ai";
+import {
+  AiOutlineTeam,
+  AiOutlineHome,
+  AiOutlineTable,
+  AiOutlineGlobal,
+  AiOutlineContainer,
+  AiOutlineBarChart,
+  AiOutlineFundProjectionScreen,
+  AiOutlineRise,
+  AiOutlineProject,
+  AiOutlineQuestionCircle,
+  AiOutlineDotChart,
+} from "react-icons/ai";
 import { APP_ROUTES, APP_ROUTES_LABEL } from "../../constants/appConstants";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -60,6 +72,12 @@ export const menuList = [
         icon: () => <AiOutlineProject />,
       },
       {
+        name: APP_ROUTES_LABEL.medical_affair_toolbox,
+        id: APP_ROUTES.medical_affair_toolbox,
+        route: `${APP_ROUTES.outputs}/${APP_ROUTES.medical_affair_toolbox}`,
+        icon: () => <AiOutlineDotChart />,
+      },
+      {
         name: APP_ROUTES_LABEL.patient_journey,
         id: APP_ROUTES.patient_journey,
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.patient_journey}`,
@@ -85,7 +103,7 @@ export const menuList = [
       },
     ],
   },
-]; 
+];
 
 const Sidebar = () => {
   const { currentMenu } = useSelector((state) => state.menu);
@@ -95,7 +113,6 @@ const Sidebar = () => {
   const { id } = useParams();
 
   const handleClick = (item) => {
-   
     navigate(item.route, {
       replace: true,
     });
@@ -127,8 +144,8 @@ const Sidebar = () => {
         })
       );
     }
-  },[user])
-  
+  }, [user]);
+
   // const handelHome = () => {
   //   navigate("/dashboard")
   //   dispatch(
@@ -162,7 +179,9 @@ const Sidebar = () => {
                     if (
                       item.name === "outputs" &&
                       user.page_view &&
-                      !user.page_view.includes(subItem.id) && subItem.id !== "hcp_insights" //remove hcp_insights
+                      subItem.id !== APP_ROUTES.hcp_insights &&
+                        subItem.id !== APP_ROUTES.medical_affair_toolbox &&
+                      !user.page_view.includes(subItem.id)
                     ) {
                       return false;
                     }
@@ -187,9 +206,11 @@ const Sidebar = () => {
                         } flex cursor-pointer rounded-md transition-all ease-in-out duration-200 px-2 py-2 font-semibold items-center gap-2  w-full text-left`}
                       >
                         <div className="w-full md:w-auto grid place-content-center">
-                        <subItem.icon />
+                          <subItem.icon />
                         </div>
-                        <div className="w-full hidden md:block">{subItem.name}</div>
+                        <div className="w-full hidden md:block">
+                          {subItem.name}
+                        </div>
                       </div>
                     );
                   })}
