@@ -67,6 +67,7 @@ export const APP_ROUTES = {
   patient_journey: "patient_journey",
   impact_tracking: "impact_tracking",
   institutional_variation: "institutional_variation",
+  medical_affair_toolbox: "medical_affair_toolbox",
   data_quality: "data_quality",
   unmet_need_definition: "unmet_need_definition",
 };
@@ -85,6 +86,7 @@ export const APP_ROUTES_LABEL = {
   patient_journey: "Patient Trajectory",
   impact_tracking: "Impact Tracking",
   institutional_variation: "Institutional Variation",
+  medical_affair_toolbox: "Medical Affairs Toolbox",
   data_quality: "Data Quality",
   unmet_need_definition: "Unmet Need Definitions",
 };

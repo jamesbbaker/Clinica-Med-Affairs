@@ -1,12 +1,8 @@
 import React from "react";
-import Map from "../../components/Map";
-import BarChart from "../../components/BarChart";
 import { RadarChart } from "../../components/RadarChart";
-import Table from "../../components/Table";
 import { APP_ROUTES } from "../../constants/appConstants";
 import { useSelector } from "react-redux";
 import { LineChart } from "../../components/LineChart";
-import Sankey from "../../components/Sankey";
 import ImpactTracking from "./ImpactTracking";
 import InstitutionalVariation from "./InstituitonalVariation";
 import DataQuality from "./DataQuality";
@@ -15,6 +11,7 @@ import UnmetNeedDefinition from "./UnmetNeedDefinition";
 import EligiblePatientLocator from "./EligiblePatientLocator";
 import PatientOpportunityMapping from "./PatientOpportunityMapping";
 import HcpInsight from "./HcpInsights";
+import MedicalAffairToolbox from "./MedicalAffairsToolbox";
 
 
 
@@ -39,6 +36,9 @@ const Output = () => {
       {currentMenu === APP_ROUTES.eligible_patient_locator && <EligiblePatientLocator />}
       {currentMenu === APP_ROUTES.institutional_variation && (
         <InstitutionalVariation />
+      )}
+      {currentMenu === APP_ROUTES.medical_affair_toolbox && (
+        <MedicalAffairToolbox />
       )}
       {currentMenu === APP_ROUTES.impact_tracking && <ImpactTracking />}
       {currentMenu === APP_ROUTES.unmet_need_definition && <UnmetNeedDefinition />}
