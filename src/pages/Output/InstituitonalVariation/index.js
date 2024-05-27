@@ -10,8 +10,29 @@ import Popup from "reactjs-popup";
 import SelectBox from "../../../components/SelectBox";
 
 const filters = [
-  "Percent of High Steroid Usage Patients",
-  "Percent of Severe Exacerbations",
+  "Number of Asthma Patients",
+  "Number of ICS Escalation Delay",
+  "Number of ICS Exacerbation",
+  "Number of ICS Exacerbation Failed Escalation",
+  "Number of ICS High Steroid Usage",
+  "Number of ICS Patients",
+  "Number of ICS-LABA Escalation Delay",
+  "Number of ICS-LABA Exacerbation",
+  "Number of ICS-LABA Exacerbation Failed Escalation",
+  "Number of ICS-LABA High Steroid Usage",
+  "Number of ICS-LABA Patients",
+  "Number of No EOS Testing",
+  "Number of No Spirometry",
+  "Number of No Treatment",
+  "Percent of ICS Escalation Delay",
+  "Percent of ICS Exacerbation Failed Escalation",
+  "Percent of ICS High Steroid Usage",
+  "Percent of ICS-LABA Escalation Delay",
+  "Percent of ICS-LABA Exacerbation Failed Escalation",
+  "Percent of ICS-LABA High Steroid Usage",
+  "Percent of No EOS Testing",
+  "Percent of No Spirometry",
+  "Percent of No Treatment",
 ];
 
 const InstitutionalVariation = () => {
@@ -38,10 +59,7 @@ const InstitutionalVariation = () => {
 
     showScale: false,
     generateTooltip: (_row, _size, value) => {
-      // console.log(_row, _size, value);
-      // console.log(TreeData[_row])
-  
-      let hcpValue = rawData[_row-1] || {
+      let hcpValue = rawData[_row - 1] || {
         "First Name": "",
         "Last Name": "",
         "Number of ICS-LABA Patients": 0,
@@ -50,14 +68,8 @@ const InstitutionalVariation = () => {
 
       return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
     <div><strong>NAME</strong>:  ${hcpValue["Assigned Physician Name"]}</div>
-    <div><strong>Number of ICS-LABA Patients</strong>:  ${
-      hcpValue["Number of ICS-LABA Patients"]
-    }</div>
-    <div>row: ${_row}</div>
-    <div>_size: ${_size}</div>
-   
-    <div>value: ${value}</div>
-    <div><strong>${filters[1]}</strong>:  ${hcpValue[filters[1]]}</div>
+    <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue["Number of ICS-LABA Patients"]}</div>
+    <div><strong>${toggleFilter}</strong>:  ${hcpValue[toggleFilter]}</div>
      </div>`;
     },
   };
@@ -84,10 +96,8 @@ const InstitutionalVariation = () => {
 
       return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
     <div><strong>NAME</strong>:  ${hcpValue["Assigned Physician Name"]}</div>
-    <div><strong>Number of ICS-LABA Patients</strong>:  ${
-      hcpValue["Number of ICS-LABA Patients"]
-    }</div>
-    <div><strong>${filters[1]}</strong>:  ${hcpValue[filters[1]]}</div>
+    <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue["Number of ICS-LABA Patients"]}</div>
+    <div><strong>${toggleFilter}</strong>:  ${hcpValue[toggleFilter]}</div>
      </div>`;
     },
   };
@@ -273,7 +283,6 @@ const InstitutionalVariation = () => {
             </div>
           </div>
           <TreeMap
-            needCallbacks={false}
             data={TreeData}
             options={toggleFilter == filters[0] ? options1 : options2}
             handleOpen={handleOpen}

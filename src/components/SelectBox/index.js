@@ -1,11 +1,12 @@
 import React from "react";
 
 const SelectBox = ({labelClassName, className,error,value, input, handleSelect }) => {
+  console.log(labelClassName)
   return (
     <div className={`w-full mt-2 ${className}`}>
       <label
         htmlFor={input.id}
-        className={`block mb-2 text-sm font-medium text-gray-900 dark:text-white ${labelClassName}`}
+        className={`block text-sm font-medium text-gray-900 dark:text-white ${labelClassName ? labelClassName : 'mb-2'}`}
       >
         {input.label}
       </label>
@@ -20,7 +21,7 @@ const SelectBox = ({labelClassName, className,error,value, input, handleSelect }
           Select...
         </option>
         {input.options.map((option) => (
-          <option value={option.id}>{option.name}</option>
+          <option style={{background: option.id == value ? "#c4c4c4" : "transparent"}} value={option.id}>{option.name}</option>
         ))}
       </select>
       <p className="mt-1 text-xs h-6 text-red-700">{error}</p>

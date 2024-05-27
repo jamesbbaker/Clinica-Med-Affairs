@@ -431,7 +431,6 @@ const UnmetNeedDefinition = () => {
       value = item.split("-")[1]
     }
     value = parseInt(value.split("mg")[0])
-    console.log(value)
     return value
   }
 

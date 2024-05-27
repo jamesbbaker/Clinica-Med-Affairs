@@ -1,12 +1,156 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from "react";
 import Table from "../../../components/Table";
 import { getDataStats } from "../../../API/Outputs";
 import { AuthContext } from "../../../context/AuthContext";
 import Popup from "reactjs-popup";
 
+const action_types = {
+  handleFilterChange: "handleFilterChange",
+};
+
+const initialState = {
+  "Number of Asthma Patients": {
+    id: "Number of Asthma Patients",
+    max: 0,
+    min: 0,
+  },
+  "Number of No Spirometry": {
+    id: "Number of No Spirometry",
+    max: 0,
+    min: 0,
+  },
+  "Percent of No Spirometry": {
+    id: "Percent of No Spirometry",
+    max: 0,
+    min: 0,
+  },
+  "Number of No EOS Testing": {
+    id: "Number of No EOS Testing",
+    max: 0,
+    min: 0,
+  },
+  "Percent of No EOS Testing": {
+    id: "Percent of No EOS Testing",
+    max: 0,
+    min: 0,
+  },
+  "Number of No Treatment": {
+    id: "Number of No Treatment",
+    max: 0,
+    min: 0,
+  },
+  "Percent of No Treatment": {
+    id: "Percent of No Treatment",
+    max: 0,
+    min: 0,
+  },
+  "Number of ICS Patients": {
+    id: "Number of ICS Patients",
+    max: 0,
+    min: 0,
+  },
+  "Number of ICS High Steroid Usage": {
+    id: "Number of ICS High Steroid Usage",
+    max: 0,
+    min: 0,
+  },
+  "Percent of ICS High Steroid Usage": {
+    id: "Percent of ICS High Steroid Usage",
+    max: 0,
+    min: 0,
+  },
+  "Number of ICS Exacerbation": {
+    id: "Number of ICS Exacerbation",
+    max: 0,
+    min: 0,
+  },
+  "Number of ICS Exacerbation Failed Escalation": {
+    id: "Number of ICS Exacerbation Failed Escalation",
+    max: 0,
+    min: 0,
+  },
+  "Percent of ICS Exacerbation Failed Escalation": {
+    id: "Percent of ICS Exacerbation Failed Escalation",
+    max: 0,
+    min: 0,
+  },
+  "Number of ICS Escalation Delay": {
+    id: "Number of ICS Escalation Delay",
+    max: 0,
+    min: 0,
+  },
+  "Percent of ICS Escalation Delay": {
+    id: "Percent of ICS Escalation Delay",
+    max: 0,
+    min: 0,
+  },
+  "Number of ICS-LABA Patients": {
+    id: "Number of ICS-LABA Patients",
+    max: 0,
+    min: 0,
+  },
+  "Number of ICS-LABA High Steroid Usage": {
+    id: "Number of ICS-LABA High Steroid Usage",
+    max: 0,
+    min: 0,
+  },
+  "Percent of ICS-LABA High Steroid Usage": {
+    id: "Percent of ICS-LABA High Steroid Usage",
+    max: 0,
+    min: 0,
+  },
+  "Number of ICS-LABA Exacerbation": {
+    id: "Number of ICS-LABA Exacerbation",
+    max: 0,
+    min: 0,
+  },
+  "Number of ICS-LABA Exacerbation Failed Escalation": {
+    id: "Number of ICS-LABA Exacerbation Failed Escalation",
+    max: 0,
+    min: 0,
+  },
+  "Percent of ICS-LABA Exacerbation Failed Escalation": {
+    id: "Percent of ICS-LABA Exacerbation Failed Escalation",
+    max: 0,
+    min: 0,
+  },
+  "Number of ICS-LABA Escalation Delay": {
+    id: "Number of ICS-LABA Escalation Delay",
+    max: 0,
+    min: 0,
+  },
+  "Percent of ICS-LABA Escalation Delay": {
+    id: "Percent of ICS-LABA Escalation Delay",
+    max: 0,
+    min: 0,
+  },
+};
+
+const reducer = (state, action) => {
+  const { type, payload } = action;
+  switch (type) {
+    case action_types.handleFilterChange:
+      return {
+        ...state,
+        [payload.id]: {
+          min: payload.min,
+          max: payload.max,
+        }
+      };
+    default:
+      return state;
+  }
+};
+
 const EligiblePatientLocator = () => {
   const [statsData1, setStatsData1] = useState(null);
-
+  const [filterState, dispatch] = useReducer(reducer, initialState);
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -132,7 +276,6 @@ const EligiblePatientLocator = () => {
   };
 
   const handleRowClicked = (col) => {
-    console.log(col);
     setRowDetails(col.original);
   };
 
@@ -171,27 +314,50 @@ const EligiblePatientLocator = () => {
       // { header: "LAT", accessor: "LAT" },
       // { header: "LONG", accessor: "LONG" },
       // { header: "State ID", accessor: "State ID" },
-      {
-        header: "Number of ICS-LABA Patients",
-        accessor: "Number of ICS-LABA Patients",
-      },
-      {
-        header: "Number of High Steroid Usage Patients",
-        accessor: "Number of High Steroid Usage Patients",
-      },
-      {
-        header: "Number of Severe Exacerbations",
-        accessor: "Number of Severe Exacerbations",
-      },
-      {
-        header: "Percent of High Steroid Usage Patients",
-        accessor: "Percent of High Steroid Usage Patients",
-      },
-      {
-        header: "Percent of Severe Exacerbations",
-        accessor: "Percent of Severe Exacerbations",
-      },
+      
+      // {
+      //   header: "Number of ICS-LABA Patients",
+      //   accessor: "Number of ICS-LABA Patients",
+      // },
+      // {
+      //   header: "Number of High Steroid Usage Patients",
+      //   accessor: "Number of High Steroid Usage Patients",
+      // },
+      // {
+      //   header: "Number of Severe Exacerbations",
+      //   accessor: "Number of Severe Exacerbations",
+      // },
+      // {
+      //   header: "Percent of High Steroid Usage Patients",
+      //   accessor: "Percent of High Steroid Usage Patients",
+      // },
+      // {
+      //   header: "Percent of Severe Exacerbations",
+      //   accessor: "Percent of Severe Exacerbations",
+      // },
     ];
+    ['Number of Asthma Patients',
+    'Number of No Spirometry', 'Percent of No Spirometry',
+    'Number of No EOS Testing', 'Percent of No EOS Testing',
+    'Number of No Treatment', 'Percent of No Treatment',
+    'Number of ICS Patients', 'Number of ICS High Steroid Usage',
+    'Percent of ICS High Steroid Usage', 'Number of ICS Exacerbation',
+    'Number of ICS Exacerbation Failed Escalation',
+    'Percent of ICS Exacerbation Failed Escalation',
+    'Number of ICS Escalation Delay', 'Percent of ICS Escalation Delay',
+    'Number of ICS-LABA Patients', 'Number of ICS-LABA High Steroid Usage',
+    'Percent of ICS-LABA High Steroid Usage',
+    'Number of ICS-LABA Exacerbation',
+    'Number of ICS-LABA Exacerbation Failed Escalation',
+    'Percent of ICS-LABA Exacerbation Failed Escalation',
+    'Number of ICS-LABA Escalation Delay',
+    'Percent of ICS-LABA Escalation Delay'].map(item => (
+      column_names.push({
+        header: item,
+        accessor: item,
+      })
+    ))
+    
 
     const USERS_TABLE_COLUMNS = column_names.map((column) => ({
       Header: column.header,
@@ -255,6 +421,8 @@ const EligiblePatientLocator = () => {
   return statsData1 && !loading ? (
     <>
       <Table
+      dispatch={dispatch}
+        filterState={filterState}
         value={value}
         setValue={setValue}
         selectedIds={selectedIds}

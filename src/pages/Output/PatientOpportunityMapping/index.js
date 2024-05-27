@@ -102,15 +102,26 @@ const reducer = (state, action) => {
 };
 
 const toggleBtns = [
-  {
-    label: "Number of High Steroid Usage Patients",
-    id: "Number of High Steroid Usage Patients",
-  },
-  {
-    label: "Number of Severe Exacerbations",
-    id: "Number of Severe Exacerbations",
-  },
-];
+  'Number of Asthma Patients',
+  'Number of No Spirometry', 'Percent of No Spirometry',
+  'Number of No EOS Testing', 'Percent of No EOS Testing',
+  'Number of No Treatment', 'Percent of No Treatment',
+  'Number of ICS Patients', 'Number of ICS High Steroid Usage',
+  'Percent of ICS High Steroid Usage', 'Number of ICS Exacerbation',
+  'Number of ICS Exacerbation Failed Escalation',
+  'Percent of ICS Exacerbation Failed Escalation',
+  'Number of ICS Escalation Delay', 'Percent of ICS Escalation Delay',
+  'Number of ICS-LABA Patients', 'Number of ICS-LABA High Steroid Usage',
+  'Percent of ICS-LABA High Steroid Usage',
+  'Number of ICS-LABA Exacerbation',
+  'Number of ICS-LABA Exacerbation Failed Escalation',
+  'Percent of ICS-LABA Exacerbation Failed Escalation',
+  'Number of ICS-LABA Escalation Delay',
+  'Percent of ICS-LABA Escalation Delay'
+].map(item => ({
+  label: item,
+  id: item,
+}))
 
 const PatientOpportunityMapping = () => {
   const [currentLevel, setCurrentLevel] = useState("region");
