@@ -55,8 +55,14 @@ const CustomMarker = ({
         levelToggles.region[currentToggle]
       );
 
+   
+
       setMaxValue(_maxValue);
       let coordinates = [feature.LONG, feature.LAT];
+      if (feature.LAT > 90) {
+        return
+      }
+      console.log(coordinates, "coordinates:");
       const marker = new mapboxgl.Marker(markerRef.current, { ...props });
       marker.setLngLat(coordinates);
       marker.addTo(mapRef.current); // Assuming mapRef.current is a valid Mapbox GL map instance

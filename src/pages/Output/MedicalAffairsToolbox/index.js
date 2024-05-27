@@ -6,10 +6,38 @@ import { highestValue } from "../../../utils/MathUtils";
 import SelectBox from "../../../components/SelectBox";
 import { MultiSelect } from "react-multi-select-component";
 
+
+const filterOptions = [
+  "Number of Asthma Patients",
+  "Number of ICS Escalation Delay",
+  "Number of ICS Exacerbation",
+  "Number of ICS Exacerbation Failed Escalation",
+  "Number of ICS High Steroid Usage",
+  "Number of ICS Patients",
+  "Number of ICS-LABA Escalation Delay",
+  "Number of ICS-LABA Exacerbation",
+  "Number of ICS-LABA Exacerbation Failed Escalation",
+  "Number of ICS-LABA High Steroid Usage",
+  "Number of ICS-LABA Patients",
+  "Number of No EOS Testing",
+  "Number of No Spirometry",
+  "Number of No Treatment",
+  "Percent of ICS Escalation Delay",
+  "Percent of ICS Exacerbation Failed Escalation",
+  "Percent of ICS High Steroid Usage",
+  "Percent of ICS-LABA Escalation Delay",
+  'Percent of ICS-LABA Exacerbation Failed Escalation',
+  "Percent of ICS-LABA High Steroid Usage",
+  "Percent of No EOS Testing",
+  "Percent of No Spirometry",
+  "Percent of No Treatment",
+];
+
+
 const initialState = {
   data: null,
-  xLabel: "Percent of High Steroid Usage Patients",
-  yLabel: "Percent of Severe Exacerbations",
+  xLabel: filterOptions[0],
+  yLabel: filterOptions[filterOptions.length - 1],
 };
 
 const actions = {
@@ -35,18 +63,15 @@ const reducer = (state, action) => {
   }
 };
 
-const filterOptions = [
-  "Percent of High Steroid Usage Patients",
-  "Percent of Severe Exacerbations",
-  "Number of High Steroid Usage Patients",
-  "Number of Severe Exacerbations",
-];
 
 const MedicalAffairToolbox = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [rawData, setRawData] = useState(null);
+  const [lineX, setLineX] = useState(10);
+  const [lineY, setLineY] = useState(10);
+
 
   const fetchData = (
     filters = {
@@ -236,7 +261,7 @@ const MedicalAffairToolbox = () => {
             <div>
               <SelectBox
               labelClassName="mb-0"
-                className={"flex items-center"}
+                className={"flex items-center gap-2"}
                 input={{
                   label: "X-axis unmet need select",
                   name: "X-axis unmet need select",
@@ -253,7 +278,8 @@ const MedicalAffairToolbox = () => {
             </div>
             <div>
               <SelectBox
-                className={"flex items-center"}
+                  labelClassName="mb-0"
+                className={"flex items-center gap-2"}
                 input={{
                   label: "Y-axis unmet need select",
                   name: "Y-axis unmet need select",
@@ -270,7 +296,7 @@ const MedicalAffairToolbox = () => {
             </div>
           </div>
 
-          <ScatterChart data={state.data} />
+          <ScatterChart lineX={lineX} lineY={lineY} setLineX={setLineX} setLineY={setLineY} data={state.data} />
         </>
       ) : (
         <div className="w-full h-[400px] grid place-content-center">

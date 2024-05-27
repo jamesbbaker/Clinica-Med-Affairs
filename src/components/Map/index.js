@@ -137,17 +137,99 @@ function MapAddLayer(
 
 const levelToggles = {
   region: {
-    ["Number of High Steroid Usage Patients"]: "Total High Steroid Usage",
-    ["Number of Severe Exacerbations"]: "Total Severe Exacerbations",
+    "Number of Asthma Patients": "Total Asthma Patients",
+    "Number of No Spirometry": "Total No Spirometry",
+    "Percent of No Spirometry": "Percent No Spirometry",
+    "Number of No EOS Testing": "Total No EOS Testing",
+    "Percent of No EOS Testing": "Percent No EOS Testing",
+    "Number of No Treatment": "Total No Treatment",
+    "Percent of No Treatment": "Percent No Treatment",
+    "Number of ICS Patients": "Total ICS Patients",
+    "Number of ICS High Steroid Usage": "Total ICS High Steroid Usage",
+    "Percent of ICS High Steroid Usage": "Percent ICS High Steroid Usage",
+    "Number of ICS Exacerbation": "Total ICS Exacerbations",
+    "Number of ICS Exacerbation Failed Escalation":
+      "Total ICS Exacerbation Failed Escalation",
+    "Percent of ICS Exacerbation Failed Escalation":
+      "Percent ICS Exacerbation Failed Escalation",
+    "Number of ICS Escalation Delay": "Total ICS Escalation Delay",
+    "Percent of ICS Escalation Delay": "Percent ICS Escalation Delay",
+    "Number of ICS-LABA Patients": "Total ICS-LABA Patients",
+    "Number of ICS-LABA High Steroid Usage":
+      "Total ICS-LABA High Steroid Usage",
+    "Percent of ICS-LABA High Steroid Usage":
+      "Percent ICS-LABA High Steroid Usage",
+    "Number of ICS-LABA Exacerbation": "Total ICS-LABA Exacerbations",
+    "Number of ICS-LABA Exacerbation Failed Escalation":
+      "Total ICS-LABA Exacerbation Failed Escalation",
+    "Percent of ICS-LABA Exacerbation Failed Escalation":
+      "Percent ICS-LABA Exacerbation Failed Escalation",
+    "Number of ICS-LABA Escalation Delay": "Total ICS-LABA Escalation Delay",
+    "Percent of ICS-LABA Escalation Delay": "Percent ICS-LABA Escalation Delay",
   },
   state: {
-    ["Number of High Steroid Usage Patients"]: "Total High Steroid Usage",
-    ["Number of Severe Exacerbations"]: "Total Severe Exacerbations",
+    "Number of Asthma Patients": "Total Asthma Patients",
+    "Number of No Spirometry": "Total No Spirometry",
+    "Percent of No Spirometry": "Percent No Spirometry",
+    "Number of No EOS Testing": "Total No EOS Testing",
+    "Percent of No EOS Testing": "Percent No EOS Testing",
+    "Number of No Treatment": "Total No Treatment",
+    "Percent of No Treatment": "Percent No Treatment",
+    "Number of ICS Patients": "Total ICS Patients",
+    "Number of ICS High Steroid Usage": "Total ICS High Steroid Usage",
+    "Percent of ICS High Steroid Usage": "Percent ICS High Steroid Usage",
+    "Number of ICS Exacerbation": "Total ICS Exacerbations",
+    "Number of ICS Exacerbation Failed Escalation":
+      "Total ICS Exacerbation Failed Escalation",
+    "Percent of ICS Exacerbation Failed Escalation":
+      "Percent ICS Exacerbation Failed Escalation",
+    "Number of ICS Escalation Delay": "Total ICS Escalation Delay",
+    "Percent of ICS Escalation Delay": "Percent ICS Escalation Delay",
+    "Number of ICS-LABA Patients": "Total ICS-LABA Patients",
+    "Number of ICS-LABA High Steroid Usage":
+      "Total ICS-LABA High Steroid Usage",
+    "Percent of ICS-LABA High Steroid Usage":
+      "Percent ICS-LABA High Steroid Usage",
+    "Number of ICS-LABA Exacerbation": "Total ICS-LABA Exacerbations",
+    "Number of ICS-LABA Exacerbation Failed Escalation":
+      "Total ICS-LABA Exacerbation Failed Escalation",
+    "Percent of ICS-LABA Exacerbation Failed Escalation":
+      "Percent ICS-LABA Exacerbation Failed Escalation",
+    "Number of ICS-LABA Escalation Delay": "Total ICS-LABA Escalation Delay",
+    "Percent of ICS-LABA Escalation Delay": "Percent ICS-LABA Escalation Delay",
   },
   hcp: {
-    ["Number of High Steroid Usage Patients"]:
-      "Number of High Steroid Usage Patients",
-    ["Number of Severe Exacerbations"]: "Number of Severe Exacerbations",
+    "Number of Asthma Patients": "Number of Asthma Patients",
+    "Number of No Spirometry": "Number of No Spirometry",
+    "Percent of No Spirometry": "Percent of No Spirometry",
+    "Number of No EOS Testing": "Number of No EOS Testing",
+    "Percent of No EOS Testing": "Percent of No EOS Testing",
+    "Number of No Treatment": "Number of No Treatment",
+    "Percent of No Treatment": "Percent of No Treatment",
+    "Number of ICS Patients": "Number of ICS Patients",
+    "Number of ICS High Steroid Usage": "Number of ICS High Steroid Usage",
+    "Percent of ICS High Steroid Usage": "Percent of ICS High Steroid Usage",
+    "Number of ICS Exacerbation": "Number of ICS Exacerbation",
+    "Number of ICS Exacerbation Failed Escalation":
+      "Number of ICS Exacerbation Failed Escalation",
+    "Percent of ICS Exacerbation Failed Escalation":
+      "Percent of ICS Exacerbation Failed Escalation",
+    "Number of ICS Escalation Delay": "Number of ICS Escalation Delay",
+    "Percent of ICS Escalation Delay": "Percent of ICS Escalation Delay",
+    "Number of ICS-LABA Patients": "Number of ICS-LABA Patients",
+    "Number of ICS-LABA High Steroid Usage":
+      "Number of ICS-LABA High Steroid Usage",
+    "Percent of ICS-LABA High Steroid Usage":
+      "Percent of ICS-LABA High Steroid Usage",
+    "Number of ICS-LABA Exacerbation": "Number of ICS-LABA Exacerbation",
+    "Number of ICS-LABA Exacerbation Failed Escalation":
+      "Number of ICS-LABA Exacerbation Failed Escalation",
+    "Percent of ICS-LABA Exacerbation Failed Escalation":
+      "Percent of ICS-LABA Exacerbation Failed Escalation",
+    "Number of ICS-LABA Escalation Delay":
+      "Number of ICS-LABA Escalation Delay",
+    "Percent of ICS-LABA Escalation Delay":
+      "Percent of ICS-LABA Escalation Delay",
   },
 };
 
@@ -189,6 +271,7 @@ const Map = ({
   useEffect(() => {
     if (markers && stateData && layerAdded) {
       let _itemValues = [];
+      console.log(stateData,regionColors,"stateData")
       Object.values(stateData).map((item) => {
         item.forEach((_state) => {
           if (regionColors[_state.Region]) {
@@ -197,11 +280,13 @@ const Map = ({
               regionColors[_state.Region],
             ]);
           } else {
-            console.log(_state);
+            // console.log(_state);
           }
         });
       });
-      window.mapRemoveLayer();
+      if (window.mapRemoveLayer) {
+        window.mapRemoveLayer();
+      }
 
       handleRegionMarkers(markers, "marker2");
       mapRef.current.setPaintProperty("countries", "fill-color", {
@@ -532,7 +617,7 @@ const Map = ({
           );
         } else {
           const item = e.features[0];
-       
+
           setModalDetails(filteredArr);
         }
 
@@ -929,6 +1014,7 @@ const Map = ({
         stateMarkers &&
         currentRegion &&
         stateMarkers.map((marker, index) => {
+          console.log(stateMarkers)
           if (!marker) {
             return;
           }
@@ -946,7 +1032,7 @@ const Map = ({
               onClick={handleClick}
               className={"marker1"}
               mapRef={mapRef}
-              feature={marker}
+            feature={marker}
             />
           );
         })}

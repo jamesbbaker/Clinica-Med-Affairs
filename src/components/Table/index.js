@@ -65,10 +65,12 @@ const BarChartOptions = {
 };
 
 const Table = ({
+  filterState,
   showTopBtnsToggle = false,
   stateName,
   setStateName,
   selectedIds,
+  dispatch,
   setSelectedIds,
   value,
   setValue,
@@ -264,6 +266,17 @@ const Table = ({
     }
   }, [showTopBtnsToggle]);
 
+
+  const handleFilterValueChange = (min, max, id) => {
+    dispatch({
+      type: "handleFilterChange",
+      payload: {
+        min, max, id
+      }
+    })
+  }
+
+
   return (
     <div style={{ marginTop }} className="w-full max-w-full overflow-auto">
       {Title && (
@@ -306,6 +319,14 @@ const Table = ({
             />
           </div>
           <div className="flex items-center gap-2">
+              {Object.values(filterState).map(item => {
+                return  <MinMaxSlider
+                 handleValueChange={(min,max) => handleFilterValueChange(min, max, item.id)}
+                 minValue={item.min}
+                 maxValue={item.max}
+                 label={item.id}
+               />
+              })}
             <MinMaxSlider
               handleValueChange={handelIcsValueChange}
               minValue={icsNumber.min}
