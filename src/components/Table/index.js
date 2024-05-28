@@ -65,6 +65,8 @@ const BarChartOptions = {
 };
 
 const Table = ({
+  setFilterList,
+  filterList,
   filterState,
   showTopBtnsToggle = false,
   stateName,
@@ -236,28 +238,35 @@ const Table = ({
   const handleOrganisationSelect = (val) => {
     setorganisation(val);
   };
+  const firstRef = React.useRef(true)
 
   const handleToggleSelect = (val) => {
-    let headerName = selectedIds.map((item) => item.col.Header);
-    val.map((item) => {
-      !headerName.includes(item.col.Header) && item.col.toggleHidden();
-    });
+    console.log(val)
+    let headerName = firstRef.current ? selectedIds.map((item) => item.col.Header) : []
+
+      val.map((item) => {
+        !headerName.includes(item.col.Header) && item.col.toggleHidden();
+      });
+  
+    firstRef.current = true
     let valHeaders = val.map((item) => item.col.Header);
-    selectedIds.map((item) => {
-      !valHeaders.includes(item.col.Header) && item.col.toggleHidden();
-    });
+
+    selectedIds.map((item) => 
+      !valHeaders.includes(item.col.Header) && item.col.toggleHidden()
+    );
     setSelectedIds(val);
 
     setValue(val);
   };
+
 
   useEffect(() => {
     if (showTopBtnsToggle) {
       let valHeaders = [];
       if (value) {
         valHeaders = value.map((item) => item.col.Header);
+        firstRef.current = false
       }
-
       allColumns
         .filter((item) => selectionBtnsArray.includes(item.id))
         .map(
@@ -266,16 +275,26 @@ const Table = ({
     }
   }, [showTopBtnsToggle]);
 
-
   const handleFilterValueChange = (min, max, id) => {
     dispatch({
       type: "handleFilterChange",
       payload: {
-        min, max, id
-      }
-    })
-  }
+        min,
+        max,
+        id,
+      },
+    });
+  };
 
+  const handleShowFilters = (val) => {
+    dispatch({
+      type: "handleResetFilterValues",
+      payload: {
+        val,
+      },
+    });
+    setFilterList(val);
+  };
 
   return (
     <div style={{ marginTop }} className="w-full max-w-full overflow-auto">
@@ -298,97 +317,112 @@ const Table = ({
       )}
       {totalPage && (
         <div className="flex flex-col items-start">
-          <div className="flex items-center mt-2 gap-8">
-            <label className="font-[600]">Select Unmet Needs</label>
-            <MultiSelect
-              labelledBy=""
-              options={allColumns
-                .filter((item) => selectionBtnsArray.includes(item.id))
-                .map(
-                  (item) =>
-                    isNaN(item) && {
-                      col: item,
-                      label: item.Header,
-                      value: item.Header,
-                    }
-                )
-                .filter((item) => typeof item !== "boolean")}
-              className="w-[10rem] z-[5]"
-              value={value || []}
-              onChange={(val) => handleToggleSelect(val)}
-            />
+          <div className="flex items-center gap-8">
+            <div className="flex items-center mt-2 gap-8">
+              <label className="font-[600]">Select Unmet Needs</label>
+              <MultiSelect
+                labelledBy=""
+                options={allColumns
+                  .filter((item) => selectionBtnsArray.includes(item.id))
+                  .map(
+                    (item) =>
+                      isNaN(item) && {
+                        col: item,
+                        label: item.Header,
+                        value: item.Header,
+                      }
+                  )
+                  .filter((item) => typeof item !== "boolean")}
+                className="w-[10rem] z-[5]"
+                value={value || []}
+                onChange={(val) => handleToggleSelect(val)}
+              />
+            </div>
+            <div className="flex items-center mt-2 gap-8">
+              <label className="font-[600]">Select Filters</label>
+              <MultiSelect
+                labelledBy=""
+                options={Object.values(filterState).map((item) => ({
+                  label: item.id,
+                  value: item.id,
+                }))}
+                className="w-[10rem] z-[5]"
+                value={filterList || []}
+                onChange={(val) => handleShowFilters(val)}
+              />
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-              {Object.values(filterState).map(item => {
-                return  <MinMaxSlider
-                 handleValueChange={(min,max) => handleFilterValueChange(min, max, item.id)}
-                 minValue={item.min}
-                 maxValue={item.max}
-                 label={item.id}
-               />
-              })}
-            <MinMaxSlider
-              handleValueChange={handelIcsValueChange}
-              minValue={icsNumber.min}
-              maxValue={icsNumber.max}
-              label={"Number of ICS-LABA Patients"}
-            />
-            <MinMaxSlider
-              handleValueChange={handleSteroidPercent}
-              minValue={steroidPercent.min}
-              maxValue={steroidPercent.max}
-              label={"Percent of High Steroid Usage Patients"}
-            />
-            <div className="flex items-start flex-col gap-8">
-              <label className="font-[600]">
-                Primary Specialty Description
-              </label>
-              <MultiSelect
-                labelledBy=""
-                options={specialityList
-                  .map((item) => isNaN(item) && { label: item, value: item })
-                  .filter((item) => typeof item !== "boolean")}
-                className="w-[10rem]"
-                value={speciality || []}
-                onChange={(val) => handleMultipleSelect(val)}
-              />
-            </div>
 
-            <div className="flex items-start flex-col gap-8">
-              <label className="font-[600]">Region</label>
-              <MultiSelect
-                labelledBy=""
-                options={regionList
-                  .map((item) => isNaN(item) && { label: item, value: item })
-                  .filter((item) => typeof item !== "boolean")}
-                className="w-[10rem]"
-                value={region || []}
-                onChange={(val) => handleRegionSelect(val)}
-              />
+          <div className="flex flex-col items-start gap-8">
+            <div className="flex items-center gap-4">
+              {Object.values(filterState).map((item) => {
+                let _newFilterValue = filterList.map((item) => item.value);
+                if (!_newFilterValue.includes(item.id)) {
+                  return;
+                }
+                return (
+                  <MinMaxSlider
+                    handleValueChange={(min, max) =>
+                      handleFilterValueChange(min, max, item.id)
+                    }
+                    minValue={item.min}
+                    maxValue={item.max}
+                    label={item.id}
+                  />
+                );
+              })}
             </div>
-            <div className="flex items-start flex-col gap-8">
-              <label className="font-[600]">Organization</label>
-              <MultiSelect
-                labelledBy=""
-                options={organisationList
-                  .map((item) => isNaN(item) && { label: item, value: item })
-                  .filter((item) => typeof item !== "boolean")}
-                className="w-[10rem]"
-                value={organisation || []}
-                onChange={(val) => handleOrganisationSelect(val)}
-              />
-            </div>
-            <div className="flex items-start flex-col gap-8">
-              <label className="font-[600]">State Name</label>
-              <MultiSelect
-                labelledBy=""
-                options={stateNameList
-                  .map((item) => isNaN(item) && { label: item, value: item })
-                  .filter((item) => typeof item !== "boolean")}
-                className="w-[10rem]"
-                value={stateName || []}
-                onChange={(val) => handleStateName(val)}
-              />
+            <div className="flex mt-2 items-center gap-4">
+              <div className="flex items-center gap-8">
+                <label className="font-[600]">
+                  Primary Specialty Description
+                </label>
+                <MultiSelect
+                  labelledBy=""
+                  options={specialityList
+                    .map((item) => isNaN(item) && { label: item, value: item })
+                    .filter((item) => typeof item !== "boolean")}
+                  className="w-[10rem]"
+                  value={speciality || []}
+                  onChange={(val) => handleMultipleSelect(val)}
+                />
+              </div>
+              <div className="flex items-center gap-8">
+                <label className="font-[600]">Region</label>
+                <MultiSelect
+                  labelledBy=""
+                  options={regionList
+                    .map((item) => isNaN(item) && { label: item, value: item })
+                    .filter((item) => typeof item !== "boolean")}
+                  className="w-[10rem]"
+                  value={region || []}
+                  onChange={(val) => handleRegionSelect(val)}
+                />
+              </div>
+              <div className="flex items-center gap-8">
+                <label className="font-[600]">Organization</label>
+                <MultiSelect
+                  labelledBy=""
+                  options={organisationList
+                    .map((item) => isNaN(item) && { label: item, value: item })
+                    .filter((item) => typeof item !== "boolean")}
+                  className="w-[10rem]"
+                  value={organisation || []}
+                  onChange={(val) => handleOrganisationSelect(val)}
+                />
+              </div>
+              <div className="flex items-center gap-8">
+                <label className="font-[600]">State Name</label>
+                <MultiSelect
+                  labelledBy=""
+                  options={stateNameList
+                    .map((item) => isNaN(item) && { label: item, value: item })
+                    .filter((item) => typeof item !== "boolean")}
+                  className="w-[10rem]"
+                  value={stateName || []}
+                  onChange={(val) => handleStateName(val)}
+                />
+              </div>
             </div>
           </div>
         </div>

@@ -18,6 +18,9 @@ ChartJS.register(LinearScale, PointElement, Tooltip, Legend, BubbleController);
 const arbitraryLinePlugin = {
   id: "arbitraryLine",
   afterDraw: (chart) => {
+    if (chart.config && chart.config.options && chart.config.options.plugins && chart.config.options.plugins.arbitraryLine) {
+
+  
     const {
       ctx,
       chartArea: { top, bottom, left, right },
@@ -49,6 +52,7 @@ const arbitraryLinePlugin = {
       ctx.stroke();
       ctx.restore();
     }
+  }
   },
 };
 
