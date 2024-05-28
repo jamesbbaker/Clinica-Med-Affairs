@@ -48,21 +48,27 @@ const CustomMarker = ({
     return radius;
   }
 
+  function convertToDecimal(num) {
+    console.log(num)
+    let numString = num.toString();
+    let length = numString.length;
+    let divisor = Math.pow(10, length - 2);
+    let decimalNumber = num / divisor;
+    return decimalNumber;
+}
   useEffect(() => {
     if (markerRef.current && markersData) {
       const _maxValue = highestValue(
         markersData,
         levelToggles.region[currentToggle]
       );
-
-   
-
       setMaxValue(_maxValue);
-      let coordinates = [feature.LONG, feature.LAT];
-      if (feature.LAT > 90) {
-        return
+      let LATITUDE  =feature.LAT
+      if (LATITUDE>90) {
+        LATITUDE  = convertToDecimal(feature.LAT);
       }
-      console.log(coordinates, "coordinates:");
+      let coordinates = [feature.LONG, LATITUDE];
+      console.log(coordinates)
       const marker = new mapboxgl.Marker(markerRef.current, { ...props });
       marker.setLngLat(coordinates);
       marker.addTo(mapRef.current); // Assuming mapRef.current is a valid Mapbox GL map instance

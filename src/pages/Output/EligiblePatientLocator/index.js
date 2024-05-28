@@ -12,6 +12,7 @@ import Popup from "reactjs-popup";
 
 const action_types = {
   handleFilterChange: "handleFilterChange",
+  handleResetFilterValues: "handleResetFilterValues",
 };
 
 const initialState = {
@@ -139,9 +140,25 @@ const reducer = (state, action) => {
       return {
         ...state,
         [payload.id]: {
+          id: payload.id,
           min: payload.min,
           max: payload.max,
+        },
+      };
+    case action_types.handleResetFilterValues:
+      let arrayVal = payload.val
+      let _prevState = {...state}
+      let _filters = {}
+      arrayVal.forEach(item => {
+        _filters[item.value] = {
+          id: _prevState[item.value].id,
+          min: _prevState[item.value].min,
+          max: _prevState[item.value].max,
         }
+      })
+      return {
+        ...initialState,
+        ..._filters
       };
     default:
       return state;
@@ -149,6 +166,7 @@ const reducer = (state, action) => {
 };
 
 const EligiblePatientLocator = () => {
+  const [filterList, setFilterList] = useState([]);
   const [statsData1, setStatsData1] = useState(null);
   const [filterState, dispatch] = useReducer(reducer, initialState);
   const { accessToken, refreshToken } = useContext(AuthContext);
@@ -186,8 +204,6 @@ const EligiblePatientLocator = () => {
     size = 5,
     _sortBy,
     _sortOrder,
-    ics_patients,
-    steroid_percent,
     _speciality,
     _region,
     _stateName,
@@ -220,16 +236,161 @@ const EligiblePatientLocator = () => {
 
     // Add other query parameters as needed
     const additionalParams = {
-      max_ics_laba_patients:
-        ics_patients?.max && ics_patients.max !== 0
-          ? ics_patients.max
+      max_num_asthma_patients:
+        filterState["Number of Asthma Patients"]?.max &&
+        filterState["Number of Asthma Patients"].max !== 0
+          ? filterState["Number of Asthma Patients"].max
           : undefined,
-      min_ics_laba_patients: ics_patients?.min,
-      max_percent_high_steroid:
-        steroid_percent?.max && steroid_percent.max !== 0
-          ? steroid_percent.max
+      min_num_asthma_patients: filterState["Number of Asthma Patients"].min,
+      max_num_no_spirometry:
+        filterState["Number of No Spirometry"]?.max &&
+        filterState["Number of No Spirometry"].max !== 0
+          ? filterState["Number of No Spirometry"].max
           : undefined,
-      min_percent_high_steroid: steroid_percent?.min,
+      min_num_no_spirometry: filterState["Number of No Spirometry"].min,
+      max_percent_no_spirometry:
+        filterState["Percent of No Spirometry"]?.max &&
+        filterState["Percent of No Spirometry"].max !== 0
+          ? filterState["Percent of No Spirometry"].max
+          : undefined,
+      min_percent_no_spirometry: filterState["Percent of No Spirometry"].min,
+      max_num_no_eos_testing:
+        filterState["Number of No EOS Testing"]?.max &&
+        filterState["Number of No EOS Testing"].max !== 0
+          ? filterState["Number of No EOS Testing"].max
+          : undefined,
+      min_num_no_eos_testing: filterState["Number of No EOS Testing"].min,
+      max_percent_no_eos_testing:
+        filterState["Percent of No EOS Testing"]?.max &&
+        filterState["Percent of No EOS Testing"].max !== 0
+          ? filterState["Percent of No EOS Testing"].max
+          : undefined,
+      min_percent_no_eos_testing: filterState["Percent of No EOS Testing"].min,
+      max_num_no_treatment:
+        filterState["Number of No Treatment"]?.max &&
+        filterState["Number of No Treatment"].max !== 0
+          ? filterState["Number of No Treatment"].max
+          : undefined,
+      min_num_no_treatment: filterState["Number of No Treatment"].min,
+      max_percent_no_treatment:
+        filterState["Percent of No Treatment"]?.max &&
+        filterState["Percent of No Treatment"].max !== 0
+          ? filterState["Percent of No Treatment"].max
+          : undefined,
+      min_percent_no_treatment: filterState["Percent of No Treatment"].min,
+      max_num_ics_patients:
+        filterState["Number of ICS Patients"]?.max &&
+        filterState["Number of ICS Patients"].max !== 0
+          ? filterState["Number of ICS Patients"].max
+          : undefined,
+      min_num_ics_patients: filterState["Number of ICS Patients"].min,
+      max_num_ics_high_steroid_usage:
+        filterState["Number of ICS High Steroid Usage"]?.max &&
+        filterState["Number of ICS High Steroid Usage"].max !== 0
+          ? filterState["Number of ICS High Steroid Usage"].max
+          : undefined,
+      min_num_ics_high_steroid_usage:
+        filterState["Number of ICS High Steroid Usage"].min,
+      max_percent_ics_high_steroid_usage:
+        filterState["Percent of ICS High Steroid Usage"]?.max &&
+        filterState["Percent of ICS High Steroid Usage"].max !== 0
+          ? filterState["Percent of ICS High Steroid Usage"].max
+          : undefined,
+      min_percent_ics_high_steroid_usage:
+        filterState["Percent of ICS High Steroid Usage"].min,
+      max_num_ics_exacerbation:
+        filterState["Number of ICS Exacerbation"]?.max &&
+        filterState["Number of ICS Exacerbation"].max !== 0
+          ? filterState["Number of ICS Exacerbation"].max
+          : undefined,
+      min_num_ics_exacerbation: filterState["Number of ICS Exacerbation"].min,
+      max_num_ics_exacerbation_failed_escalation:
+        filterState["Number of ICS Exacerbation Failed Escalation"]?.max &&
+        filterState["Number of ICS Exacerbation Failed Escalation"].max !== 0
+          ? filterState["Number of ICS Exacerbation Failed Escalation"].max
+          : undefined,
+      min_num_ics_exacerbation_failed_escalation:
+        filterState["Number of ICS Exacerbation Failed Escalation"].min,
+      max_percent_ics_exacerbation_failed_escalation:
+        filterState["Percent of ICS Exacerbation Failed Escalation"]?.max &&
+        filterState["Percent of ICS Exacerbation Failed Escalation"].max !== 0
+          ? filterState["Percent of ICS Exacerbation Failed Escalation"].max
+          : undefined,
+      min_percent_ics_exacerbation_failed_escalation:
+        filterState["Percent of ICS Exacerbation Failed Escalation"].min,
+      max_num_ics_escalation_delay:
+        filterState["Number of ICS Escalation Delay"]?.max &&
+        filterState["Number of ICS Escalation Delay"].max !== 0
+          ? filterState["Number of ICS Escalation Delay"].max
+          : undefined,
+      min_num_ics_escalation_delay:
+        filterState["Number of ICS Escalation Delay"].min,
+      max_percent_ics_escalation_delay:
+        filterState["Percent of ICS Escalation Delay"]?.max &&
+        filterState["Percent of ICS Escalation Delay"].max !== 0
+          ? filterState["Percent of ICS Escalation Delay"].max
+          : undefined,
+      min_percent_ics_escalation_delay:
+        filterState["Percent of ICS Escalation Delay"].min,
+      max_num_ics_laba_patients:
+        filterState["Number of ICS-LABA Patients"]?.max &&
+        filterState["Number of ICS-LABA Patients"].max !== 0
+          ? filterState["Number of ICS-LABA Patients"].max
+          : undefined,
+      min_num_ics_laba_patients: filterState["Number of ICS-LABA Patients"].min,
+      max_num_ics_laba_high_steroid_usage:
+        filterState["Number of ICS-LABA High Steroid Usage"]?.max &&
+        filterState["Number of ICS-LABA High Steroid Usage"].max !== 0
+          ? filterState["Number of ICS-LABA High Steroid Usage"].max
+          : undefined,
+      min_num_ics_laba_high_steroid_usage:
+        filterState["Number of ICS-LABA High Steroid Usage"].min,
+      max_percent_ics_laba_high_steroid_usage:
+        filterState["Percent of ICS-LABA High Steroid Usage"]?.max &&
+        filterState["Percent of ICS-LABA High Steroid Usage"].max !== 0
+          ? filterState["Percent of ICS-LABA High Steroid Usage"].max
+          : undefined,
+      min_percent_ics_laba_high_steroid_usage:
+        filterState["Percent of ICS-LABA High Steroid Usage"].min,
+      max_num_ics_laba_exacerbation:
+        filterState["Number of ICS-LABA Exacerbation"]?.max &&
+        filterState["Number of ICS-LABA Exacerbation"].max !== 0
+          ? filterState["Number of ICS-LABA Exacerbation"].max
+          : undefined,
+      min_num_ics_laba_exacerbation:
+        filterState["Number of ICS-LABA Exacerbation"].min,
+      max_num_ics_laba_exacerbation_failed_escalation:
+        filterState["Number of ICS-LABA Exacerbation Failed Escalation"]?.max &&
+        filterState["Number of ICS-LABA Exacerbation Failed Escalation"].max !==
+          0
+          ? filterState["Number of ICS-LABA Exacerbation Failed Escalation"].max
+          : undefined,
+      min_num_ics_laba_exacerbation_failed_escalation:
+        filterState["Number of ICS-LABA Exacerbation Failed Escalation"].min,
+      max_percent_ics_laba_exacerbation_failed_escalation:
+        filterState["Percent of ICS-LABA Exacerbation Failed Escalation"]
+          ?.max &&
+        filterState["Percent of ICS-LABA Exacerbation Failed Escalation"]
+          .max !== 0
+          ? filterState["Percent of ICS-LABA Exacerbation Failed Escalation"]
+              .max
+          : undefined,
+      min_percent_ics_laba_exacerbation_failed_escalation:
+        filterState["Percent of ICS-LABA Exacerbation Failed Escalation"].min,
+      max_num_ics_laba_escalation_delay:
+        filterState["Number of ICS-LABA Escalation Delay"]?.max &&
+        filterState["Number of ICS-LABA Escalation Delay"].max !== 0
+          ? filterState["Number of ICS-LABA Escalation Delay"].max
+          : undefined,
+      min_num_ics_laba_escalation_delay:
+        filterState["Number of ICS-LABA Escalation Delay"].min,
+      max_percent_ics_laba_escalation_delay:
+        filterState["Percent of ICS-LABA Escalation Delay"]?.max &&
+        filterState["Percent of ICS-LABA Escalation Delay"].max !== 0
+          ? filterState["Percent of ICS-LABA Escalation Delay"].max
+          : undefined,
+      min_percent_ics_laba_escalation_delay:
+        filterState["Percent of ICS-LABA Escalation Delay"].min,
       sort_by: _sortBy,
       sort_order: _sortOrder,
       page,
@@ -248,6 +409,8 @@ const EligiblePatientLocator = () => {
     const finalUrl = `${queryString}${
       urlParams.length > 0 ? "&" : ""
     }${urlParams}`;
+
+    console.log(finalUrl);
 
     getDataStats(finalUrl, accessToken, refreshToken)
       .then((res) => {
@@ -314,7 +477,7 @@ const EligiblePatientLocator = () => {
       // { header: "LAT", accessor: "LAT" },
       // { header: "LONG", accessor: "LONG" },
       // { header: "State ID", accessor: "State ID" },
-      
+
       // {
       //   header: "Number of ICS-LABA Patients",
       //   accessor: "Number of ICS-LABA Patients",
@@ -336,28 +499,36 @@ const EligiblePatientLocator = () => {
       //   accessor: "Percent of Severe Exacerbations",
       // },
     ];
-    ['Number of Asthma Patients',
-    'Number of No Spirometry', 'Percent of No Spirometry',
-    'Number of No EOS Testing', 'Percent of No EOS Testing',
-    'Number of No Treatment', 'Percent of No Treatment',
-    'Number of ICS Patients', 'Number of ICS High Steroid Usage',
-    'Percent of ICS High Steroid Usage', 'Number of ICS Exacerbation',
-    'Number of ICS Exacerbation Failed Escalation',
-    'Percent of ICS Exacerbation Failed Escalation',
-    'Number of ICS Escalation Delay', 'Percent of ICS Escalation Delay',
-    'Number of ICS-LABA Patients', 'Number of ICS-LABA High Steroid Usage',
-    'Percent of ICS-LABA High Steroid Usage',
-    'Number of ICS-LABA Exacerbation',
-    'Number of ICS-LABA Exacerbation Failed Escalation',
-    'Percent of ICS-LABA Exacerbation Failed Escalation',
-    'Number of ICS-LABA Escalation Delay',
-    'Percent of ICS-LABA Escalation Delay'].map(item => (
+    [
+      "Number of Asthma Patients",
+      "Number of No Spirometry",
+      "Percent of No Spirometry",
+      "Number of No EOS Testing",
+      "Percent of No EOS Testing",
+      "Number of No Treatment",
+      "Percent of No Treatment",
+      "Number of ICS Patients",
+      "Number of ICS High Steroid Usage",
+      "Percent of ICS High Steroid Usage",
+      "Number of ICS Exacerbation",
+      "Number of ICS Exacerbation Failed Escalation",
+      "Percent of ICS Exacerbation Failed Escalation",
+      "Number of ICS Escalation Delay",
+      "Percent of ICS Escalation Delay",
+      "Number of ICS-LABA Patients",
+      "Number of ICS-LABA High Steroid Usage",
+      "Percent of ICS-LABA High Steroid Usage",
+      "Number of ICS-LABA Exacerbation",
+      "Number of ICS-LABA Exacerbation Failed Escalation",
+      "Percent of ICS-LABA Exacerbation Failed Escalation",
+      "Number of ICS-LABA Escalation Delay",
+      "Percent of ICS-LABA Escalation Delay",
+    ].map((item) =>
       column_names.push({
         header: item,
         accessor: item,
       })
-    ))
-    
+    );
 
     const USERS_TABLE_COLUMNS = column_names.map((column) => ({
       Header: column.header,
@@ -416,12 +587,12 @@ const EligiblePatientLocator = () => {
     );
   };
 
-  console.log(rowDetails);
-
   return statsData1 && !loading ? (
     <>
       <Table
-      dispatch={dispatch}
+        dispatch={dispatch}
+        setFilterList={setFilterList}
+        filterList={filterList}
         filterState={filterState}
         value={value}
         setValue={setValue}
@@ -462,11 +633,29 @@ const EligiblePatientLocator = () => {
           pageIndex: 0,
         }}
         selectionBtnsArray={[
+          "Number of Asthma Patients",
+          "Number of No Spirometry",
+          "Percent of No Spirometry",
+          "Number of No EOS Testing",
+          "Percent of No EOS Testing",
+          "Number of No Treatment",
+          "Percent of No Treatment",
+          "Number of ICS Patients",
+          "Number of ICS High Steroid Usage",
+          "Percent of ICS High Steroid Usage",
+          "Number of ICS Exacerbation",
+          "Number of ICS Exacerbation Failed Escalation",
+          "Percent of ICS Exacerbation Failed Escalation",
+          "Number of ICS Escalation Delay",
+          "Percent of ICS Escalation Delay",
           "Number of ICS-LABA Patients",
-          "Number of High Steroid Usage Patients",
-          "Number of Severe Exacerbations",
-          "Percent of High Steroid Usage Patients",
-          "Percent of Severe Exacerbations",
+          "Number of ICS-LABA High Steroid Usage",
+          "Percent of ICS-LABA High Steroid Usage",
+          "Number of ICS-LABA Exacerbation",
+          "Number of ICS-LABA Exacerbation Failed Escalation",
+          "Percent of ICS-LABA Exacerbation Failed Escalation",
+          "Number of ICS-LABA Escalation Delay",
+          "Percent of ICS-LABA Escalation Delay",
         ]}
         showSelectionBtns={true}
         TableData={statsData1}

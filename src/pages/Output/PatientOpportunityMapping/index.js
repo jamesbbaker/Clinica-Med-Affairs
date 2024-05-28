@@ -10,6 +10,7 @@ import Map from "../../../components/Map";
 import { AuthContext } from "../../../context/AuthContext";
 import { getDataStats } from "../../../API/Outputs";
 import mapDataJson from "../../../components/Map/data.json";
+import SelectBox from "../../../components/SelectBox";
 const options = {
   indexAxis: "y",
   elements: {
@@ -102,26 +103,33 @@ const reducer = (state, action) => {
 };
 
 const toggleBtns = [
-  'Number of Asthma Patients',
-  'Number of No Spirometry', 'Percent of No Spirometry',
-  'Number of No EOS Testing', 'Percent of No EOS Testing',
-  'Number of No Treatment', 'Percent of No Treatment',
-  'Number of ICS Patients', 'Number of ICS High Steroid Usage',
-  'Percent of ICS High Steroid Usage', 'Number of ICS Exacerbation',
-  'Number of ICS Exacerbation Failed Escalation',
-  'Percent of ICS Exacerbation Failed Escalation',
-  'Number of ICS Escalation Delay', 'Percent of ICS Escalation Delay',
-  'Number of ICS-LABA Patients', 'Number of ICS-LABA High Steroid Usage',
-  'Percent of ICS-LABA High Steroid Usage',
-  'Number of ICS-LABA Exacerbation',
-  'Number of ICS-LABA Exacerbation Failed Escalation',
-  'Percent of ICS-LABA Exacerbation Failed Escalation',
-  'Number of ICS-LABA Escalation Delay',
-  'Percent of ICS-LABA Escalation Delay'
-].map(item => ({
+  "Number of Asthma Patients",
+  "Number of No Spirometry",
+  "Percent of No Spirometry",
+  "Number of No EOS Testing",
+  "Percent of No EOS Testing",
+  "Number of No Treatment",
+  "Percent of No Treatment",
+  "Number of ICS Patients",
+  "Number of ICS High Steroid Usage",
+  "Percent of ICS High Steroid Usage",
+  "Number of ICS Exacerbation",
+  "Number of ICS Exacerbation Failed Escalation",
+  "Percent of ICS Exacerbation Failed Escalation",
+  "Number of ICS Escalation Delay",
+  "Percent of ICS Escalation Delay",
+  "Number of ICS-LABA Patients",
+  "Number of ICS-LABA High Steroid Usage",
+  "Percent of ICS-LABA High Steroid Usage",
+  "Number of ICS-LABA Exacerbation",
+  "Number of ICS-LABA Exacerbation Failed Escalation",
+  "Percent of ICS-LABA Exacerbation Failed Escalation",
+  "Number of ICS-LABA Escalation Delay",
+  "Percent of ICS-LABA Escalation Delay",
+].map((item) => ({
   label: item,
   id: item,
-}))
+}));
 
 const PatientOpportunityMapping = () => {
   const [currentLevel, setCurrentLevel] = useState("region");
@@ -135,10 +143,8 @@ const PatientOpportunityMapping = () => {
   const currentStateClicked = useRef(null);
   const [currentToggle, setCurrentToggle] = useState(toggleBtns[0].id);
   const [loading, setLoading] = useState(true);
-  const [resetMap,setResetMap] = useState(false)
-  const [summaryData, setSummaryData] = useState(null)
-
-
+  const [resetMap, setResetMap] = useState(false);
+  const [summaryData, setSummaryData] = useState(null);
 
   useEffect(() => {
     getDataStats("region_level_data", accessToken, refreshToken)
@@ -155,6 +161,7 @@ const PatientOpportunityMapping = () => {
       .then(async (res) => {
         if (res) {
           let _data = JSON.parse(res.replaceAll("NaN", 0));
+          console.log(_data.data);
           let StateByRegion = {};
           _data.data.map((entry) => {
             if (entry.Region != 0) {
@@ -175,21 +182,23 @@ const PatientOpportunityMapping = () => {
       .catch((err) => {
         console.log(err, "err");
       });
-    getDataStats("national_data", accessToken, refreshToken).then(async (res) => {
-      if (res) { 
-        let data_1_labels = [
-          "Total High Steroid Usage",
-          "Total Severe Exacerbations",
-        ];
-        let data_2_labels = [
-          "Percent High Steroid Usage",
-          "Percent Severe Exacerbations",
-        ];
-        setChartDataValue(setData1, data_1_labels, [res.summary_data]);
-        setChartDataValue(setData2, data_2_labels, [res.summary_data]);
-        setSummaryData([res.summary_data])
+    getDataStats("national_data", accessToken, refreshToken).then(
+      async (res) => {
+        if (res) {
+          let data_1_labels = [
+            "Total High Steroid Usage",
+            "Total Severe Exacerbations",
+          ];
+          let data_2_labels = [
+            "Percent High Steroid Usage",
+            "Percent Severe Exacerbations",
+          ];
+          setChartDataValue(setData1, data_1_labels, [res.summary_data]);
+          setChartDataValue(setData2, data_2_labels, [res.summary_data]);
+          setSummaryData([res.summary_data]);
+        }
       }
-    })
+    );
   }, []);
 
   useEffect(() => {
@@ -242,17 +251,36 @@ const PatientOpportunityMapping = () => {
       type: "FeatureCollection",
       features: filteredFeatures,
     };
-    
-      let _filteredArray = regionData.filter(
+
+    let _filteredArray = regionData.filter(
       (item) => item["Region"] === _region
     );
     let data_1_labels = [
-      "Total High Steroid Usage",
-      "Total Severe Exacerbations",
+      "Total Asthma Patients",
+      "Total No Spirometry",
+      "Total No EOS Testing",
+      "Total No Treatment",
+      "Total ICS Patients",
+      "Total ICS High Steroid Usage",
+      "Total ICS Exacerbations",
+      "Total ICS Exacerbation Failed Escalation",
+      "Total ICS Escalation Delay",
+      "Total ICS-LABA Patients",
+      "Total ICS-LABA High Steroid Usage",
+      "Total ICS-LABA Exacerbations",
+      "Total ICS-LABA Exacerbation Failed Escalation",
+      "Total ICS-LABA Escalation Delay",
     ];
     let data_2_labels = [
-      "Percent High Steroid Usage",
-      "Percent Severe Exacerbations",
+      "Percent No Spirometry",
+      "Percent No EOS Testing",
+      "Percent No Treatment",
+      "Percent ICS High Steroid Usage",
+      "Percent ICS Exacerbation Failed Escalation",
+      "Percent ICS Escalation Delay",
+      "Percent ICS-LABA High Steroid Usage",
+      "Percent ICS-LABA Exacerbation Failed Escalation",
+      "Percent ICS-LABA Escalation Delay",
     ];
     setChartDataValue(setData1, data_1_labels, _filteredArray);
     setChartDataValue(setData2, data_2_labels, _filteredArray);
@@ -287,16 +315,35 @@ const PatientOpportunityMapping = () => {
       (item) => item["State Name"] === clickedState
     );
     let data_1_labels = [
-      "Total High Steroid Usage",
-      "Total Severe Exacerbations",
+      "Total Asthma Patients",
+      "Total No Spirometry",
+      "Total No EOS Testing",
+      "Total No Treatment",
+      "Total ICS Patients",
+      "Total ICS High Steroid Usage",
+      "Total ICS Exacerbations",
+      "Total ICS Exacerbation Failed Escalation",
+      "Total ICS Escalation Delay",
+      "Total ICS-LABA Patients",
+      "Total ICS-LABA High Steroid Usage",
+      "Total ICS-LABA Exacerbations",
+      "Total ICS-LABA Exacerbation Failed Escalation",
+      "Total ICS-LABA Escalation Delay",
     ];
     let data_2_labels = [
-      "Percent High Steroid Usage",
-      "Percent Severe Exacerbations",
+      "Percent No Spirometry",
+      "Percent No EOS Testing",
+      "Percent No Treatment",
+      "Percent ICS High Steroid Usage",
+      "Percent ICS Exacerbation Failed Escalation",
+      "Percent ICS Escalation Delay",
+      "Percent ICS-LABA High Steroid Usage",
+      "Percent ICS-LABA Exacerbation Failed Escalation",
+      "Percent ICS-LABA Escalation Delay",
     ];
     setChartDataValue(setData1, data_1_labels, _filteredArray);
     setChartDataValue(setData2, data_2_labels, _filteredArray);
-  
+
     handleStateLevelData(state, clickedState);
 
     mapRef.current.flyTo({
@@ -307,28 +354,47 @@ const PatientOpportunityMapping = () => {
   };
 
   const handleReset = () => {
-    setResetMap(true)
+    setResetMap(true);
     setTimeout(() => {
-      setResetMap(false)
+      setResetMap(false);
       setCurrentLevel("region");
       setCurrentToggle(toggleBtns[0].id);
-      setMarkedStates(null)
-      currentStateClicked.current = null
+      setMarkedStates(null);
+      currentStateClicked.current = null;
       let data_1_labels = [
-        "Total High Steroid Usage",
-        "Total Severe Exacerbations",
+        "Total Asthma Patients",
+        "Total No Spirometry",
+        "Total No EOS Testing",
+        "Total No Treatment",
+        "Total ICS Patients",
+        "Total ICS High Steroid Usage",
+        "Total ICS Exacerbations",
+        "Total ICS Exacerbation Failed Escalation",
+        "Total ICS Escalation Delay",
+        "Total ICS-LABA Patients",
+        "Total ICS-LABA High Steroid Usage",
+        "Total ICS-LABA Exacerbations",
+        "Total ICS-LABA Exacerbation Failed Escalation",
+        "Total ICS-LABA Escalation Delay",
       ];
       let data_2_labels = [
-        "Percent High Steroid Usage",
-        "Percent Severe Exacerbations",
+        "Percent No Spirometry",
+        "Percent No EOS Testing",
+        "Percent No Treatment",
+        "Percent ICS High Steroid Usage",
+        "Percent ICS Exacerbation Failed Escalation",
+        "Percent ICS Escalation Delay",
+        "Percent ICS-LABA High Steroid Usage",
+        "Percent ICS-LABA Exacerbation Failed Escalation",
+        "Percent ICS-LABA Escalation Delay",
       ];
       setChartDataValue(setData1, data_1_labels, summaryData);
       setChartDataValue(setData2, data_2_labels, summaryData);
-    }, 100)
-  }
+    }, 100);
+  };
 
-  const handleToggle = (id) => {
-    setCurrentToggle(id);
+  const handleToggle = (e) => {
+    setCurrentToggle(e.target.value);
   };
 
   return (
@@ -341,44 +407,55 @@ const PatientOpportunityMapping = () => {
           <div className="w-6 h-6 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
         </div>
       </div>
-      <div style={{ opacity: loading ? 0 : 1 }} >
-        <div className="flex items-center justify-between"><div onClick={handleReset} className="font-500 cursor-pointer hover:bg-[#c3c3c3] p-1 border border-[#000]">RESET MAP</div>
-        <div className="gap-5 cursor-pointer flex py-2">
-          {toggleBtns.map((btn) => {
-            return (
-              <div
-              key={btn.label}
-                onClick={() => handleToggle(btn.id)}
-                className={`${
-                  btn.id == currentToggle ? "bg-[#c3c3c3]" : "bg-[transparent]"
-                } hover:bg-[#c3c3c3] p-1`}
-              >
-                {btn.label}
-              </div>
-            );
-          })}
+      <div style={{ opacity: loading ? 0 : 1 }}>
+        <div className="flex items-center justify-between">
+          <div
+            onClick={handleReset}
+            className="font-500 cursor-pointer hover:bg-[#c3c3c3] p-1 border border-[#000]"
+          >
+            RESET MAP
+          </div>
+          <div className="flex mb-6 items-center gap-8">
+            <SelectBox
+              labelClassName="mb-0"
+              className={"flex items-center"}
+              input={{
+                label: "Select Unmet Needs",
+                id: "unmet",
+                options: toggleBtns.map((item) => ({
+                  name: item.id,
+                  value: item.label,
+                })),
+              }}
+              handleSelect={(e) => handleToggle(e)}
+              value={currentToggle}
+            />
+          </div>
         </div>
-        </div>
-       {resetMap ? <div
-        style={{ display: loading ? "grid" : "none" }}
-        className="w-full h-[400px] grid place-content-center"
-      >
-        <div className="flex justify-center items-center h-24">
-          <div className="w-6 h-6 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
-        </div>
-      </div> : <Map
-          currentLevel={currentLevel}
-          setCurrentLevel={setCurrentLevel}
-          currentToggle={currentToggle}
-          stateClicked={stateClicked}
-          stateData={stateData}
-          markedStates={markedStates}
-          markerClickedFn={markerClicked}
-          markers={regionData}
-          markersEnabled={false}
-        />}
+        {resetMap ? (
+          <div
+            style={{ display: loading ? "grid" : "none" }}
+            className="w-full h-[400px] grid place-content-center"
+          >
+            <div className="flex justify-center items-center h-24">
+              <div className="w-6 h-6 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
+            </div>
+          </div>
+        ) : (
+          <Map
+            currentLevel={currentLevel}
+            setCurrentLevel={setCurrentLevel}
+            currentToggle={currentToggle}
+            stateClicked={stateClicked}
+            stateData={stateData}
+            markedStates={markedStates}
+            markerClickedFn={markerClicked}
+            markers={regionData}
+            markersEnabled={false}
+          />
+        )}
         <div className="text-md font-medium mt-4">
-        National Map of Unmet need
+          National Map of Unmet need
         </div>
         <div className="grid grid-cols-2 ">
           {data1 && <BarChart data={data1} />}

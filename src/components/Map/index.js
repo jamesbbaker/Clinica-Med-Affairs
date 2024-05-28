@@ -271,7 +271,7 @@ const Map = ({
   useEffect(() => {
     if (markers && stateData && layerAdded) {
       let _itemValues = [];
-      console.log(stateData,regionColors,"stateData")
+    
       Object.values(stateData).map((item) => {
         item.forEach((_state) => {
           if (regionColors[_state.Region]) {
