@@ -71,6 +71,7 @@ const MedicalAffairToolbox = () => {
   const [rawData, setRawData] = useState(null);
   const [lineX, setLineX] = useState(10);
   const [lineY, setLineY] = useState(10);
+  
 
 
   const fetchData = (
@@ -149,6 +150,7 @@ const MedicalAffairToolbox = () => {
             name: item["Assigned Physician Name"],
             x: item[vabelValues.xLabel],
             y: item[vabelValues.yLabel],
+        
             r: calculateRadius(item[radius], maxValue),
             value: item[radius],
           })),
@@ -296,7 +298,7 @@ const MedicalAffairToolbox = () => {
             </div>
           </div>
 
-          <ScatterChart lineX={lineX} lineY={lineY} setLineX={setLineX} setLineY={setLineY} data={state.data} />
+          <ScatterChart lineX={lineX} lineY={lineY} setLineX={setLineX} state={state} setLineY={setLineY} data={state.data} />
         </>
       ) : (
         <div className="w-full h-[400px] grid place-content-center">

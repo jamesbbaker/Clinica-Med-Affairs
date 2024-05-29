@@ -102,12 +102,12 @@ export const defaultOptions = {
   fontColor: "black",
   title: "Asthma Patients by States",
   titleTextStyle: {
-    color: '#888',
-    textAlign: 'center',
+    color: "#888",
+    textAlign: "center",
   },
   colorAxis: {
     values: [0, 1000, 10000, 100005, 1000000], // Define custom values for the color axis
-    colors: ['#ffef96', '#ff6e73', 'white', 'white', '#d2177a'], // Define colors for the color axis
+    colors: ["#ffef96", "#ff6e73", "white", "white", "#d2177a"], // Define colors for the color axis
   },
   showScale: false,
   generateTooltip: (_row, _size, value) => {
@@ -171,14 +171,21 @@ const BarChartOptions = {
   },
 };
 
-const TreeMap = ({ needCallbacks=true,options = defaultOptions, data = defaultData, handleOpen = () => {} }) => {
+const TreeMap = ({
+  chartEvents,
+  preventDrill = false,
+  needCallbacks = true,
+  options = defaultOptions,
+  data = defaultData,
+  handleOpen = () => {},
+}) => {
   const [openPopup, setOpenPopup] = useState(false);
 
   const [barChartConfig, setBarChartConfig] = useState(null);
   const handleClick = (row, value, data) => {
     setOpenPopup((o) => !o);
-    handleOpen(row, value, data)
-    return
+    handleOpen(row, value, data);
+    return;
     const barChartData = {
       labels: EPL_TABLE_COLUMNS.map((item) => breakString(item.Header, 40)),
       datasets: [
@@ -199,6 +206,10 @@ const TreeMap = ({ needCallbacks=true,options = defaultOptions, data = defaultDa
     setBarChartConfig(null);
   };
 
+  const handleChartClick = () => {
+    console.log("first")
+  }
+
   return (
     <div>
       <Chart
@@ -209,20 +220,25 @@ const TreeMap = ({ needCallbacks=true,options = defaultOptions, data = defaultDa
         options={options}
         chartEvents={[
           {
+            
             eventName: "ready",
             callback: ({ chartWrapper, google }) => {
               if (!needCallbacks) {
-                return
+                return;
               }
               const chart = chartWrapper.getChart();
               const data = chartWrapper.getDataTable();
               google.visualization.events.addListener(
                 chart,
                 "select",
-                function () {
+                function (e) {
+                  console.log(e)
+                  
                   var selection = chart.getSelection();
                   if (selection.length > 0) {
-                    if (data.getValue(selection[0].row, 0).length > 2) {
+                    if (preventDrill) {
+                     return
+                    } else if (data.getValue(selection[0].row, 0).length > 2) {
                       let column = data
                         .getValue(selection[0].row, 0)
                         .split("_")[0];
@@ -233,6 +249,10 @@ const TreeMap = ({ needCallbacks=true,options = defaultOptions, data = defaultDa
                 }
               );
             },
+          },
+          {
+            eventName: 'click',
+            callback: handleChartClick,
           },
         ]}
       />

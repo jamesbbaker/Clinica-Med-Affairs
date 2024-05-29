@@ -6,6 +6,7 @@ import mapDataJson from "./data.json";
 import Popup from "reactjs-popup";
 import CustomMarker from "./Marker";
 import MapboxglSpiderifier from "mapboxgl-spiderifier";
+import { highestValue } from "../../utils/MathUtils";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
@@ -271,7 +272,7 @@ const Map = ({
   useEffect(() => {
     if (markers && stateData && layerAdded) {
       let _itemValues = [];
-    
+
       Object.values(stateData).map((item) => {
         item.forEach((_state) => {
           if (regionColors[_state.Region]) {
@@ -280,7 +281,7 @@ const Map = ({
               regionColors[_state.Region],
             ]);
           } else {
-            // console.log(_state);
+            console.log(_state);
           }
         });
       });
@@ -289,6 +290,7 @@ const Map = ({
       }
 
       handleRegionMarkers(markers, "marker2");
+     
       mapRef.current.setPaintProperty("countries", "fill-color", {
         property: "name",
         type: "categorical",
@@ -384,7 +386,7 @@ const Map = ({
         )}px`;
         pinElem.style.borderRadius = `50%`;
         pinElem.style.background =
-          currentToggle === "Number of High Steroid Usage Patients"
+        currentToggle.includes("Percent")
             ? "#11b4da"
             : "#f28cb1";
         pinElem.style.border = "1px solid #fff";
@@ -429,7 +431,7 @@ const Map = ({
       markerHeight: 40,
     });
 
-    if (toggleId == "Number of High Steroid Usage Patients") {
+    if (toggleId.includes("Percent")) {
       mapRef.current.setPaintProperty(
         "unclustered-point",
         "circle-color",
@@ -794,13 +796,14 @@ const Map = ({
           var popup;
 
           pinElem.className = pinElem.className + "marker1";
+          let maxValue = highestValue(markedStates, currentToggle);
           function interpolateRadius(value) {
             const minRadius = 10;
             const maxRadius = 50;
             // Maximum value
 
             // Ensure value is within range [0, maxValue]
-            const clampedValue = Math.min(Math.max(value, 0), 20);
+            const clampedValue = Math.min(Math.max(value, 0), maxValue);
 
             // Linear interpolation formula
             const radius =
@@ -995,6 +998,7 @@ const Map = ({
           return (
             <CustomMarker
               key={index}
+              allMarkers={mapMarkers}
               handleCustomAddMarkers={handleCustomAddMarkers}
               levelToggles={levelToggles}
               currentToggle={currentToggle}
@@ -1014,12 +1018,12 @@ const Map = ({
         stateMarkers &&
         currentRegion &&
         stateMarkers.map((marker, index) => {
-          console.log(stateMarkers)
           if (!marker) {
             return;
           }
           return (
             <CustomMarker
+              allMarkers={stateMarkers}
               key={index}
               currentLevel={currentLevel}
               handleCustomAddMarkers={handleCustomAddStateMarkers}
@@ -1032,7 +1036,7 @@ const Map = ({
               onClick={handleClick}
               className={"marker1"}
               mapRef={mapRef}
-            feature={marker}
+              feature={marker}
             />
           );
         })}

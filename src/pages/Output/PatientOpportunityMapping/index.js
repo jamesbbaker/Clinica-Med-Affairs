@@ -161,7 +161,6 @@ const PatientOpportunityMapping = () => {
       .then(async (res) => {
         if (res) {
           let _data = JSON.parse(res.replaceAll("NaN", 0));
-          console.log(_data.data);
           let StateByRegion = {};
           _data.data.map((entry) => {
             if (entry.Region != 0) {
@@ -186,12 +185,31 @@ const PatientOpportunityMapping = () => {
       async (res) => {
         if (res) {
           let data_1_labels = [
-            "Total High Steroid Usage",
-            "Total Severe Exacerbations",
+            "Total Asthma Patients",
+            "Total No Spirometry",
+            "Total No EOS Testing",
+            "Total No Treatment",
+            "Total ICS Patients",
+            "Total ICS High Steroid Usage",
+            "Total ICS Exacerbations",
+            "Total ICS Exacerbation Failed Escalation",
+            "Total ICS Escalation Delay",
+            "Total ICS-LABA Patients",
+            "Total ICS-LABA High Steroid Usage",
+            "Total ICS-LABA Exacerbations",
+            "Total ICS-LABA Exacerbation Failed Escalation",
+            "Total ICS-LABA Escalation Delay",
           ];
           let data_2_labels = [
-            "Percent High Steroid Usage",
-            "Percent Severe Exacerbations",
+            "Percent No Spirometry",
+            "Percent No EOS Testing",
+            "Percent No Treatment",
+            "Percent ICS High Steroid Usage",
+            "Percent ICS Exacerbation Failed Escalation",
+            "Percent ICS Escalation Delay",
+            "Percent ICS-LABA High Steroid Usage",
+            "Percent ICS-LABA Exacerbation Failed Escalation",
+            "Percent ICS-LABA Escalation Delay",
           ];
           setChartDataValue(setData1, data_1_labels, [res.summary_data]);
           setChartDataValue(setData2, data_2_labels, [res.summary_data]);
