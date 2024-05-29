@@ -45,6 +45,7 @@ const InstitutionalVariation = () => {
   const [toggleFilter, setToggleFilter] = useState(filters[0]);
   const [showModal, setShowModal] = useState(false);
   const [modalDetails, setModalDetails] = useState({});
+  const [sizeValueMap, setSizeValueMap] = useState({})
   const options1 = {
     minColor: "#00FF00",
     midColor: "#FFA500",
@@ -52,6 +53,7 @@ const InstitutionalVariation = () => {
     headerHeight: 15,
     fontColor: "black",
     title: "Asthma Patients by States",
+    allowHtml: false,
     titleTextStyle: {
       color: "#888",
       textAlign: "center",
@@ -59,7 +61,8 @@ const InstitutionalVariation = () => {
 
     showScale: false,
     generateTooltip: (_row, _size, value) => {
-      let hcpValue = rawData[_row - 1] || {
+    
+      let hcpValue = sizeValueMap[TreeData[_row + 1][2] + "_" + TreeData[_row + 1][3]] || {
         "First Name": "",
         "Last Name": "",
         "Number of ICS-LABA Patients": 0,
@@ -76,6 +79,7 @@ const InstitutionalVariation = () => {
   const options2 = {
     minColor: "#00FF00",
     midColor: "#FFA500",
+
     maxColor: "#FF0000",
     headerHeight: 15,
     fontColor: "black",
@@ -106,6 +110,8 @@ const InstitutionalVariation = () => {
   );
   const { accessToken, refreshToken } = useContext(AuthContext);
 
+  
+
   const handleTreeData = (data, toggleFilter, page) => {
     let _treeData = [
       [
@@ -117,7 +123,9 @@ const InstitutionalVariation = () => {
       ["Global", null, 0, 0],
     ];
 
+    let sizeValue = {}
     data.map((item, index) => {
+      sizeValue[item["Number of ICS-LABA Patients"] + "_" + item[toggleFilter]] = item
       _treeData.push([
         `${item["Assigned Physician Name"] + index}`,
         `Global`,
@@ -126,6 +134,7 @@ const InstitutionalVariation = () => {
       ]);
       // groupInterval++;
     });
+    setSizeValueMap(sizeValue)
     setTreeData(JSON.parse(JSON.stringify(_treeData)));
   };
 
@@ -152,7 +161,6 @@ const InstitutionalVariation = () => {
     setShowModal(false);
   };
 
-  console.log(rawData, "rawData");
 
   const fetchData = (
     filterValues = {
@@ -217,6 +225,10 @@ const InstitutionalVariation = () => {
       setSelectedSpeciality(val);
     }
   };
+
+  const handleChartClick  = () => {
+    console.log("first")
+  }
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -283,9 +295,16 @@ const InstitutionalVariation = () => {
             </div>
           </div>
           <TreeMap
+          preventDrill={true}
             data={TreeData}
             options={toggleFilter == filters[0] ? options1 : options2}
             handleOpen={handleOpen}
+            chartEvents={[
+              {
+                eventName: 'click',
+                callback: handleChartClick,
+              },
+            ]}
           />
           <Popup
             onClose={closeModal}

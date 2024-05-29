@@ -3,9 +3,10 @@ import mapboxgl from "mapbox-gl";
 import { highestValue } from "../../../utils/MathUtils";
 
 const CustomMarker = ({
-    mapboxGlMarker,
-    handleCustomAddMarkers,
-    currentLevel,
+  allMarkers = [],
+  mapboxGlMarker,
+  handleCustomAddMarkers,
+  currentLevel,
   mapRef,
   markersData,
   levelToggles,
@@ -21,6 +22,30 @@ const CustomMarker = ({
   const markerRef = useRef(null);
   const [maxValue, setMaxValue] = useState(null);
 
+  const [dimensions, setDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
+  useEffect(() => {
+    if (maxValue) {
+      let _MaxValue = highestValue(
+        allMarkers,
+        levelToggles[currentLevel][currentToggle]
+      );
+      let width = interpolateRadius(
+        feature[levelToggles[currentLevel][currentToggle]],_MaxValue
+      );
+
+      let height = interpolateRadius(
+        feature[levelToggles[currentLevel][currentToggle]],_MaxValue
+      );
+
+      setDimensions({
+        width,
+        height,
+      });
+    }
+  }, [maxValue, currentToggle]);
   const hoverListener = (e) => {
     const coordinates = [feature.LONG, feature.LAT];
     const item = { ...feature };
@@ -33,7 +58,7 @@ const CustomMarker = ({
     setDetailsItem(null);
   };
 
-  function interpolateRadius(value) {
+  function interpolateRadius(value, maxValue) {
     const minRadius = 0;
     const maxRadius = 100;
     // Maximum value
@@ -49,13 +74,12 @@ const CustomMarker = ({
   }
 
   function convertToDecimal(num) {
-    console.log(num)
     let numString = num.toString();
     let length = numString.length;
     let divisor = Math.pow(10, length - 2);
     let decimalNumber = num / divisor;
     return decimalNumber;
-}
+  }
   useEffect(() => {
     if (markerRef.current && markersData) {
       const _maxValue = highestValue(
@@ -63,16 +87,15 @@ const CustomMarker = ({
         levelToggles.region[currentToggle]
       );
       setMaxValue(_maxValue);
-      let LATITUDE  =feature.LAT
-      if (LATITUDE>90) {
-        LATITUDE  = convertToDecimal(feature.LAT);
+      let LATITUDE = feature.LAT;
+      if (LATITUDE > 90) {
+        LATITUDE = convertToDecimal(feature.LAT);
       }
       let coordinates = [feature.LONG, LATITUDE];
-      console.log(coordinates)
       const marker = new mapboxgl.Marker(markerRef.current, { ...props });
       marker.setLngLat(coordinates);
       marker.addTo(mapRef.current); // Assuming mapRef.current is a valid Mapbox GL map instance
-      handleCustomAddMarkers(marker)
+      handleCustomAddMarkers(marker);
     }
   }, [feature]);
 
@@ -80,14 +103,13 @@ const CustomMarker = ({
     <div
       style={{
         cursor: "pointer",
-        border: '1px solid #fff',
-        backgroundColor: currentToggle == "Number of High Steroid Usage Patients" ? "#11b4da" : '#f28cb1',
-        width: maxValue
-          ? interpolateRadius(feature[levelToggles[currentLevel][currentToggle]])
-          : "1rem",
-        height: maxValue
-          ? interpolateRadius(feature[levelToggles[currentLevel][currentToggle]])
-          : "1rem",
+        border: "1px solid #fff",
+        backgroundColor:
+          currentToggle.includes("Percent")
+            ? "#11b4da"
+            : "#f28cb1",
+        width:dimensions.width,
+        height: dimensions.height,
       }}
       onMouseOver={hoverListener}
       onMouseLeave={hoverOutListener}

@@ -10,6 +10,7 @@ import {
   Legend,
   BubbleController,
 } from "chart.js";
+import { highestValue } from "../../utils/MathUtils";
 
 // Register required components from Chart.js
 ChartJS.register(LinearScale, PointElement, Tooltip, Legend, BubbleController);
@@ -103,13 +104,39 @@ const ScatterChart = ({
   lineY,
   setLineX,
   setLineY,
+  state,
   data = defaultData,
   options = defaultOptions,
 }) => {
   const chartRef = useRef(null);
+  const [dataOptions, setOptions] = useState(options)
+  const [maxX, setMaxX] = useState();
+  const [maxY, setMaxY] = useState();
 
-  const [maxX, setMaxX] = useState(0);
-  const [maxY, setMaxY] = useState(0);
+  useEffect(() => {
+    const _defaultOptions = {
+      scales: {
+        x: {
+          type: "linear",
+          position: "bottom",
+        },
+      },
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "top",
+        },
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              return `Name: ${context.raw.name}, ${[state.xLabel]}:${context.raw.x}, ${state.yLabel}:${context.raw.y}, Number of ICS-LABA Patients: ${context.raw.value}`;
+            },
+          },
+        },
+      },
+    };
+    setOptions(_defaultOptions)
+  },[state.xLabel, state.yLabel])
 
   useEffect(() => {
     if (chartRef.current) {
@@ -131,7 +158,7 @@ const ScatterChart = ({
       const maxXValue = Math.max(...data.map((point) => point.x));
       setMaxX(maxXValue);
     }
-  }, [chartRef.current]);
+  }, [chartRef.current, data]);
 
   useEffect(() => {
     const data = chartRef.current?.data.datasets[0]?.data;
@@ -139,7 +166,7 @@ const ScatterChart = ({
       const maxXValue = Math.max(...data.map((point) => point.y));
       setMaxY(maxXValue);
     }
-  }, [chartRef.current]);
+  }, [chartRef.current, data]);
 
   const handleChangeX = (e) => {
     setLineX(Number(e.target.value));
@@ -150,7 +177,7 @@ const ScatterChart = ({
   };
   return (
     <div className="h-[800px] w-full">
-      <Bubble ref={chartRef} data={data} options={options} />
+      <Bubble ref={chartRef} data={data} options={dataOptions} />
       <div className="flex w-full mt-4 flex-col items-start gap-2">
         <div className="flex w-full mt-2 items-center gap-2">
           <label
