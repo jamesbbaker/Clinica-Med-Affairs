@@ -91,7 +91,7 @@ const InstitutionalVariation = () => {
     //  rawData[_row - 1 - Math.floor(rawData.length/100)]
     showScale: false,
     generateTooltip: (_row, _size, value) => {
-      let hcpValue = TreeData[_row] || {
+      let hcpValue = sizeValueMap[TreeData[_row + 1][2] + "_" + TreeData[_row + 1][3]] || {
         "First Name": "",
         "Last Name": "",
         "Number of ICS-LABA Patients": 0,
