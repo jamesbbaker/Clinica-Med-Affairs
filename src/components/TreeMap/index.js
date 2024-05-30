@@ -183,8 +183,12 @@ const TreeMap = ({
 
   const [barChartConfig, setBarChartConfig] = useState(null);
   const handleClick = (row, value, data) => {
+    if(preventDrill) {
+      handleOpen(row, value, data);
+      return
+    }
     setOpenPopup((o) => !o);
-    handleOpen(row, value, data);
+ 
     return;
     const barChartData = {
       labels: EPL_TABLE_COLUMNS.map((item) => breakString(item.Header, 40)),
@@ -207,8 +211,8 @@ const TreeMap = ({
   };
 
   const handleChartClick = () => {
-    console.log("first")
-  }
+    console.log("first");
+  };
 
   return (
     <div>
@@ -220,7 +224,6 @@ const TreeMap = ({
         options={options}
         chartEvents={[
           {
-            
             eventName: "ready",
             callback: ({ chartWrapper, google }) => {
               if (!needCallbacks) {
@@ -232,27 +235,22 @@ const TreeMap = ({
                 chart,
                 "select",
                 function (e) {
-                  console.log(e)
-                  
+                  console.log(e);
+
                   var selection = chart.getSelection();
                   if (selection.length > 0) {
-                    if (preventDrill) {
-                     return
-                    } else if (data.getValue(selection[0].row, 0).length > 2) {
+                    if (data.getValue(selection[0].row, 0).length > 2) {
                       let column = data
-                        .getValue(selection[0].row, 0)
-                        .split("_")[0];
+                      .getValue(selection[0].row, 0)
+                      .split("_")[0];
                       let value = data.getValue(selection[0].row, 2);
-                      handleClick(column, value, data);
+                      let _data = data.getValue(selection[0].row, 3);
+                      handleClick(column, value, _data);
                     }
                   }
                 }
               );
             },
-          },
-          {
-            eventName: 'click',
-            callback: handleChartClick,
           },
         ]}
       />

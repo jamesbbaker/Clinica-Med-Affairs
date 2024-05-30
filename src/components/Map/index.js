@@ -7,6 +7,7 @@ import Popup from "reactjs-popup";
 import CustomMarker from "./Marker";
 import MapboxglSpiderifier from "mapboxgl-spiderifier";
 import { highestValue } from "../../utils/MathUtils";
+import { patientTotals } from "../../constants/appConstants";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
@@ -28,7 +29,11 @@ const regionColors = {
   SW: "#98FB98",
   SE: "#FFD700",
   NW: "#FFA07A",
+  AK: "#9932CC",
+  HI: "#6A5ACD",
+  PR: "#3CB371"
 };
+
 
 function MapAddLayer(
   map,
@@ -386,9 +391,9 @@ const Map = ({
         )}px`;
         pinElem.style.borderRadius = `50%`;
         pinElem.style.background =
-        currentToggle.includes("Percent")
-            ? "#11b4da"
-            : "#f28cb1";
+        !patientTotals.includes(currentToggle)
+        ? "#800000"
+        : "#00008B";
         pinElem.style.border = "1px solid #fff";
 
         pinElem.addEventListener("mouseenter", function () {
@@ -431,17 +436,17 @@ const Map = ({
       markerHeight: 40,
     });
 
-    if (toggleId.includes("Percent")) {
+    if (  !patientTotals.includes(currentToggle)) {
       mapRef.current.setPaintProperty(
         "unclustered-point",
         "circle-color",
-        "#11b4da"
+        "#800000"
       );
     } else {
       mapRef.current.setPaintProperty(
         "unclustered-point",
         "circle-color",
-        "#f28cb1"
+        "#00008B"
       );
     }
   };
@@ -820,9 +825,9 @@ const Map = ({
           )}px`;
           pinElem.style.borderRadius = `50%`;
           pinElem.style.background =
-            currentToggle === "Number of High Steroid Usage Patients"
-              ? "#11b4da"
-              : "#f28cb1";
+           !patientTotals.includes(currentToggle)
+              ? "#800000"
+              : "#00008B";
           pinElem.style.border = "1px solid #fff";
           pinElem.addEventListener("mouseenter", function () {
             let newObject = {

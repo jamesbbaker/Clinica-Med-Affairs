@@ -11,6 +11,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import { getDataStats } from "../../../API/Outputs";
 import mapDataJson from "../../../components/Map/data.json";
 import SelectBox from "../../../components/SelectBox";
+import { patientTotals } from "../../../constants/appConstants";
 const options = {
   indexAxis: "y",
   elements: {
@@ -104,24 +105,24 @@ const reducer = (state, action) => {
 
 const toggleBtns = [
   "Number of Asthma Patients",
+  "Number of ICS Patients",
+  "Number of ICS Exacerbation",
+  "Number of ICS-LABA Patients",
+  "Number of ICS-LABA Exacerbation",
   "Number of No Spirometry",
   "Percent of No Spirometry",
   "Number of No EOS Testing",
   "Percent of No EOS Testing",
   "Number of No Treatment",
   "Percent of No Treatment",
-  "Number of ICS Patients",
   "Number of ICS High Steroid Usage",
   "Percent of ICS High Steroid Usage",
-  "Number of ICS Exacerbation",
   "Number of ICS Exacerbation Failed Escalation",
   "Percent of ICS Exacerbation Failed Escalation",
   "Number of ICS Escalation Delay",
   "Percent of ICS Escalation Delay",
-  "Number of ICS-LABA Patients",
   "Number of ICS-LABA High Steroid Usage",
   "Percent of ICS-LABA High Steroid Usage",
-  "Number of ICS-LABA Exacerbation",
   "Number of ICS-LABA Exacerbation Failed Escalation",
   "Percent of ICS-LABA Exacerbation Failed Escalation",
   "Number of ICS-LABA Escalation Delay",
@@ -130,6 +131,39 @@ const toggleBtns = [
   label: item,
   id: item,
 }));
+
+let data_1_labels = [
+  "Total Asthma Patients",
+  "Total ICS Patients",
+  "Total ICS Exacerbations",
+  "Total ICS-LABA Patients",
+  "Total ICS-LABA Exacerbations",
+  "Total No Spirometry",
+  "Total No EOS Testing",
+  "Total No Treatment",
+  "Total ICS High Steroid Usage",
+  "Total ICS Exacerbation Failed Escalation",
+  "Total ICS Escalation Delay",
+  "Total ICS-LABA High Steroid Usage",
+  "Total ICS-LABA Exacerbation Failed Escalation",
+  "Total ICS-LABA Escalation Delay",
+];
+let data_2_labels = [
+  "Percent Asthma Patients",
+  "Percent ICS Patients",
+  "Percent ICS Exacerbations",
+  "Percent ICS-LABA Patients",
+  "Percent ICS-LABA Exacerbations",
+  "Percent No Spirometry",
+  "Percent No EOS Testing",
+  "Percent No Treatment",
+  "Percent ICS High Steroid Usage",
+  "Percent ICS Exacerbation Failed Escalation",
+  "Percent ICS Escalation Delay",
+  "Percent ICS-LABA High Steroid Usage",
+  "Percent ICS-LABA Exacerbation Failed Escalation",
+  "Percent ICS-LABA Escalation Delay",
+];
 
 const PatientOpportunityMapping = () => {
   const [currentLevel, setCurrentLevel] = useState("region");
@@ -150,8 +184,9 @@ const PatientOpportunityMapping = () => {
     getDataStats("region_level_data", accessToken, refreshToken)
       .then((res) => {
         if (res) {
-          let _data = JSON.parse(res.replaceAll("NaN", 0));
-          setRegionData(_data.data);
+          console.log(res)
+          // let _data = JSON.parse(res.replaceAll("NaN", 0));
+          setRegionData(res.data);
         }
       })
       .catch((err) => {
@@ -184,33 +219,6 @@ const PatientOpportunityMapping = () => {
     getDataStats("national_data", accessToken, refreshToken).then(
       async (res) => {
         if (res) {
-          let data_1_labels = [
-            "Total Asthma Patients",
-            "Total No Spirometry",
-            "Total No EOS Testing",
-            "Total No Treatment",
-            "Total ICS Patients",
-            "Total ICS High Steroid Usage",
-            "Total ICS Exacerbations",
-            "Total ICS Exacerbation Failed Escalation",
-            "Total ICS Escalation Delay",
-            "Total ICS-LABA Patients",
-            "Total ICS-LABA High Steroid Usage",
-            "Total ICS-LABA Exacerbations",
-            "Total ICS-LABA Exacerbation Failed Escalation",
-            "Total ICS-LABA Escalation Delay",
-          ];
-          let data_2_labels = [
-            "Percent No Spirometry",
-            "Percent No EOS Testing",
-            "Percent No Treatment",
-            "Percent ICS High Steroid Usage",
-            "Percent ICS Exacerbation Failed Escalation",
-            "Percent ICS Escalation Delay",
-            "Percent ICS-LABA High Steroid Usage",
-            "Percent ICS-LABA Exacerbation Failed Escalation",
-            "Percent ICS-LABA Escalation Delay",
-          ];
           setChartDataValue(setData1, data_1_labels, [res.summary_data]);
           setChartDataValue(setData2, data_2_labels, [res.summary_data]);
           setSummaryData([res.summary_data]);
@@ -273,33 +281,6 @@ const PatientOpportunityMapping = () => {
     let _filteredArray = regionData.filter(
       (item) => item["Region"] === _region
     );
-    let data_1_labels = [
-      "Total Asthma Patients",
-      "Total No Spirometry",
-      "Total No EOS Testing",
-      "Total No Treatment",
-      "Total ICS Patients",
-      "Total ICS High Steroid Usage",
-      "Total ICS Exacerbations",
-      "Total ICS Exacerbation Failed Escalation",
-      "Total ICS Escalation Delay",
-      "Total ICS-LABA Patients",
-      "Total ICS-LABA High Steroid Usage",
-      "Total ICS-LABA Exacerbations",
-      "Total ICS-LABA Exacerbation Failed Escalation",
-      "Total ICS-LABA Escalation Delay",
-    ];
-    let data_2_labels = [
-      "Percent No Spirometry",
-      "Percent No EOS Testing",
-      "Percent No Treatment",
-      "Percent ICS High Steroid Usage",
-      "Percent ICS Exacerbation Failed Escalation",
-      "Percent ICS Escalation Delay",
-      "Percent ICS-LABA High Steroid Usage",
-      "Percent ICS-LABA Exacerbation Failed Escalation",
-      "Percent ICS-LABA Escalation Delay",
-    ];
     setChartDataValue(setData1, data_1_labels, _filteredArray);
     setChartDataValue(setData2, data_2_labels, _filteredArray);
   };
@@ -314,8 +295,8 @@ const PatientOpportunityMapping = () => {
       datasets: [
         {
           data: _value,
-          borderColor: "rgb(255, 99, 132)",
-          backgroundColor: "rgba(255, 99, 132, 0.5)",
+          borderColor: API_labels.map(item =>!patientTotals.includes(item) ? "#800000" : "#00008B" ),
+          backgroundColor: API_labels.map(item =>!patientTotals.includes(item) ? "#800000" : "#00008B" ),
         },
       ],
     };
@@ -332,33 +313,6 @@ const PatientOpportunityMapping = () => {
     let _filteredArray = stateData[_Region].filter(
       (item) => item["State Name"] === clickedState
     );
-    let data_1_labels = [
-      "Total Asthma Patients",
-      "Total No Spirometry",
-      "Total No EOS Testing",
-      "Total No Treatment",
-      "Total ICS Patients",
-      "Total ICS High Steroid Usage",
-      "Total ICS Exacerbations",
-      "Total ICS Exacerbation Failed Escalation",
-      "Total ICS Escalation Delay",
-      "Total ICS-LABA Patients",
-      "Total ICS-LABA High Steroid Usage",
-      "Total ICS-LABA Exacerbations",
-      "Total ICS-LABA Exacerbation Failed Escalation",
-      "Total ICS-LABA Escalation Delay",
-    ];
-    let data_2_labels = [
-      "Percent No Spirometry",
-      "Percent No EOS Testing",
-      "Percent No Treatment",
-      "Percent ICS High Steroid Usage",
-      "Percent ICS Exacerbation Failed Escalation",
-      "Percent ICS Escalation Delay",
-      "Percent ICS-LABA High Steroid Usage",
-      "Percent ICS-LABA Exacerbation Failed Escalation",
-      "Percent ICS-LABA Escalation Delay",
-    ];
     setChartDataValue(setData1, data_1_labels, _filteredArray);
     setChartDataValue(setData2, data_2_labels, _filteredArray);
 
@@ -379,33 +333,7 @@ const PatientOpportunityMapping = () => {
       setCurrentToggle(toggleBtns[0].id);
       setMarkedStates(null);
       currentStateClicked.current = null;
-      let data_1_labels = [
-        "Total Asthma Patients",
-        "Total No Spirometry",
-        "Total No EOS Testing",
-        "Total No Treatment",
-        "Total ICS Patients",
-        "Total ICS High Steroid Usage",
-        "Total ICS Exacerbations",
-        "Total ICS Exacerbation Failed Escalation",
-        "Total ICS Escalation Delay",
-        "Total ICS-LABA Patients",
-        "Total ICS-LABA High Steroid Usage",
-        "Total ICS-LABA Exacerbations",
-        "Total ICS-LABA Exacerbation Failed Escalation",
-        "Total ICS-LABA Escalation Delay",
-      ];
-      let data_2_labels = [
-        "Percent No Spirometry",
-        "Percent No EOS Testing",
-        "Percent No Treatment",
-        "Percent ICS High Steroid Usage",
-        "Percent ICS Exacerbation Failed Escalation",
-        "Percent ICS Escalation Delay",
-        "Percent ICS-LABA High Steroid Usage",
-        "Percent ICS-LABA Exacerbation Failed Escalation",
-        "Percent ICS-LABA Escalation Delay",
-      ];
+     
       setChartDataValue(setData1, data_1_labels, summaryData);
       setChartDataValue(setData2, data_2_labels, summaryData);
     }, 100);
@@ -437,9 +365,11 @@ const PatientOpportunityMapping = () => {
             <SelectBox
               labelClassName="mb-0"
               className={"flex items-center"}
+              showColors={true}
               input={{
                 label: "Select Unmet Needs",
                 id: "unmet",
+                
                 options: toggleBtns.map((item) => ({
                   name: item.id,
                   value: item.label,

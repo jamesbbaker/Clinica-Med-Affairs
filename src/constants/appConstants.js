@@ -90,3 +90,16 @@ export const APP_ROUTES_LABEL = {
   data_quality: "Data Quality",
   unmet_need_definition: "Unmet Need Definitions",
 };
+
+
+export const patientTotals = ["Number of Asthma Patients",
+"Number of ICS Patients",
+"Number of ICS Exacerbation",
+"Number of ICS-LABA Patients",
+"Number of ICS-LABA Exacerbation",
+"Total Asthma Patients",
+"Total ICS Patients",
+"Total ICS Exacerbations",
+"Total ICS-LABA Patients",
+"Total ICS-LABA Exacerbations",
+]

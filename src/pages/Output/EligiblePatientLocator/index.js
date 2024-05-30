@@ -21,6 +21,26 @@ const initialState = {
     max: 0,
     min: 0,
   },
+  "Number of ICS Patients": {
+    id: "Number of ICS Patients",
+    max: 0,
+    min: 0,
+  },
+  "Number of ICS Exacerbation": {
+    id: "Number of ICS Exacerbation",
+    max: 0,
+    min: 0,
+  },
+  "Number of ICS-LABA Patients": {
+    id: "Number of ICS-LABA Patients",
+    max: 0,
+    min: 0,
+  },
+  "Number of ICS-LABA Exacerbation": {
+    id: "Number of ICS-LABA Exacerbation",
+    max: 0,
+    min: 0,
+  },
   "Number of No Spirometry": {
     id: "Number of No Spirometry",
     max: 0,
@@ -51,11 +71,7 @@ const initialState = {
     max: 0,
     min: 0,
   },
-  "Number of ICS Patients": {
-    id: "Number of ICS Patients",
-    max: 0,
-    min: 0,
-  },
+  
   "Number of ICS High Steroid Usage": {
     id: "Number of ICS High Steroid Usage",
     max: 0,
@@ -66,11 +82,7 @@ const initialState = {
     max: 0,
     min: 0,
   },
-  "Number of ICS Exacerbation": {
-    id: "Number of ICS Exacerbation",
-    max: 0,
-    min: 0,
-  },
+
   "Number of ICS Exacerbation Failed Escalation": {
     id: "Number of ICS Exacerbation Failed Escalation",
     max: 0,
@@ -91,11 +103,7 @@ const initialState = {
     max: 0,
     min: 0,
   },
-  "Number of ICS-LABA Patients": {
-    id: "Number of ICS-LABA Patients",
-    max: 0,
-    min: 0,
-  },
+
   "Number of ICS-LABA High Steroid Usage": {
     id: "Number of ICS-LABA High Steroid Usage",
     max: 0,
@@ -106,11 +114,7 @@ const initialState = {
     max: 0,
     min: 0,
   },
-  "Number of ICS-LABA Exacerbation": {
-    id: "Number of ICS-LABA Exacerbation",
-    max: 0,
-    min: 0,
-  },
+ 
   "Number of ICS-LABA Exacerbation Failed Escalation": {
     id: "Number of ICS-LABA Exacerbation Failed Escalation",
     max: 0,
@@ -410,7 +414,7 @@ const EligiblePatientLocator = () => {
       urlParams.length > 0 ? "&" : ""
     }${urlParams}`;
 
-    console.log(finalUrl);
+  
 
     getDataStats(finalUrl, accessToken, refreshToken)
       .then((res) => {
@@ -634,24 +638,24 @@ const EligiblePatientLocator = () => {
         }}
         selectionBtnsArray={[
           "Number of Asthma Patients",
+          "Number of ICS Patients",
+          "Number of ICS Exacerbation",
+          "Number of ICS-LABA Patients",
+          "Number of ICS-LABA Exacerbation",
           "Number of No Spirometry",
           "Percent of No Spirometry",
           "Number of No EOS Testing",
           "Percent of No EOS Testing",
           "Number of No Treatment",
           "Percent of No Treatment",
-          "Number of ICS Patients",
           "Number of ICS High Steroid Usage",
           "Percent of ICS High Steroid Usage",
-          "Number of ICS Exacerbation",
           "Number of ICS Exacerbation Failed Escalation",
           "Percent of ICS Exacerbation Failed Escalation",
           "Number of ICS Escalation Delay",
           "Percent of ICS Escalation Delay",
-          "Number of ICS-LABA Patients",
           "Number of ICS-LABA High Steroid Usage",
           "Percent of ICS-LABA High Steroid Usage",
-          "Number of ICS-LABA Exacerbation",
           "Number of ICS-LABA Exacerbation Failed Escalation",
           "Percent of ICS-LABA Exacerbation Failed Escalation",
           "Number of ICS-LABA Escalation Delay",
