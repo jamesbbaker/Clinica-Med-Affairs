@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import { highestValue } from "../../../utils/MathUtils";
+import { patientTotals } from "../../../constants/appConstants";
 
 const CustomMarker = ({
   allMarkers = [],
@@ -105,9 +106,9 @@ const CustomMarker = ({
         cursor: "pointer",
         border: "1px solid #fff",
         backgroundColor:
-          currentToggle.includes("Percent")
-            ? "#11b4da"
-            : "#f28cb1",
+        !patientTotals.includes(currentToggle)
+            ? "#800000"
+            : "#00008B",
         width:dimensions.width,
         height: dimensions.height,
       }}

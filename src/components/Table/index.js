@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { useTable, usePagination, useSortBy } from "react-table";
 import Popup from "reactjs-popup";
 import BarChart from "../BarChart";
-import { EPL_TABLE_COLUMNS } from "../../constants/appConstants";
+import { EPL_TABLE_COLUMNS, patientTotals } from "../../constants/appConstants";
 import SelectionButtons from "../SelectionButtons";
 import { breakString, removeCommasFromString } from "../../utils/StringUtils";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -241,8 +241,12 @@ const Table = ({
   const firstRef = React.useRef(true)
 
   const handleToggleSelect = (val) => {
-    console.log(val)
-    let headerName = firstRef.current ? selectedIds.map((item) => item.col.Header) : []
+      if (firstRef.current) {
+        // selectedIds.map(item => item.to)
+        setSelectedIds(val);
+        setValue(val)
+      }
+    let headerName = selectedIds.map((item) => item.col.Header)
 
       val.map((item) => {
         !headerName.includes(item.col.Header) && item.col.toggleHidden();
@@ -251,9 +255,10 @@ const Table = ({
     firstRef.current = true
     let valHeaders = val.map((item) => item.col.Header);
 
-    selectedIds.map((item) => 
-      !valHeaders.includes(item.col.Header) && item.col.toggleHidden()
-    );
+    selectedIds.map((item) => {
+  
+      !valHeaders.includes(item.col.Header) && item.col.toggleHidden();
+    });
     setSelectedIds(val);
 
     setValue(val);
@@ -296,6 +301,23 @@ const Table = ({
     setFilterList(val);
   };
 
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.data.color,
+      color: 'white',
+    }),
+    multiValue: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.data.color,
+    }),
+    multiValueLabel: (provided, state) => ({
+      ...provided,
+      color: patientTotals.includes(state.data.value) ?"#00008B" : "#800000",
+    }),
+  };
+  
+
   return (
     <div style={{ marginTop }} className="w-full max-w-full overflow-auto">
       {Title && (
@@ -321,7 +343,9 @@ const Table = ({
             <div className="flex items-center mt-2 gap-8">
               <label className="font-[600]">Select Unmet Needs</label>
               <MultiSelect
+              
                 labelledBy=""
+                customStyles={customStyles}
                 options={allColumns
                   .filter((item) => selectionBtnsArray.includes(item.id))
                   .map(

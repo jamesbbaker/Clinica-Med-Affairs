@@ -11,28 +11,28 @@ import SelectBox from "../../../components/SelectBox";
 
 const filters = [
   "Number of Asthma Patients",
-  "Number of ICS Escalation Delay",
-  "Number of ICS Exacerbation",
-  "Number of ICS Exacerbation Failed Escalation",
-  "Number of ICS High Steroid Usage",
   "Number of ICS Patients",
-  "Number of ICS-LABA Escalation Delay",
-  "Number of ICS-LABA Exacerbation",
-  "Number of ICS-LABA Exacerbation Failed Escalation",
-  "Number of ICS-LABA High Steroid Usage",
+  "Number of ICS Exacerbation",
   "Number of ICS-LABA Patients",
-  "Number of No EOS Testing",
+  "Number of ICS-LABA Exacerbation",
   "Number of No Spirometry",
-  "Number of No Treatment",
-  "Percent of ICS Escalation Delay",
-  "Percent of ICS Exacerbation Failed Escalation",
-  "Percent of ICS High Steroid Usage",
-  "Percent of ICS-LABA Escalation Delay",
-  "Percent of ICS-LABA Exacerbation Failed Escalation",
-  "Percent of ICS-LABA High Steroid Usage",
-  "Percent of No EOS Testing",
   "Percent of No Spirometry",
+  "Number of No EOS Testing",
+  "Percent of No EOS Testing",
+  "Number of No Treatment",
   "Percent of No Treatment",
+  "Number of ICS High Steroid Usage",
+  "Percent of ICS High Steroid Usage",
+  "Number of ICS Exacerbation Failed Escalation",
+  "Percent of ICS Exacerbation Failed Escalation",
+  "Number of ICS Escalation Delay",
+  "Percent of ICS Escalation Delay",
+  "Number of ICS-LABA High Steroid Usage",
+  "Percent of ICS-LABA High Steroid Usage",
+  "Number of ICS-LABA Exacerbation Failed Escalation",
+  "Percent of ICS-LABA Exacerbation Failed Escalation",
+  "Number of ICS-LABA Escalation Delay",
+  "Percent of ICS-LABA Escalation Delay",
 ];
 
 const InstitutionalVariation = () => {
@@ -58,7 +58,13 @@ const InstitutionalVariation = () => {
       color: "#888",
       textAlign: "center",
     },
-
+    eventsConfig: {
+      highlight: ['click'],
+      unhighlight: ['mouseout'],
+      rollup: ['contextmenu'],
+      drilldown: ['dblclick'],
+    },
+    useWeightedAverageForAggregation: true,
     showScale: false,
     generateTooltip: (_row, _size, value) => {
     
@@ -97,7 +103,6 @@ const InstitutionalVariation = () => {
         "Number of ICS-LABA Patients": 0,
         toggleFilter: 0,
       };
-
       return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
     <div><strong>NAME</strong>:  ${hcpValue["Assigned Physician Name"]}</div>
     <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue["Number of ICS-LABA Patients"]}</div>
@@ -146,10 +151,10 @@ const InstitutionalVariation = () => {
     if (row === modalDetails.name) {
       return;
     }
+  
     setShowModal(true);
-    setModalDetails({
-      name: row,
-    });
+    let _data =      sizeValueMap[value + "_" + data] 
+    setModalDetails(_data);
   };
 
   const handleToggleFilter = (e) => {
@@ -196,7 +201,7 @@ const InstitutionalVariation = () => {
     // }
 
     const finalUrl = `${queryString}`;
-    console.log(finalUrl);
+  
     getDataStats(finalUrl, accessToken, refreshToken)
       .then((res) => {
         if (res) {
@@ -226,9 +231,6 @@ const InstitutionalVariation = () => {
     }
   };
 
-  const handleChartClick  = () => {
-    console.log("first")
-  }
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -299,24 +301,26 @@ const InstitutionalVariation = () => {
             data={TreeData}
             options={toggleFilter == filters[0] ? options1 : options2}
             handleOpen={handleOpen}
-            chartEvents={[
-              {
-                eventName: 'click',
-                callback: handleChartClick,
-              },
-            ]}
+           
           />
           <Popup
             onClose={closeModal}
+            
             modal
             open={showModal}
             position="center center"
           >
-            <div className="flex p-10 flex-col items-center">
+           { modalDetails && <div className="flex px-4 py-8 flex-col items-start gap-4">
               <div>
-                <strong>Name:</strong> {modalDetails.name}
+                <strong className="mr-2">Name:</strong> {modalDetails["Assigned Physician Name"]}
               </div>
-            </div>
+              <div>
+                <strong className="mr-2">Number of ICS-LABA Patients:</strong> { modalDetails["Number of ICS-LABA Patients"]}
+              </div>
+              <div>
+                <strong className="mr-2">{toggleFilter}:</strong> {        modalDetails[toggleFilter]}
+              </div>
+            </div>}
           </Popup>
         </>
       ) : (
