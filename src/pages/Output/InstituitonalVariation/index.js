@@ -47,22 +47,18 @@ const InstitutionalVariation = () => {
   const [modalDetails, setModalDetails] = useState({});
   const [sizeValueMap, setSizeValueMap] = useState({})
   const options1 = {
+    enableHighlight: true,
     minColor: "#00FF00",
+    maxDepth: 0,
+    maxPostDepth: 0,
     midColor: "#FFA500",
     maxColor: "#FF0000",
     headerHeight: 15,
     fontColor: "black",
     title: "Asthma Patients by States",
-    allowHtml: false,
     titleTextStyle: {
       color: "#888",
       textAlign: "center",
-    },
-    eventsConfig: {
-      highlight: ['click'],
-      unhighlight: ['mouseout'],
-      rollup: ['contextmenu'],
-      drilldown: ['dblclick'],
     },
     useWeightedAverageForAggregation: true,
     showScale: false,
@@ -239,6 +235,7 @@ const InstitutionalVariation = () => {
           <div className="flex flex-col w-full justify-between items-start">
             <div className="flex mb-6 items-center gap-8">
               <SelectBox
+              showColors
                 labelClassName="mb-0"
                 className={"flex items-center"}
                 input={{
@@ -298,7 +295,7 @@ const InstitutionalVariation = () => {
           </div>
           <TreeMap
           preventDrill={true}
-            data={TreeData}
+            data={TreeData.slice(0,100)}
             options={toggleFilter == filters[0] ? options1 : options2}
             handleOpen={handleOpen}
            

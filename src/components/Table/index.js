@@ -305,7 +305,7 @@ const Table = ({
     option: (provided, state) => ({
       ...provided,
       backgroundColor: state.data.color,
-      color: 'white',
+      color: 'red',
     }),
     multiValue: (provided, state) => ({
       ...provided,
@@ -316,6 +316,24 @@ const Table = ({
       color: patientTotals.includes(state.data.value) ?"#00008B" : "#800000",
     }),
   };
+
+  const customOptionRenderer = ({ checked, option, onClick }) => (
+    <div
+      onClick={onClick}
+      className={`flex items-center p-2 cursor-pointer ${checked ? 'bg-gray-200' : ''}`}
+      style={{ fontWeight: 600, color: option.label == "Select All" ? "#000" : patientTotals.includes(option.label) ?"#00008B" : "#800000" }}
+    >
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={() => {}}
+        className="mr-2"
+      />
+      {option.label}
+    </div>
+  );
+
+
   
 
   return (
@@ -343,9 +361,8 @@ const Table = ({
             <div className="flex items-center mt-2 gap-8">
               <label className="font-[600]">Select Unmet Needs</label>
               <MultiSelect
-              
                 labelledBy=""
-                customStyles={customStyles}
+                ItemRenderer={customOptionRenderer}
                 options={allColumns
                   .filter((item) => selectionBtnsArray.includes(item.id))
                   .map(
@@ -356,8 +373,8 @@ const Table = ({
                         value: item.Header,
                       }
                   )
-                  .filter((item) => typeof item !== "boolean")}
-                className="w-[10rem] z-[5]"
+                  .filter((item) => typeof item !== "boolean").sort((a, b) => selectionBtnsArray.indexOf(a.col.id) - selectionBtnsArray.indexOf(b.col.id))}
+                className="w-[20rem] z-[5]"
                 value={value || []}
                 onChange={(val) => handleToggleSelect(val)}
               />
@@ -366,11 +383,12 @@ const Table = ({
               <label className="font-[600]">Select Filters</label>
               <MultiSelect
                 labelledBy=""
+                ItemRenderer={customOptionRenderer}
                 options={Object.values(filterState).map((item) => ({
                   label: item.id,
                   value: item.id,
                 }))}
-                className="w-[10rem] z-[5]"
+                className="w-[20rem] z-[5]"
                 value={filterList || []}
                 onChange={(val) => handleShowFilters(val)}
               />

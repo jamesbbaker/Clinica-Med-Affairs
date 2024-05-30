@@ -223,3 +223,7 @@ th {
 
 .spider-leg-container.animate.initial .spider-leg-line,
 .spider-leg-container.animate.exit .spider-leg-line { height: 0 !important }
+
+.rmsc .dropdown-heading {
+  max-width: unset !important;
+}
