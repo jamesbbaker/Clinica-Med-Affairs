@@ -183,6 +183,7 @@ const TreeMap = ({
 
   const [barChartConfig, setBarChartConfig] = useState(null);
   const handleClick = (row, value, data) => {
+   
     if(preventDrill) {
       handleOpen(row, value, data);
       return
@@ -224,7 +225,7 @@ const TreeMap = ({
         options={options}
         chartEvents={[
           {
-            eventName: "ready",
+            eventName: "select",
             callback: ({ chartWrapper, google }) => {
               if (!needCallbacks) {
                 return;
@@ -235,8 +236,6 @@ const TreeMap = ({
                 chart,
                 "select",
                 function (e) {
-                  console.log(e);
-
                   var selection = chart.getSelection();
                   if (selection.length > 0) {
                     if (data.getValue(selection[0].row, 0).length > 2) {

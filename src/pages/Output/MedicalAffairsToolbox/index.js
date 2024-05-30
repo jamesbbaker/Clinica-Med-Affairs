@@ -292,6 +292,7 @@ const MedicalAffairToolbox = () => {
           <div className="flex flex-col mb-4 items-start">
             <div>
               <SelectBox
+              showColors
                 labelClassName="mb-0"
                 className={"flex items-center gap-2"}
                 input={{
