@@ -295,7 +295,7 @@ const InstitutionalVariation = () => {
           </div>
           <TreeMap
           preventDrill={true}
-            data={TreeData.slice(0,100)}
+            data={TreeData}
             options={toggleFilter == filters[0] ? options1 : options2}
             handleOpen={handleOpen}
            
