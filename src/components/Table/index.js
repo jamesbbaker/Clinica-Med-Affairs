@@ -331,10 +331,7 @@ const Table = ({
       />
       {option.label}
     </div>
-  );
-
-
-  
+  );  
 
   return (
     <div style={{ marginTop }} className="w-full max-w-full overflow-auto">

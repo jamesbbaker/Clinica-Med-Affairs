@@ -12,6 +12,7 @@ import { getDataStats } from "../../../API/Outputs";
 import mapDataJson from "../../../components/Map/data.json";
 import SelectBox from "../../../components/SelectBox";
 import { patientTotals } from "../../../constants/appConstants";
+import CustomDropdown from "../../../components/CustomDropdown";
 const options = {
   indexAxis: "y",
   elements: {
@@ -340,7 +341,8 @@ const PatientOpportunityMapping = () => {
   };
 
   const handleToggle = (e) => {
-    setCurrentToggle(e.target.value);
+    console.log(e)
+    setCurrentToggle(e);
   };
 
   return (
@@ -362,7 +364,7 @@ const PatientOpportunityMapping = () => {
             RESET MAP
           </div>
           <div className="flex mb-6 items-center gap-8">
-            <SelectBox
+            <CustomDropdown
               labelClassName="mb-0"
               className={"flex items-center"}
               showColors={true}

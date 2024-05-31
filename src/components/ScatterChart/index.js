@@ -180,9 +180,9 @@ const ScatterChart = ({
     <div className="h-[800px] relative w-full">
       <Bubble ref={chartRef} data={data} options={dataOptions} />
       <div className="absolute font-[700] top-[8%] left-[5%]">{quadrantValues.topLeft}</div>
-      <div className="absolute font-[700] top-[8%] right-[5%]">{quadrantValues.topRight}</div>
+   {chartRef.current &&   <div style={{left: `calc(${chartRef.current.width}px - 10%)`}} className="absolute font-[700] top-[8%]">{quadrantValues.topRight}</div>}
      {chartRef.current && <div style={{ top: `calc(${chartRef.current.height}px - 10%)`}}  className="absolute font-[700] left-[5%]">{quadrantValues.bottomLeft}</div>} 
-      {chartRef.current && <div style={{ top:  `calc(${chartRef.current.height}px - 10%)`}} className="absolute font-[700] right-[5%]">{quadrantValues.bottomRight}</div>}
+      {chartRef.current && <div style={{ top:  `calc(${chartRef.current.height}px - 10%)`, left: `calc(${chartRef.current.width}px - 10%)`}} className="absolute font-[700]">{quadrantValues.bottomRight}</div>}
       <div className="flex w-full mt-4 flex-col items-start gap-2">
         <div className="flex w-full mt-2 items-center gap-2">
           <label
