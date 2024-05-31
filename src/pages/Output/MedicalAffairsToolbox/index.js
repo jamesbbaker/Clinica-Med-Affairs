@@ -5,6 +5,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import { highestValue } from "../../../utils/MathUtils";
 import SelectBox from "../../../components/SelectBox";
 import { MultiSelect } from "react-multi-select-component";
+import CustomDropdown from "../../../components/CustomDropdown";
 
 const filterOptions = [
   "Number of Asthma Patients",
@@ -197,16 +198,16 @@ const MedicalAffairToolbox = () => {
     fetchData();
   }, []);
 
-  const handleSelect = (e) => {
+  const handleSelect = (id, val) => {
     dispatch({
       type: actions.handleUpdate,
       payload: {
-        [e.target.id]: e.target.value,
+        [id]: val,
       },
     });
     let labelValue = {
-      xLabel: e.target.id == "xLabel" ? e.target.value : state.xLabel,
-      yLabel: e.target.id == "yLabel" ? e.target.value : state.yLabel,
+      xLabel:id == "xLabel" ? val : state.xLabel,
+      yLabel:id == "yLabel" ? val : state.yLabel,
     };
     let data = handleChartData(rawData, labelValue);
     dispatch({
@@ -291,7 +292,8 @@ const MedicalAffairToolbox = () => {
           </div>
           <div className="flex flex-col mb-4 items-start">
             <div>
-              <SelectBox
+              
+              <CustomDropdown
               showColors
                 labelClassName="mb-0"
                 className={"flex items-center gap-2"}
@@ -300,17 +302,18 @@ const MedicalAffairToolbox = () => {
                   name: "X-axis unmet need select",
                   type: "select",
                   options: filterOptions.map((item) => ({
-                    id: item,
                     name: item,
+                    value: item,
                   })),
                   id: "xLabel",
                 }}
                 value={state.xLabel}
-                handleSelect={(val) => handleSelect(val)}
+                handleSelect={(val) => handleSelect("xLabel",val)}
               />
             </div>
             <div>
-              <SelectBox
+              <CustomDropdown
+              showColors
                 labelClassName="mb-0"
                 className={"flex items-center gap-2"}
                 input={{
@@ -318,13 +321,13 @@ const MedicalAffairToolbox = () => {
                   name: "Y-axis unmet need select",
                   type: "select",
                   options: filterOptions.map((item) => ({
-                    id: item,
                     name: item,
+                    value: item,
                   })),
                   id: "yLabel",
                 }}
                 value={state.yLabel}
-                handleSelect={(val) => handleSelect(val)}
+                handleSelect={(val) => handleSelect("yLabel",val)}
               />
             </div>
           </div>

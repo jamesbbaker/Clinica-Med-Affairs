@@ -618,10 +618,12 @@ const Map = ({
         ];
         if (filteredArr.length > 1) {
           spiderifier.current.unspiderfy();
+          setStateMapMarkers(filteredArr)
           spiderifier.current.spiderfy(
             e.features[0].geometry.coordinates,
             filteredArr
           );
+          
         } else {
           const item = e.features[0];
 
@@ -796,19 +798,20 @@ const Map = ({
           setModalDetails([feature]);
         },
         initializeLeg: function initializeSpiderLeg(spiderLeg) {
+         
           var pinElem = spiderLeg.elements.pin;
           var feature = spiderLeg.feature;
           var popup;
 
           pinElem.className = pinElem.className + "marker1";
-          let maxValue = highestValue(markedStates, currentToggle);
+          // let maxValue = highestValue(markedStates, currentToggle);
           function interpolateRadius(value) {
             const minRadius = 10;
             const maxRadius = 50;
             // Maximum value
 
             // Ensure value is within range [0, maxValue]
-            const clampedValue = Math.min(Math.max(value, 0), maxValue);
+            const clampedValue = Math.min(Math.max(value, 0), 20);
 
             // Linear interpolation formula
             const radius =
@@ -922,7 +925,7 @@ const Map = ({
         source: "markers",
         filter: ["!", ["has", "point_count"]],
         paint: {
-          "circle-color": "#11b4da",
+          "circle-color": "#00008B",
           "circle-radius": ["get", "size"], // Assuming 'size' is a property in your marker data
           "circle-stroke-width": 1,
           "circle-stroke-color": "#fff",

@@ -415,7 +415,7 @@ const EligiblePatientLocator = () => {
     }${urlParams}`;
 
   
-
+    console.log(finalUrl);
     getDataStats(finalUrl, accessToken, refreshToken)
       .then((res) => {
         let _data = JSON.parse(res.replaceAll("NaN", 0));
@@ -452,8 +452,6 @@ const EligiblePatientLocator = () => {
       currentSize,
       sortBy,
       sortOrder,
-      icsNumber,
-      steroidPercent,
       speciality,
       region,
       stateName,
@@ -555,8 +553,6 @@ const EligiblePatientLocator = () => {
       currentSize,
       sortBy,
       sortOrder,
-      icsNumber,
-      steroidPercent,
       speciality,
       region,
       stateName,
@@ -582,8 +578,6 @@ const EligiblePatientLocator = () => {
       currentSize,
       columnId,
       _sortOrder,
-      icsNumber,
-      steroidPercent,
       speciality,
       region,
       stateName,

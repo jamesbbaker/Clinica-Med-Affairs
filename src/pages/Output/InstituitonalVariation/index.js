@@ -8,6 +8,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import { MultiSelect } from "react-multi-select-component";
 import Popup from "reactjs-popup";
 import SelectBox from "../../../components/SelectBox";
+import CustomDropdown from "../../../components/CustomDropdown";
 
 const filters = [
   "Number of Asthma Patients",
@@ -154,8 +155,8 @@ const InstitutionalVariation = () => {
   };
 
   const handleToggleFilter = (e) => {
-    setToggleFilter(e.target.value);
-    handleTreeData(rawData, e.target.value);
+    setToggleFilter(e);
+    handleTreeData(rawData, e);
   };
 
   const closeModal = () => {
@@ -234,7 +235,7 @@ const InstitutionalVariation = () => {
         <>
           <div className="flex flex-col w-full justify-between items-start">
             <div className="flex mb-6 items-center gap-8">
-              <SelectBox
+              <CustomDropdown
               showColors
                 labelClassName="mb-0"
                 className={"flex items-center"}

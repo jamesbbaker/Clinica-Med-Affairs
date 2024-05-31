@@ -179,6 +179,12 @@ const UnmetNeedDefinition = () => {
   const [statsData4, setStatsData4] = useState(null);
   const [statsData5, setStatsData5] = useState(null);
   const [statsData6, setStatsData6] = useState(null);
+  const [statsData7, setStatsData7] = useState(null);
+  const [statsData8, setStatsData8] = useState(null);
+  const [statsData9, setStatsData9] = useState(null);
+  const [statsData10, setStatsData10] = useState(null);
+  const [statsData11, setStatsData11] = useState(null);
+  const [statsData12, setStatsData12] = useState(null);
   const { accessToken, refreshToken } = useContext(AuthContext);
 
   const Table_Columns_3 = useMemo(() => {
@@ -193,6 +199,123 @@ const UnmetNeedDefinition = () => {
       },
     ];
     return USERS_TABLE_COLUMNS;
+  }, []);
+
+  const chart_8_options = useMemo(() => {
+    return {
+      indexAxis: "x",
+      elements: {
+        bar: {
+          borderWidth: 1,
+        },
+      },
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: "patients",
+          },
+        },
+        x: {
+          title: {
+            display: true,
+            text: "Time from diagnosis to spirometry testing",
+          },
+          grid: {
+            display: false, // Turn off grid lines for x-axis
+          },
+          ticks: {
+            font: {
+              size: 10,
+            },
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+    };
+  }, []);
+
+  const chart_9_options = useMemo(() => {
+    return {
+      indexAxis: "x",
+      elements: {
+        bar: {
+          borderWidth: 1,
+        },
+      },
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: "patients",
+          },
+        },
+        x: {
+          title: {
+            display: true,
+            text: "Time from diagnosis to EOS / CBC testing",
+          },
+          grid: {
+            display: false, // Turn off grid lines for x-axis
+          },
+          ticks: {
+            font: {
+              size: 10,
+            },
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+    };
+  }, []);
+
+  const chart_10_options = useMemo(() => {
+    return {
+      indexAxis: "x",
+      elements: {
+        bar: {
+          borderWidth: 1,
+        },
+      },
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: "patients",
+          },
+        },
+        x: {
+          title: {
+            display: true,
+            text: "Time from exacerbation to escalation",
+          },
+          grid: {
+            display: false, // Turn off grid lines for x-axis
+          },
+          ticks: {
+            font: {
+              size: 10,
+            },
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+    };
   }, []);
 
   const _options = useMemo(() => {
@@ -343,6 +466,11 @@ const UnmetNeedDefinition = () => {
     setStatsData4(null);
     setStatsData5(null);
     setStatsData6(null);
+    setStatsData7(null);
+    setStatsData8(null);
+    setStatsData9(null);
+    setStatsData10(null);
+    setStatsData11(null);
     setModalId(null);
   };
 
@@ -426,26 +554,37 @@ const UnmetNeedDefinition = () => {
     setStatsData1(data);
   }
   function getIntValue(item) {
-    let value = item
+    let value = item;
     if (item.includes("-")) {
-      value = item.split("-")[1]
+      value = item.split("-")[1];
     }
-    value = parseInt(value.split("mg")[0])
-    return value
+    value = parseInt(value.split("mg")[0]);
+    return value;
   }
 
-  function getBarChart(res, type1, type2) {
-    const responseData = res.data;
-    responseData.sort((a, b) => a[type1] - b[type1]);
-   
+  function getBarChart(res, type1, type2, sortFn) {
+    let responseData = res.data;
+    if (sortFn) {
+      responseData = sortFn(res.data);
+    } else {
+      responseData.sort((a, b) => a[type1] - b[type1]);
+    }
 
     let _data = {
       labels: responseData.map((item) => item[type1]),
       datasets: [
         {
           data: responseData.map((item) => item[type2]),
-          borderColor: responseData.map((item) => getIntValue(item[type1]) <= 450 ? "rgb(542, 62, 35, 0.8)" : "rgb(0,212,100, 0.7)"),
-          backgroundColor: responseData.map((item) => getIntValue(item[type1]) <= 450 ? "rgb(542, 62, 35)" : "rgb(0,212,100)"),
+          borderColor: responseData.map((item) =>
+            getIntValue(item[type1]) <= 450
+              ? "rgb(542, 62, 35, 0.8)"
+              : "rgb(0,212,100, 0.7)"
+          ),
+          backgroundColor: responseData.map((item) =>
+            getIntValue(item[type1]) <= 450
+              ? "rgb(542, 62, 35)"
+              : "rgb(0,212,100)"
+          ),
           borderWidth: 2,
         },
       ],
@@ -455,7 +594,108 @@ const UnmetNeedDefinition = () => {
 
   const handleClick = (key) => {
     setModalId(key);
-    if (UnmetNeedDefinitionData[key].id === "id8") {
+    if (UnmetNeedDefinitionData[key].id === "id2") {
+      getDataStats("data_stats_25", accessToken, refreshToken).then((res) => {
+        if (res) {
+          const sortFn = (data) => {
+            data.sort((a, b) => {
+              const parseRange = (str) => {
+                if (str.includes("+")) {
+                  return Number.MAX_VALUE;
+                } else {
+                  return parseInt(str.split("-")[0]);
+                }
+              };
+              return parseRange(a.delay_bucket) - parseRange(b.delay_bucket);
+            });
+            return data;
+          };
+
+          let _data = getBarChart(res, res.headers[0], res.headers[1], sortFn);
+
+          setStatsData8(_data);
+        }
+      });
+    }
+    if (UnmetNeedDefinitionData[key].id === "id3") {
+      getDataStats("data_stats_26", accessToken, refreshToken).then((res) => {
+        if (res) {
+          const sortFn = (data) => {
+            data.sort((a, b) => {
+              const parseRange = (str) => {
+                if (str.includes("+")) {
+                  return Number.MAX_VALUE;
+                } else {
+                  return parseInt(str.split("-")[0]);
+                }
+              };
+              return parseRange(a.delay_bucket) - parseRange(b.delay_bucket);
+            });
+            return data;
+          };
+
+          let _data = getBarChart(res, res.headers[0], res.headers[1], sortFn);
+
+          setStatsData9(_data);
+        }
+      });
+    }
+    if (UnmetNeedDefinitionData[key].id == "id7") {
+      getDataStats("data_stats_28", accessToken, refreshToken).then((res) => {
+        if (res) {
+          const sortFn = (data) => {
+            data.sort((a, b) => {
+              const parseRange = (str) => {
+                if (str.includes("+")) {
+                  return Number.MAX_VALUE;
+                } else {
+                  return parseInt(str.split("-")[0]);
+                }
+              };
+              return parseRange(a.delay_bucket) - parseRange(b.delay_bucket);
+            });
+            return data;
+          };
+
+          let _data = getBarChart(res, res.headers[0], res.headers[1], sortFn);
+
+          setStatsData11(_data);
+        }
+      });
+    }
+    if (UnmetNeedDefinitionData[key].id == "id9") {
+      getDataStats("data_stats_29", accessToken, refreshToken).then((res) => {
+        if (res) {
+          const sortFn = (data) => {
+            data.sort((a, b) => {
+              const parseRange = (str) => {
+                if (str.includes("+")) {
+                  return Number.MAX_VALUE;
+                } else {
+                  return parseInt(str.split("-")[0]);
+                }
+              };
+              return parseRange(a.delay_bucket) - parseRange(b.delay_bucket);
+            });
+            return data;
+          };
+
+          let _data = getBarChart(res, res.headers[0], res.headers[1], sortFn);
+
+          setStatsData12(_data);
+        }
+      });
+    }
+    if (
+      UnmetNeedDefinitionData[key].id === "id2" ||
+      UnmetNeedDefinitionData[key].id === "id3"
+    ) {
+      getDataStats("data_stats_24", accessToken, refreshToken).then((res) => {
+        if (res) {
+          setStatsData7(res);
+        }
+      });
+    } else if (UnmetNeedDefinitionData[key].id === "id8") {
       getDataStats("data_stats_18", accessToken, refreshToken)
         .then((res) => {
           if (res) {
@@ -478,7 +718,6 @@ const UnmetNeedDefinition = () => {
       getDataStats("data_stats_14", accessToken, refreshToken)
         .then((res) => {
           if (res && res.headers) {
-            console.log(res, "responsee");
             let _data = getBarChart(res, res.headers[0], res.headers[1]);
 
             setStatsData2(_data);
@@ -518,6 +757,12 @@ const UnmetNeedDefinition = () => {
         .catch((err) => {
           console.log(err, "err");
         });
+    } else if (UnmetNeedDefinitionData[key].id === "id5") {
+      getDataStats("data_stats_27", accessToken, refreshToken).then((res) => {
+        if (res) {
+          setStatsData10(res);
+        }
+      });
     }
   };
 
@@ -585,23 +830,106 @@ const UnmetNeedDefinition = () => {
         position="center center"
       >
         {modalId && (
-          <>
+          <div className="flex flex-col items-center w-[70vw] max-h-[80vh] overflow-y-auto">
             <div className="w-[100%] sticky top-0 bg-white z-20 px-2 text-lg text-left py-8 font-[600] text-[#808080]">
               {UnmetNeedDefinitionData[modalId].buttonText}
             </div>
-            <div className="w-[70vw] max-h-[80vh] pb-10 overflow-auto h-[auto] flex flex-col gap-2 items-center bg-white">
+            <p className="px-2 w-full text-[#808080] pb-4 text-left text-sm">
+              {UnmetNeedDefinitionData[modalId].description}
+            </p>
+            <div className="w-full max-h-[80vh] pb-10 overflow-auto h-[auto] flex flex-col gap-2 items-center bg-white">
               {statsData6 && (
                 <div className="h-[30rem] flex items-center justify-center w-full">
                   <Table
                     initialState={{ pageSize: 10, pageIndex: 0 }}
                     marginTop={0}
-                    Title="Summary Table"
+                    Title="No treatment"
                     activeCells={false}
                     showSelectionBtns={false}
                     TableData={statsData6}
                     TableColummns={Table_Columns_3}
                   />
                 </div>
+              )}
+            {statsData10 && (
+                <div className="h-[30rem] flex items-center justify-center w-full">
+                  <Table
+                    initialState={{ pageSize: 10, pageIndex: 0 }}
+                    marginTop={0}
+                    Title="Testing Counts"
+                    activeCells={false}
+                    showSelectionBtns={false}
+                    TableData={statsData10.data}
+                    TableColummns={statsData10.headers.map((item, index) => ({
+                      Header: item,
+                      accessor: item,
+                    }))}
+                  />
+                </div>
+              )}
+              {statsData7 && (
+                <div className="h-[30rem] flex items-center justify-center w-full">
+                  <Table
+                    initialState={{ pageSize: 10, pageIndex: 0 }}
+                    marginTop={0}
+                    Title="Testing Counts"
+                    activeCells={false}
+                    showSelectionBtns={false}
+                    TableData={statsData7.data}
+                    TableColummns={statsData7.headers.map((item, index) => ({
+                      Header: item,
+                      accessor: item,
+                    }))}
+                  />
+                </div>
+              )}
+              {statsData8 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Delay from Diagnosis to Spirometry testing
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData8}
+                    options={chart_8_options}
+                  />
+                </>
+              )}
+               {statsData11 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                  Delay between Exacerbation and Escalation
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData11}
+                    options={chart_10_options}
+                  />
+                </>
+              )}
+                  {statsData12 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                  Delay between Exacerbation and Escalation
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData12}
+                    options={chart_10_options}
+                  />
+                </>
+              )}
+               {statsData9 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                  Delay from Diagnosis to EOS / CBC testing
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData9}
+                    options={chart_9_options}
+                  />
+                </>
               )}
               {statsData5 && (
                 <div className="h-[30rem] flex items-center justify-center w-full">
@@ -647,11 +975,8 @@ const UnmetNeedDefinition = () => {
                   options={chart_2_options}
                 />
               )}
-              <p className="px-4 py-14 w-full text-left text-sm">
-                {UnmetNeedDefinitionData[modalId].description}
-              </p>
             </div>
-          </>
+          </div>
         )}
       </Popup>
     </div>
