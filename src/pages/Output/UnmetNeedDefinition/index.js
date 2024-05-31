@@ -291,7 +291,7 @@ const UnmetNeedDefinition = () => {
       scales: {
         y: {
           title: {
-            display: true,
+          display: true,
             text: "patients",
           },
         },

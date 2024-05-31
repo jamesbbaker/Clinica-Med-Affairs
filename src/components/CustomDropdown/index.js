@@ -6,6 +6,10 @@ const CustomDropdown = ({ showColors = false, labelClassName, className, error, 
   const [selectedOption, setSelectedOption] = useState(value);
   const dropdownRef = useRef(null);
 
+  useEffect(() => {
+    setSelectedOption(value)
+  },[value])
+
   const handleOptionClick = (option) => {
    
     setSelectedOption(option.name);
