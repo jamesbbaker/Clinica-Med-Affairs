@@ -11,6 +11,7 @@ import {
   BubbleController,
 } from "chart.js";
 import { highestValue } from "../../utils/MathUtils";
+import { selectLabels } from "../../constants/appConstants";
 
 // Register required components from Chart.js
 ChartJS.register(LinearScale, PointElement, Tooltip, Legend, BubbleController);
@@ -19,41 +20,44 @@ ChartJS.register(LinearScale, PointElement, Tooltip, Legend, BubbleController);
 const arbitraryLinePlugin = {
   id: "arbitraryLine",
   afterDraw: (chart) => {
-    if (chart.config && chart.config.options && chart.config.options.plugins && chart.config.options.plugins.arbitraryLine) {
+    if (
+      chart.config &&
+      chart.config.options &&
+      chart.config.options.plugins &&
+      chart.config.options.plugins.arbitraryLine
+    ) {
+      const {
+        ctx,
+        chartArea: { top, bottom, left, right },
+        scales: { x, y },
+      } = chart;
+      const { lineX, lineY } = chart.config.options.plugins.arbitraryLine;
 
-  
-    const {
-      ctx,
-      chartArea: { top, bottom, left, right },
-      scales: { x, y },
-    } = chart;
-    const { lineX, lineY } = chart.config.options.plugins.arbitraryLine;
+      if (x && lineX !== undefined) {
+        const xValue = x.getPixelForValue(lineX);
 
-    if (x && lineX !== undefined) {
-      const xValue = x.getPixelForValue(lineX);
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(xValue, top);
+        ctx.lineTo(xValue, bottom);
+        ctx.strokeStyle = "blue";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+      }
+      if (y && lineY !== undefined) {
+        const yValue = y.getPixelForValue(lineY);
 
-      ctx.save();
-      ctx.beginPath();
-      ctx.moveTo(xValue, top);
-      ctx.lineTo(xValue, bottom);
-      ctx.strokeStyle = "blue";
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      ctx.restore();
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(left, yValue);
+        ctx.lineTo(right, yValue);
+        ctx.strokeStyle = "blue";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+      }
     }
-    if (y && lineY !== undefined) {
-      const yValue = y.getPixelForValue(lineY);
-
-      ctx.save();
-      ctx.beginPath();
-      ctx.moveTo(left, yValue);
-      ctx.lineTo(right, yValue);
-      ctx.strokeStyle = "blue";
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      ctx.restore();
-    }
-  }
   },
 };
 
@@ -100,7 +104,7 @@ const defaultOptions = {
 };
 
 const ScatterChart = ({
-  quadrantValues, 
+  quadrantValues,
   lineX,
   lineY,
   setLineX,
@@ -110,7 +114,7 @@ const ScatterChart = ({
   options = defaultOptions,
 }) => {
   const chartRef = useRef(null);
-  const [dataOptions, setOptions] = useState(options)
+  const [dataOptions, setOptions] = useState(options);
   const [maxX, setMaxX] = useState();
   const [maxY, setMaxY] = useState();
 
@@ -120,6 +124,17 @@ const ScatterChart = ({
         x: {
           type: "linear",
           position: "bottom",
+          title: {
+            display: true,
+            text: selectLabels[state.xLabel], // Replace with your x-axis label
+          },
+        },
+        y: {
+          type: "linear",
+          title: {
+            display: true,
+            text: selectLabels[state.yLabel], // Replace with your y-axis label
+          },
         },
       },
       responsive: true,
@@ -127,17 +142,22 @@ const ScatterChart = ({
         legend: {
           position: "top",
         },
+
         tooltip: {
           callbacks: {
             label: function (context) {
-              return `Name: ${context.raw.name}, ${[state.xLabel]}:${context.raw.x}, ${state.yLabel}:${context.raw.y}, Number of ICS-LABA Patients: ${context.raw.value}`;
+              return `Name: ${context.raw.name}, ${[selectLabels[state.xLabel]]}:${
+                context.raw.x
+              }, ${selectLabels[state.yLabel]}:${
+                context.raw.y
+              }, Number of ICS-LABA Patients: ${context.raw.value}`;
             },
           },
         },
       },
     };
-    setOptions(_defaultOptions)
-  },[state.xLabel, state.yLabel])
+    setOptions(_defaultOptions);
+  }, [state.xLabel, state.yLabel]);
 
   useEffect(() => {
     if (chartRef.current) {
@@ -179,17 +199,43 @@ const ScatterChart = ({
   return (
     <div className="h-[800px] relative w-full">
       <Bubble ref={chartRef} data={data} options={dataOptions} />
-      <div className="absolute font-[700] top-[8%] left-[5%]">{quadrantValues.topLeft}</div>
-   {chartRef.current &&   <div style={{left: `calc(${chartRef.current.width}px - 10%)`}} className="absolute font-[700] top-[8%]">{quadrantValues.topRight}</div>}
-     {chartRef.current && <div style={{ top: `calc(${chartRef.current.height}px - 10%)`}}  className="absolute font-[700] left-[5%]">{quadrantValues.bottomLeft}</div>} 
-      {chartRef.current && <div style={{ top:  `calc(${chartRef.current.height}px - 10%)`, left: `calc(${chartRef.current.width}px - 10%)`}} className="absolute font-[700]">{quadrantValues.bottomRight}</div>}
+      <div className="absolute text-[#4B0082] font-[700] top-[8%] left-[5%]">
+        {quadrantValues.topLeft}
+      </div>
+      {chartRef.current && (
+        <div
+          style={{ left: `calc(${chartRef.current.width}px - 10%)` }}
+          className="absolute text-[#FF0000] font-[700] top-[8%]"
+        >
+          {quadrantValues.topRight}
+        </div>
+      )}
+      {chartRef.current && (
+        <div
+          style={{ top: `calc(${chartRef.current.height}px - 10%)` }}
+          className="absolute text-[#D3D3D3] font-[700] left-[5%]"
+        >
+          {quadrantValues.bottomLeft}
+        </div>
+      )}
+      {chartRef.current && (
+        <div
+          style={{
+            top: `calc(${chartRef.current.height}px - 10%)`,
+            left: `calc(${chartRef.current.width}px - 10%)`,
+          }}
+          className="absolute text-[#D8BFD8] font-[700]"
+        >
+          {quadrantValues.bottomRight}
+        </div>
+      )}
       <div className="flex w-full mt-4 flex-col items-start gap-2">
         <div className="flex w-full mt-2 items-center gap-2">
           <label
             className="text-xs font-[500] whitespace-nowrap"
             htmlFor="labels-range-input"
           >
-            X-axis prioritization line
+           {selectLabels[state.xLabel]}
           </label>
           <input
             id="labels-range-input"
@@ -207,7 +253,7 @@ const ScatterChart = ({
             className="text-xs font-[500] whitespace-nowrap"
             htmlFor="labels-range-input"
           >
-            Y-axis prioritization line
+            {selectLabels[state.yLabel]}
           </label>
           <input
             id="labels-range-input"

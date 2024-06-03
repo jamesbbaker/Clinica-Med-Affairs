@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import unmetChart from "../../../assets/images/unmetChart.png";
 import Popup from "reactjs-popup";
 import { getDataStats } from "../../../API/Outputs";
@@ -7,6 +7,7 @@ import { generateStatsOptions, setLineData } from "../../../utils/ChartUtils";
 import { LineChart } from "../../../components/LineChart";
 import BarChart from "../../../components/BarChart";
 import Table from "../../../components/Table";
+import { unmetLabels } from "../../../constants/appConstants";
 
 const UnmetNeedDefinitionData = {
   id1: {
@@ -66,7 +67,7 @@ const UnmetNeedDefinitionData = {
   },
   id4: {
     id: "id4",
-    title: "Treatment (all lines of therapy)",
+    title: "Treatment (prior to receiving ICS / beta-agonist)",
     description: "Lorem Ipsum",
     buttonText: "",
     color: "#6FA9D9",
@@ -79,6 +80,13 @@ const UnmetNeedDefinitionData = {
       "Definition: Patients who have an exacerbation prior to receiving an ICS/beta-agonist treatment after being diagnosed with Asthma. Exacerbations are defined as patients going to the ED / ER WITH a primary asthma diagnosis code or a specific asthma treatment (e.g. insert emergency airway, airway inhaltion treatment, or nebulizer with compression.)",
     color: "#6FA9D9",
   },
+  id19: {
+    id: "id19",
+    title: "Treatment (ICS / beta-agonist)",
+    description: "Lorem Ipsum",
+    buttonText: "",
+    color: "#81BEBB",
+  },
   id6: {
     id: "id6",
     title:
@@ -87,7 +95,7 @@ const UnmetNeedDefinitionData = {
       "Failure to escalate uncontrolled/severe patients to double therapy",
     description:
       "Definition: Patients who receive ICS / beta-agonists with an exacerbation who are not escalated to double therapy. Exacerbations are defined as patients going to the ED / ER WITH a primary asthma diagnosis code or a specific asthma treatment (e.g. insert emergency airway, airway inhaltion treatment, or nebulizer with compression.)",
-    color: "#6FA9D9",
+    color: "#81BEBB",
   },
   id17: {
     id: "id17",
@@ -96,7 +104,7 @@ const UnmetNeedDefinitionData = {
     buttonText: "Excessive steroid usage on ICS/beta-agonist",
     description:
       "Definition: Patients on single therapy who receive >450mg of OCS in a year. OCS converted to prednisone equivalent milligrams. Dose per month and year calculated using prescribed dose, quantity, and days supply.",
-    color: "#6FA9D9",
+    color: "#81BEBB",
   },
   id7: {
     id: "id7",
@@ -105,7 +113,14 @@ const UnmetNeedDefinitionData = {
     buttonText: "Delay in escalating patients to double therapy",
     description:
       "Definition: Patients who are escalated from single to double therapy >3 week after their first exacerbation. Exacerbations are defined as patients going to the ED / ER WITH a primary asthma diagnosis code or a specific asthma treatment (e.g. insert emergency airway, airway inhaltion treatment, or nebulizer with compression.)",
-    color: "#6FA9D9",
+    color: "#81BEBB",
+  },
+  id21: {
+    id: "id21",
+    title: "Treatment (ICS-LABA)",
+    description: "Lorem Ipsum",
+    buttonText: "",
+    color: "#88C8B7",
   },
   id8: {
     id: "id8",
@@ -115,7 +130,7 @@ const UnmetNeedDefinitionData = {
       "Failure to escalate uncontrolled/severe patients to triple therapy",
     description:
       "Definition: Patients who receive double therapy with an exacerbation who are not escalated to triple therapy or biologics. Exacerbations are defined as patients going to the ED / ER WITH a primary asthma diagnosis code or a specific asthma treatment (e.g. insert emergency airway, airway inhaltion treatment, or nebulizer with compression.)",
-    color: "#6FA9D9",
+    color: "#88C8B7",
   },
   id18: {
     id: "id18",
@@ -124,7 +139,7 @@ const UnmetNeedDefinitionData = {
     buttonText: "Excessive steroid usage on double therapy",
     description:
       "Definition: Patients on double therapy who receive >450mg of OCS in a year. OCS converted to prednisone equivalent milligrams. Dose per month and year calculated using prescribed dose, quantity, and days supply.",
-    color: "#6FA9D9",
+    color: "#88C8B7",
   },
   id9: {
     id: "id9",
@@ -132,14 +147,14 @@ const UnmetNeedDefinitionData = {
       "How long does it take from demonstrating severe/uncontrolled asthma to treatment escalation?",
     buttonText: "Delay in escalating patients from double to triple therapy",
     description: "Lorem Ipsum",
-    color: "#6FA9D9",
+    color: "#88C8B7",
   },
   id10: {
     id: "id10",
     title: "Do patients receive open triple therapies?",
     buttonText: "Suboptimal use of open triple therapy",
     description: "Lorem Ipsum",
-    color: "#6FA9D9",
+    color: "#94D3A2",
   },
   id12: {
     id: "id12",
@@ -185,7 +200,23 @@ const UnmetNeedDefinition = () => {
   const [statsData10, setStatsData10] = useState(null);
   const [statsData11, setStatsData11] = useState(null);
   const [statsData12, setStatsData12] = useState(null);
+  const [nationalData, setNationalData] = useState(null);
+  const [dataValue, setDataValue] = useState(null);
   const { accessToken, refreshToken } = useContext(AuthContext);
+  const [showTooltip, setTooltip] = useState({
+    id: "",
+    index: null,
+  });
+
+  useEffect(() => {
+    getDataStats("national_data", accessToken, refreshToken).then(
+      async (res) => {
+        if (res) {
+          setNationalData(res.summary_data);
+        }
+      }
+    );
+  }, []);
 
   const Table_Columns_3 = useMemo(() => {
     const USERS_TABLE_COLUMNS = [
@@ -291,7 +322,7 @@ const UnmetNeedDefinition = () => {
       scales: {
         y: {
           title: {
-          display: true,
+            display: true,
             text: "patients",
           },
         },
@@ -594,6 +625,13 @@ const UnmetNeedDefinition = () => {
 
   const handleClick = (key) => {
     setModalId(key);
+    setDataValue({
+      id: nationalData[unmetLabels[UnmetNeedDefinitionData[key].buttonText].id],
+      percent:
+        nationalData[
+          unmetLabels[UnmetNeedDefinitionData[key].buttonText].percent
+        ],
+    });
     if (UnmetNeedDefinitionData[key].id === "id2") {
       getDataStats("data_stats_25", accessToken, refreshToken).then((res) => {
         if (res) {
@@ -766,6 +804,24 @@ const UnmetNeedDefinition = () => {
     }
   };
 
+  console.log(showTooltip, "showtooltuip");
+
+  const mouseOver = (key, index) => {
+    if (
+      nationalData &&
+      UnmetNeedDefinitionData[key].buttonText &&
+      UnmetNeedDefinitionData[key].buttonText.length > 0
+    ) {
+      console.log(UnmetNeedDefinitionData[key]);
+      setTooltip({
+        id: nationalData[
+          unmetLabels[UnmetNeedDefinitionData[key].buttonText].id
+        ],
+        index: index,
+      });
+    }
+  };
+
   return (
     <div className="grid grid-cols-3 items-center">
       <div className="px-4 py-2 font-semibold text-lg">
@@ -778,9 +834,9 @@ const UnmetNeedDefinition = () => {
         Asthma Clinical Patient Treatment Trajectory
       </div>
       <div className="grid grid-cols-2 col-span-2 ">
-        {Object.keys(UnmetNeedDefinitionData).map((key) => {
+        {Object.keys(UnmetNeedDefinitionData).map((key, index) => {
           return (
-            <div className="col-span-2" key={key}>
+            <div className="col-span-2 relative" key={key}>
               <div
                 className={`bg-white px-4 ${
                   UnmetNeedDefinitionData[key].buttonText ? "py-2" : "py-1"
@@ -804,11 +860,18 @@ const UnmetNeedDefinition = () => {
                 </div>
                 {UnmetNeedDefinitionData[key].buttonText && (
                   <button
+                    onMouseOver={() => mouseOver(key, index)}
+                    onMouseLeave={() => setTooltip({ id: "", index: null })}
                     onClick={() => handleClick(key)}
                     style={{ borderColor: UnmetNeedDefinitionData[key].color }}
                     className={`text-gray-700 hover:scale-105 transition-all ease-linear border-2 px-4 py-2`}
                   >
                     {UnmetNeedDefinitionData[key].buttonText}
+                    {showTooltip.index == index && nationalData && (
+                      <div className="absolute -top-[1rem] bg-[#fff] text-[#000] border px-2 py-2">
+                        {showTooltip.id}
+                      </div>
+                    )}
                   </button>
                 )}
               </div>
@@ -834,6 +897,23 @@ const UnmetNeedDefinition = () => {
             <div className="w-[100%] sticky top-0 bg-white z-20 px-2 text-lg text-left py-8 font-[600] text-[#808080]">
               {UnmetNeedDefinitionData[modalId].buttonText}
             </div>
+            {dataValue && (
+              <div className="flex flex-col mb-2 items-start w-full">
+                <div>
+                  Number of Patients: <strong>{dataValue.id}</strong>
+                </div>
+                <div>
+                  Eligible Patients:{" "}
+                  <strong>
+                    {Math.round(dataValue.id / dataValue.percent)}
+                  </strong>
+                </div>
+                <div>
+                  Percent of Eligible Patients with Unmet Need:{" "}
+                  <strong>{Math.round(dataValue.percent)}%</strong>
+                </div>
+              </div>
+            )}
             <p className="px-2 w-full text-[#808080] pb-4 text-left text-sm">
               {UnmetNeedDefinitionData[modalId].description}
             </p>
@@ -851,7 +931,7 @@ const UnmetNeedDefinition = () => {
                   />
                 </div>
               )}
-            {statsData10 && (
+              {statsData10 && (
                 <div className="h-[30rem] flex items-center justify-center w-full">
                   <Table
                     initialState={{ pageSize: 10, pageIndex: 0 }}
@@ -895,10 +975,10 @@ const UnmetNeedDefinition = () => {
                   />
                 </>
               )}
-               {statsData11 && (
+              {statsData11 && (
                 <>
                   <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Delay between Exacerbation and Escalation
+                    Delay between Exacerbation and Escalation
                   </div>
                   <BarChart
                     height={window.innerWidth > 1400 ? 120 : 80}
@@ -907,10 +987,10 @@ const UnmetNeedDefinition = () => {
                   />
                 </>
               )}
-                  {statsData12 && (
+              {statsData12 && (
                 <>
                   <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Delay between Exacerbation and Escalation
+                    Delay between Exacerbation and Escalation
                   </div>
                   <BarChart
                     height={window.innerWidth > 1400 ? 120 : 80}
@@ -919,10 +999,10 @@ const UnmetNeedDefinition = () => {
                   />
                 </>
               )}
-               {statsData9 && (
+              {statsData9 && (
                 <>
                   <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Delay from Diagnosis to EOS / CBC testing
+                    Delay from Diagnosis to EOS / CBC testing
                   </div>
                   <BarChart
                     height={window.innerWidth > 1400 ? 120 : 80}

@@ -11,7 +11,11 @@ import { AuthContext } from "../../../context/AuthContext";
 import { getDataStats } from "../../../API/Outputs";
 import mapDataJson from "../../../components/Map/data.json";
 import SelectBox from "../../../components/SelectBox";
-import { patientTotals } from "../../../constants/appConstants";
+import {
+  mapLabels,
+  patientTotals,
+  selectLabels,
+} from "../../../constants/appConstants";
 import CustomDropdown from "../../../components/CustomDropdown";
 const options = {
   indexAxis: "y",
@@ -25,6 +29,9 @@ const options = {
     y: {
       display: false,
       ticks: {
+        callback: function (value, index, ticks) {
+          return `${value}%`;
+        },
         stepSize: 1,
         min: 0,
         autoSkip: false,
@@ -185,7 +192,7 @@ const PatientOpportunityMapping = () => {
     getDataStats("region_level_data", accessToken, refreshToken)
       .then((res) => {
         if (res) {
-          console.log(res)
+          console.log(res);
           // let _data = JSON.parse(res.replaceAll("NaN", 0));
           setRegionData(res.data);
         }
@@ -287,17 +294,22 @@ const PatientOpportunityMapping = () => {
   };
 
   function setChartDataValue(setValue, API_labels, data) {
+    console.log(API_labels);
     let _value = [];
     API_labels.forEach((item) => {
       _value.push(data[0][item]);
     });
     let chartData = {
-      labels: API_labels,
+      labels: API_labels.map((item) => selectLabels[mapLabels[item]]),
       datasets: [
         {
           data: _value,
-          borderColor: API_labels.map(item =>!patientTotals.includes(item) ? "#800000" : "#00008B" ),
-          backgroundColor: API_labels.map(item =>!patientTotals.includes(item) ? "#800000" : "#00008B" ),
+          borderColor: API_labels.map((item) =>
+            !patientTotals.includes(item) ? "#800000" : "#00008B"
+          ),
+          backgroundColor: API_labels.map((item) =>
+            !patientTotals.includes(item) ? "#800000" : "#00008B"
+          ),
         },
       ],
     };
@@ -334,14 +346,14 @@ const PatientOpportunityMapping = () => {
       setCurrentToggle(toggleBtns[0].id);
       setMarkedStates(null);
       currentStateClicked.current = null;
-     
+
       setChartDataValue(setData1, data_1_labels, summaryData);
       setChartDataValue(setData2, data_2_labels, summaryData);
     }, 100);
   };
 
   const handleToggle = (e) => {
-    console.log(e)
+    console.log(e);
     setCurrentToggle(e);
   };
 
@@ -354,6 +366,17 @@ const PatientOpportunityMapping = () => {
         <div className="flex justify-center items-center h-24">
           <div className="w-6 h-6 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
         </div>
+      </div>
+      <div className="text-md font-medium mt-4">
+        National Summary of Unmet Needs
+      </div>
+      <div className="flex items-center w-full justify-center">
+        {data1 && (
+          <div className="w-[60%]">
+            <BarChart data={data1} />
+          </div>
+        )}
+        {/* {data2 && <BarChart data={data2} options={options} />} */}
       </div>
       <div style={{ opacity: loading ? 0 : 1 }}>
         <div className="flex items-center justify-between">
@@ -371,9 +394,8 @@ const PatientOpportunityMapping = () => {
               input={{
                 label: "Select Unmet Needs",
                 id: "unmet",
-                
                 options: toggleBtns.map((item) => ({
-                  name: item.id,
+                  name: selectLabels[item.id],
                   value: item.label,
                 })),
               }}
@@ -404,13 +426,6 @@ const PatientOpportunityMapping = () => {
             markersEnabled={false}
           />
         )}
-        <div className="text-md font-medium mt-4">
-          National Map of Unmet need
-        </div>
-        <div className="grid grid-cols-2 ">
-          {data1 && <BarChart data={data1} />}
-          {data2 && <BarChart data={data2} options={options} />}
-        </div>
       </div>
     </div>
   );
