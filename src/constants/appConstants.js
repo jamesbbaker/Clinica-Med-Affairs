@@ -159,42 +159,60 @@ export const unmetLabels = {
   },
 };
 
-
 export const selectLabels = {
   "Number of Asthma Patients": "Number of Asthma Patients",
-  "Number of ICS Patients":  "Number of ICS Patients",
-  "Number of ICS Exacerbation":   "Number of ICS Exacerbation",
+  "Number of ICS Patients": "Number of ICS Patients",
+  "Number of ICS Exacerbation": "Number of ICS Exacerbation",
   "Number of ICS-LABA Patients": "Number of ICS-LABA Patients",
-  "Number of ICS-LABA Exacerbation":   "Number of ICS-LABA Exacerbation",
+  "Number of ICS-LABA Exacerbation": "Number of ICS-LABA Exacerbation",
   "Number of No Spirometry": "Incomplete initial asthma testing",
   "Percent of No Spirometry": "Incomplete initial asthma testing percent",
   "Number of No EOS Testing": "Improper severe asthma testing",
   "Percent of No EOS Testing": "Improper severe asthma testing percent",
   "Number of No Treatment": "Exacerbation prior to receiving ICS/beta-agonist",
-  "Percent of No Treatment": "Exacerbation prior to receiving ICS/beta-agonist percent",
-  "Number of ICS High Steroid Usage": "Excessive steroid usage on ICS/beta-agonist",
-  "Percent of ICS High Steroid Usage":  "Excessive steroid usage on ICS/beta-agonist percent",
-  "Number of ICS Exacerbation Failed Escalation": "Failure to escalate uncontrolled/severe patients to double therapy",
-  "Percent of ICS Exacerbation Failed Escalation":"Failure to escalate uncontrolled/severe patients to double therapy percent",
-  "Number of ICS Escalation Delay": "Delay in escalating patients to double therapy",
-  "Percent of ICS Escalation Delay": "Delay in escalating patients to double therapy percent",
-  "Number of ICS-LABA High Steroid Usage": "Excessive steroid usage on double therapy",
-  "Percent of ICS-LABA High Steroid Usage": "Excessive steroid usage on double therapy percent",
-  "Number of ICS-LABA Exacerbation Failed Escalation": "Failure to escalate uncontrolled/severe patients to triple therapy",
-  "Percent of ICS-LABA Exacerbation Failed Escalation": "Failure to escalate uncontrolled/severe patients to triple therapy percent",
-  "Number of ICS-LABA Escalation Delay": "Delay in escalating patients from double to triple therapy",
-  "Percent of ICS-LABA Escalation Delay": "Delay in escalating patients from double to triple therapy percent",
-  "Number of Suboptimal Use of Open Triple Therapy": "Suboptimal use of open triple therapy",
-  "Percent of Suboptimal Use of Open Triple Therapy": "Suboptimal use of open triple therapy percent",
-  "Number of Non-adherence to Double Therapies": "Non-adherence to double therapies",
-  "Percent of Non-adherence to Double Therapies": "Non-adherence to double therapies percent",
-  "Number of Non-adherence to Open Triple Therapies": "Non-adherence to open triple therapies",
-  "Percent of Non-adherence to Open Triple Therapies": "Non-adherence to open triple therapies percent",
-  "Number of Non-adherence to Closed Triple Therapies": "Non-adherence to closed triple therapies",
-  "Percent of Non-adherence to Closed Triple Therapies": "Non-adherence to closed triple therapies percent"
-}
-
-
+  "Percent of No Treatment":
+    "Exacerbation prior to receiving ICS/beta-agonist percent",
+  "Number of ICS High Steroid Usage":
+    "Excessive steroid usage on ICS/beta-agonist",
+  "Percent of ICS High Steroid Usage":
+    "Excessive steroid usage on ICS/beta-agonist percent",
+  "Number of ICS Exacerbation Failed Escalation":
+    "Failure to escalate uncontrolled/severe patients to double therapy",
+  "Percent of ICS Exacerbation Failed Escalation":
+    "Failure to escalate uncontrolled/severe patients to double therapy percent",
+  "Number of ICS Escalation Delay":
+    "Delay in escalating patients to double therapy",
+  "Percent of ICS Escalation Delay":
+    "Delay in escalating patients to double therapy percent",
+  "Number of ICS-LABA High Steroid Usage":
+    "Excessive steroid usage on double therapy",
+  "Percent of ICS-LABA High Steroid Usage":
+    "Excessive steroid usage on double therapy percent",
+  "Number of ICS-LABA Exacerbation Failed Escalation":
+    "Failure to escalate uncontrolled/severe patients to triple therapy",
+  "Percent of ICS-LABA Exacerbation Failed Escalation":
+    "Failure to escalate uncontrolled/severe patients to triple therapy percent",
+  "Number of ICS-LABA Escalation Delay":
+    "Delay in escalating patients from double to triple therapy",
+  "Percent of ICS-LABA Escalation Delay":
+    "Delay in escalating patients from double to triple therapy percent",
+  "Number of Suboptimal Use of Open Triple Therapy":
+    "Suboptimal use of open triple therapy",
+  "Percent of Suboptimal Use of Open Triple Therapy":
+    "Suboptimal use of open triple therapy percent",
+  "Number of Non-adherence to Double Therapies":
+    "Non-adherence to double therapies",
+  "Percent of Non-adherence to Double Therapies":
+    "Non-adherence to double therapies percent",
+  "Number of Non-adherence to Open Triple Therapies":
+    "Non-adherence to open triple therapies",
+  "Percent of Non-adherence to Open Triple Therapies":
+    "Non-adherence to open triple therapies percent",
+  "Number of Non-adherence to Closed Triple Therapies":
+    "Non-adherence to closed triple therapies",
+  "Percent of Non-adherence to Closed Triple Therapies":
+    "Non-adherence to closed triple therapies percent",
+};
 
 export const mapLabels = {
   "Total Asthma Patients": "Number of Asthma Patients",
@@ -210,22 +228,57 @@ export const mapLabels = {
   "Percent No Treatment": "Percent of No Treatment",
   "Total ICS High Steroid Usage": "Number of ICS High Steroid Usage",
   "Percent ICS High Steroid Usage": "Percent of ICS High Steroid Usage",
-  "Total ICS Exacerbation Failed Escalation": "Number of ICS Exacerbation Failed Escalation",
-  "Percent ICS Exacerbation Failed Escalation": "Percent of ICS Exacerbation Failed Escalation",
+  "Total ICS Exacerbation Failed Escalation":
+    "Number of ICS Exacerbation Failed Escalation",
+  "Percent ICS Exacerbation Failed Escalation":
+    "Percent of ICS Exacerbation Failed Escalation",
   "Total ICS Escalation Delay": "Number of ICS Escalation Delay",
   "Percent ICS Escalation Delay": "Percent of ICS Escalation Delay",
   "Total ICS-LABA High Steroid Usage": "Number of ICS-LABA High Steroid Usage",
-  "Percent ICS-LABA High Steroid Usage": "Percent of ICS-LABA High Steroid Usage",
-  "Total ICS-LABA Exacerbation Failed Escalation": "Number of ICS-LABA Exacerbation Failed Escalation",
-  "Percent ICS-LABA Exacerbation Failed Escalation": "Percent of ICS-LABA Exacerbation Failed Escalation",
+  "Percent ICS-LABA High Steroid Usage":
+    "Percent of ICS-LABA High Steroid Usage",
+  "Total ICS-LABA Exacerbation Failed Escalation":
+    "Number of ICS-LABA Exacerbation Failed Escalation",
+  "Percent ICS-LABA Exacerbation Failed Escalation":
+    "Percent of ICS-LABA Exacerbation Failed Escalation",
   "Total ICS-LABA Escalation Delay": "Number of ICS-LABA Escalation Delay",
   "Percent ICS-LABA Escalation Delay": "Percent of ICS-LABA Escalation Delay",
-  "Number of Suboptimal Use of Open Triple Therapy": "Suboptimal use of open triple therapy",
-  "Percent of Suboptimal Use of Open Triple Therapy": "Suboptimal use of open triple therapy percent",
-  "Number of Non-adherence to Double Therapies": "Non-adherence to double therapies",
-  "Percent of Non-adherence to Double Therapies": "Non-adherence to double therapies percent",
-  "Number of Non-adherence to Open Triple Therapies": "Non-adherence to open triple therapies",
-  "Percent of Non-adherence to Open Triple Therapies": "Non-adherence to open triple therapies percent",
-  "Number of Non-adherence to Closed Triple Therapies": "Non-adherence to closed triple therapies",
-  "Percent of Non-adherence to Closed Triple Therapies": "Non-adherence to closed triple therapies percent"
-}
+  "Number of Suboptimal Use of Open Triple Therapy":
+    "Suboptimal use of open triple therapy",
+  "Percent of Suboptimal Use of Open Triple Therapy":
+    "Suboptimal use of open triple therapy percent",
+  "Number of Non-adherence to Double Therapies":
+    "Non-adherence to double therapies",
+  "Percent of Non-adherence to Double Therapies":
+    "Non-adherence to double therapies percent",
+  "Number of Non-adherence to Open Triple Therapies":
+    "Non-adherence to open triple therapies",
+  "Percent of Non-adherence to Open Triple Therapies":
+    "Non-adherence to open triple therapies percent",
+  "Number of Non-adherence to Closed Triple Therapies":
+    "Non-adherence to closed triple therapies",
+  "Percent of Non-adherence to Closed Triple Therapies":
+    "Non-adherence to closed triple therapies percent",
+};
+
+export const mapBarCharts = {
+  chart1: [
+    "Total Asthma Patients",
+    "Total No Spirometry",
+    "Total No EOS Testing",
+  ],
+  chart2: ["Total Asthma Patients", "Total No Treatment"],
+  chart3: [  "Total ICS Patients",
+  "Total ICS Exacerbation",
+    "Total ICS Exacerbation Failed Escalation",
+    "Total ICS High Steroid Usage",
+    "Total ICS Escalation Delay",
+  ],
+  chart4: [
+    "Total ICS-LABA Patients",
+    "Total ICS-LABA Exacerbations",
+    "Total ICS-LABA Exacerbation Failed Escalation",
+    "Total ICS-LABA High Steroid Usage",
+    "Total ICS-LABA Escalation Delay",
+  ],
+};
