@@ -294,7 +294,7 @@ const PatientOpportunityMapping = () => {
   };
 
   function setChartDataValue(setValue, API_labels, data) {
-    console.log(API_labels);
+  
     let _value = [];
     API_labels.forEach((item) => {
       _value.push(data[0][item]);
@@ -373,6 +373,9 @@ const PatientOpportunityMapping = () => {
       <div className="flex items-center w-full justify-center">
         {data1 && (
           <div className="w-[60%]">
+            <BarChart data={data1.splice} />
+            <BarChart data={data1} />
+            <BarChart data={data1} />
             <BarChart data={data1} />
           </div>
         )}

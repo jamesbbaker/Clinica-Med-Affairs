@@ -2,7 +2,7 @@ import axios from "axios";
 import { refreshTokenFunction } from "../../context/AuthContext";
 
 export async function getDataStats(endPoint, token, refreshToken) {
-  console.log(token)
+
   return new Promise(function(resolve, reject) {
     axios
     .get(`https://clinica-server.replit.app/${endPoint}`, {
