@@ -346,7 +346,6 @@ const PatientOpportunityMapping = () => {
       setCurrentToggle(toggleBtns[0].id);
       setMarkedStates(null);
       currentStateClicked.current = null;
-
       setChartDataValue(setData1, data_1_labels, summaryData);
       setChartDataValue(setData2, data_2_labels, summaryData);
     }, 100);
@@ -373,10 +372,8 @@ const PatientOpportunityMapping = () => {
       <div className="flex items-center w-full justify-center">
         {data1 && (
           <div className="w-[60%]">
-            <BarChart data={data1.splice} />
             <BarChart data={data1} />
-            <BarChart data={data1} />
-            <BarChart data={data1} />
+         
           </div>
         )}
         {/* {data2 && <BarChart data={data2} options={options} />} */}
