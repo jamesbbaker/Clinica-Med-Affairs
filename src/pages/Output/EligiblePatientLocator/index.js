@@ -414,8 +414,7 @@ const EligiblePatientLocator = () => {
       urlParams.length > 0 ? "&" : ""
     }${urlParams}`;
 
-  
-    console.log(finalUrl);
+
     getDataStats(finalUrl, accessToken, refreshToken)
       .then((res) => {
         let _data = JSON.parse(res.replaceAll("NaN", 0));
