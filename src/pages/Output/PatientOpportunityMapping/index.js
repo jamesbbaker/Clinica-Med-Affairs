@@ -12,6 +12,7 @@ import { getDataStats } from "../../../API/Outputs";
 import mapDataJson from "../../../components/Map/data.json";
 import SelectBox from "../../../components/SelectBox";
 import {
+  mapBarCharts,
   mapLabels,
   patientTotals,
   selectLabels,
@@ -294,26 +295,34 @@ const PatientOpportunityMapping = () => {
   };
 
   function setChartDataValue(setValue, API_labels, data) {
-  
-    let _value = [];
-    API_labels.forEach((item) => {
-      _value.push(data[0][item]);
+    function generateChartData(array) {
+      let _value = [];
+      array.forEach((item) => {
+        _value.push(data[0][item]);
+      });
+
+      return {
+        labels: array.map((item) => selectLabels[mapLabels[item]]),
+        datasets: [
+          {
+            data: _value,
+            borderColor: array.map((item) =>
+              !patientTotals.includes(item) ? "#800000" : "#00008B"
+            ),
+            backgroundColor: array.map((item) =>
+              !patientTotals.includes(item) ? "#800000" : "#00008B"
+            ),
+          },
+        ],
+      };
+    }
+
+    setValue({
+      mapValue1: generateChartData(mapBarCharts.chart1),
+      mapValue2: generateChartData(mapBarCharts.chart2),
+      mapValue3: generateChartData(mapBarCharts.chart3),
+      mapValue4: generateChartData(mapBarCharts.chart4),
     });
-    let chartData = {
-      labels: API_labels.map((item) => selectLabels[mapLabels[item]]),
-      datasets: [
-        {
-          data: _value,
-          borderColor: API_labels.map((item) =>
-            !patientTotals.includes(item) ? "#800000" : "#00008B"
-          ),
-          backgroundColor: API_labels.map((item) =>
-            !patientTotals.includes(item) ? "#800000" : "#00008B"
-          ),
-        },
-      ],
-    };
-    setValue(chartData);
   }
 
   const stateClicked = (feature, mapRef) => {
@@ -372,8 +381,22 @@ const PatientOpportunityMapping = () => {
       <div className="flex items-center w-full justify-center">
         {data1 && (
           <div className="w-[60%]">
-            <BarChart data={data1} />
-         
+            <BarChart label="Testing" height={80} data={data1.mapValue1} />
+            <BarChart
+              label="Treatment (prior to receiving ICS / beta-agonist)"
+              height={80}
+              data={data1.mapValue2}
+            />
+            <BarChart
+              label="Treatment (ICS / beta-agonist)"
+              height={80}
+              data={data1.mapValue3}
+            />
+            <BarChart
+              label="Treatment (ICS-LABA)"
+              height={80}
+              data={data1.mapValue4}
+            />
           </div>
         )}
         {/* {data2 && <BarChart data={data2} options={options} />} */}

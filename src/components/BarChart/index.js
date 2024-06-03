@@ -88,13 +88,14 @@ export const _data = {
         28795, 34325, 43017, 18139, 37761, 16982, 20873, 21435, 31948, 14192,
         12540, 22449, 29210,
       ],
+      barThickness: 10, 
       borderColor: "rgb(255, 99, 132)",
       backgroundColor: "rgba(255, 99, 132, 0.5)",
     },
   ],
 };
 
-const BarChart = ({ height = 250, data = _data, options = _options }) => {
+const BarChart = ({ label,height = 250, data = _data, options = _options }) => {
   const chartRef = useRef(null);
   const [selectedValue, setSelectedValue] = useState(0);
 
@@ -108,6 +109,7 @@ const BarChart = ({ height = 250, data = _data, options = _options }) => {
 
   return (
     <div className="px-4 w-full h-full mt-2 rounded-lg py-4">
+      {label && <div className="text-[500] text-[#555555] text-md">{label}</div>}
       <Bar
         height={height}
         ref={chartRef}
