@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { useTable, usePagination, useSortBy } from "react-table";
 import Popup from "reactjs-popup";
 import BarChart from "../BarChart";
-import { EPL_TABLE_COLUMNS, patientTotals } from "../../constants/appConstants";
+import { EPL_TABLE_COLUMNS, patientTotals, selectLabels } from "../../constants/appConstants";
 import SelectionButtons from "../SelectionButtons";
 import { breakString, removeCommasFromString } from "../../utils/StringUtils";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -366,7 +366,7 @@ const Table = ({
                     (item) =>
                       isNaN(item) && {
                         col: item,
-                        label: item.Header,
+                        label: selectLabels[item.Header],
                         value: item.Header,
                       }
                   )
@@ -382,7 +382,7 @@ const Table = ({
                 labelledBy=""
                 ItemRenderer={customOptionRenderer}
                 options={Object.values(filterState).map((item) => ({
-                  label: item.id,
+                  label: selectLabels[item.id],
                   value: item.id,
                 }))}
                 className="w-[20rem] z-[5]"

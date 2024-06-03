@@ -6,6 +6,7 @@ import { highestValue } from "../../../utils/MathUtils";
 import SelectBox from "../../../components/SelectBox";
 import { MultiSelect } from "react-multi-select-component";
 import CustomDropdown from "../../../components/CustomDropdown";
+import { selectLabels } from "../../../constants/appConstants";
 
 const filterOptions = [
   "Number of Asthma Patients",
@@ -19,16 +20,16 @@ const filterOptions = [
   "Percent of No EOS Testing",
   "Number of No Treatment",
   "Percent of No Treatment",
-  "Number of ICS High Steroid Usage",
-  "Percent of ICS High Steroid Usage",
   "Number of ICS Exacerbation Failed Escalation",
   "Percent of ICS Exacerbation Failed Escalation",
+  "Number of ICS High Steroid Usage",
+  "Percent of ICS High Steroid Usage",
   "Number of ICS Escalation Delay",
   "Percent of ICS Escalation Delay",
-  "Number of ICS-LABA High Steroid Usage",
-  "Percent of ICS-LABA High Steroid Usage",
   "Number of ICS-LABA Exacerbation Failed Escalation",
   "Percent of ICS-LABA Exacerbation Failed Escalation",
+  "Number of ICS-LABA High Steroid Usage",
+  "Percent of ICS-LABA High Steroid Usage",
   "Number of ICS-LABA Escalation Delay",
   "Percent of ICS-LABA Escalation Delay",
 ];
@@ -78,20 +79,19 @@ const MedicalAffairToolbox = () => {
 
   useEffect(() => {
     if (state.data) {
-  
       let topLeft = 0;
       let topRight = 0;
       let bottomLeft = 0;
       let bottomRight = 0;
       state.data.datasets[0].data.map((item) => {
         if (item.x < lineX && item.y < lineY) {
-          bottomLeft+=1
+          bottomLeft += 1;
         } else if (item.x >= lineX && item.y < lineY) {
-          bottomRight+=1
+          bottomRight += 1;
         } else if (item.x < lineX && item.y >= lineY) {
-          topLeft+=1
+          topLeft += 1;
         } else {
-          topRight+=1
+          topRight += 1;
         }
       });
       setQuadrantValues({
@@ -102,8 +102,6 @@ const MedicalAffairToolbox = () => {
       });
     }
   }, [lineX, lineY, state.data]);
-
-
 
   const fetchData = (
     filters = {
@@ -181,7 +179,6 @@ const MedicalAffairToolbox = () => {
             name: item["Assigned Physician Name"],
             x: item[vabelValues.xLabel],
             y: item[vabelValues.yLabel],
-
             r: calculateRadius(item[radius], maxValue),
             value: item[radius],
           })),
@@ -206,8 +203,8 @@ const MedicalAffairToolbox = () => {
       },
     });
     let labelValue = {
-      xLabel:id == "xLabel" ? val : state.xLabel,
-      yLabel:id == "yLabel" ? val : state.yLabel,
+      xLabel: id == "xLabel" ? val : state.xLabel,
+      yLabel: id == "yLabel" ? val : state.yLabel,
     };
     let data = handleChartData(rawData, labelValue);
     dispatch({
@@ -292,9 +289,8 @@ const MedicalAffairToolbox = () => {
           </div>
           <div className="flex flex-col mb-4 items-start">
             <div>
-              
               <CustomDropdown
-              showColors
+                showColors
                 labelClassName="mb-0"
                 className={"flex items-center gap-2"}
                 input={{
@@ -302,18 +298,18 @@ const MedicalAffairToolbox = () => {
                   name: "X-axis unmet need select",
                   type: "select",
                   options: filterOptions.map((item) => ({
-                    name: item,
+                    name: selectLabels[item] ? selectLabels[item] : item,
                     value: item,
                   })),
                   id: "xLabel",
                 }}
                 value={state.xLabel}
-                handleSelect={(val) => handleSelect("xLabel",val)}
+                handleSelect={(val) => handleSelect("xLabel", val)}
               />
             </div>
             <div>
               <CustomDropdown
-              showColors
+                showColors
                 labelClassName="mb-0"
                 className={"flex items-center gap-2"}
                 input={{
@@ -327,13 +323,13 @@ const MedicalAffairToolbox = () => {
                   id: "yLabel",
                 }}
                 value={state.yLabel}
-                handleSelect={(val) => handleSelect("yLabel",val)}
+                handleSelect={(val) => handleSelect("yLabel", val)}
               />
             </div>
           </div>
 
           <ScatterChart
-          quadrantValues={quadrantValues}
+            quadrantValues={quadrantValues}
             lineX={lineX}
             lineY={lineY}
             setLineX={setLineX}

@@ -12,8 +12,8 @@ const CustomDropdown = ({ showColors = false, labelClassName, className, error, 
 
   const handleOptionClick = (option) => {
    
-    setSelectedOption(option.name);
-    handleSelect(option.name);
+    setSelectedOption(option.value);
+    handleSelect(option.value);
     setIsOpen(false);
   };
 
@@ -30,7 +30,7 @@ const CustomDropdown = ({ showColors = false, labelClassName, className, error, 
     };
   }, []);
 
-  const selectedOptionObject = input.options.find(option => option.name === selectedOption);
+  const selectedOptionObject = input.options.find(option => option.value === selectedOption);
 
   return (
     <div className={`w-full mt-2 ${className}`} ref={dropdownRef}>
@@ -56,7 +56,7 @@ const CustomDropdown = ({ showColors = false, labelClassName, className, error, 
                 className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
                 onClick={() => handleOptionClick(option)}
                 style={{
-                  backgroundColor: option.name === selectedOption ? '#c4c4c4' : 'transparent',
+                  backgroundColor: option.value === selectedOption ? '#c4c4c4' : 'transparent',
                 }}
               >
                 {showColors && (
@@ -69,7 +69,7 @@ const CustomDropdown = ({ showColors = false, labelClassName, className, error, 
                       minWidth: '10px',
                       maxWidth: '10px',
                       display: 'inline-block',
-                      backgroundColor: (patientTotals.includes(option.name) ? '#00008B' : '#800000'),
+                      backgroundColor: (patientTotals.includes(option.value) ? '#00008B' : '#800000'),
                       borderRadius: '50%',
                       display: 'inline-block',
                       marginRight: '10px',

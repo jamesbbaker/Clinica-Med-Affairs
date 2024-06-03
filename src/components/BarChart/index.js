@@ -45,10 +45,12 @@ export const _options = {
         text: "Patients",
       },
       ticks: {
-        // Include a dollar sign in the ticks
-        callback: function (value, index, ticks) {
-          return value == 0 ? 0 : `${value / 1000}k`;
-        },
+        callback: function(value) {
+          if (value === 0) return '0';
+          else if (value >= 1e6) return `${Math.round(value / 1e6)}m`;
+          else if (value >= 1e3) return `${Math.round(value / 1e3)}k`;
+          else return `${value}`;
+      },
         font: {
           size: 10,
         },

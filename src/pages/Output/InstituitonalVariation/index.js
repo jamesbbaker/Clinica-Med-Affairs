@@ -1,13 +1,11 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import SelectionButtons from "../../../components/SelectionButtons";
 import TreeMap from "../../../components/TreeMap";
-import { EPL_TABLE_COLUMNS } from "../../../constants/appConstants";
+import { EPL_TABLE_COLUMNS, selectLabels } from "../../../constants/appConstants";
 import { removeOrAddColumn } from "../../../utils/MapUtils";
 import { getDataStats } from "../../../API/Outputs";
 import { AuthContext } from "../../../context/AuthContext";
 import { MultiSelect } from "react-multi-select-component";
 import Popup from "reactjs-popup";
-import SelectBox from "../../../components/SelectBox";
 import CustomDropdown from "../../../components/CustomDropdown";
 
 const filters = [
@@ -22,16 +20,16 @@ const filters = [
   "Percent of No EOS Testing",
   "Number of No Treatment",
   "Percent of No Treatment",
-  "Number of ICS High Steroid Usage",
-  "Percent of ICS High Steroid Usage",
   "Number of ICS Exacerbation Failed Escalation",
   "Percent of ICS Exacerbation Failed Escalation",
+  "Number of ICS High Steroid Usage",
+  "Percent of ICS High Steroid Usage",
   "Number of ICS Escalation Delay",
   "Percent of ICS Escalation Delay",
-  "Number of ICS-LABA High Steroid Usage",
-  "Percent of ICS-LABA High Steroid Usage",
   "Number of ICS-LABA Exacerbation Failed Escalation",
   "Percent of ICS-LABA Exacerbation Failed Escalation",
+  "Number of ICS-LABA High Steroid Usage",
+  "Percent of ICS-LABA High Steroid Usage",
   "Number of ICS-LABA Escalation Delay",
   "Percent of ICS-LABA Escalation Delay",
 ];
@@ -75,7 +73,7 @@ const InstitutionalVariation = () => {
       return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
     <div><strong>NAME</strong>:  ${hcpValue["Assigned Physician Name"]}</div>
     <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue["Number of ICS-LABA Patients"]}</div>
-    <div><strong>${toggleFilter}</strong>:  ${hcpValue[toggleFilter]}</div>
+    <div><strong>${selectLabels[toggleFilter]}</strong>:  ${hcpValue[toggleFilter]}</div>
      </div>`;
     },
   };
@@ -103,7 +101,7 @@ const InstitutionalVariation = () => {
       return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
     <div><strong>NAME</strong>:  ${hcpValue["Assigned Physician Name"]}</div>
     <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue["Number of ICS-LABA Patients"]}</div>
-    <div><strong>${toggleFilter}</strong>:  ${hcpValue[toggleFilter]}</div>
+    <div><strong>${selectLabels[toggleFilter]}</strong>:  ${hcpValue[toggleFilter]}</div>
      </div>`;
     },
   };
@@ -242,7 +240,7 @@ const InstitutionalVariation = () => {
                 input={{
                   label: "Select Unmet Needs",
                   id: "unmet",
-                  options: filters.map((item) => ({ name: item, value: item })),
+                  options: filters.map((item) => ({ name: selectLabels[item], value: item })),
                 }}
                 handleSelect={(e) => handleToggleFilter(e)}
                 value={toggleFilter}
