@@ -66,7 +66,7 @@ const UnmetNeedDefinitionData = {
   },
   id4: {
     id: "id4",
-    title: "Treatment (prior to receiving ICS / beta-agonist)",
+    title: "Treatment (prior to receiving ICS or beta-agonist)",
     description: "Lorem Ipsum",
     buttonText: "",
     color: "#6FA9D9",
@@ -82,7 +82,7 @@ const UnmetNeedDefinitionData = {
   },
   id19: {
     id: "id19",
-    title: "Treatment (ICS / beta-agonist)",
+    title: "Treatment (ICS or beta-agonist)",
     description: "Lorem Ipsum",
     buttonText: "",
     color: "#81BEBB",
@@ -175,7 +175,7 @@ const UnmetNeedDefinitionData = {
   },
   id13: {
     id: "id13",
-    title: "Are patients adherent to their double treatments?",
+    title: "Are patients persistence on single therapy?",
     buttonText: "Non-adherence to single therapy (persistence)",
     column: "ICS persistence",
     description:
@@ -184,7 +184,7 @@ const UnmetNeedDefinitionData = {
   },
   id14: {
     id: "id14",
-    title: "Are patients adherent to open triple treatments?",
+    title: "Are patients compliance on single therapy?",
     buttonText: "Non-adherence to single therapy (compliance)",
     column: "ICS compliance",
     description:
@@ -193,7 +193,7 @@ const UnmetNeedDefinitionData = {
   },
   id15: {
     id: "id15",
-    title: "Are patients adherence to closed triple treatments?",
+    title: "Are patients persistence on double therapy?",
     column: "ICS-LABA persistence",
     buttonText: "Non-adherence to double therapy (persistence)",
     description:
@@ -202,7 +202,7 @@ const UnmetNeedDefinitionData = {
   },
   id30: {
     id: "id30",
-    title: "Are patients adherence to closed triple treatments?",
+    title: "Are patients compliance on double therapy?",
     column: "ICS-LABA compliance",
     buttonText: "Non-adherence to double therapy (compliance)",
     description:
@@ -211,7 +211,7 @@ const UnmetNeedDefinitionData = {
   },
   id31: {
     id: "id31",
-    title: "Are patients adherence to closed triple treatments?",
+    title: "Are patients persistence on triple therapy?",
     buttonText: "Non-adherence to triple therapy (persistence)",
     column: "ICS-LABA-LAMA persistence",
     description:
@@ -220,7 +220,7 @@ const UnmetNeedDefinitionData = {
   },
   id32: {
     id: "id32",
-    title: "Are patients adherence to closed triple treatments?",
+    title: "Are patients compliance on triple therapy?",
     column: "ICS-LABA-LAMA compliance",
     buttonText: "Non-adherence to triple therapy (compliance)",
     description:
