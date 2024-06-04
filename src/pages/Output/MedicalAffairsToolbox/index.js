@@ -9,29 +9,7 @@ import CustomDropdown from "../../../components/CustomDropdown";
 import { selectLabels } from "../../../constants/appConstants";
 
 const filterOptions = [
-  "Number of Asthma Patients",
-  "Number of ICS Patients",
-  "Number of ICS Exacerbation",
-  "Number of ICS-LABA Patients",
-  "Number of ICS-LABA Exacerbation",
-  "Number of No Spirometry",
-  "Percent of No Spirometry",
-  "Number of No EOS Testing",
-  "Percent of No EOS Testing",
-  "Number of No Treatment",
-  "Percent of No Treatment",
-  "Number of ICS Exacerbation Failed Escalation",
-  "Percent of ICS Exacerbation Failed Escalation",
-  "Number of ICS High Steroid Usage",
-  "Percent of ICS High Steroid Usage",
-  "Number of ICS Escalation Delay",
-  "Percent of ICS Escalation Delay",
-  "Number of ICS-LABA Exacerbation Failed Escalation",
-  "Percent of ICS-LABA Exacerbation Failed Escalation",
-  "Number of ICS-LABA High Steroid Usage",
-  "Percent of ICS-LABA High Steroid Usage",
-  "Number of ICS-LABA Escalation Delay",
-  "Percent of ICS-LABA Escalation Delay",
+  ...Object.keys(selectLabels)
 ];
 
 const initialState = {
@@ -317,7 +295,7 @@ const MedicalAffairToolbox = () => {
                   name: "Y-axis unmet need select",
                   type: "select",
                   options: filterOptions.map((item) => ({
-                    name: item,
+                    name: selectLabels[item] ? selectLabels[item] : item,
                     value: item,
                   })),
                   id: "yLabel",

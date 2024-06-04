@@ -21,6 +21,7 @@ const UnmetNeedDefinitionData = {
     id: "id2",
     title: "After diagnosis, do patients receive a spirometry test?",
     buttonText: "Incomplete initial asthma testing",
+    column: "No spirometry",
     description: (
       <div>
         Patients who do not receive one of the following codes that indicate
@@ -45,10 +46,11 @@ const UnmetNeedDefinitionData = {
     title:
       "Do severe or uncontrolled asthma patients receive IGE and EOS/CBC testing?",
     buttonText: "Improper severe asthma testing",
+    column: "No EOS",
     description: (
       <div>
-        Patients who do not receive one of the following codes that indicate EOS
-        testing:
+        Patients with at least one asthma exacerbation who do not receive one of
+        the following EOS tests:
         <ul>
           <li>
             85025 - Complete blood count (CBC) with automated differential WBC
@@ -56,9 +58,6 @@ const UnmetNeedDefinitionData = {
           </li>
           <li>85048 - Leukocyte (WBC), automated</li>
           <li>85004 - Automated differential WBC count</li>
-        </ul>
-        Additionally, eosinophil-specific tests include:
-        <ul>
           <li>85013 - Blood count; eosinophil count, direct</li>
         </ul>
       </div>
@@ -75,9 +74,10 @@ const UnmetNeedDefinitionData = {
   id5: {
     id: "id5",
     title: "Do patients diagnosed with asthma receive any treatment at all?",
-    buttonText: "Exacerbation prior to receiving ICS/beta-agonist",
+    buttonText: "Exacerbation Prior to Receiving Single Therapy",
+    column: "No treatment",
     description:
-      "Definition: Patients who have an exacerbation prior to receiving an ICS/beta-agonist treatment after being diagnosed with Asthma. Exacerbations are defined as patients going to the ED / ER WITH a primary asthma diagnosis code or a specific asthma treatment (e.g. insert emergency airway, airway inhaltion treatment, or nebulizer with compression.)",
+      "Patients who have at least one exacerbation but never receive ICS or beta-agonist treatment after their asthma diagnosis. Exacerbations are defined as visits to the ED/ER with a primary asthma diagnosis code or specific asthma treatments (e.g., emergency airway insertion, airway inhalation treatment, or nebulizer with compression).",
     color: "#6FA9D9",
   },
   id19: {
@@ -92,27 +92,31 @@ const UnmetNeedDefinitionData = {
     title:
       "Are uncontrolled or severe patients receiving ICS/beta-agonists escalated to double therapy?",
     buttonText:
-      "Failure to escalate uncontrolled/severe patients to double therapy",
+      "Failure to Escalate Uncontrolled/Severe Patients from Single to Double Therapy",
+    column: "ICS failed escalation",
     description:
-      "Definition: Patients who receive ICS / beta-agonists with an exacerbation who are not escalated to double therapy. Exacerbations are defined as patients going to the ED / ER WITH a primary asthma diagnosis code or a specific asthma treatment (e.g. insert emergency airway, airway inhaltion treatment, or nebulizer with compression.)",
+      "Patients on ICS or beta-agonists with at least one exacerbations that are not escalated to double therapy. Exacerbations are defined as visits to the ED/ER with a primary asthma diagnosis code or specific asthma treatments (e.g., emergency airway insertion, airway inhalation treatment, or nebulizer with compression).",
     color: "#81BEBB",
   },
   id17: {
     id: "id17",
     title:
       "Do patients receive excessive OCS by either consistency or quantity of use when receiving ICS/beta-agonists?",
-    buttonText: "Excessive steroid usage on ICS/beta-agonist",
+    buttonText: "Excessive Steroid Usage on Single Therapy",
+    column: "ICS High steroid usage",
     description:
-      "Definition: Patients on single therapy who receive >450mg of OCS in a year. OCS converted to prednisone equivalent milligrams. Dose per month and year calculated using prescribed dose, quantity, and days supply.",
+      "Patients on ICS or beta-agonists who receive more than 450mg of OCS in a year. OCS is converted to prednisone equivalent milligrams, calculated using prescribed dose, quantity, and days supply.",
     color: "#81BEBB",
   },
   id7: {
     id: "id7",
     title:
       "How long does it take from demonstrating severe/uncontrolled asthma to treatment escalation?",
-    buttonText: "Delay in escalating patients to double therapy",
+    buttonText:
+      "Delay in Escalating Patients from Single to Double Therapy after Exacerbation",
+    column: "ICS escalation delay",
     description:
-      "Definition: Patients who are escalated from single to double therapy >3 week after their first exacerbation. Exacerbations are defined as patients going to the ED / ER WITH a primary asthma diagnosis code or a specific asthma treatment (e.g. insert emergency airway, airway inhaltion treatment, or nebulizer with compression.)",
+      "Patients who are escalated from single to double therapy more than 60 days after their first exacerbation. Exacerbations are defined as visits to the ED/ER with a primary asthma diagnosis code or specific asthma treatments (e.g., emergency airway insertion, airway inhalation treatment, or nebulizer with compression).",
     color: "#81BEBB",
   },
   id21: {
@@ -127,33 +131,39 @@ const UnmetNeedDefinitionData = {
     title:
       "Are uncontrolled or severe patients receiving double therapies escalated to triple therapy?",
     buttonText:
-      "Failure to escalate uncontrolled/severe patients to triple therapy",
+      "Failure to Escalate Uncontrolled/Severe Patients from Double to Triple Therapy",
+    Column: "ICS-LABA failed escalation",
     description:
-      "Definition: Patients who receive double therapy with an exacerbation who are not escalated to triple therapy or biologics. Exacerbations are defined as patients going to the ED / ER WITH a primary asthma diagnosis code or a specific asthma treatment (e.g. insert emergency airway, airway inhaltion treatment, or nebulizer with compression.)",
+      "Patients on double therapy who experience exacerbations but are not escalated to triple therapy or biologics. Exacerbations are defined as visits to the ED/ER with a primary asthma diagnosis code or specific asthma treatments (e.g., emergency airway insertion, airway inhalation treatment, or nebulizer with compression).",
     color: "#88C8B7",
   },
   id18: {
     id: "id18",
     title:
       "Do patients receive excessive OCS by either consistency or quantity of use when receiving double therapies?",
-    buttonText: "Excessive steroid usage on double therapy",
+    buttonText: "Excessive Steroid Usage on Double Therapy",
+    column: "ICS-LABA high steroid usage",
     description:
-      "Definition: Patients on double therapy who receive >450mg of OCS in a year. OCS converted to prednisone equivalent milligrams. Dose per month and year calculated using prescribed dose, quantity, and days supply.",
+      "Patients on double therapy who receive more than 450mg of OCS in a year. OCS is converted to prednisone equivalent milligrams, calculated using prescribed dose, quantity, and days supply.",
     color: "#88C8B7",
   },
   id9: {
     id: "id9",
     title:
       "How long does it take from demonstrating severe/uncontrolled asthma to treatment escalation?",
-    buttonText: "Delay in escalating patients from double to triple therapy",
-    description: "Lorem Ipsum",
+    buttonText: "Delay in Escalating Patients from Double to Triple Therapy",
+    column: "ICS-LABA escalation delay",
+    description:
+      "Patients who are escalated from double to triple therapy more than 60 days after their first exacerbation. Exacerbations are defined as visits to the ED/ER with a primary asthma diagnosis code or specific asthma treatments (e.g., emergency airway insertion, airway inhalation treatment, or nebulizer with compression).",
     color: "#88C8B7",
   },
   id10: {
     id: "id10",
     title: "Do patients receive open triple therapies?",
-    buttonText: "Suboptimal use of open triple therapy",
-    description: "Lorem Ipsum",
+    buttonText: "Use of open triple therapy",
+    column: "ICS-LABA with LAMA",
+    description:
+      "Patients on double therapy who are escalated to a separate LAMA therapy.",
     color: "#94D3A2",
   },
   id12: {
@@ -166,22 +176,55 @@ const UnmetNeedDefinitionData = {
   id13: {
     id: "id13",
     title: "Are patients adherent to their double treatments?",
-    buttonText: "Non-adherence to double therapies",
-    description: "Lorem Ipsum",
+    buttonText: "Non-adherence to single therapy (persistence)",
+    column: "ICS persistence",
+    description:
+      "Patients who discontinue ICS or beta-agonist treatment within 1 year of beginning therapy.",
     color: "#94D3A2",
   },
   id14: {
     id: "id14",
     title: "Are patients adherent to open triple treatments?",
-    buttonText: "Non-adherence to open triple therapies",
-    description: "Lorem Ipsum",
+    buttonText: "Non-adherence to single therapy (compliance)",
+    column: "ICS compliance",
+    description:
+      "Patients who receive less than 240 days supply of ICS or beta-agonist in their first year on therapy.",
     color: "#94D3A2",
   },
   id15: {
     id: "id15",
     title: "Are patients adherence to closed triple treatments?",
-    buttonText: "Non-adherence to closed triple therapies",
-    description: "Lorem Ipsum",
+    column: "ICS-LABA persistence",
+    buttonText: "Non-adherence to double therapy (persistence)",
+    description:
+      "Patients who discontinue ICS-LABA treatment within 1 year of beginning therapy.",
+    color: "#94D3A2",
+  },
+  id30: {
+    id: "id30",
+    title: "Are patients adherence to closed triple treatments?",
+    column: "ICS-LABA compliance",
+    buttonText: "Non-adherence to double therapy (compliance)",
+    description:
+      "Patients who receive less than 240 days supply of ICS-LABA in their first year on therapy.",
+    color: "#94D3A2",
+  },
+  id31: {
+    id: "id31",
+    title: "Are patients adherence to closed triple treatments?",
+    buttonText: "Non-adherence to triple therapy (persistence)",
+    column: "ICS-LABA-LAMA persistence",
+    description:
+      "Patients who discontinue ICS-LABA-LAMA treatment within 1 year of beginning therapy.",
+    color: "#94D3A2",
+  },
+  id32: {
+    id: "id32",
+    title: "Are patients adherence to closed triple treatments?",
+    column: "ICS-LABA-LAMA compliance",
+    buttonText: "Non-adherence to triple therapy (compliance)",
+    description:
+      "Patients who receive less than 240 days supply of ICS-LABA-LAMA in their first year on therapy.",
     color: "#94D3A2",
   },
 };
@@ -201,6 +244,12 @@ const UnmetNeedDefinition = () => {
   const [statsData11, setStatsData11] = useState(null);
   const [statsData12, setStatsData12] = useState(null);
   const [nationalData, setNationalData] = useState(null);
+  const [statsData13, setStatsData13] = useState(null);
+  const [statsData14, setStatsData14] = useState(null);
+  const [statsData15, setStatsData15] = useState(null);
+  const [statsData16, setStatsData16] = useState(null);
+  const [statsData18, setStatsData18] = useState(null);
+  const [statsData19, setStatsData19] = useState(null);
   const [dataValue, setDataValue] = useState(null);
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [showTooltip, setTooltip] = useState({
@@ -212,6 +261,7 @@ const UnmetNeedDefinition = () => {
     getDataStats("national_data", accessToken, refreshToken).then(
       async (res) => {
         if (res) {
+       
           setNationalData(res.summary_data);
         }
       }
@@ -232,6 +282,85 @@ const UnmetNeedDefinition = () => {
     return USERS_TABLE_COLUMNS;
   }, []);
 
+  const compliance_options = useMemo(() => {
+    return {
+      indexAxis: "x",
+      elements: {
+        bar: {
+          borderWidth: 1,
+        },
+      },
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: "patients",
+          },
+        },
+        x: {
+          title: {
+            display: true,
+            text: "Total Days Supply in First Year on Therapy",
+          },
+          grid: {
+            display: false, // Turn off grid lines for x-axis
+          },
+          ticks: {
+            font: {
+              size: 10,
+            },
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+    };
+  }, []);
+
+
+  
+  const persistence_options = useMemo(() => {
+    return {
+      indexAxis: "x",
+      elements: {
+        bar: {
+          borderWidth: 1,
+        },
+      },
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: "patients",
+          },
+        },
+        x: {
+          title: {
+            display: true,
+            text: "Days from Start of Therapy to Discontinuation",
+          },
+          grid: {
+            display: false, // Turn off grid lines for x-axis
+          },
+          ticks: {
+            font: {
+              size: 10,
+            },
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+    };
+  }, []);
   const chart_8_options = useMemo(() => {
     return {
       indexAxis: "x",
@@ -502,6 +631,13 @@ const UnmetNeedDefinition = () => {
     setStatsData9(null);
     setStatsData10(null);
     setStatsData11(null);
+    setStatsData12(null)
+    setStatsData13(null)
+    setStatsData14(null)
+    setStatsData15(null)
+    setStatsData16(null)
+    setStatsData18(null)
+    setStatsData19(null)
     setModalId(null);
   };
 
@@ -606,13 +742,13 @@ const UnmetNeedDefinition = () => {
       datasets: [
         {
           data: responseData.map((item) => item[type2]),
-          borderColor: responseData.map((item) =>
+          borderColor: sortFn ?"rgb(542, 62, 35, 0.8)":  responseData.map((item) =>
             getIntValue(item[type1]) <= 450
               ? "rgb(542, 62, 35, 0.8)"
               : "rgb(0,212,100, 0.7)"
           ),
           backgroundColor: responseData.map((item) =>
-            getIntValue(item[type1]) <= 450
+           sortFn ? "rgb(542, 62, 35, 0.8)" : getIntValue(item[type1]) <= 450
               ? "rgb(542, 62, 35)"
               : "rgb(0,212,100)"
           ),
@@ -632,6 +768,165 @@ const UnmetNeedDefinition = () => {
           unmetLabels[UnmetNeedDefinitionData[key].buttonText].percent
         ],
     });
+    
+    if (UnmetNeedDefinitionData[key].id === "id15") {
+      getDataStats("data_stats_33", accessToken, refreshToken).then((res) => {
+        if (res) {
+          const sortFn = (data) => {
+            data.sort((a, b) => {
+              const parseRange = (str) => {
+                if (str.includes("+")) {
+                  return Number.MAX_VALUE;
+                } else {
+                  return parseInt(str.split("-")[0]);
+                }
+              };
+              return (
+                parseRange(a.persistence_bucket) -
+                parseRange(b.persistence_bucket)
+              );
+            });
+            return data;
+          };
+
+          let _data = getBarChart(res, res.headers[0], res.headers[1], sortFn);
+
+          setStatsData16(_data);
+        }
+      });
+    }
+    
+    if (UnmetNeedDefinitionData[key].id === "id31") {
+      getDataStats("data_stats_35", accessToken, refreshToken).then((res) => {
+        if (res) {
+          const sortFn = (data) => {
+            data.sort((a, b) => {
+              const parseRange = (str) => {
+                if (str.includes("+")) {
+                  return Number.MAX_VALUE;
+                } else {
+                  return parseInt(str.split("-")[0]);
+                }
+              };
+              return (
+                parseRange(a.persistence_bucket) -
+                parseRange(b.persistence_bucket)
+              );
+            });
+            return data;
+          };
+
+          let _data = getBarChart(res, res.headers[0], res.headers[1], sortFn);
+
+          setStatsData19(_data);
+        }
+      });
+    }
+    if (UnmetNeedDefinitionData[key].id === "id13") {
+      getDataStats("data_stats_31", accessToken, refreshToken).then((res) => {
+        if (res) {
+          const sortFn = (data) => {
+            data.sort((a, b) => {
+              const parseRange = (str) => {
+                if (str.includes("+")) {
+                  return Number.MAX_VALUE;
+                } else {
+                  return parseInt(str.split("-")[0]);
+                }
+              };
+              return (
+                parseRange(a.persistence_bucket) -
+                parseRange(b.persistence_bucket)
+              );
+            });
+            return data;
+          };
+
+          let _data = getBarChart(res, res.headers[0], res.headers[1], sortFn);
+
+          setStatsData14(_data);
+        }
+      });
+    }
+    
+    if (UnmetNeedDefinitionData[key].id === "id30") {
+      getDataStats("data_stats_32", accessToken, refreshToken).then((res) => {
+        if (res) {
+          const sortFn = (data) => {
+            data.sort((a, b) => {
+              const parseRange = (str) => {
+                if (str.includes("+")) {
+                  return Number.MAX_VALUE;
+                } else {
+                  return parseInt(str.split("-")[0]);
+                }
+              };
+              return (
+                parseRange(a.compliance_bucket) -
+                parseRange(b.compliance_bucket)
+              );
+            });
+            return data;
+          };
+
+          let _data = getBarChart(res, res.headers[0], res.headers[1], sortFn);
+
+          setStatsData15(_data);
+        }
+      });
+    }
+    if (UnmetNeedDefinitionData[key].id === "id32") {
+      getDataStats("data_stats_34", accessToken, refreshToken).then((res) => {
+        if (res) {
+          const sortFn = (data) => {
+            data.sort((a, b) => {
+              const parseRange = (str) => {
+                if (str.includes("+")) {
+                  return Number.MAX_VALUE;
+                } else {
+                  return parseInt(str.split("-")[0]);
+                }
+              };
+              return (
+                parseRange(a.compliance_bucket) -
+                parseRange(b.compliance_bucket)
+              );
+            });
+            return data;
+          };
+
+          let _data = getBarChart(res, res.headers[0], res.headers[1], sortFn);
+
+          setStatsData18(_data);
+        }
+      });
+    }
+    if (UnmetNeedDefinitionData[key].id === "id14") {
+      getDataStats("data_stats_30", accessToken, refreshToken).then((res) => {
+        if (res) {
+          const sortFn = (data) => {
+            data.sort((a, b) => {
+              const parseRange = (str) => {
+                if (str.includes("+")) {
+                  return Number.MAX_VALUE;
+                } else {
+                  return parseInt(str.split("-")[0]);
+                }
+              };
+              return (
+                parseRange(a.compliance_bucket) -
+                parseRange(b.compliance_bucket)
+              );
+            });
+            return data;
+          };
+
+          let _data = getBarChart(res, res.headers[0], res.headers[1], sortFn);
+
+          setStatsData13(_data);
+        }
+      });
+    }
     if (UnmetNeedDefinitionData[key].id === "id2") {
       getDataStats("data_stats_25", accessToken, refreshToken).then((res) => {
         if (res) {
@@ -804,15 +1099,12 @@ const UnmetNeedDefinition = () => {
     }
   };
 
-  console.log(showTooltip, "showtooltuip");
-
   const mouseOver = (key, index) => {
     if (
       nationalData &&
       UnmetNeedDefinitionData[key].buttonText &&
       UnmetNeedDefinitionData[key].buttonText.length > 0
     ) {
-      console.log(UnmetNeedDefinitionData[key]);
       setTooltip({
         id: nationalData[
           unmetLabels[UnmetNeedDefinitionData[key].buttonText].id
@@ -972,6 +1264,78 @@ const UnmetNeedDefinition = () => {
                     height={window.innerWidth > 1400 ? 120 : 80}
                     data={statsData8}
                     options={chart_8_options}
+                  />
+                </>
+              )}
+              {statsData13 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    First Year Compliance to Therapy
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData13}
+                    options={compliance_options}
+                  />
+                </>
+              )}
+              {statsData15 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    First Year Compliance to Therapy
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData15}
+                    options={compliance_options}
+                  />
+                </>
+              )}
+              {statsData18 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    First Year Compliance to Therapy
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData18}
+                    options={compliance_options}
+                  />
+                </>
+              )}
+               {statsData14 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                  Persistence on Therapy
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData14}
+                    options={persistence_options}
+                  />
+                </>
+              )}
+                {statsData16 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                  Persistence on Therapy
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData16}
+                    options={persistence_options}
+                  />
+                </>
+              )}
+                {statsData19 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                  Persistence on Therapy
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData19}
+                    options={persistence_options}
                   />
                 </>
               )}
