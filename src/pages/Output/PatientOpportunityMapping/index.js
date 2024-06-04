@@ -227,6 +227,7 @@ const PatientOpportunityMapping = () => {
       });
     getDataStats("national_data", accessToken, refreshToken).then(
       async (res) => {
+        console.log(res, "res")
         if (res) {
           setChartDataValue(setData1, data_1_labels, [res.summary_data]);
           setChartDataValue(setData2, data_2_labels, [res.summary_data]);
@@ -297,9 +298,12 @@ const PatientOpportunityMapping = () => {
   function setChartDataValue(setValue, API_labels, data) {
     function generateChartData(array) {
       let _value = [];
+      // console.log(array, data[0])
       array.forEach((item) => {
         _value.push(data[0][item]);
       });
+      let labes = array.map((item) => mapLabels[item])
+      console.log(_value, labes )
 
       return {
         labels: array.map((item) => selectLabels[mapLabels[item]]),
@@ -322,6 +326,7 @@ const PatientOpportunityMapping = () => {
       mapValue2: generateChartData(mapBarCharts.chart2),
       mapValue3: generateChartData(mapBarCharts.chart3),
       mapValue4: generateChartData(mapBarCharts.chart4),
+      mapValue5: generateChartData(mapBarCharts.chart5),
     });
   }
 
@@ -378,29 +383,7 @@ const PatientOpportunityMapping = () => {
       <div className="text-md font-medium mt-4">
         National Summary of Unmet Needs
       </div>
-      <div className="flex items-center w-full justify-center">
-        {data1 && (
-          <div className="w-[60%]">
-            <BarChart label="Testing" height={80} data={data1.mapValue1} />
-            <BarChart
-              label="Treatment (prior to receiving ICS / beta-agonist)"
-              height={80}
-              data={data1.mapValue2}
-            />
-            <BarChart
-              label="Treatment (ICS / beta-agonist)"
-              height={80}
-              data={data1.mapValue3}
-            />
-            <BarChart
-              label="Treatment (ICS-LABA)"
-              height={80}
-              data={data1.mapValue4}
-            />
-          </div>
-        )}
-        {/* {data2 && <BarChart data={data2} options={options} />} */}
-      </div>
+
       <div style={{ opacity: loading ? 0 : 1 }}>
         <div className="flex items-center justify-between">
           <div
@@ -449,6 +432,33 @@ const PatientOpportunityMapping = () => {
             markersEnabled={false}
           />
         )}
+        <div className="flex items-center w-full justify-center">
+          {data1 && (
+            <div className="w-[60%]">
+              <BarChart label="Diagnosis and Investigation" height={80} data={data1.mapValue1} />
+              {/* <BarChart
+                label="Treatment (prior to receiving ICS or beta-agonist)"
+                height={80}
+                data={data1.mapValue2}
+              /> */}
+              <BarChart
+                label="Treatment (ICS or beta-agonist)"
+                height={80}
+                data={data1.mapValue3}
+              />
+              <BarChart
+                label="Treatment (ICS-LABA)"
+                height={80}
+                data={data1.mapValue4}
+              />
+              <BarChart
+                label="Treatment (ICS-LABA-LAMA)"
+                height={80}
+                data={data1.mapValue5}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
