@@ -361,7 +361,6 @@ export const mapBarCharts = {
   chart2: ["Total Asthma Patients", "Total No Treatment"],
   chart3: [
     "Total ICS Patients",
-   
     "Total ICS Exacerbation Failed Escalation",
     "Total ICS High Steroid Usage",
     "Total ICS Escalation Delay",

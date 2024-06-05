@@ -77,7 +77,7 @@ const MedicalAffairToolbox = () => {
         bottomLeft,
         bottomRight,
       });
-      console.log("first")
+  
     }
   }, [lineX, lineY, state.data]);
 
@@ -133,6 +133,23 @@ const MedicalAffairToolbox = () => {
       });
   };
 
+
+  const generateShape = (val) => {
+    let shape1 = ['PULMONARY DISEASE', 'PEDIATRIC PULMONOLOGY', 'PULMONARY CRITICAL CARE MEDICINE']
+    if (shape1.includes(val)) {
+      return "triangle"
+    }
+    let shape2 = ['ALLERGY & IMMUNOLOGY']
+    if (shape2.includes(val)) {
+      return "circle"
+    }
+    let shape3 = ['FAMILY MEDICINE',  'PEDIATRICS', 'INTERNAL MEDICINE', 'GENERAL PRACTICE', 'INTERNAL MEDICINE/PEDIATRICS', 'GERIATRIC MEDICINE (INTERNAL MEDICINE)', 'GERIATRIC MEDICINE (FAMILY MEDICINE)']
+    if (shape3.includes(val)) {
+      return "square"
+    }
+    return "star"
+  }
+
   const calculateRadius = (value, maxValue) => {
     const maxRadius = 30;
     const minRadius = 0;
@@ -157,9 +174,12 @@ const MedicalAffairToolbox = () => {
       x: item[vabelValues.xLabel],
       y: item[vabelValues.yLabel],
       r: calculateRadius(item[radius], maxValue),
+    
       value: item[radius],
     }))
-    console.log(lineX, lineY)
+  
+    console.log(data)
+    
 
     let scatterData = {
       datasets: [
@@ -171,7 +191,6 @@ const MedicalAffairToolbox = () => {
             y: item[vabelValues.yLabel],
             r: calculateRadius(item[radius], maxValue),
             value: item[radius],
-          
           })),
           backgroundColor: _data.map((item) => {
             if (item.x < lineX && item.y < lineY) {
@@ -184,6 +203,7 @@ const MedicalAffairToolbox = () => {
               return "#FF0000"
             }
           }),
+          shape: _data.map(item => generateShape(item["Primary Specialty Description"])),
           borderColor: "rgba(75, 192, 192, 1)",
           borderWidth: 1,
         },
@@ -203,7 +223,7 @@ const MedicalAffairToolbox = () => {
         [id]: val,
       },
     });
-    console.log(val)
+
     let labelValue = {
       xLabel: id == "xLabel" ? val : state.xLabel,
       yLabel: id == "yLabel" ? val : state.yLabel,

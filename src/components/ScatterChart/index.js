@@ -9,12 +9,76 @@ import {
   Tooltip,
   Legend,
   BubbleController,
+  registerables,
 } from "chart.js";
 import { highestValue } from "../../utils/MathUtils";
 import { selectLabels } from "../../constants/appConstants";
 
 // Register required components from Chart.js
 ChartJS.register(LinearScale, PointElement, Tooltip, Legend, BubbleController);
+ChartJS.register(...registerables);
+
+// Custom plugin for different marker shapes
+ChartJS.register({
+  id: 'customBubbleShapes',
+  afterDraw: function(chart, args, options) {
+    const ctx = chart.ctx;
+    const datasets = chart.config.data.datasets;
+
+    datasets.forEach((dataset, i) => {
+      const meta = chart.getDatasetMeta(i);
+
+      if (!meta.hidden) {
+        meta.data.forEach((point, index) => {
+          const { x, y } = point.getProps(['x', 'y']);
+          const radius = point.options.radius;
+          const shape = dataset.shape[index];
+          const color = dataset.backgroundColor[index];
+
+          ctx.save();
+          ctx.fillStyle = color;
+          ctx.beginPath();
+
+          switch (shape) {
+            case 'circle':
+              ctx.arc(x, y, radius, 0, Math.PI * 2);
+              break;
+            case 'square':
+              ctx.rect(x - radius, y - radius, radius * 2, radius * 2);
+              break;
+            case 'triangle':
+              ctx.moveTo(x, y - radius);
+              ctx.lineTo(x + radius, y + radius);
+              ctx.lineTo(x - radius, y + radius);
+              ctx.closePath();
+              break;
+            case 'star':
+              const outerRadius = radius;
+              const innerRadius = radius / 2;
+              for (let j = 0; j < 5; j++) {
+                ctx.lineTo(
+                  x + outerRadius * Math.cos((18 + j * 72) / 180 * Math.PI),
+                  y - outerRadius * Math.sin((18 + j * 72) / 180 * Math.PI)
+                );
+                ctx.lineTo(
+                  x + innerRadius * Math.cos((54 + j * 72) / 180 * Math.PI),
+                  y - innerRadius * Math.sin((54 + j * 72) / 180 * Math.PI)
+                );
+              }
+              ctx.closePath();
+              break;
+            default:
+              ctx.arc(x, y, radius, 0, Math.PI * 2);
+              break;
+          }
+
+          ctx.fill();
+          ctx.restore();
+        });
+      }
+    });
+  }
+});
 
 // Register the arbitrary line plugin globally
 const arbitraryLinePlugin = {
@@ -89,6 +153,11 @@ const defaultOptions = {
     },
   },
   responsive: true,
+  elements: {
+    point: {
+      radius: 0 // Disable the default circle drawing
+    }
+  },
   plugins: {
     legend: {
       position: "top",
@@ -118,6 +187,7 @@ const ScatterChart = ({
 }) => {
   const chartRef = useRef(null);
   const [dataOptions, setOptions] = useState(options);
+
   const [maxX, setMaxX] = useState();
   const [maxY, setMaxY] = useState();
 
@@ -140,18 +210,30 @@ const ScatterChart = ({
           },
         },
       },
+      interaction: {
+        intersect: false,
+        mode: 'index',
+        axis: 'x'
+      },
       responsive: true,
       plugins: {
         legend: {
           position: "top",
         },
-
+        elements: {
+          point: {
+            radius: 0 // Disable the default circle drawing
+          }
+        },
+        customBubbleShapes: {},
         tooltip: {
+          mode: 'nearest',
+          intersect: false,
           callbacks: {
             label: function (context) {
-              return `Name: ${context.raw.name}, ${[selectLabels[state.xLabel]]}:${
-                context.raw.x
-              }, ${selectLabels[state.yLabel]}:${
+              return `Name: ${context.raw.name}, ${[
+                selectLabels[state.xLabel],
+              ]}:${context.raw.x}, ${selectLabels[state.yLabel]}:${
                 context.raw.y
               }, Number of ICS-LABA Patients: ${context.raw.value}`;
             },
@@ -241,7 +323,7 @@ const ScatterChart = ({
             className="text-xs font-[500] whitespace-nowrap"
             htmlFor="labels-range-input"
           >
-           {selectLabels[state.xLabel]}
+            {selectLabels[state.xLabel]}
           </label>
           <input
             id="labels-range-input"
