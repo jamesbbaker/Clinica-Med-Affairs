@@ -45,7 +45,7 @@ const UnmetNeedDefinitionData = {
     id: "id3",
     title:
       "Do severe or uncontrolled asthma patients receive IGE and EOS/CBC testing?",
-    buttonText: "Improper severe asthma testing",
+    buttonText: "Incomplete severe asthma testing",
     column: "No EOS",
     description: (
       <div>
@@ -113,7 +113,7 @@ const UnmetNeedDefinitionData = {
     title:
       "How long does it take from demonstrating severe/uncontrolled asthma to treatment escalation?",
     buttonText:
-      "Delay in Escalating Patients from Single to Double Therapy after Exacerbation",
+      "Delay in Escalating Patients from Single to Double Therapy",
     column: "ICS escalation delay",
     description:
       "Patients who are escalated from single to double therapy more than 60 days after their first exacerbation. Exacerbations are defined as visits to the ED/ER with a primary asthma diagnosis code or specific asthma treatments (e.g., emergency airway insertion, airway inhalation treatment, or nebulizer with compression).",
@@ -184,7 +184,7 @@ const UnmetNeedDefinitionData = {
   },
   id14: {
     id: "id14",
-    title: "Are patients compliance on single therapy?",
+    title: "Are patients compliant on single therapy?",
     buttonText: "Non-adherence to single therapy (compliance)",
     column: "ICS compliance",
     description:
@@ -202,7 +202,7 @@ const UnmetNeedDefinitionData = {
   },
   id30: {
     id: "id30",
-    title: "Are patients compliance on double therapy?",
+    title: "Are patients compliant on double therapy?",
     column: "ICS-LABA compliance",
     buttonText: "Non-adherence to double therapy (compliance)",
     description:
@@ -220,7 +220,7 @@ const UnmetNeedDefinitionData = {
   },
   id32: {
     id: "id32",
-    title: "Are patients compliance on triple therapy?",
+    title: "Are patients compliant on triple therapy?",
     column: "ICS-LABA-LAMA compliance",
     buttonText: "Non-adherence to triple therapy (compliance)",
     description:
@@ -317,6 +317,9 @@ const UnmetNeedDefinition = () => {
         legend: {
           display: false,
         },
+        datalabels: {
+          display: false
+        }
       },
     };
   }, []);
@@ -358,6 +361,9 @@ const UnmetNeedDefinition = () => {
         legend: {
           display: false,
         },
+        dataLabels: {
+          display: false
+        }
       },
     };
   }, []);
@@ -396,6 +402,9 @@ const UnmetNeedDefinition = () => {
         legend: {
           display: false,
         },
+        datalabels: {
+          display: false
+        }
       },
     };
   }, []);
@@ -435,6 +444,9 @@ const UnmetNeedDefinition = () => {
         legend: {
           display: false,
         },
+        datalabels: {
+          display: false
+        }
       },
     };
   }, []);
@@ -474,6 +486,9 @@ const UnmetNeedDefinition = () => {
         legend: {
           display: false,
         },
+        datalabels: {
+          display: false
+        }
       },
     };
   }, []);
@@ -513,6 +528,9 @@ const UnmetNeedDefinition = () => {
         legend: {
           display: false,
         },
+        datalabels: {
+          display: false
+        }
       },
     };
   }, []);
@@ -561,6 +579,9 @@ const UnmetNeedDefinition = () => {
             size: 14, // Increase font size
           },
         },
+        datalabels: {
+          display: false
+        }
       },
     };
   }, []);
@@ -611,6 +632,9 @@ const UnmetNeedDefinition = () => {
             size: 14, // Increase font size
           },
         },
+        datalabels: {
+          display: false
+        }
       },
     };
   }, []);
@@ -1161,7 +1185,7 @@ const UnmetNeedDefinition = () => {
                     {UnmetNeedDefinitionData[key].buttonText}
                     {showTooltip.index == index && nationalData && (
                       <div className="absolute -top-[1rem] bg-[#fff] text-[#000] border px-2 py-2">
-                        {showTooltip.id}
+                       Number of Patients: {showTooltip ? showTooltip.id.toLocaleString() : ""}
                       </div>
                     )}
                   </button>
@@ -1197,7 +1221,7 @@ const UnmetNeedDefinition = () => {
                 <div>
                   Eligible Patients:{" "}
                   <strong>
-                    {Math.round(dataValue.id / dataValue.percent)}
+                    {Math.round(dataValue.id / (dataValue.percent/100))}
                   </strong>
                 </div>
                 <div>

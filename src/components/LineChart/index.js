@@ -58,6 +58,11 @@ export const defaultOptions = {
       },
     },
   },
+  plugins: {
+    datalabels: {
+      display: false,
+    },
+  }
 };
 
 function generateValues() {

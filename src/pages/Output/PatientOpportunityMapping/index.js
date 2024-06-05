@@ -14,6 +14,7 @@ import SelectBox from "../../../components/SelectBox";
 import {
   mapBarCharts,
   mapLabels,
+  mapSelectLabels,
   patientTotals,
   selectLabels,
 } from "../../../constants/appConstants";
@@ -193,7 +194,7 @@ const PatientOpportunityMapping = () => {
     getDataStats("region_level_data", accessToken, refreshToken)
       .then((res) => {
         if (res) {
-          console.log(res);
+        
           // let _data = JSON.parse(res.replaceAll("NaN", 0));
           setRegionData(res.data);
         }
@@ -204,6 +205,7 @@ const PatientOpportunityMapping = () => {
     getDataStats("state_level_data", accessToken, refreshToken)
       .then(async (res) => {
         if (res) {
+          console.log(res, "response state")
           let _data = JSON.parse(res.replaceAll("NaN", 0));
           let StateByRegion = {};
           _data.data.map((entry) => {
@@ -227,7 +229,7 @@ const PatientOpportunityMapping = () => {
       });
     getDataStats("national_data", accessToken, refreshToken).then(
       async (res) => {
-        console.log(res, "res")
+        console.log(res,"res")
         if (res) {
           setChartDataValue(setData1, data_1_labels, [res.summary_data]);
           setChartDataValue(setData2, data_2_labels, [res.summary_data]);
@@ -302,11 +304,8 @@ const PatientOpportunityMapping = () => {
       array.forEach((item) => {
         _value.push(data[0][item]);
       });
-      let labes = array.map((item) => mapLabels[item])
-      console.log(_value, labes )
-
       return {
-        labels: array.map((item) => selectLabels[mapLabels[item]]),
+        labels: array.map((item) => mapSelectLabels[mapLabels[item]]),
         datasets: [
           {
             data: _value,
@@ -316,6 +315,8 @@ const PatientOpportunityMapping = () => {
             backgroundColor: array.map((item) =>
               !patientTotals.includes(item) ? "#800000" : "#00008B"
             ),
+            barThickness: 20, // Set a specific thickness for the bar
+            maxBarThickness: 20,
           },
         ],
       };
@@ -350,6 +351,15 @@ const PatientOpportunityMapping = () => {
       zoom: 7,
       essential: true,
     });
+  };
+
+  const formatNumber = (num) => {
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1) + 'm';
+    } else if (num >= 1000) {
+      return (num / 1000).toFixed(0) + 'k';
+    }
+    return num.toLocaleString();
   };
 
   const handleReset = () => {
@@ -400,9 +410,9 @@ const PatientOpportunityMapping = () => {
               input={{
                 label: "Select Unmet Needs",
                 id: "unmet",
-                options: toggleBtns.map((item) => ({
-                  name: selectLabels[item.id],
-                  value: item.label,
+                options:[...Object.keys(selectLabels)].map((item) => ({
+                  name: selectLabels[item],
+                  value: item,
                 })),
               }}
               handleSelect={(e) => handleToggle(e)}
@@ -434,28 +444,116 @@ const PatientOpportunityMapping = () => {
         )}
         <div className="flex items-center w-full justify-center">
           {data1 && (
-            <div className="w-[60%]">
-              <BarChart label="Diagnosis and Investigation" height={80} data={data1.mapValue1} />
-              {/* <BarChart
-                label="Treatment (prior to receiving ICS or beta-agonist)"
-                height={80}
-                data={data1.mapValue2}
-              /> */}
-              <BarChart
-                label="Treatment (ICS or beta-agonist)"
-                height={80}
-                data={data1.mapValue3}
-              />
-              <BarChart
-                label="Treatment (ICS-LABA)"
-                height={80}
-                data={data1.mapValue4}
-              />
-              <BarChart
-                label="Treatment (ICS-LABA-LAMA)"
-                height={80}
-                data={data1.mapValue5}
-              />
+            <div className="w-full flex items-center flex-wrap">
+              <div className="w-[50%]">
+                <BarChart
+                  label="Percent of All Asthma Patients with Unmet Need"
+                  height={80}
+                  data={{
+                    labels: [
+                      "Percent of Patients with at least one Unmet Need",
+                    ],
+                    datasets: [
+                      {
+                        label: "81% Unmet Need",
+                        data: [0.81 * 16800000],
+                        borderColor: "#800000",
+                        backgroundColor: "#800000",
+                        barThickness: 20,
+                        maxBarThickness: 20,
+                        datalabels: {
+                          align: 'center',
+                          anchor: 'center',
+                          color: 'white',
+                          formatter: (value) => `${81}%`,
+                        },
+                      },
+                      {
+                        label: "19% Met Need",
+                        data: [0.19 * 16800000],
+                        borderColor: "#008000",
+                        backgroundColor: "#008000",
+                        barThickness: 20,
+                        maxBarThickness: 20,
+                        datalabels: {
+                          display: false,
+                        },
+                      },
+                    ],
+                  }}
+                  options={{
+                    indexAxis: "y",
+                    scales: {
+                      x: {
+                        stacked: true,
+                        title: {
+                          display: true,
+                          text: "Patients",
+                        },
+                        ticks: {
+                          callback: function(value) {
+                            if (value === 0) return '0';
+                            else if (value >= 1e6) return `${Math.round(value / 1e6)}m`;
+                            else if (value >= 1e3) return `${Math.round(value / 1e3)}k`;
+                            else return `${value}`;
+                        },
+                      }
+                      },
+                      y: {
+                        stacked: true,
+                      },
+                    },
+                    plugins: {
+                      legend: {
+                        display: false,
+                      },
+                      tooltip: {
+                        callbacks: {
+                          label: function (tooltipItem) {
+                            const value = tooltipItem.raw;
+                            const total = 1680000;
+                            const percentage = ((value / total) * 100).toFixed(
+                              2
+                            );
+                            return `${percentage}% (${value.toLocaleString()})`;
+                          },
+                        },
+                      },
+                      datalabels: {
+                        display: true,
+                      },
+                    },
+                  }}
+                />
+              </div>
+              <div className="w-[50%]">
+                <BarChart
+                  label={`Diagnosis and Investigation (N = ${formatNumber(data1.mapValue1.datasets[0].data[0])})`}
+                  height={80}
+                  data={data1.mapValue1}
+                />
+              </div>
+              <div className="w-[50%]">
+                <BarChart
+                  label={`Treatment (ICS or beta-agonist) (N = ${formatNumber(data1.mapValue3.datasets[0].data[0])})`}
+                  height={80}
+                  data={data1.mapValue3}
+                />
+              </div>
+              <div className="w-[50%]">
+                <BarChart
+                  label={`Treatment (ICS-LABA) (N = ${formatNumber(data1.mapValue4.datasets[0].data[0])})`}
+                  height={80}
+                  data={data1.mapValue4}
+                />
+              </div>
+              <div className="w-[50%]">
+                <BarChart
+                  label={`Treatment (ICS-LABA-LAMA) (N = ${formatNumber(data1.mapValue5.datasets[0].data[0])})`}
+                  height={80}
+                  data={data1.mapValue5}
+                />
+              </div>
             </div>
           )}
         </div>

@@ -18,10 +18,19 @@ const HcpInsight = () => {
     getDataStats("data_stats_23", accessToken, refreshToken)
       .then((responseData) => {
         if (responseData) {
-          let _data = JSON.parse(responseData.replaceAll("NaN", 0));
-          setStatsData2(_data.data);
+          console.log(responseData);
+          let _data = responseData.data.map(item => {
+            let newItem = {...item}
+            responseData.headers.map(header => {
+              if (header.includes("Percent")) {
+                newItem[header] = `${item[header].toFixed(2)}%`
+              }
+            })
+            return newItem
+          })
+          setStatsData2(_data);
           setTableColumns(
-            _data.headers
+            responseData.headers
               .filter((item) => !filteredArr.includes(item.trim()))
               .map((item) => ({ Header: item, accessor: item }))
           );

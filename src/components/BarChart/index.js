@@ -9,6 +9,8 @@ import {
   Legend,
 } from "chart.js";
 import { Bar, getElementAtEvent } from "react-chartjs-2";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 
 ChartJS.register(
   CategoryScale,
@@ -16,7 +18,8 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  ChartDataLabels
 );
 
 export const _options = {
@@ -34,7 +37,7 @@ export const _options = {
         min: 0,
         autoSkip: false,
         font: {
-          size: 9,
+          size: 11,
           weight: 700,
         },
       },
@@ -59,6 +62,9 @@ export const _options = {
   },
   plugins: {
     legend: {
+      display: false,
+    },
+    datalabels: {
       display: false,
     },
   },

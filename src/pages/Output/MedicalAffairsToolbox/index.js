@@ -8,9 +8,7 @@ import { MultiSelect } from "react-multi-select-component";
 import CustomDropdown from "../../../components/CustomDropdown";
 import { selectLabels } from "../../../constants/appConstants";
 
-const filterOptions = [
-  ...Object.keys(selectLabels)
-];
+const filterOptions = [...Object.keys(selectLabels)];
 
 const initialState = {
   data: null,
@@ -55,6 +53,7 @@ const MedicalAffairToolbox = () => {
     bottomRight: 0,
   });
 
+
   useEffect(() => {
     if (state.data) {
       let topLeft = 0;
@@ -78,8 +77,11 @@ const MedicalAffairToolbox = () => {
         bottomLeft,
         bottomRight,
       });
+      console.log("first")
     }
   }, [lineX, lineY, state.data]);
+
+ 
 
   const fetchData = (
     filters = {
@@ -144,10 +146,20 @@ const MedicalAffairToolbox = () => {
     vabelValues = {
       xLabel: state.xLabel,
       yLabel: state.yLabel,
-    }
+    },
+    
   ) => {
     let radius = "Number of ICS-LABA Patients";
     const maxValue = highestValue(data, radius);
+
+    let _data = data.map((item) => ({
+      name: item["Assigned Physician Name"],
+      x: item[vabelValues.xLabel],
+      y: item[vabelValues.yLabel],
+      r: calculateRadius(item[radius], maxValue),
+      value: item[radius],
+    }))
+    console.log(lineX, lineY)
 
     let scatterData = {
       datasets: [
@@ -159,8 +171,19 @@ const MedicalAffairToolbox = () => {
             y: item[vabelValues.yLabel],
             r: calculateRadius(item[radius], maxValue),
             value: item[radius],
+          
           })),
-          backgroundColor: "rgba(75, 192, 192, 0.6)",
+          backgroundColor: _data.map((item) => {
+            if (item.x < lineX && item.y < lineY) {
+              return "#d4d4d4"
+            } else if (item.x >= lineX && item.y < lineY) {
+              return "#D8BFD8"
+            } else if (item.x < lineX && item.y >= lineY) {
+              return "#4B0082"
+            } else {
+              return "#FF0000"
+            }
+          }),
           borderColor: "rgba(75, 192, 192, 1)",
           borderWidth: 1,
         },
@@ -180,10 +203,12 @@ const MedicalAffairToolbox = () => {
         [id]: val,
       },
     });
+    console.log(val)
     let labelValue = {
       xLabel: id == "xLabel" ? val : state.xLabel,
       yLabel: id == "yLabel" ? val : state.yLabel,
     };
+    console.log(rawData)
     let data = handleChartData(rawData, labelValue);
     dispatch({
       type: actions.handleUpdateData,
