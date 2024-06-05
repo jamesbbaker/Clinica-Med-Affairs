@@ -7,7 +7,7 @@ import Popup from "reactjs-popup";
 import CustomMarker from "./Marker";
 import MapboxglSpiderifier from "mapboxgl-spiderifier";
 import { highestValue } from "../../utils/MathUtils";
-import { patientTotals } from "../../constants/appConstants";
+import { mapLabels, patientTotals, selectLabels } from "../../constants/appConstants";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
@@ -1150,7 +1150,7 @@ const DetailsComponent = ({ item, currentLevel, currentToggle }) => {
                 </span>
               </h4>
               <h4 className="text-xs">
-                {currentToggle}:{" "}
+                {selectLabels[mapLabels[currentToggle]]}:{" "}
                 <span className="font-bold">
                   {_detail.properties &&
                     currentToggle &&
@@ -1166,7 +1166,7 @@ const DetailsComponent = ({ item, currentLevel, currentToggle }) => {
             Total: <span className="font-bold">{itemValue.totalValue}</span>
           </h4>
           <h4 className="text-xs">
-            Total {currentToggle}
+            Total {selectLabels[mapLabels[currentToggle]]}
             <span className="font-bold"> {itemValue.totalCurrentToggles}</span>
           </h4>
         </div>
@@ -1193,7 +1193,7 @@ const DetailsComponent = ({ item, currentLevel, currentToggle }) => {
         </h4>
       )}
       <h4>
-        {currentToggle}:{" "}
+        {selectLabels[mapLabels[currentToggle]]}:{" "}
         <span className="font-bold">
           {item && currentToggle && item[currentToggle].toLocaleString()}
         </span>

@@ -36,7 +36,7 @@ const CustomDropdown = ({ showColors = false, labelClassName, className, error, 
     <div className={`w-full mt-2 ${className}`} ref={dropdownRef}>
       <label
         htmlFor={input.id}
-        className={`block mr-4 text-sm font-medium text-gray-900 dark:text-white ${labelClassName ? labelClassName : 'mb-2'}`}
+        className={`block mr-4 text-sm font-medium text-gray-900 {labelClassName ? labelClassName : 'mb-2'}`}
       >
         {input.label}
       </label>
