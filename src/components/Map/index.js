@@ -31,9 +31,8 @@ const regionColors = {
   NW: "#FFA07A",
   AK: "#9932CC",
   HI: "#6A5ACD",
-  PR: "#3CB371"
+  PR: "#3CB371",
 };
-
 
 function MapAddLayer(
   map,
@@ -151,27 +150,36 @@ const levelToggles = {
     "Number of No Treatment": "Total No Treatment",
     "Percent of No Treatment": "Percent No Treatment",
     "Number of ICS Patients": "Total ICS Patients",
+    "Number of ICS Compliance < 240": "Total ICS Compliance < 240",
+    "Percent of ICS Compliance < 240": "Percent ICS Compliance < 240",
+    "Number of ICS Persistence < 360": "Total ICS Persistence < 360",
+    "Percent of ICS Persistence < 360": "Percent ICS Persistence < 360",
     "Number of ICS High Steroid Usage": "Total ICS High Steroid Usage",
     "Percent of ICS High Steroid Usage": "Percent ICS High Steroid Usage",
     "Number of ICS Exacerbation": "Total ICS Exacerbations",
-    "Number of ICS Exacerbation Failed Escalation":
-      "Total ICS Exacerbation Failed Escalation",
-    "Percent of ICS Exacerbation Failed Escalation":
-      "Percent ICS Exacerbation Failed Escalation",
+    "Number of ICS Exacerbation Failed Escalation": "Total ICS Exacerbation Failed Escalation",
+    "Percent of ICS Exacerbation Failed Escalation": "Percent ICS Exacerbation Failed Escalation",
     "Number of ICS Escalation Delay": "Total ICS Escalation Delay",
     "Percent of ICS Escalation Delay": "Percent ICS Escalation Delay",
     "Number of ICS-LABA Patients": "Total ICS-LABA Patients",
-    "Number of ICS-LABA High Steroid Usage":
-      "Total ICS-LABA High Steroid Usage",
-    "Percent of ICS-LABA High Steroid Usage":
-      "Percent ICS-LABA High Steroid Usage",
+    "Number of ICS-LABA Compliance < 240": "Total ICS-LABA Compliance < 240",
+    "Percent of ICS-LABA Compliance < 240": "Percent ICS-LABA Compliance < 240",
+    "Number of ICS-LABA Persistence < 360": "Total ICS-LABA Persistence < 360",
+    "Percent of ICS-LABA Persistence < 360": "Percent ICS-LABA Persistence < 360",
+    "Number of ICS-LABA High Steroid Usage": "Total ICS-LABA High Steroid Usage",
+    "Percent of ICS-LABA High Steroid Usage": "Percent ICS-LABA High Steroid Usage",
     "Number of ICS-LABA Exacerbation": "Total ICS-LABA Exacerbations",
-    "Number of ICS-LABA Exacerbation Failed Escalation":
-      "Total ICS-LABA Exacerbation Failed Escalation",
-    "Percent of ICS-LABA Exacerbation Failed Escalation":
-      "Percent ICS-LABA Exacerbation Failed Escalation",
+    "Number of ICS-LABA Exacerbation Failed Escalation": "Total ICS-LABA Exacerbation Failed Escalation",
+    "Percent of ICS-LABA Exacerbation Failed Escalation": "Percent ICS-LABA Exacerbation Failed Escalation",
     "Number of ICS-LABA Escalation Delay": "Total ICS-LABA Escalation Delay",
     "Percent of ICS-LABA Escalation Delay": "Percent ICS-LABA Escalation Delay",
+    "Number of ICS-LABA LAMA Patients": "Total ICS-LABA LAMA Patients",
+    "Number of ICS-LABA LAMA Compliance < 240": "Total ICS-LABA LAMA Compliance < 240",
+    "Percent of ICS-LABA LAMA Compliance < 240": "Percent ICS-LABA LAMA Compliance < 240",
+    "Number of ICS-LABA LAMA Persistence < 360": "Total ICS-LABA LAMA Persistence < 360",
+    "Percent of ICS-LABA LAMA Persistence < 360": "Percent ICS-LABA LAMA Persistence < 360",
+    "Number of ICS-LABA Patients with LAMA": "Total ICS-LABA With LAMA",
+    "Percent of ICS-LABA Patients with LAMA": "Percent ICS-LABA With LAMA"
   },
   state: {
     "Number of Asthma Patients": "Total Asthma Patients",
@@ -182,27 +190,36 @@ const levelToggles = {
     "Number of No Treatment": "Total No Treatment",
     "Percent of No Treatment": "Percent No Treatment",
     "Number of ICS Patients": "Total ICS Patients",
+    "Number of ICS Compliance < 240": "Total ICS Compliance < 240",
+    "Percent of ICS Compliance < 240": "Percent ICS Compliance < 240",
+    "Number of ICS Persistence < 360": "Total ICS Persistence < 360",
+    "Percent of ICS Persistence < 360": "Percent ICS Persistence < 360",
     "Number of ICS High Steroid Usage": "Total ICS High Steroid Usage",
     "Percent of ICS High Steroid Usage": "Percent ICS High Steroid Usage",
     "Number of ICS Exacerbation": "Total ICS Exacerbations",
-    "Number of ICS Exacerbation Failed Escalation":
-      "Total ICS Exacerbation Failed Escalation",
-    "Percent of ICS Exacerbation Failed Escalation":
-      "Percent ICS Exacerbation Failed Escalation",
+    "Number of ICS Exacerbation Failed Escalation": "Total ICS Exacerbation Failed Escalation",
+    "Percent of ICS Exacerbation Failed Escalation": "Percent ICS Exacerbation Failed Escalation",
     "Number of ICS Escalation Delay": "Total ICS Escalation Delay",
     "Percent of ICS Escalation Delay": "Percent ICS Escalation Delay",
     "Number of ICS-LABA Patients": "Total ICS-LABA Patients",
-    "Number of ICS-LABA High Steroid Usage":
-      "Total ICS-LABA High Steroid Usage",
-    "Percent of ICS-LABA High Steroid Usage":
-      "Percent ICS-LABA High Steroid Usage",
+    "Number of ICS-LABA Compliance < 240": "Total ICS-LABA Compliance < 240",
+    "Percent of ICS-LABA Compliance < 240": "Percent ICS-LABA Compliance < 240",
+    "Number of ICS-LABA Persistence < 360": "Total ICS-LABA Persistence < 360",
+    "Percent of ICS-LABA Persistence < 360": "Percent ICS-LABA Persistence < 360",
+    "Number of ICS-LABA High Steroid Usage": "Total ICS-LABA High Steroid Usage",
+    "Percent of ICS-LABA High Steroid Usage": "Percent ICS-LABA High Steroid Usage",
     "Number of ICS-LABA Exacerbation": "Total ICS-LABA Exacerbations",
-    "Number of ICS-LABA Exacerbation Failed Escalation":
-      "Total ICS-LABA Exacerbation Failed Escalation",
-    "Percent of ICS-LABA Exacerbation Failed Escalation":
-      "Percent ICS-LABA Exacerbation Failed Escalation",
+    "Number of ICS-LABA Exacerbation Failed Escalation": "Total ICS-LABA Exacerbation Failed Escalation",
+    "Percent of ICS-LABA Exacerbation Failed Escalation": "Percent ICS-LABA Exacerbation Failed Escalation",
     "Number of ICS-LABA Escalation Delay": "Total ICS-LABA Escalation Delay",
     "Percent of ICS-LABA Escalation Delay": "Percent ICS-LABA Escalation Delay",
+    "Number of ICS-LABA LAMA Patients": "Total ICS-LABA LAMA Patients",
+    "Number of ICS-LABA LAMA Compliance < 240": "Total ICS-LABA LAMA Compliance < 240",
+    "Percent of ICS-LABA LAMA Compliance < 240": "Percent ICS-LABA LAMA Compliance < 240",
+    "Number of ICS-LABA LAMA Persistence < 360": "Total ICS-LABA LAMA Persistence < 360",
+    "Percent of ICS-LABA LAMA Persistence < 360": "Percent ICS-LABA LAMA Persistence < 360",
+    "Number of ICS-LABA Patients with LAMA": "Total ICS-LABA With LAMA",
+    "Percent of ICS-LABA Patients with LAMA": "Percent ICS-LABA With LAMA"
   },
   hcp: {
     "Number of Asthma Patients": "Number of Asthma Patients",
@@ -295,7 +312,7 @@ const Map = ({
       }
 
       handleRegionMarkers(markers, "marker2");
-     
+
       mapRef.current.setPaintProperty("countries", "fill-color", {
         property: "name",
         type: "categorical",
@@ -390,10 +407,9 @@ const Map = ({
           feature.properties[currentToggle]
         )}px`;
         pinElem.style.borderRadius = `50%`;
-        pinElem.style.background =
-        !patientTotals.includes(currentToggle)
-        ? "#800000"
-        : "#00008B";
+        pinElem.style.background = !patientTotals.includes(currentToggle)
+          ? "#800000"
+          : "#00008B";
         pinElem.style.border = "1px solid #fff";
 
         pinElem.addEventListener("mouseenter", function () {
@@ -436,7 +452,7 @@ const Map = ({
       markerHeight: 40,
     });
 
-    if (  !patientTotals.includes(currentToggle)) {
+    if (!patientTotals.includes(currentToggle)) {
       mapRef.current.setPaintProperty(
         "unclustered-point",
         "circle-color",
@@ -618,12 +634,11 @@ const Map = ({
         ];
         if (filteredArr.length > 1) {
           spiderifier.current.unspiderfy();
-          setStateMapMarkers(filteredArr)
+          setStateMapMarkers(filteredArr);
           spiderifier.current.spiderfy(
             e.features[0].geometry.coordinates,
             filteredArr
           );
-          
         } else {
           const item = e.features[0];
 
@@ -798,7 +813,6 @@ const Map = ({
           setModalDetails([feature]);
         },
         initializeLeg: function initializeSpiderLeg(spiderLeg) {
-         
           var pinElem = spiderLeg.elements.pin;
           var feature = spiderLeg.feature;
           var popup;
@@ -827,10 +841,9 @@ const Map = ({
             feature.properties[currentToggle]
           )}px`;
           pinElem.style.borderRadius = `50%`;
-          pinElem.style.background =
-           !patientTotals.includes(currentToggle)
-              ? "#800000"
-              : "#00008B";
+          pinElem.style.background = !patientTotals.includes(currentToggle)
+            ? "#800000"
+            : "#00008B";
           pinElem.style.border = "1px solid #fff";
           pinElem.addEventListener("mouseenter", function () {
             let newObject = {
