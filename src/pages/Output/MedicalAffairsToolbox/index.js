@@ -208,7 +208,7 @@ const MedicalAffairToolbox = () => {
       xLabel: id == "xLabel" ? val : state.xLabel,
       yLabel: id == "yLabel" ? val : state.yLabel,
     };
-    console.log(rawData)
+   
     let data = handleChartData(rawData, labelValue);
     dispatch({
       type: actions.handleUpdateData,
