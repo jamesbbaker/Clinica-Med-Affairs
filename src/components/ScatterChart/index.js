@@ -100,6 +100,9 @@ const defaultOptions = {
         },
       },
     },
+    datalabels: {
+      display: false,
+    },
   },
 };
 
@@ -154,6 +157,9 @@ const ScatterChart = ({
             },
           },
         },
+        datalabels: {
+          display: false,
+        },
       },
     };
     setOptions(_defaultOptions);
@@ -199,7 +205,7 @@ const ScatterChart = ({
   return (
     <div className="h-[800px] relative w-full">
       <Bubble ref={chartRef} data={data} options={dataOptions} />
-      <div className="absolute text-[#4B0082] font-[700] top-[8%] left-[5%]">
+      <div className="absolute text-[#4B0082] font-[700] top-[8%] left-[10%]">
         {quadrantValues.topLeft}
       </div>
       {chartRef.current && (
@@ -213,7 +219,7 @@ const ScatterChart = ({
       {chartRef.current && (
         <div
           style={{ top: `calc(${chartRef.current.height}px - 10%)` }}
-          className="absolute text-[#D3D3D3] font-[700] left-[5%]"
+          className="absolute text-[#d4d4d4] font-[700] left-[10%]"
         >
           {quadrantValues.bottomLeft}
         </div>

@@ -131,6 +131,9 @@ export function setLineData(res, _type, dataKey) {
           display: true,
           text: text
         },
+        datalabels: {
+          display: false,
+        },
       },
     };
     return statsOptions

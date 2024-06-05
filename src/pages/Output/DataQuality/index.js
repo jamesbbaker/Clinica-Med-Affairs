@@ -94,6 +94,9 @@ const DataQuality = () => {
           display: true,
           text: "Asthma Patients and Claims By Month",
         },
+        datalabels: {
+          display: false,
+        },
       },
     };
     return statsOptions;
@@ -132,6 +135,9 @@ const DataQuality = () => {
         title: {
           display: true,
           text: "Asthma Incidence",
+        },
+        datalabels: {
+          display: false,
         },
       },
     };
