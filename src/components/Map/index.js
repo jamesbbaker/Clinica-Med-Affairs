@@ -7,7 +7,11 @@ import Popup from "reactjs-popup";
 import CustomMarker from "./Marker";
 import MapboxglSpiderifier from "mapboxgl-spiderifier";
 import { highestValue } from "../../utils/MathUtils";
-import { mapLabels, patientTotals, selectLabels } from "../../constants/appConstants";
+import {
+  mapLabels,
+  patientTotals,
+  selectLabels,
+} from "../../constants/appConstants";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
@@ -157,29 +161,40 @@ const levelToggles = {
     "Number of ICS High Steroid Usage": "Total ICS High Steroid Usage",
     "Percent of ICS High Steroid Usage": "Percent ICS High Steroid Usage",
     "Number of ICS Exacerbation": "Total ICS Exacerbations",
-    "Number of ICS Exacerbation Failed Escalation": "Total ICS Exacerbation Failed Escalation",
-    "Percent of ICS Exacerbation Failed Escalation": "Percent ICS Exacerbation Failed Escalation",
+    "Number of ICS Exacerbation Failed Escalation":
+      "Total ICS Exacerbation Failed Escalation",
+    "Percent of ICS Exacerbation Failed Escalation":
+      "Percent ICS Exacerbation Failed Escalation",
     "Number of ICS Escalation Delay": "Total ICS Escalation Delay",
     "Percent of ICS Escalation Delay": "Percent ICS Escalation Delay",
     "Number of ICS-LABA Patients": "Total ICS-LABA Patients",
     "Number of ICS-LABA Compliance < 240": "Total ICS-LABA Compliance < 240",
     "Percent of ICS-LABA Compliance < 240": "Percent ICS-LABA Compliance < 240",
     "Number of ICS-LABA Persistence < 360": "Total ICS-LABA Persistence < 360",
-    "Percent of ICS-LABA Persistence < 360": "Percent ICS-LABA Persistence < 360",
-    "Number of ICS-LABA High Steroid Usage": "Total ICS-LABA High Steroid Usage",
-    "Percent of ICS-LABA High Steroid Usage": "Percent ICS-LABA High Steroid Usage",
+    "Percent of ICS-LABA Persistence < 360":
+      "Percent ICS-LABA Persistence < 360",
+    "Number of ICS-LABA High Steroid Usage":
+      "Total ICS-LABA High Steroid Usage",
+    "Percent of ICS-LABA High Steroid Usage":
+      "Percent ICS-LABA High Steroid Usage",
     "Number of ICS-LABA Exacerbation": "Total ICS-LABA Exacerbations",
-    "Number of ICS-LABA Exacerbation Failed Escalation": "Total ICS-LABA Exacerbation Failed Escalation",
-    "Percent of ICS-LABA Exacerbation Failed Escalation": "Percent ICS-LABA Exacerbation Failed Escalation",
+    "Number of ICS-LABA Exacerbation Failed Escalation":
+      "Total ICS-LABA Exacerbation Failed Escalation",
+    "Percent of ICS-LABA Exacerbation Failed Escalation":
+      "Percent ICS-LABA Exacerbation Failed Escalation",
     "Number of ICS-LABA Escalation Delay": "Total ICS-LABA Escalation Delay",
     "Percent of ICS-LABA Escalation Delay": "Percent ICS-LABA Escalation Delay",
     "Number of ICS-LABA LAMA Patients": "Total ICS-LABA LAMA Patients",
-    "Number of ICS-LABA LAMA Compliance < 240": "Total ICS-LABA LAMA Compliance < 240",
-    "Percent of ICS-LABA LAMA Compliance < 240": "Percent ICS-LABA LAMA Compliance < 240",
-    "Number of ICS-LABA LAMA Persistence < 360": "Total ICS-LABA LAMA Persistence < 360",
-    "Percent of ICS-LABA LAMA Persistence < 360": "Percent ICS-LABA LAMA Persistence < 360",
+    "Number of ICS-LABA LAMA Compliance < 240":
+      "Total ICS-LABA LAMA Compliance < 240",
+    "Percent of ICS-LABA LAMA Compliance < 240":
+      "Percent ICS-LABA LAMA Compliance < 240",
+    "Number of ICS-LABA LAMA Persistence < 360":
+      "Total ICS-LABA LAMA Persistence < 360",
+    "Percent of ICS-LABA LAMA Persistence < 360":
+      "Percent ICS-LABA LAMA Persistence < 360",
     "Number of ICS-LABA Patients with LAMA": "Total ICS-LABA With LAMA",
-    "Percent of ICS-LABA Patients with LAMA": "Percent ICS-LABA With LAMA"
+    "Percent of ICS-LABA Patients with LAMA": "Percent ICS-LABA With LAMA",
   },
   state: {
     "Number of Asthma Patients": "Total Asthma Patients",
@@ -197,29 +212,40 @@ const levelToggles = {
     "Number of ICS High Steroid Usage": "Total ICS High Steroid Usage",
     "Percent of ICS High Steroid Usage": "Percent ICS High Steroid Usage",
     "Number of ICS Exacerbation": "Total ICS Exacerbations",
-    "Number of ICS Exacerbation Failed Escalation": "Total ICS Exacerbation Failed Escalation",
-    "Percent of ICS Exacerbation Failed Escalation": "Percent ICS Exacerbation Failed Escalation",
+    "Number of ICS Exacerbation Failed Escalation":
+      "Total ICS Exacerbation Failed Escalation",
+    "Percent of ICS Exacerbation Failed Escalation":
+      "Percent ICS Exacerbation Failed Escalation",
     "Number of ICS Escalation Delay": "Total ICS Escalation Delay",
     "Percent of ICS Escalation Delay": "Percent ICS Escalation Delay",
     "Number of ICS-LABA Patients": "Total ICS-LABA Patients",
     "Number of ICS-LABA Compliance < 240": "Total ICS-LABA Compliance < 240",
     "Percent of ICS-LABA Compliance < 240": "Percent ICS-LABA Compliance < 240",
     "Number of ICS-LABA Persistence < 360": "Total ICS-LABA Persistence < 360",
-    "Percent of ICS-LABA Persistence < 360": "Percent ICS-LABA Persistence < 360",
-    "Number of ICS-LABA High Steroid Usage": "Total ICS-LABA High Steroid Usage",
-    "Percent of ICS-LABA High Steroid Usage": "Percent ICS-LABA High Steroid Usage",
+    "Percent of ICS-LABA Persistence < 360":
+      "Percent ICS-LABA Persistence < 360",
+    "Number of ICS-LABA High Steroid Usage":
+      "Total ICS-LABA High Steroid Usage",
+    "Percent of ICS-LABA High Steroid Usage":
+      "Percent ICS-LABA High Steroid Usage",
     "Number of ICS-LABA Exacerbation": "Total ICS-LABA Exacerbations",
-    "Number of ICS-LABA Exacerbation Failed Escalation": "Total ICS-LABA Exacerbation Failed Escalation",
-    "Percent of ICS-LABA Exacerbation Failed Escalation": "Percent ICS-LABA Exacerbation Failed Escalation",
+    "Number of ICS-LABA Exacerbation Failed Escalation":
+      "Total ICS-LABA Exacerbation Failed Escalation",
+    "Percent of ICS-LABA Exacerbation Failed Escalation":
+      "Percent ICS-LABA Exacerbation Failed Escalation",
     "Number of ICS-LABA Escalation Delay": "Total ICS-LABA Escalation Delay",
     "Percent of ICS-LABA Escalation Delay": "Percent ICS-LABA Escalation Delay",
     "Number of ICS-LABA LAMA Patients": "Total ICS-LABA LAMA Patients",
-    "Number of ICS-LABA LAMA Compliance < 240": "Total ICS-LABA LAMA Compliance < 240",
-    "Percent of ICS-LABA LAMA Compliance < 240": "Percent ICS-LABA LAMA Compliance < 240",
-    "Number of ICS-LABA LAMA Persistence < 360": "Total ICS-LABA LAMA Persistence < 360",
-    "Percent of ICS-LABA LAMA Persistence < 360": "Percent ICS-LABA LAMA Persistence < 360",
+    "Number of ICS-LABA LAMA Compliance < 240":
+      "Total ICS-LABA LAMA Compliance < 240",
+    "Percent of ICS-LABA LAMA Compliance < 240":
+      "Percent ICS-LABA LAMA Compliance < 240",
+    "Number of ICS-LABA LAMA Persistence < 360":
+      "Total ICS-LABA LAMA Persistence < 360",
+    "Percent of ICS-LABA LAMA Persistence < 360":
+      "Percent ICS-LABA LAMA Persistence < 360",
     "Number of ICS-LABA Patients with LAMA": "Total ICS-LABA With LAMA",
-    "Percent of ICS-LABA Patients with LAMA": "Percent ICS-LABA With LAMA"
+    "Percent of ICS-LABA Patients with LAMA": "Percent ICS-LABA With LAMA",
   },
   hcp: {
     "Number of Asthma Patients": "Number of Asthma Patients",
@@ -230,6 +256,10 @@ const levelToggles = {
     "Number of No Treatment": "Number of No Treatment",
     "Percent of No Treatment": "Percent of No Treatment",
     "Number of ICS Patients": "Number of ICS Patients",
+    "Number of ICS Compliance < 240": "Number of ICS Compliance < 240",
+    "Percent of ICS Compliance < 240": "Percent of ICS Compliance < 240",
+    "Number of ICS Persistence < 360": "Number of ICS Persistence < 360",
+    "Percent of ICS Persistence < 360": "Percent of ICS Persistence < 360",
     "Number of ICS High Steroid Usage": "Number of ICS High Steroid Usage",
     "Percent of ICS High Steroid Usage": "Percent of ICS High Steroid Usage",
     "Number of ICS Exacerbation": "Number of ICS Exacerbation",
@@ -240,6 +270,14 @@ const levelToggles = {
     "Number of ICS Escalation Delay": "Number of ICS Escalation Delay",
     "Percent of ICS Escalation Delay": "Percent of ICS Escalation Delay",
     "Number of ICS-LABA Patients": "Number of ICS-LABA Patients",
+    "Number of ICS-LABA Compliance < 240":
+      "Number of ICS-LABA Compliance < 240",
+    "Percent of ICS-LABA Compliance < 240":
+      "Percent of ICS-LABA Compliance < 240",
+    "Number of ICS-LABA Persistence < 360":
+      "Number of ICS-LABA Persistence < 360",
+    "Percent of ICS-LABA Persistence < 360":
+      "Percent of ICS-LABA Persistence < 360",
     "Number of ICS-LABA High Steroid Usage":
       "Number of ICS-LABA High Steroid Usage",
     "Percent of ICS-LABA High Steroid Usage":
@@ -253,6 +291,17 @@ const levelToggles = {
       "Number of ICS-LABA Escalation Delay",
     "Percent of ICS-LABA Escalation Delay":
       "Percent of ICS-LABA Escalation Delay",
+    "Number of ICS-LABA LAMA Patients": "Number of ICS-LABA LAMA Patients",
+    "Number of ICS-LABA LAMA Compliance < 240":
+      "Number of ICS-LABA LAMA Compliance < 240",
+    "Percent of ICS-LABA LAMA Compliance < 240":
+      "Percent of ICS-LABA LAMA Compliance < 240",
+    "Number of ICS-LABA LAMA Persistence < 360":
+      "Number of ICS-LABA LAMA Persistence < 360",
+    "Percent of ICS-LABA LAMA Persistence < 360":
+      "Percent of ICS-LABA LAMA Persistence < 360",
+    "Number of ICS-LABA Patients with LAMA": "Number of ICS-LABA With LAMA",
+    "Percent of ICS-LABA Patients with LAMA": "Percent of ICS-LABA With LAMA",
   },
 };
 
@@ -275,7 +324,6 @@ const Map = ({
   const mapRef = useRef(null);
   const [latitude, setLatitude] = useState(-90);
   const [longitude, setLongitude] = useState(40);
-
   const spiderifier = useRef(null);
   const [zoom, setZoom] = useState(3.5);
   const [mapMarkers, setMapMarkers] = useState([]);
@@ -432,7 +480,7 @@ const Map = ({
                 feature.properties["Assigned Physician Name"]
               }</strong></h4><h4 className="text-xs">Primary Specialty Description: <strong className="font-bold">${
                 feature.properties["Assigned Specialty"]
-              }</strong></h4> <h4 className="text-xs">${currentToggle}: <strong className="font-bold">${
+              }</strong></h4> <h4 className="text-xs">${selectLabels[currentToggle]}: <strong className="font-bold">${
                 feature.properties &&
                 currentToggle &&
                 feature.properties[currentToggle].toLocaleString()
@@ -751,7 +799,7 @@ const Map = ({
 
     function interpolateRadius(value) {
       const minRadius = 0;
-      const maxRadius = 100;
+      const maxRadius = 50;
       // Maximum value
 
       // Ensure value is within range [0, maxValue]
@@ -865,7 +913,7 @@ const Map = ({
                   feature.properties["Assigned Physician Name"]
                 }</strong></h4><h4 className="text-xs">Primary Specialty Description: <strong className="font-bold">${
                   feature.properties["Assigned Specialty"]
-                }</strong></h4> <h4 className="text-xs">${currentToggle}: <strong className="font-bold">${
+                }</strong></h4> <h4 className="text-xs">${selectLabels[currentToggle]}: <strong className="font-bold">${
                   feature.properties &&
                   currentToggle &&
                   feature.properties[currentToggle].toLocaleString()
@@ -1117,7 +1165,6 @@ const DetailsComponent = ({ item, currentLevel, currentToggle }) => {
   useEffect(() => {
     if (item.length) {
       let totalValue = item.length;
-
       let val = 0;
       item.map((_item) => {
         val += _item.properties[currentToggle];
@@ -1150,7 +1197,7 @@ const DetailsComponent = ({ item, currentLevel, currentToggle }) => {
                 </span>
               </h4>
               <h4 className="text-xs">
-                {selectLabels[mapLabels[currentToggle]]}:{" "}
+                {selectLabels[currentToggle]}:{" "}
                 <span className="font-bold">
                   {_detail.properties &&
                     currentToggle &&
@@ -1166,8 +1213,8 @@ const DetailsComponent = ({ item, currentLevel, currentToggle }) => {
             Total: <span className="font-bold">{itemValue.totalValue}</span>
           </h4>
           <h4 className="text-xs">
-            Total {selectLabels[mapLabels[currentToggle]]}
-            <span className="font-bold"> {itemValue.totalCurrentToggles}</span>
+            Total {selectLabels[currentToggle]}
+            <span className="font-bold">: {itemValue.totalCurrentToggles}</span>
           </h4>
         </div>
       ) : null}
