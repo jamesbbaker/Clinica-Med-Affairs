@@ -621,15 +621,15 @@ const Map = ({
       0, // If size is 0, radius is 0
       0, // If size is 0, radius is 0
       1, // If size is 1, radius is 12
-      8, // If size is 1, radius is 12,
+      4, // If size is 1, radius is 12,
       10,
-      18,
+      9,
       20,
-      28,
+      14,
       30,
-      38,
+      19,
       40,
-      48,
+      24,
     ]);
 
     let hoverListener = (e) => {

@@ -10,6 +10,7 @@ import {
   Legend,
   BubbleController,
   registerables,
+  elements,
 } from "chart.js";
 import { highestValue } from "../../utils/MathUtils";
 import { selectLabels } from "../../constants/appConstants";
@@ -20,8 +21,8 @@ ChartJS.register(...registerables);
 
 // Custom plugin for different marker shapes
 ChartJS.register({
-  id: 'customBubbleShapes',
-  afterDraw: function(chart, args, options) {
+  id: "customBubbleShapes",
+  afterDraw: function (chart, args, options) {
     const ctx = chart.ctx;
     const datasets = chart.config.data.datasets;
 
@@ -30,54 +31,56 @@ ChartJS.register({
 
       if (!meta.hidden) {
         meta.data.forEach((point, index) => {
-          const { x, y } = point.getProps(['x', 'y']);
+          const { x, y } = point.getProps(["x", "y"]);
           const radius = point.options.radius;
-          const shape = dataset.shape[index];
-          const color = dataset.backgroundColor[index];
+          if (dataset && dataset.shape && dataset.shape[index]) {
+            const shape = dataset.shape[index];
+            const color = dataset.backgroundColor[index];
 
-          ctx.save();
-          ctx.fillStyle = color;
-          ctx.beginPath();
+            ctx.save();
+            ctx.fillStyle = color;
+            ctx.beginPath();
 
-          switch (shape) {
-            case 'circle':
-              ctx.arc(x, y, radius, 0, Math.PI * 2);
-              break;
-            case 'square':
-              ctx.rect(x - radius, y - radius, radius * 2, radius * 2);
-              break;
-            case 'triangle':
-              ctx.moveTo(x, y - radius);
-              ctx.lineTo(x + radius, y + radius);
-              ctx.lineTo(x - radius, y + radius);
-              ctx.closePath();
-              break;
-            case 'star':
-              const outerRadius = radius;
-              const innerRadius = radius / 2;
-              for (let j = 0; j < 5; j++) {
-                ctx.lineTo(
-                  x + outerRadius * Math.cos((18 + j * 72) / 180 * Math.PI),
-                  y - outerRadius * Math.sin((18 + j * 72) / 180 * Math.PI)
-                );
-                ctx.lineTo(
-                  x + innerRadius * Math.cos((54 + j * 72) / 180 * Math.PI),
-                  y - innerRadius * Math.sin((54 + j * 72) / 180 * Math.PI)
-                );
-              }
-              ctx.closePath();
-              break;
-            default:
-              ctx.arc(x, y, radius, 0, Math.PI * 2);
-              break;
+            switch (shape) {
+              case "circle":
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                break;
+              case "square":
+                ctx.rect(x - radius, y - radius, radius * 2, radius * 2);
+                break;
+              case "triangle":
+                ctx.moveTo(x, y - radius);
+                ctx.lineTo(x + radius, y + radius);
+                ctx.lineTo(x - radius, y + radius);
+                ctx.closePath();
+                break;
+              case "star":
+                const outerRadius = radius;
+                const innerRadius = radius / 2;
+                for (let j = 0; j < 5; j++) {
+                  ctx.lineTo(
+                    x + outerRadius * Math.cos(((18 + j * 72) / 180) * Math.PI),
+                    y - outerRadius * Math.sin(((18 + j * 72) / 180) * Math.PI)
+                  );
+                  ctx.lineTo(
+                    x + innerRadius * Math.cos(((54 + j * 72) / 180) * Math.PI),
+                    y - innerRadius * Math.sin(((54 + j * 72) / 180) * Math.PI)
+                  );
+                }
+                ctx.closePath();
+                break;
+              default:
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                break;
+            }
+
+            ctx.fill();
+            ctx.restore();
           }
-
-          ctx.fill();
-          ctx.restore();
         });
       }
     });
-  }
+  },
 });
 
 // Register the arbitrary line plugin globally
@@ -153,11 +156,6 @@ const defaultOptions = {
     },
   },
   responsive: true,
-  elements: {
-    point: {
-      radius: 0 // Disable the default circle drawing
-    }
-  },
   plugins: {
     legend: {
       position: "top",
@@ -180,6 +178,7 @@ const ScatterChart = ({
   lineX,
   lineY,
   setLineX,
+  handleDispatchData,
   setLineY,
   state,
   data = defaultData,
@@ -210,25 +209,18 @@ const ScatterChart = ({
           },
         },
       },
-      interaction: {
-        intersect: false,
-        mode: 'index',
-        axis: 'x'
+      elements: {
+        point: {
+          radius: 10,
+        },
       },
       responsive: true,
       plugins: {
         legend: {
           position: "top",
         },
-        elements: {
-          point: {
-            radius: 0 // Disable the default circle drawing
-          }
-        },
         customBubbleShapes: {},
-        tooltip: {
-          mode: 'nearest',
-          intersect: false,
+        tooltip: {  
           callbacks: {
             label: function (context) {
               return `Name: ${context.raw.name}, ${[
@@ -244,6 +236,8 @@ const ScatterChart = ({
         },
       },
     };
+    
+  
     setOptions(_defaultOptions);
   }, [state.xLabel, state.yLabel]);
 
@@ -251,15 +245,29 @@ const ScatterChart = ({
     if (chartRef.current) {
       chartRef.current.options.plugins.arbitraryLine.lineX = lineX;
       chartRef.current.update();
+      let labelValue = {
+        xLabel:  state.xLabel,
+        yLabel:  state.yLabel,
+      };
+      if (data &&  data.datasets) {
+        handleDispatchData(labelValue,)
+      }
     }
-  }, [lineX]);
+  }, [lineX, dataOptions]);
 
   useEffect(() => {
     if (chartRef.current) {
       chartRef.current.options.plugins.arbitraryLine.lineY = lineY;
       chartRef.current.update();
+      let labelValue = {
+        xLabel:  state.xLabel,
+        yLabel:  state.yLabel,
+      };
+      if (data &&  data.datasets) {
+        handleDispatchData(labelValue,)
+      }
     }
-  }, [lineY]);
+  }, [lineY, dataOptions]);
 
   useEffect(() => {
     const data = chartRef.current?.data.datasets[0]?.data;
@@ -287,13 +295,13 @@ const ScatterChart = ({
   return (
     <div className="h-[800px] relative w-full">
       <Bubble ref={chartRef} data={data} options={dataOptions} />
-      <div className="absolute text-[#4B0082] font-[700] top-[8%] left-[10%]">
+      <div className="absolute border text-[#4B0082] font-[700] top-[8%] left-[10%]">
         {quadrantValues.topLeft}
       </div>
       {chartRef.current && (
         <div
           style={{ left: `calc(${chartRef.current.width}px - 10%)` }}
-          className="absolute text-[#FF0000] font-[700] top-[8%]"
+          className="absolute border text-[#FF0000] font-[700] top-[8%]"
         >
           {quadrantValues.topRight}
         </div>
@@ -301,7 +309,7 @@ const ScatterChart = ({
       {chartRef.current && (
         <div
           style={{ top: `calc(${chartRef.current.height}px - 10%)` }}
-          className="absolute text-[#d4d4d4] font-[700] left-[10%]"
+          className="absolute border text-[#000] font-[700] left-[10%]"
         >
           {quadrantValues.bottomLeft}
         </div>
@@ -312,7 +320,7 @@ const ScatterChart = ({
             top: `calc(${chartRef.current.height}px - 10%)`,
             left: `calc(${chartRef.current.width}px - 10%)`,
           }}
-          className="absolute text-[#D8BFD8] font-[700]"
+          className="absolute border text-[#D8BFD8] font-[700]"
         >
           {quadrantValues.bottomRight}
         </div>
