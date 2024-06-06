@@ -29,7 +29,7 @@ export const EPL_TABLE_COLUMNS = [
   {
     Header: "Repeated cardioversions without treatment escalation",
     accessor: "repeatedCardioversions",
-  },
+  }, 
   { Header: "Improper support of therapy", accessor: "supportTherapy" },
   { Header: "Failure to manage AEs", accessor: "manageAEs" },
   {
@@ -127,7 +127,7 @@ export const unmetLabels = {
     id: "Total ICS Exacerbation Failed Escalation",
     percent: "Percent ICS Exacerbation Failed Escalation",
   },
-  "Delay in Escalating Patients from Single to Double Therapy after Exacerbation":
+  "Delay in Escalating Patients from Single to Double Therapy":
     {
       id: "Total ICS Escalation Delay",
       percent: "Percent ICS Escalation Delay",

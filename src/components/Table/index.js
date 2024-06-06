@@ -333,6 +333,8 @@ const Table = ({
     </div>
   );  
 
+  console.log(filterState)
+
   return (
     <div style={{ marginTop }} className="w-full max-w-full overflow-auto">
       {Title && (
@@ -473,7 +475,7 @@ const Table = ({
               {headerGroup.headers.map((column) =>
                 totalPage ? (
                   <th onClick={() => handleSort(column)}>
-                    {column.render("Header")}
+                    {selectLabels[column.render("Header")]  ? selectLabels[column.render("Header")] : column.render("Header")}
                     <span>
                       {sortBy === column.id ||
                       (column.id == "Name" && sortBy === "First Name")

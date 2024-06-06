@@ -205,7 +205,7 @@ const PatientOpportunityMapping = () => {
     getDataStats("state_level_data", accessToken, refreshToken)
       .then(async (res) => {
         if (res) {
-          console.log(res, "response state")
+     
           let _data = JSON.parse(res.replaceAll("NaN", 0));
           let StateByRegion = {};
           _data.data.map((entry) => {
@@ -229,7 +229,7 @@ const PatientOpportunityMapping = () => {
       });
     getDataStats("national_data", accessToken, refreshToken).then(
       async (res) => {
-        console.log(res,"res")
+      
         if (res) {
           setChartDataValue(setData1, data_1_labels, [res.summary_data]);
           setChartDataValue(setData2, data_2_labels, [res.summary_data]);
@@ -253,6 +253,7 @@ const PatientOpportunityMapping = () => {
         refreshToken
       );
       if (res) {
+        console.log(res, "response")
         let _data = JSON.parse(res.replaceAll("NaN", 0));
         dispatch({
           type: action_types.HandleUpdateStates,
@@ -445,10 +446,10 @@ const PatientOpportunityMapping = () => {
         <div className="flex items-center w-full justify-center">
           {data1 && (
             <div className="w-full flex items-center flex-wrap">
-              <div className="w-[50%]">
+              <div className="w-[100%]">
                 <BarChart
-                  label="Percent of All Asthma Patients with Unmet Need"
-                  height={80}
+                  // label="Percent of All Asthma Patients with Unmet Need"
+                  height={30}
                   data={{
                     labels: [
                       "Percent of Patients with at least one Unmet Need",
@@ -459,8 +460,8 @@ const PatientOpportunityMapping = () => {
                         data: [0.81 * 16800000],
                         borderColor: "#800000",
                         backgroundColor: "#800000",
-                        barThickness: 20,
-                        maxBarThickness: 20,
+                        barThickness: 40,
+                        maxBarThickness: 40,
                         datalabels: {
                           align: 'center',
                           anchor: 'center',
@@ -473,8 +474,8 @@ const PatientOpportunityMapping = () => {
                         data: [0.19 * 16800000],
                         borderColor: "#008000",
                         backgroundColor: "#008000",
-                        barThickness: 20,
-                        maxBarThickness: 20,
+                        barThickness: 40,
+                        maxBarThickness: 40,
                         datalabels: {
                           display: false,
                         },

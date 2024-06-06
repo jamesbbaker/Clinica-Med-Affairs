@@ -53,7 +53,6 @@ const MedicalAffairToolbox = () => {
     bottomRight: 0,
   });
 
-
   useEffect(() => {
     if (state.data) {
       let topLeft = 0;
@@ -77,11 +76,8 @@ const MedicalAffairToolbox = () => {
         bottomLeft,
         bottomRight,
       });
-  
     }
   }, [lineX, lineY, state.data]);
-
- 
 
   const fetchData = (
     filters = {
@@ -133,22 +129,33 @@ const MedicalAffairToolbox = () => {
       });
   };
 
-
   const generateShape = (val) => {
-    let shape1 = ['PULMONARY DISEASE', 'PEDIATRIC PULMONOLOGY', 'PULMONARY CRITICAL CARE MEDICINE']
+    let shape1 = [
+      "PULMONARY DISEASE",
+      "PEDIATRIC PULMONOLOGY",
+      "PULMONARY CRITICAL CARE MEDICINE",
+    ];
     if (shape1.includes(val)) {
-      return "triangle"
+      return "triangle";
     }
-    let shape2 = ['ALLERGY & IMMUNOLOGY']
+    let shape2 = ["ALLERGY & IMMUNOLOGY"];
     if (shape2.includes(val)) {
-      return "circle"
+      return "circle";
     }
-    let shape3 = ['FAMILY MEDICINE',  'PEDIATRICS', 'INTERNAL MEDICINE', 'GENERAL PRACTICE', 'INTERNAL MEDICINE/PEDIATRICS', 'GERIATRIC MEDICINE (INTERNAL MEDICINE)', 'GERIATRIC MEDICINE (FAMILY MEDICINE)']
+    let shape3 = [
+      "FAMILY MEDICINE",
+      "PEDIATRICS",
+      "INTERNAL MEDICINE",
+      "GENERAL PRACTICE",
+      "INTERNAL MEDICINE/PEDIATRICS",
+      "GERIATRIC MEDICINE (INTERNAL MEDICINE)",
+      "GERIATRIC MEDICINE (FAMILY MEDICINE)",
+    ];
     if (shape3.includes(val)) {
-      return "square"
+      return "square";
     }
-    return "star"
-  }
+    return "star";
+  };
 
   const calculateRadius = (value, maxValue) => {
     const maxRadius = 30;
@@ -163,8 +170,7 @@ const MedicalAffairToolbox = () => {
     vabelValues = {
       xLabel: state.xLabel,
       yLabel: state.yLabel,
-    },
-    
+    }
   ) => {
     let radius = "Number of ICS-LABA Patients";
     const maxValue = highestValue(data, radius);
@@ -174,12 +180,9 @@ const MedicalAffairToolbox = () => {
       x: item[vabelValues.xLabel],
       y: item[vabelValues.yLabel],
       r: calculateRadius(item[radius], maxValue),
-    
+
       value: item[radius],
-    }))
-  
-    console.log(data)
-    
+    }));
 
     let scatterData = {
       datasets: [
@@ -194,17 +197,17 @@ const MedicalAffairToolbox = () => {
           })),
           backgroundColor: _data.map((item) => {
             if (item.x < lineX && item.y < lineY) {
-              return "#d4d4d4"
+              return "#d4d4d4";
             } else if (item.x >= lineX && item.y < lineY) {
-              return "#D8BFD8"
+              return "#E0B0FF";
             } else if (item.x < lineX && item.y >= lineY) {
-              return "#4B0082"
+              return "#4B0082";
             } else {
-              return "#FF0000"
+              return "#FF0000";
             }
           }),
-          shape: _data.map(item => generateShape(item["Primary Specialty Description"])),
-          borderColor: "rgba(75, 192, 192, 1)",
+          shape: _data.map((item) => generateShape(item["Primary Specialty Description"])),
+          // borderColor: "rgba(75, 192, 192, 1)",
           borderWidth: 1,
         },
       ],
@@ -215,6 +218,15 @@ const MedicalAffairToolbox = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const handleDispatchData = (labelValue, chartData) => {
+    let _data = chartData ? chartData : rawData;
+    let data = handleChartData(rawData, labelValue);
+    dispatch({
+      type: actions.handleUpdateData,
+      payload: data,
+    });
+  };
 
   const handleSelect = (id, val) => {
     dispatch({
@@ -228,12 +240,7 @@ const MedicalAffairToolbox = () => {
       xLabel: id == "xLabel" ? val : state.xLabel,
       yLabel: id == "yLabel" ? val : state.yLabel,
     };
-   
-    let data = handleChartData(rawData, labelValue);
-    dispatch({
-      type: actions.handleUpdateData,
-      payload: data,
-    });
+    handleDispatchData(labelValue);
   };
 
   const handleToggleSelect = (val, id) => {
@@ -354,6 +361,7 @@ const MedicalAffairToolbox = () => {
           <ScatterChart
             quadrantValues={quadrantValues}
             lineX={lineX}
+            handleDispatchData={handleDispatchData}
             lineY={lineY}
             setLineX={setLineX}
             state={state}
