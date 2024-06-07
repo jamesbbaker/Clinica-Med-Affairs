@@ -8,10 +8,13 @@ import CustomMarker from "./Marker";
 import MapboxglSpiderifier from "mapboxgl-spiderifier";
 import { highestValue } from "../../utils/MathUtils";
 import {
+  mapBarCharts,
   mapLabels,
+  mapSelectLabels,
   patientTotals,
   selectLabels,
 } from "../../constants/appConstants";
+import BarChartPopup from "../../pages/Output/PatientOpportunityMapping/Popup";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
@@ -338,6 +341,8 @@ const Map = ({
   const mapStateboxglMarker = useRef([]);
   const [layerAdded, setLayerAdded] = useState(false);
   const [modalDetails, setModalDetails] = useState(null);
+  const [data1, setData1] = useState(null);
+  console.log(data1)
 
   useEffect(() => {
     if (markers && stateData && layerAdded) {
@@ -423,7 +428,7 @@ const Map = ({
     spiderifier.current = new MapboxglSpiderifier(mapRef.current, {
       onClick: function (e, spiderLeg) {
         var feature = spiderLeg.feature;
-
+        setChartDataValue(setData1, null,[ feature.properties]);
         setModalDetails([feature]);
       },
       initializeLeg: function initializeSpiderLeg(spiderLeg) {
@@ -516,6 +521,7 @@ const Map = ({
   };
 
   const closeModal = () => {
+    setData1(null)
     setModalDetails(null);
   };
 
@@ -689,7 +695,8 @@ const Map = ({
           );
         } else {
           const item = e.features[0];
-
+        
+          setChartDataValue(setData1, null,[filteredArr[0].properties]);
           setModalDetails(filteredArr);
         }
 
@@ -832,6 +839,42 @@ const Map = ({
     );
   };
 
+  
+  function setChartDataValue(setValue, API_labels, data) {
+    
+    function generateChartData(array) {
+      let _value = [];
+      // console.log(array, data[0])
+      array.forEach((item) => {
+        _value.push(data[0][mapLabels[item]]);
+      });
+      return {
+        labels: array.map((item) => mapSelectLabels[mapLabels[item]]),
+        datasets: [
+          {
+            data: _value,
+            borderColor: array.map((item) =>
+              !patientTotals.includes(item) ? "#800000" : "#00008B"
+            ),
+            backgroundColor: array.map((item) =>
+              !patientTotals.includes(item) ? "#800000" : "#00008B"
+            ),
+            barThickness: 20, // Set a specific thickness for the bar
+            maxBarThickness: 20,
+          },
+        ],
+      };
+    }
+
+    setValue({
+      mapValue1: generateChartData(mapBarCharts.chart1),
+      mapValue2: generateChartData(mapBarCharts.chart2),
+      mapValue3: generateChartData(mapBarCharts.chart3),
+      mapValue4: generateChartData(mapBarCharts.chart4),
+      mapValue5: generateChartData(mapBarCharts.chart5),
+    });
+  }
+
   // Initialize map when component mounts
   useEffect(() => {
     mapRef.current = new mapboxgl.Map({
@@ -857,7 +900,7 @@ const Map = ({
       spiderifier.current = new MapboxglSpiderifier(mapRef.current, {
         onClick: function (e, spiderLeg) {
           var feature = spiderLeg.feature;
-
+          setChartDataValue(setData1, null,[ feature.properties]);
           setModalDetails([feature]);
         },
         initializeLeg: function initializeSpiderLeg(spiderLeg) {
@@ -1111,7 +1154,7 @@ const Map = ({
         })}
       {detailsItem && (
         <div
-          className="bg-white shadow-xl px-2 py-2"
+          className="bg-white shadow-xl pointer-events-none px-2 py-2"
           style={{
             position: "absolute",
             left: detailsPosition.left,
@@ -1144,15 +1187,7 @@ const Map = ({
         open={modalDetails != null}
         position="center center"
       >
-        <DetailsComponent
-          item={modalDetails}
-          currentLevel={currentLevel}
-          currentToggle={
-            levelToggles && currentLevel && currentToggle
-              ? levelToggles[currentLevel][currentToggle]
-              : null
-          }
-        />
+        <BarChartPopup data1={data1} />
       </Popup>
     </div>
   );

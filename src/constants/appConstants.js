@@ -384,3 +384,5 @@ export const mapBarCharts = {
     'Total ICS-LABA With LAMA',
   ],
 };
+
+

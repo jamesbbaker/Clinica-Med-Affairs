@@ -9,21 +9,27 @@ import Table from "../../../components/Table";
 import { getDataStats } from "../../../API/Outputs";
 import { AuthContext } from "../../../context/AuthContext";
 import Popup from "reactjs-popup";
-import { selectLabels } from "../../../constants/appConstants";
+import {
+  mapBarCharts,
+  mapLabels,
+  mapSelectLabels,
+  patientTotals,
+  selectLabels,
+} from "../../../constants/appConstants";
+import BarChartPopup from "../PatientOpportunityMapping/Popup";
 
 const action_types = {
   handleFilterChange: "handleFilterChange",
   handleResetFilterValues: "handleResetFilterValues",
 };
 
-let obj = {}
+let obj = {};
 
+Object.keys(selectLabels).forEach((item) => {
+  return (obj[item] = { id: item, max: 0, min: 0 });
+});
 
-Object.keys(selectLabels).forEach(item => {
-  return obj[item] = {id: item, max: 0, min: 0}
-})
-
-const initialState = {...obj}
+const initialState = { ...obj };
 
 const reducer = (state, action) => {
   const { type, payload } = action;
@@ -38,19 +44,19 @@ const reducer = (state, action) => {
         },
       };
     case action_types.handleResetFilterValues:
-      let arrayVal = payload.val
-      let _prevState = {...state}
-      let _filters = {}
-      arrayVal.forEach(item => {
+      let arrayVal = payload.val;
+      let _prevState = { ...state };
+      let _filters = {};
+      arrayVal.forEach((item) => {
         _filters[item.value] = {
           id: _prevState[item.value].id,
           min: _prevState[item.value].min,
           max: _prevState[item.value].max,
-        }
-      })
+        };
+      });
       return {
         ...initialState,
-        ..._filters
+        ..._filters,
       };
     default:
       return state;
@@ -72,7 +78,6 @@ const EligiblePatientLocator = () => {
   const [totalPage, settotalPage] = useState(1);
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setsortOrder] = useState("asc");
-
   const [value, setValue] = useState(null);
   const [selectedIds, setSelectedIds] = useState([]);
   const [specialityList, setSpecialityList] = useState(null);
@@ -82,6 +87,7 @@ const EligiblePatientLocator = () => {
   const [icsNumber, setIcsNumber] = useState({ min: 0, max: 0 });
   const [steroidPercent, setsteroidPercent] = useState({ min: 0, max: 0 });
   const [rowDetails, setRowDetails] = useState(null);
+  const [data1, setData1] = useState(null);
 
   useEffect(() => {
     if (!statsData1) {
@@ -129,61 +135,204 @@ const EligiblePatientLocator = () => {
     // Add other query parameters as needed
     const additionalParams = {
       Number_of_Asthma_Patients: filterState["Number of Asthma Patients"].min,
-      max_Number_of_Asthma_Patients: filterState["Number of Asthma Patients"]?.max !== undefined && filterState["Number of Asthma Patients"].max !== 0 ? filterState["Number of Asthma Patients"].max : undefined,
+      max_Number_of_Asthma_Patients:
+        filterState["Number of Asthma Patients"]?.max !== undefined &&
+        filterState["Number of Asthma Patients"].max !== 0
+          ? filterState["Number of Asthma Patients"].max
+          : undefined,
       min_Number_of_ICS_Patients: filterState["Number of ICS Patients"].min,
-      max_Number_of_ICS_Patients: filterState["Number of ICS Patients"]?.max !== undefined && filterState["Number of ICS Patients"].max !== 0 ? filterState["Number of ICS Patients"].max : undefined,
-      min_Number_of_ICS_LABA_Patients: filterState["Number of ICS-LABA Patients"].min,
-      max_Number_of_ICS_LABA_Patients: filterState["Number of ICS-LABA Patients"]?.max !== undefined && filterState["Number of ICS-LABA Patients"].max !== 0 ? filterState["Number of ICS-LABA Patients"].max : undefined,
-      min_Number_of_ICS_LABA_LAMA_Patients: filterState["Number of ICS-LABA LAMA Patients"].min,
-      max_Number_of_ICS_LABA_LAMA_Patients: filterState["Number of ICS-LABA LAMA Patients"]?.max !== undefined && filterState["Number of ICS-LABA LAMA Patients"].max !== 0 ? filterState["Number of ICS-LABA LAMA Patients"].max : undefined,
+      max_Number_of_ICS_Patients:
+        filterState["Number of ICS Patients"]?.max !== undefined &&
+        filterState["Number of ICS Patients"].max !== 0
+          ? filterState["Number of ICS Patients"].max
+          : undefined,
+      min_Number_of_ICS_LABA_Patients:
+        filterState["Number of ICS-LABA Patients"].min,
+      max_Number_of_ICS_LABA_Patients:
+        filterState["Number of ICS-LABA Patients"]?.max !== undefined &&
+        filterState["Number of ICS-LABA Patients"].max !== 0
+          ? filterState["Number of ICS-LABA Patients"].max
+          : undefined,
+      min_Number_of_ICS_LABA_LAMA_Patients:
+        filterState["Number of ICS-LABA LAMA Patients"].min,
+      max_Number_of_ICS_LABA_LAMA_Patients:
+        filterState["Number of ICS-LABA LAMA Patients"]?.max !== undefined &&
+        filterState["Number of ICS-LABA LAMA Patients"].max !== 0
+          ? filterState["Number of ICS-LABA LAMA Patients"].max
+          : undefined,
       min_Number_of_No_Spirometry: filterState["Number of No Spirometry"].min,
-      max_Number_of_No_Spirometry: filterState["Number of No Spirometry"]?.max !== undefined && filterState["Number of No Spirometry"].max !== 0 ? filterState["Number of No Spirometry"].max : undefined,
+      max_Number_of_No_Spirometry:
+        filterState["Number of No Spirometry"]?.max !== undefined &&
+        filterState["Number of No Spirometry"].max !== 0
+          ? filterState["Number of No Spirometry"].max
+          : undefined,
       min_Percent_of_No_Spirometry: filterState["Percent of No Spirometry"].min,
-      max_Percent_of_No_Spirometry: filterState["Percent of No Spirometry"]?.max !== undefined && filterState["Percent of No Spirometry"].max !== 0 ? filterState["Percent of No Spirometry"].max : undefined,
+      max_Percent_of_No_Spirometry:
+        filterState["Percent of No Spirometry"]?.max !== undefined &&
+        filterState["Percent of No Spirometry"].max !== 0
+          ? filterState["Percent of No Spirometry"].max
+          : undefined,
       min_Number_of_No_EOS_Testing: filterState["Number of No EOS Testing"].min,
-      max_Number_of_No_EOS_Testing: filterState["Number of No EOS Testing"]?.max !== undefined && filterState["Number of No EOS Testing"].max !== 0 ? filterState["Number of No EOS Testing"].max : undefined,
-      min_Percent_of_No_EOS_Testing: filterState["Percent of No EOS Testing"].min,
-      max_Percent_of_No_EOS_Testing: filterState["Percent of No EOS Testing"]?.max !== undefined && filterState["Percent of No EOS Testing"].max !== 0 ? filterState["Percent of No EOS Testing"].max : undefined,
+      max_Number_of_No_EOS_Testing:
+        filterState["Number of No EOS Testing"]?.max !== undefined &&
+        filterState["Number of No EOS Testing"].max !== 0
+          ? filterState["Number of No EOS Testing"].max
+          : undefined,
+      min_Percent_of_No_EOS_Testing:
+        filterState["Percent of No EOS Testing"].min,
+      max_Percent_of_No_EOS_Testing:
+        filterState["Percent of No EOS Testing"]?.max !== undefined &&
+        filterState["Percent of No EOS Testing"].max !== 0
+          ? filterState["Percent of No EOS Testing"].max
+          : undefined,
       min_Number_of_No_Treatment: filterState["Number of No Treatment"].min,
-      max_Number_of_No_Treatment: filterState["Number of No Treatment"]?.max !== undefined && filterState["Number of No Treatment"].max !== 0 ? filterState["Number of No Treatment"].max : undefined,
+      max_Number_of_No_Treatment:
+        filterState["Number of No Treatment"]?.max !== undefined &&
+        filterState["Number of No Treatment"].max !== 0
+          ? filterState["Number of No Treatment"].max
+          : undefined,
       min_Percent_of_No_Treatment: filterState["Percent of No Treatment"].min,
-      max_Percent_of_No_Treatment: filterState["Percent of No Treatment"]?.max !== undefined && filterState["Percent of No Treatment"].max !== 0 ? filterState["Percent of No Treatment"].max : undefined,
-      min_Number_of_ICS_High_Steroid_Usage: filterState["Number of ICS High Steroid Usage"].min,
-      max_Number_of_ICS_High_Steroid_Usage: filterState["Number of ICS High Steroid Usage"]?.max !== undefined && filterState["Number of ICS High Steroid Usage"].max !== 0 ? filterState["Number of ICS High Steroid Usage"].max : undefined,
-      min_Percent_of_ICS_High_Steroid_Usage: filterState["Percent of ICS High Steroid Usage"].min,
-      max_Percent_of_ICS_High_Steroid_Usage: filterState["Percent of ICS High Steroid Usage"]?.max !== undefined && filterState["Percent of ICS High Steroid Usage"].max !== 0 ? filterState["Percent of ICS High Steroid Usage"].max : undefined,
-      min_Number_of_ICS_Exacerbation_Failed_Escalation: filterState["Number of ICS Exacerbation Failed Escalation"].min,
-      max_Number_of_ICS_Exacerbation_Failed_Escalation: filterState["Number of ICS Exacerbation Failed Escalation"]?.max !== undefined && filterState["Number of ICS Exacerbation Failed Escalation"].max !== 0 ? filterState["Number of ICS Exacerbation Failed Escalation"].max : undefined,
-      min_Percent_of_ICS_Exacerbation_Failed_Escalation: filterState["Percent of ICS Exacerbation Failed Escalation"].min,
-      max_Percent_of_ICS_Exacerbation_Failed_Escalation: filterState["Percent of ICS Exacerbation Failed Escalation"]?.max !== undefined && filterState["Percent of ICS Exacerbation Failed Escalation"].max !== 0 ? filterState["Percent of ICS Exacerbation Failed Escalation"].max : undefined,
-      min_Number_of_ICS_LABA_Escalation_Delay: filterState["Number of ICS-LABA Escalation Delay"].min,
-      max_Number_of_ICS_LABA_Escalation_Delay: filterState["Number of ICS-LABA Escalation Delay"]?.max !== undefined && filterState["Number of ICS-LABA Escalation Delay"].max !== 0 ? filterState["Number of ICS-LABA Escalation Delay"].max : undefined,
-      min_Percent_of_ICS_LABA_Escalation_Delay: filterState["Percent of ICS-LABA Escalation Delay"].min,
-      max_Percent_of_ICS_LABA_Escalation_Delay: filterState["Percent of ICS-LABA Escalation Delay"]?.max !== undefined && filterState["Percent of ICS-LABA Escalation Delay"].max !== 0 ? filterState["Percent of ICS-LABA Escalation Delay"].max : undefined,
-      min_Number_of_ICS_LABA_Patients_with_LAMA: filterState["Number of ICS-LABA Patients with LAMA"].min,
-      max_Number_of_ICS_LABA_Patients_with_LAMA: filterState["Number of ICS-LABA Patients with LAMA"]?.max !== undefined && filterState["Number of ICS-LABA Patients with LAMA"].max !== 0 ? filterState["Number of ICS-LABA Patients with LAMA"].max : undefined,
-      min_Percent_of_ICS_LABA_Patients_with_LAMA: filterState["Percent of ICS-LABA Patients with LAMA"].min,
-      max_Percent_of_ICS_LABA_Patients_with_LAMA: filterState["Percent of ICS-LABA Patients with LAMA"]?.max !== undefined && filterState["Percent of ICS-LABA Patients with LAMA"].max !== 0 ? filterState["Percent of ICS-LABA Patients with LAMA"].max : undefined,
-      min_Number_of_ICS_Persistence_less_than_360: filterState["Number of ICS Persistence < 360"].min,
-      max_Number_of_ICS_Persistence_less_than_360: filterState["Number of ICS Persistence < 360"]?.max !== undefined && filterState["Number of ICS Persistence < 360"].max !== 0 ? filterState["Number of ICS Persistence < 360"].max : undefined,
-      min_Percent_of_ICS_Persistence_less_than_360: filterState["Percent of ICS Persistence < 360"].min,
-      max_Percent_of_ICS_Persistence_less_than_360: filterState["Percent of ICS Persistence < 360"]?.max !== undefined && filterState["Percent of ICS Persistence < 360"].max !== 0 ? filterState["Percent of ICS Persistence < 360"].max : undefined,
-      min_Number_of_ICS_Compliance_less_than_240: filterState["Number of ICS Compliance < 240"].min,
-      max_Number_of_ICS_Compliance_less_than_240: filterState["Number of ICS Compliance < 240"]?.max !== undefined && filterState["Number of ICS Compliance < 240"].max !== 0 ? filterState["Number of ICS Compliance < 240"].max : undefined,
-      min_Percent_of_ICS_Compliance_less_than_240: filterState["Percent of ICS Compliance < 240"].min,
-      max_Percent_of_ICS_Compliance_less_than_240: filterState["Percent of ICS Compliance < 240"]?.max !== undefined && filterState["Percent of ICS Compliance < 240"].max !== 0 ? filterState["Percent of ICS Compliance < 240"].max : undefined,
-      min_Number_of_ICS_LABA_Persistence_less_than_360: filterState["Number of ICS-LABA Persistence < 360"].min,
-      max_Number_of_ICS_LABA_Persistence_less_than_360: filterState["Number of ICS-LABA Persistence < 360"]?.max !== undefined && filterState["Number of ICS-LABA Persistence < 360"].max !== 0 ? filterState["Number of ICS-LABA Persistence < 360"].max : undefined,
-      min_Percent_of_ICS_LABA_Persistence_less_than_360: filterState["Percent of ICS-LABA Persistence < 360"].min,
-      max_Percent_of_ICS_LABA_Persistence_less_than_360: filterState["Percent of ICS-LABA Persistence < 360"]?.max !== undefined && filterState["Percent of ICS-LABA Persistence < 360"].max !== 0 ? filterState["Percent of ICS-LABA Persistence < 360"].max : undefined,
-      min_Number_of_ICS_LABA_Compliance_less_than_240: filterState["Number of ICS-LABA Compliance < 240"].min,
-      max_Number_of_ICS_LABA_Compliance_less_than_240: filterState["Number of ICS-LABA Compliance < 240"]?.max !== undefined && filterState["Number of ICS-LABA Compliance < 240"].max !== 0 ? filterState["Number of ICS-LABA Compliance < 240"].max : undefined,
-      min_Percent_of_ICS_LABA_Compliance_less_than_240: filterState["Percent of ICS-LABA Compliance < 240"].min,
-      max_Percent_of_ICS_LABA_Compliance_less_than_240: filterState["Percent of ICS-LABA Compliance < 240"]?.max !== undefined && filterState["Percent of ICS-LABA Compliance < 240"].max !== 0 ? filterState["Percent of ICS-LABA Compliance < 240"].max : undefined,
-      min_Number_of_ICS_LABA_LAMA_Persistence_less_than_360: filterState["Number of ICS-LABA LAMA Persistence < 360"].min,
-      max_Number_of_ICS_LABA_LAMA_Persistence_less_than_360: filterState["Number of ICS-LABA LAMA Persistence < 360"]?.max !== undefined && filterState["Number of ICS-LABA LAMA Persistence < 360"].max !== 0 ? filterState["Number of ICS-LABA LAMA Persistence < 360"].max : undefined,
-      min_Percent_of_ICS_LABA_LAMA_Persistence_less_than_360: filterState["Percent of ICS-LABA LAMA Persistence < 360"].min,
-      max_Percent_of_ICS_LABA_LAMA_Persistence_less_than_360:  filterState["Percent of ICS-LABA LAMA Persistence < 360"]?.max !== undefined && filterState["Percent of ICS-LABA LAMA Persistence < 360"].max !== 0 ? filterState["Percent of ICS-LABA LAMA Persistence < 360"].max : undefined,
+      max_Percent_of_No_Treatment:
+        filterState["Percent of No Treatment"]?.max !== undefined &&
+        filterState["Percent of No Treatment"].max !== 0
+          ? filterState["Percent of No Treatment"].max
+          : undefined,
+      min_Number_of_ICS_High_Steroid_Usage:
+        filterState["Number of ICS High Steroid Usage"].min,
+      max_Number_of_ICS_High_Steroid_Usage:
+        filterState["Number of ICS High Steroid Usage"]?.max !== undefined &&
+        filterState["Number of ICS High Steroid Usage"].max !== 0
+          ? filterState["Number of ICS High Steroid Usage"].max
+          : undefined,
+      min_Percent_of_ICS_High_Steroid_Usage:
+        filterState["Percent of ICS High Steroid Usage"].min,
+      max_Percent_of_ICS_High_Steroid_Usage:
+        filterState["Percent of ICS High Steroid Usage"]?.max !== undefined &&
+        filterState["Percent of ICS High Steroid Usage"].max !== 0
+          ? filterState["Percent of ICS High Steroid Usage"].max
+          : undefined,
+      min_Number_of_ICS_Exacerbation_Failed_Escalation:
+        filterState["Number of ICS Exacerbation Failed Escalation"].min,
+      max_Number_of_ICS_Exacerbation_Failed_Escalation:
+        filterState["Number of ICS Exacerbation Failed Escalation"]?.max !==
+          undefined &&
+        filterState["Number of ICS Exacerbation Failed Escalation"].max !== 0
+          ? filterState["Number of ICS Exacerbation Failed Escalation"].max
+          : undefined,
+      min_Percent_of_ICS_Exacerbation_Failed_Escalation:
+        filterState["Percent of ICS Exacerbation Failed Escalation"].min,
+      max_Percent_of_ICS_Exacerbation_Failed_Escalation:
+        filterState["Percent of ICS Exacerbation Failed Escalation"]?.max !==
+          undefined &&
+        filterState["Percent of ICS Exacerbation Failed Escalation"].max !== 0
+          ? filterState["Percent of ICS Exacerbation Failed Escalation"].max
+          : undefined,
+      min_Number_of_ICS_LABA_Escalation_Delay:
+        filterState["Number of ICS-LABA Escalation Delay"].min,
+      max_Number_of_ICS_LABA_Escalation_Delay:
+        filterState["Number of ICS-LABA Escalation Delay"]?.max !== undefined &&
+        filterState["Number of ICS-LABA Escalation Delay"].max !== 0
+          ? filterState["Number of ICS-LABA Escalation Delay"].max
+          : undefined,
+      min_Percent_of_ICS_LABA_Escalation_Delay:
+        filterState["Percent of ICS-LABA Escalation Delay"].min,
+      max_Percent_of_ICS_LABA_Escalation_Delay:
+        filterState["Percent of ICS-LABA Escalation Delay"]?.max !==
+          undefined &&
+        filterState["Percent of ICS-LABA Escalation Delay"].max !== 0
+          ? filterState["Percent of ICS-LABA Escalation Delay"].max
+          : undefined,
+      min_Number_of_ICS_LABA_Patients_with_LAMA:
+        filterState["Number of ICS-LABA Patients with LAMA"].min,
+      max_Number_of_ICS_LABA_Patients_with_LAMA:
+        filterState["Number of ICS-LABA Patients with LAMA"]?.max !==
+          undefined &&
+        filterState["Number of ICS-LABA Patients with LAMA"].max !== 0
+          ? filterState["Number of ICS-LABA Patients with LAMA"].max
+          : undefined,
+      min_Percent_of_ICS_LABA_Patients_with_LAMA:
+        filterState["Percent of ICS-LABA Patients with LAMA"].min,
+      max_Percent_of_ICS_LABA_Patients_with_LAMA:
+        filterState["Percent of ICS-LABA Patients with LAMA"]?.max !==
+          undefined &&
+        filterState["Percent of ICS-LABA Patients with LAMA"].max !== 0
+          ? filterState["Percent of ICS-LABA Patients with LAMA"].max
+          : undefined,
+      min_Number_of_ICS_Persistence_less_than_360:
+        filterState["Number of ICS Persistence < 360"].min,
+      max_Number_of_ICS_Persistence_less_than_360:
+        filterState["Number of ICS Persistence < 360"]?.max !== undefined &&
+        filterState["Number of ICS Persistence < 360"].max !== 0
+          ? filterState["Number of ICS Persistence < 360"].max
+          : undefined,
+      min_Percent_of_ICS_Persistence_less_than_360:
+        filterState["Percent of ICS Persistence < 360"].min,
+      max_Percent_of_ICS_Persistence_less_than_360:
+        filterState["Percent of ICS Persistence < 360"]?.max !== undefined &&
+        filterState["Percent of ICS Persistence < 360"].max !== 0
+          ? filterState["Percent of ICS Persistence < 360"].max
+          : undefined,
+      min_Number_of_ICS_Compliance_less_than_240:
+        filterState["Number of ICS Compliance < 240"].min,
+      max_Number_of_ICS_Compliance_less_than_240:
+        filterState["Number of ICS Compliance < 240"]?.max !== undefined &&
+        filterState["Number of ICS Compliance < 240"].max !== 0
+          ? filterState["Number of ICS Compliance < 240"].max
+          : undefined,
+      min_Percent_of_ICS_Compliance_less_than_240:
+        filterState["Percent of ICS Compliance < 240"].min,
+      max_Percent_of_ICS_Compliance_less_than_240:
+        filterState["Percent of ICS Compliance < 240"]?.max !== undefined &&
+        filterState["Percent of ICS Compliance < 240"].max !== 0
+          ? filterState["Percent of ICS Compliance < 240"].max
+          : undefined,
+      min_Number_of_ICS_LABA_Persistence_less_than_360:
+        filterState["Number of ICS-LABA Persistence < 360"].min,
+      max_Number_of_ICS_LABA_Persistence_less_than_360:
+        filterState["Number of ICS-LABA Persistence < 360"]?.max !==
+          undefined &&
+        filterState["Number of ICS-LABA Persistence < 360"].max !== 0
+          ? filterState["Number of ICS-LABA Persistence < 360"].max
+          : undefined,
+      min_Percent_of_ICS_LABA_Persistence_less_than_360:
+        filterState["Percent of ICS-LABA Persistence < 360"].min,
+      max_Percent_of_ICS_LABA_Persistence_less_than_360:
+        filterState["Percent of ICS-LABA Persistence < 360"]?.max !==
+          undefined &&
+        filterState["Percent of ICS-LABA Persistence < 360"].max !== 0
+          ? filterState["Percent of ICS-LABA Persistence < 360"].max
+          : undefined,
+      min_Number_of_ICS_LABA_Compliance_less_than_240:
+        filterState["Number of ICS-LABA Compliance < 240"].min,
+      max_Number_of_ICS_LABA_Compliance_less_than_240:
+        filterState["Number of ICS-LABA Compliance < 240"]?.max !== undefined &&
+        filterState["Number of ICS-LABA Compliance < 240"].max !== 0
+          ? filterState["Number of ICS-LABA Compliance < 240"].max
+          : undefined,
+      min_Percent_of_ICS_LABA_Compliance_less_than_240:
+        filterState["Percent of ICS-LABA Compliance < 240"].min,
+      max_Percent_of_ICS_LABA_Compliance_less_than_240:
+        filterState["Percent of ICS-LABA Compliance < 240"]?.max !==
+          undefined &&
+        filterState["Percent of ICS-LABA Compliance < 240"].max !== 0
+          ? filterState["Percent of ICS-LABA Compliance < 240"].max
+          : undefined,
+      min_Number_of_ICS_LABA_LAMA_Persistence_less_than_360:
+        filterState["Number of ICS-LABA LAMA Persistence < 360"].min,
+      max_Number_of_ICS_LABA_LAMA_Persistence_less_than_360:
+        filterState["Number of ICS-LABA LAMA Persistence < 360"]?.max !==
+          undefined &&
+        filterState["Number of ICS-LABA LAMA Persistence < 360"].max !== 0
+          ? filterState["Number of ICS-LABA LAMA Persistence < 360"].max
+          : undefined,
+      min_Percent_of_ICS_LABA_LAMA_Persistence_less_than_360:
+        filterState["Percent of ICS-LABA LAMA Persistence < 360"].min,
+      max_Percent_of_ICS_LABA_LAMA_Persistence_less_than_360:
+        filterState["Percent of ICS-LABA LAMA Persistence < 360"]?.max !==
+          undefined &&
+        filterState["Percent of ICS-LABA LAMA Persistence < 360"].max !== 0
+          ? filterState["Percent of ICS-LABA LAMA Persistence < 360"].max
+          : undefined,
       sort_by: _sortBy,
       sort_order: _sortOrder,
       page,
@@ -202,7 +351,6 @@ const EligiblePatientLocator = () => {
     const finalUrl = `${queryString}${
       urlParams.length > 0 ? "&" : ""
     }${urlParams}`;
-
 
     getDataStats(finalUrl, accessToken, refreshToken)
       .then((res) => {
@@ -230,8 +378,43 @@ const EligiblePatientLocator = () => {
       });
   };
 
+  function setChartDataValue(setValue, API_labels, data) {
+    function generateChartData(array) {
+      let _value = [];
+      // console.log(array, data[0])
+      array.forEach((item) => {
+        _value.push(data[0][mapLabels[item]]);
+      });
+      return {
+        labels: array.map((item) => mapSelectLabels[mapLabels[item]]),
+        datasets: [
+          {
+            data: _value,
+            borderColor: array.map((item) =>
+              !patientTotals.includes(item) ? "#800000" : "#00008B"
+            ),
+            backgroundColor: array.map((item) =>
+              !patientTotals.includes(item) ? "#800000" : "#00008B"
+            ),
+            barThickness: 20, // Set a specific thickness for the bar
+            maxBarThickness: 20,
+          },
+        ],
+      };
+    }
+
+    setValue({
+      mapValue1: generateChartData(mapBarCharts.chart1),
+      mapValue2: generateChartData(mapBarCharts.chart2),
+      mapValue3: generateChartData(mapBarCharts.chart3),
+      mapValue4: generateChartData(mapBarCharts.chart4),
+      mapValue5: generateChartData(mapBarCharts.chart5),
+    });
+  }
+
   const handleRowClicked = (col) => {
     setRowDetails(col.original);
+    setChartDataValue(setData1, null, [col.original]);
   };
 
   useEffect(() => {
@@ -289,9 +472,7 @@ const EligiblePatientLocator = () => {
       //   accessor: "Percent of Severe Exacerbations",
       // },
     ];
-    [
-      ...Object.keys(selectLabels)
-    ].map((item) =>
+    [...Object.keys(selectLabels)].map((item) =>
       column_names.push({
         header: item,
         accessor: item,
@@ -396,9 +577,7 @@ const EligiblePatientLocator = () => {
           pageSize: 10,
           pageIndex: 0,
         }}
-        selectionBtnsArray={[
-          ...Object.keys(selectLabels)
-        ]}
+        selectionBtnsArray={[...Object.keys(selectLabels)]}
         showSelectionBtns={true}
         TableData={statsData1}
         TableColummns={Table_Columns_1}
@@ -409,22 +588,7 @@ const EligiblePatientLocator = () => {
         open={rowDetails != null}
         position="center center"
       >
-        {rowDetails && (
-          <div className="flex p-10 flex-col justify-between min-w-[30vw] items-center">
-            <div className="flex w-full flex-col gap-2">
-              <div className="w-full gap-10 flex items-center">
-                <strong>Name:</strong> {rowDetails["Assigned Physician Name"]}
-              </div>
-              <div className="w-full gap-10 flex items-center">
-                <strong>Specialty:</strong> {rowDetails["Assigned Specialty"]}
-              </div>
-              <div className="w-full gap-10 flex items-center">
-                <strong>Number of ICS-LABA Patients:</strong>{" "}
-                {rowDetails["Number of ICS-LABA Patients"]}
-              </div>
-            </div>
-          </div>
-        )}
+        <BarChartPopup data1={data1} />
       </Popup>
     </>
   ) : (

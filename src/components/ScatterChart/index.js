@@ -13,75 +13,87 @@ import {
   elements,
 } from "chart.js";
 import { highestValue } from "../../utils/MathUtils";
-import { selectLabels } from "../../constants/appConstants";
+import {
+  mapBarCharts,
+  mapLabels,
+  mapSelectLabels,
+  patientTotals,
+  selectLabels,
+} from "../../constants/appConstants";
+import Popup from "reactjs-popup";
+import BarChartPopup from "../../pages/Output/PatientOpportunityMapping/Popup";
+import { IoTriangle } from "react-icons/io5";
+import { FaCircle } from "react-icons/fa";
+import { MdOutlineStar } from "react-icons/md";
+import { FaSquare } from "react-icons/fa";
 
 // Register required components from Chart.js
 ChartJS.register(LinearScale, PointElement, Tooltip, Legend, BubbleController);
 ChartJS.register(...registerables);
 
 // Custom plugin for different marker shapes
-ChartJS.register({
-  id: "customBubbleShapes",
-  afterDraw: function (chart, args, options) {
-    const ctx = chart.ctx;
-    const datasets = chart.config.data.datasets;
+// ChartJS.register({
+//   id: "customBubbleShapes",
+//   afterDraw: function (chart, args, options) {
+//     const ctx = chart.ctx;
+//     const datasets = chart.config.data.datasets;
 
-    datasets.forEach((dataset, i) => {
-      const meta = chart.getDatasetMeta(i);
+//     datasets.forEach((dataset, i) => {
+//       const meta = chart.getDatasetMeta(i);
 
-      if (!meta.hidden) {
-        meta.data.forEach((point, index) => {
-          const { x, y } = point.getProps(["x", "y"]);
-          const radius = point.options.radius;
-          if (dataset && dataset.shape && dataset.shape[index]) {
-            const shape = dataset.shape[index];
-            const color = dataset.backgroundColor[index];
+//       if (!meta.hidden) {
+//         meta.data.forEach((point, index) => {
+//           const { x, y } = point.getProps(["x", "y"]);
+//           const radius = point.options.radius;
+//           if (dataset && dataset.shape && dataset.shape[index]) {
+//             const shape = dataset.shape[index];
+//             const color = dataset.backgroundColor[index];
 
-            ctx.save();
-            ctx.fillStyle = color;
-            ctx.beginPath();
+//             ctx.save();
+//             ctx.fillStyle = color;
+//             ctx.beginPath();
 
-            switch (shape) {
-              case "circle":
-                ctx.arc(x, y, radius, 0, Math.PI * 2);
-                break;
-              case "square":
-                ctx.rect(x - radius, y - radius, radius * 2, radius * 2);
-                break;
-              case "triangle":
-                ctx.moveTo(x, y - radius);
-                ctx.lineTo(x + radius, y + radius);
-                ctx.lineTo(x - radius, y + radius);
-                ctx.closePath();
-                break;
-              case "star":
-                const outerRadius = radius;
-                const innerRadius = radius / 2;
-                for (let j = 0; j < 5; j++) {
-                  ctx.lineTo(
-                    x + outerRadius * Math.cos(((18 + j * 72) / 180) * Math.PI),
-                    y - outerRadius * Math.sin(((18 + j * 72) / 180) * Math.PI)
-                  );
-                  ctx.lineTo(
-                    x + innerRadius * Math.cos(((54 + j * 72) / 180) * Math.PI),
-                    y - innerRadius * Math.sin(((54 + j * 72) / 180) * Math.PI)
-                  );
-                }
-                ctx.closePath();
-                break;
-              default:
-                ctx.arc(x, y, radius, 0, Math.PI * 2);
-                break;
-            }
+//             switch (shape) {
+//               case "circle":
+//                 ctx.arc(x, y, radius, 0, Math.PI * 2);
+//                 break;
+//               case "square":
+//                 ctx.rect(x - radius, y - radius, radius * 2, radius * 2);
+//                 break;
+//               case "triangle":
+//                 ctx.moveTo(x, y - radius);
+//                 ctx.lineTo(x + radius, y + radius);
+//                 ctx.lineTo(x - radius, y + radius);
+//                 ctx.closePath();
+//                 break;
+//               case "star":
+//                 const outerRadius = radius;
+//                 const innerRadius = radius / 2;
+//                 for (let j = 0; j < 5; j++) {
+//                   ctx.lineTo(
+//                     x + outerRadius * Math.cos(((18 + j * 72) / 180) * Math.PI),
+//                     y - outerRadius * Math.sin(((18 + j * 72) / 180) * Math.PI)
+//                   );
+//                   ctx.lineTo(
+//                     x + innerRadius * Math.cos(((54 + j * 72) / 180) * Math.PI),
+//                     y - innerRadius * Math.sin(((54 + j * 72) / 180) * Math.PI)
+//                   );
+//                 }
+//                 ctx.closePath();
+//                 break;
+//               default:
+//                 ctx.arc(x, y, radius, 0, Math.PI * 2);
+//                 break;
+//             }
 
-            ctx.fill();
-            ctx.restore();
-          }
-        });
-      }
-    });
-  },
-});
+//             ctx.fill();
+//             ctx.restore();
+//           }
+//         });
+//       }
+//     });
+//   },
+// });
 
 // Register the arbitrary line plugin globally
 const arbitraryLinePlugin = {
@@ -187,8 +199,43 @@ const ScatterChart = ({
   const chartRef = useRef(null);
   const [dataOptions, setOptions] = useState(options);
 
+  function setChartDataValue(setValue, API_labels, data) {
+    function generateChartData(array) {
+      let _value = [];
+      // console.log(array, data[0])
+      array.forEach((item) => {
+        _value.push(data[0][mapLabels[item]]);
+      });
+      return {
+        labels: array.map((item) => mapSelectLabels[mapLabels[item]]),
+        datasets: [
+          {
+            data: _value,
+            borderColor: array.map((item) =>
+              !patientTotals.includes(item) ? "#800000" : "#00008B"
+            ),
+            backgroundColor: array.map((item) =>
+              !patientTotals.includes(item) ? "#800000" : "#00008B"
+            ),
+            barThickness: 20, // Set a specific thickness for the bar
+            maxBarThickness: 20,
+          },
+        ],
+      };
+    }
+
+    setValue({
+      mapValue1: generateChartData(mapBarCharts.chart1),
+      mapValue2: generateChartData(mapBarCharts.chart2),
+      mapValue3: generateChartData(mapBarCharts.chart3),
+      mapValue4: generateChartData(mapBarCharts.chart4),
+      mapValue5: generateChartData(mapBarCharts.chart5),
+    });
+  }
+
   const [maxX, setMaxX] = useState();
   const [maxY, setMaxY] = useState();
+  const [data1, setData1] = useState();
 
   useEffect(() => {
     const _defaultOptions = {
@@ -214,13 +261,27 @@ const ScatterChart = ({
           radius: 10,
         },
       },
+      onClick: (evt) => {
+        const elements = chartRef.current.getElementsAtEventForMode(
+          evt,
+          "nearest",
+          { intersect: true },
+          false
+        );
+        if (elements.length > 0) {
+          const { datasetIndex, index } = elements[0];
+          const dataset = data.datasets[datasetIndex];
+          const dataPoint = dataset.data[index];
+          setChartDataValue(setData1, null, [dataPoint]);
+        }
+      },
       responsive: true,
       plugins: {
         legend: {
-          position: "top",
+          display: false, // Disable default legend
         },
         customBubbleShapes: {},
-        tooltip: {  
+        tooltip: {
           callbacks: {
             label: function (context) {
               return `Name: ${context.raw.name}, ${[
@@ -236,8 +297,7 @@ const ScatterChart = ({
         },
       },
     };
-    
-  
+
     setOptions(_defaultOptions);
   }, [state.xLabel, state.yLabel]);
 
@@ -246,11 +306,11 @@ const ScatterChart = ({
       chartRef.current.options.plugins.arbitraryLine.lineX = lineX;
       chartRef.current.update();
       let labelValue = {
-        xLabel:  state.xLabel,
-        yLabel:  state.yLabel,
+        xLabel: state.xLabel,
+        yLabel: state.yLabel,
       };
-      if (data &&  data.datasets) {
-        handleDispatchData(labelValue,)
+      if (data && data.datasets) {
+        handleDispatchData(labelValue);
       }
     }
   }, [lineX, dataOptions]);
@@ -260,11 +320,11 @@ const ScatterChart = ({
       chartRef.current.options.plugins.arbitraryLine.lineY = lineY;
       chartRef.current.update();
       let labelValue = {
-        xLabel:  state.xLabel,
-        yLabel:  state.yLabel,
+        xLabel: state.xLabel,
+        yLabel: state.yLabel,
       };
-      if (data &&  data.datasets) {
-        handleDispatchData(labelValue,)
+      if (data && data.datasets) {
+        handleDispatchData(labelValue);
       }
     }
   }, [lineY, dataOptions]);
@@ -289,11 +349,43 @@ const ScatterChart = ({
     setLineX(Number(e.target.value));
   };
 
+  const closeModal = () => {
+    setData1(null);
+  };
+
   const handleChangeY = (e) => {
     setLineY(Number(e.target.value));
   };
+
+  const shapes = [
+    {
+      icon: <IoTriangle />,
+      name: "Pulmonary Specialist",
+    },
+    {
+      icon: <FaCircle />,
+      name: "Allergy Specialist",
+    },
+    {
+      icon: <FaSquare />,
+      name: "Primary Care Provider",
+    },
+    {
+      icon: <MdOutlineStar />,
+      name: "Others",
+    },
+  ];
+
   return (
     <div className="h-[800px] relative w-full">
+      <div className="w-full flex -mb-[1%] justify-center gap-4">
+        {shapes.map((item) => (
+          <div className="flex gap-1 items-center">
+            {item.icon}
+            <div className="text-sm">{item.name}</div>
+          </div>
+        ))}
+      </div>
       <Bubble ref={chartRef} data={data} options={dataOptions} />
       <div className="absolute border text-[#4B0082] font-[700] top-[8%] left-[10%]">
         {quadrantValues.topLeft}
@@ -362,6 +454,14 @@ const ScatterChart = ({
           />
           <div className="w-40 ml-10">{lineY}</div>
         </div>
+        <Popup
+          onClose={closeModal}
+          modal
+          open={data1 != null}
+          position="center center"
+        >
+          <BarChartPopup data1={data1} />
+        </Popup>
       </div>
     </div>
   );

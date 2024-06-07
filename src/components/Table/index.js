@@ -333,7 +333,6 @@ const Table = ({
     </div>
   );  
 
-  console.log(filterState)
 
   return (
     <div style={{ marginTop }} className="w-full max-w-full overflow-auto">
@@ -423,7 +422,7 @@ const Table = ({
                   options={specialityList
                     .map((item) => isNaN(item) && { label: item, value: item })
                     .filter((item) => typeof item !== "boolean")}
-                  className="w-[10rem]"
+                  className="w-[20rem]"
                   value={speciality || []}
                   onChange={(val) => handleMultipleSelect(val)}
                 />

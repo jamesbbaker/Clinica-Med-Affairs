@@ -10,7 +10,6 @@ import Map from "../../../components/Map";
 import { AuthContext } from "../../../context/AuthContext";
 import { getDataStats } from "../../../API/Outputs";
 import mapDataJson from "../../../components/Map/data.json";
-import SelectBox from "../../../components/SelectBox";
 import {
   mapBarCharts,
   mapLabels,
@@ -253,7 +252,6 @@ const PatientOpportunityMapping = () => {
         refreshToken
       );
       if (res) {
-        console.log(res, "response")
         let _data = JSON.parse(res.replaceAll("NaN", 0));
         dispatch({
           type: action_types.HandleUpdateStates,

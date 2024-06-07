@@ -180,7 +180,7 @@ const MedicalAffairToolbox = () => {
       x: item[vabelValues.xLabel],
       y: item[vabelValues.yLabel],
       r: calculateRadius(item[radius], maxValue),
-
+      ...item,
       value: item[radius],
     }));
 
@@ -188,13 +188,7 @@ const MedicalAffairToolbox = () => {
       datasets: [
         {
           label: "HCP Profiles",
-          data: data.map((item) => ({
-            name: item["Assigned Physician Name"],
-            x: item[vabelValues.xLabel],
-            y: item[vabelValues.yLabel],
-            r: calculateRadius(item[radius], maxValue),
-            value: item[radius],
-          })),
+          data: _data,
           backgroundColor: _data.map((item) => {
             if (item.x < lineX && item.y < lineY) {
               return "#d4d4d4";
@@ -296,7 +290,7 @@ const MedicalAffairToolbox = () => {
                       label: item,
                       value: item,
                     }))}
-                    className="w-[10rem] z-[5]"
+                    className="w-[20rem] z-[5]"
                     value={state.primary || []}
                     onChange={(val) => handleToggleSelect(val, "primary")}
                   />
