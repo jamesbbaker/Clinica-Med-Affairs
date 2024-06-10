@@ -327,6 +327,7 @@ const PatientOpportunityMapping = () => {
       mapValue3: generateChartData(mapBarCharts.chart3),
       mapValue4: generateChartData(mapBarCharts.chart4),
       mapValue5: generateChartData(mapBarCharts.chart5),
+      ...data
     });
   }
 

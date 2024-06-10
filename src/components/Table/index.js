@@ -509,11 +509,11 @@ const Table = ({
                 onClick={() => activeCells && handleClick(row)}
                 {...row.getRowProps()}
               >
-                {row.cells.map((cell) => {
+                {row.cells.map((cell, index) => {
                   let cellValue = cell.render("Cell").props.value;
 
                   return (
-                    <td {...cell.getCellProps()}>
+                    <td key={index} {...cell.getCellProps()}>
                       {typeof cellValue === "number"
                         ? cell.render("Cell").props &&
                           cell.render("Cell").props.column.Header &&
@@ -634,16 +634,16 @@ const Table = ({
             <div className="flex gap-2 items-center">
               <label className="font-[600]">Sort By</label>
               <select className="w-[200px]">
-                {columns.map((item) => (
-                  <option>{item.Header}</option>
+                {columns.map((item, index) => (
+                  <option key={index}>{item.Header}</option>
                 ))}
               </select>
             </div>
             <div className="flex gap-2 items-center">
               <label className="font-[600]">Sort Order</label>
               <select className="w-[200px]">
-                {["Ascending", "Descending"].map((item) => (
-                  <option>{item}</option>
+                {["Ascending", "Descending"].map((item, index) => (
+                  <option key={index}>{item}</option>
                 ))}
               </select>
             </div>
