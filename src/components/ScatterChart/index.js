@@ -12,7 +12,6 @@ import {
   registerables,
   elements,
 } from "chart.js";
-import { highestValue } from "../../utils/MathUtils";
 import {
   mapBarCharts,
   mapLabels,
@@ -230,6 +229,7 @@ const ScatterChart = ({
       mapValue3: generateChartData(mapBarCharts.chart3),
       mapValue4: generateChartData(mapBarCharts.chart4),
       mapValue5: generateChartData(mapBarCharts.chart5),
+      ...data
     });
   }
 
@@ -379,8 +379,8 @@ const ScatterChart = ({
   return (
     <div className="h-[800px] relative w-full">
       <div className="w-full flex -mb-[1%] justify-center gap-4">
-        {shapes.map((item) => (
-          <div className="flex gap-1 items-center">
+        {shapes.map((item, index) => (
+          <div key={index} className="flex gap-1 items-center">
             {item.icon}
             <div className="text-sm">{item.name}</div>
           </div>

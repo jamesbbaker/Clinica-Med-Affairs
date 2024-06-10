@@ -22,7 +22,7 @@ const SelectBox = ({showColors=false, labelClassName, className,error,value, inp
           Select...
         </option>
         {input.options.map((option) => (
-          <option style={{ fontWeight: showColors ?  700 :400, color: showColors? patientTotals.includes(option.name)? "#00008B" : "#800000": "#000", background: option.id == value ? "#c4c4c4" : "transparent"}} value={option.id}>{option.name}
+          <option key={option.id} style={{ fontWeight: showColors ?  700 :400, color: showColors? patientTotals.includes(option.name)? "#00008B" : "#800000": "#000", background: option.id == value ? "#c4c4c4" : "transparent"}} value={option.id}>{option.name}
         
           </option>
         ))}

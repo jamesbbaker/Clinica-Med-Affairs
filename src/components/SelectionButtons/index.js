@@ -8,6 +8,7 @@ const SelectionButtons = ({ selectedValues, data, onClick, visibleKey }) => {
   
         return (
           <div
+          key={column.accessor}
             onClick={() => onClick(column)}
             className={`px-2 text-xs cursor-pointer  ${
               column[visibleKey] ||

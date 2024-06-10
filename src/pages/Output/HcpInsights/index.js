@@ -45,6 +45,7 @@ const HcpInsight = () => {
         pageSize: 10,
         pageIndex: 0,
       }}
+      activeCells={false}
       Title="Summary of Unmet Need by Specialty"
       showSelectionBtns={false}
       TableData={statsData2}

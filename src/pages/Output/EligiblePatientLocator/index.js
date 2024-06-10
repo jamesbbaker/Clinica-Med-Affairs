@@ -134,7 +134,7 @@ const EligiblePatientLocator = () => {
 
     // Add other query parameters as needed
     const additionalParams = {
-      Number_of_Asthma_Patients: filterState["Number of Asthma Patients"].min,
+      min_Number_of_Asthma_Patients: filterState["Number of Asthma Patients"].min,
       max_Number_of_Asthma_Patients:
         filterState["Number of Asthma Patients"]?.max !== undefined &&
         filterState["Number of Asthma Patients"].max !== 0
@@ -409,6 +409,7 @@ const EligiblePatientLocator = () => {
       mapValue3: generateChartData(mapBarCharts.chart3),
       mapValue4: generateChartData(mapBarCharts.chart4),
       mapValue5: generateChartData(mapBarCharts.chart5),
+      ...data
     });
   }
 
@@ -488,8 +489,6 @@ const EligiblePatientLocator = () => {
   }, []);
 
   const handleFilter = (
-    icsNumber,
-    steroidPercent,
     speciality,
     region,
     stateName,

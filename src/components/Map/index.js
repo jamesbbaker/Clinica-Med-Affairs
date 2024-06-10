@@ -848,8 +848,10 @@ const Map = ({
       array.forEach((item) => {
         _value.push(data[0][mapLabels[item]]);
       });
+      let labels =  array.map((item) => mapSelectLabels[mapLabels[item]])
+      console.log(data)
       return {
-        labels: array.map((item) => mapSelectLabels[mapLabels[item]]),
+        labels,
         datasets: [
           {
             data: _value,
@@ -872,6 +874,7 @@ const Map = ({
       mapValue3: generateChartData(mapBarCharts.chart3),
       mapValue4: generateChartData(mapBarCharts.chart4),
       mapValue5: generateChartData(mapBarCharts.chart5),
+      ...data
     });
   }
 
