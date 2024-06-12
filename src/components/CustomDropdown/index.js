@@ -50,9 +50,7 @@ const CustomDropdown = ({showImpactColors = false, showColors = false, labelClas
         </button>
         {isOpen && (
           <div className="absolute max-h-[20rem] overflow-y-auto z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
-            {input.options.map((option) => {
-              console.log(filterColors[mapSelectLabels[mapLabels[option.value]]], "option")
-              
+            {input.options.map((option) => { 
               return (
               <div
                 key={option.name}
