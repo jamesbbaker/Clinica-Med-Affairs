@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { LineChart } from "../../../components/LineChart";
 import Map from "../../../components/Map";
 import TreeMap from "../../../components/TreeMap";
+import { getDataStats } from "../../../API/Outputs";
+import { AuthContext } from "../../../context/AuthContext";
+import { mapLabels, selectLabels } from "../../../constants/appConstants";
+import CustomDropdown from "../../../components/CustomDropdown";
+import { MultiSelect } from "react-multi-select-component";
+import { getRandomInt } from "../../../utils/MathUtils";
+import ImpactLineChart from "./ImpactLineChart";
+
+const filterOptions = [...Object.keys(selectLabels)];
 
 export const options = {
   responsive: true,
@@ -21,10 +30,10 @@ export const options = {
       ticks: {
         // stepSize: 1,
         // min: 0,
-        autoSkip: false,
-        callback: function (value) {
-          return value;
-        },
+        // autoSkip: false,
+        // callback: function (value) {
+        //   return value;
+        // },
       },
     },
     y: {
@@ -195,11 +204,72 @@ function MapAddLayerFn(map, data) {
 }
 
 const ImpactTracking = () => {
+  const { accessToken, refreshToken } = useContext(AuthContext);
+  const [nationalData, setNationalData] = useState(null);
+  const [regionData, setRegionData] = useState(null);
+  const [stateData, setStateData] = useState(null);
+
+ 
+
+
+
+  useEffect(() => {
+    getDataStats("national_data_quarterly", accessToken, refreshToken).then(
+      (res) => {
+        let data = [];
+        Object.entries(res.summary_data).map((item) =>
+          data.push({ ...item[1], Quarter: item[0] })
+        );
+        setNationalData(data);
+      }
+    );
+
+    getDataStats("state_level_quarterly", accessToken, refreshToken).then(
+      (res) => {
+        let data = JSON.parse(res.replaceAll(NaN, "0"));
+        setStateData(data);
+      }
+    );
+    getDataStats("region_level_quarterly", accessToken, refreshToken).then(
+      (res) => {
+        let data = JSON.parse(res.replaceAll(NaN, "0"));
+        setRegionData(data);
+      }
+    );
+  }, []);
+
+  
+ 
+
+
+
   return (
     <div className="flex flex-col gap-8">
-      <LineChart options={options} data={data} arbitrary={false} />
+      <ImpactLineChart lineData={nationalData} />
+      {regionData && (
+        <ImpactLineChart type="Region" lineData={regionData.data} />
+      )}
+      {stateData && <ImpactLineChart type="State" lineData={stateData.data} />}
       <Map LayerFn={MapAddLayerFn} markersEnabled={false} />
-      <TreeMap />
+      {/* <div className="flex w-full flex-col items-start">
+        <CustomDropdown
+          showColors
+          labelClassName="mb-0"
+          className={"flex  mb-4 items-center gap-2"}
+          input={{
+            label: "Unmet Need select",
+            name: "Unmet Need select",
+            type: "select",
+            options: filterOptions.map((item) => ({
+              name: selectLabels[item] ? selectLabels[item] : item,
+              value: item,
+            })),
+            id: "xLabel",
+          }}
+          handleSelect={(val) => handleSelectTree(val)}
+          value={unmetNeed}
+        />
+      </div> */}
     </div>
   );
 };

@@ -1,26 +1,21 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Line } from "react-chartjs-2";
+
 import {
   Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
   LineElement,
+  PointElement,
+  LinearScale,
   Title,
   Tooltip,
   Legend,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
-
-ChartJS.register(
   CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+  TimeScale,
+  registerables,
+} from "chart.js";
+import "chartjs-adapter-date-fns"; // Import the date-fns adapter
 
+ChartJS.register(...registerables);
 export const defaultOptions = {
   responsive: true,
   scales: {
@@ -62,7 +57,7 @@ export const defaultOptions = {
     datalabels: {
       display: false,
     },
-  }
+  },
 };
 
 function generateValues() {
@@ -98,7 +93,7 @@ export const defaultData = {
 };
 
 export function LineChart({
-  key=null,
+  key = null,
   arbitrary = true,
   options = defaultOptions,
   data = defaultData,
@@ -112,7 +107,10 @@ export function LineChart({
     beforeDatasetsDraw(chart, args, pluginOptions) {},
   };
 
-  
+  useEffect(() => {
+    setChartData(data);
+  }, [data]);
+
   const intersectDataVerticalLine = {
     id: "intersectDataVerticalLine",
     afterDraw: (chart) => {
@@ -153,7 +151,7 @@ export function LineChart({
       {!loading && (
         <div className={`${arbitrary && "pointer-events-none"}`}>
           <Line
-          key={key}
+            key={key}
             height={height}
             ref={lineRef}
             plugins={arbitrary && [intersectDataVerticalLine]}

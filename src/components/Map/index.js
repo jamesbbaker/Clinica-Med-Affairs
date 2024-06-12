@@ -342,7 +342,7 @@ const Map = ({
   const [layerAdded, setLayerAdded] = useState(false);
   const [modalDetails, setModalDetails] = useState(null);
   const [data1, setData1] = useState(null);
-  console.log(data1)
+ 
 
   useEffect(() => {
     if (markers && stateData && layerAdded) {

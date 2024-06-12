@@ -351,6 +351,48 @@ export const mapLabels = {
     "Percent ICS-LABA With LAMA": "Percent of ICS-LABA Patients with LAMA"  
 };
 
+
+export const filterColors = {
+  "Total Asthma Patients": "#5b0c0f",
+  "Total No Spirometry": "#2b262c",
+  "Percent No Spirometry": "#31c2b2",
+  "Total No EOS Testing": "#244cef",
+  "Percent No EOS Testing": "#5d6cdd",
+  "Total No Treatment": "#c77542",
+  "Percent No Treatment": "#bc1a14",
+  "Total ICS Patients": "#d5eba5",
+  "Total ICS Compliance < 240": "#53249c",
+  "Percent ICS Compliance < 240": "#1ac807",
+  "Total ICS Persistence < 360": "#0512d2",
+  "Percent ICS Persistence < 360": "#b04b3c",
+  "Total ICS High Steroid Usage": "#72025e",
+  "Percent ICS High Steroid Usage": "#56a44f",
+  "Total ICS Exacerbations": "#298f07",
+  "Total ICS Exacerbation Failed Escalation": "#8bdae5",
+  "Percent ICS Exacerbation Failed Escalation": "#8fa0d3",
+  "Total ICS Escalation Delay": "#8cacc3",
+  "Percent ICS Escalation Delay": "#cb136d",
+  "Total ICS-LABA Patients": "#1b6454",
+  "Total ICS-LABA Compliance < 240": "#8340d4",
+  "Percent ICS-LABA Compliance < 240": "#13e058",
+  "Total ICS-LABA Persistence < 360": "#90bbc3",
+  "Percent ICS-LABA Persistence < 360": "#bd3ef0",
+  "Total ICS-LABA High Steroid Usage": "#5df04f",
+  "Percent ICS-LABA High Steroid Usage": "#66a6f1",
+  "Total ICS-LABA Exacerbations": "#8fadb4",
+  "Total ICS-LABA Exacerbation Failed Escalation": "#827479",
+  "Percent ICS-LABA Exacerbation Failed Escalation": "#d19fa4",
+  "Total ICS-LABA Escalation Delay": "#d0e371",
+  "Percent ICS-LABA Escalation Delay": "#17f36c",
+  "Total ICS-LABA LAMA Patients": "#09af84",
+  "Total ICS-LABA LAMA Compliance < 240": "#751423",
+  "Percent ICS-LABA LAMA Compliance < 240": "#3530b8",
+  "Total ICS-LABA LAMA Persistence < 360": "#05950f",
+  "Percent ICS-LABA LAMA Persistence < 360": "#27d953",
+  "Total ICS-LABA With LAMA": "#bddc13",
+  "Percent ICS-LABA With LAMA": "#82820d"
+}
+
 export const mapBarCharts = {
   chart1: [
     "Total Asthma Patients",
