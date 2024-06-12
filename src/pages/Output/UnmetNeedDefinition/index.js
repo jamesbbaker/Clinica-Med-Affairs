@@ -112,8 +112,7 @@ const UnmetNeedDefinitionData = {
     id: "id7",
     title:
       "How long does it take from demonstrating severe/uncontrolled asthma to treatment escalation?",
-    buttonText:
-      "Delay in Escalating Patients from Single to Double Therapy",
+    buttonText: "Delay in Escalating Patients from Single to Double Therapy",
     column: "ICS escalation delay",
     description:
       "Patients who are escalated from single to double therapy more than 60 days after their first exacerbation. Exacerbations are defined as visits to the ED/ER with a primary asthma diagnosis code or specific asthma treatments (e.g., emergency airway insertion, airway inhalation treatment, or nebulizer with compression).",
@@ -250,6 +249,10 @@ const UnmetNeedDefinition = () => {
   const [statsData16, setStatsData16] = useState(null);
   const [statsData18, setStatsData18] = useState(null);
   const [statsData19, setStatsData19] = useState(null);
+  const [statsData20, setStatsData20] = useState(null);
+  const [statsData21, setStatsData21] = useState(null);
+  const [statsData22, setStatsData22] = useState(null);
+  const [statsData23, setStatsData23] = useState(null);
   const [dataValue, setDataValue] = useState(null);
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [showTooltip, setTooltip] = useState({
@@ -261,7 +264,6 @@ const UnmetNeedDefinition = () => {
     getDataStats("national_data", accessToken, refreshToken).then(
       async (res) => {
         if (res) {
-       
           setNationalData(res.summary_data);
         }
       }
@@ -318,14 +320,138 @@ const UnmetNeedDefinition = () => {
           display: false,
         },
         datalabels: {
-          display: false
-        }
+          display: false,
+        },
       },
     };
   }, []);
 
+  const excessive_double_2 = useMemo(() => {
+    return {
+      indexAxis: "x",
+      elements: {
+        bar: {
+          borderWidth: 1,
+        },
+      },
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: "patients",
+          },
+        },
+        x: {
+          title: {
+            display: true,
+            text: "Days Supply in Year after receiving OCS",
+          },
+          grid: {
+            display: false, // Turn off grid lines for x-axis
+          },
+          ticks: {
+            font: {
+              size: 10,
+            },
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+        datalabels: {
+          display: false,
+        },
+      },
+    };
+  }, []);
 
-  
+  const excessive_options_2 = useMemo(() => {
+    return {
+      indexAxis: "x",
+      elements: {
+        bar: {
+          borderWidth: 1,
+        },
+      },
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: "patients",
+          },
+        },
+        x: {
+          title: {
+            display: true,
+            text: "Number of Distinct Calendar Months with OCS Prescription",
+          },
+          grid: {
+            display: false, // Turn off grid lines for x-axis
+          },
+          ticks: {
+            font: {
+              size: 10,
+            },
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+        datalabels: {
+          display: false,
+        },
+      },
+    };
+  }, []);
+
+  const excessive_options = useMemo(() => {
+    return {
+      indexAxis: "x",
+      elements: {
+        bar: {
+          borderWidth: 1,
+        },
+      },
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: "patients",
+          },
+        },
+        x: {
+          title: {
+            display: true,
+            text: "Days Supply in Year after receiving Single Therapy",
+          },
+          grid: {
+            display: false, // Turn off grid lines for x-axis
+          },
+          ticks: {
+            font: {
+              size: 10,
+            },
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+        datalabels: {
+          display: false,
+        },
+      },
+    };
+  }, []);
+
   const persistence_options = useMemo(() => {
     return {
       indexAxis: "x",
@@ -361,9 +487,9 @@ const UnmetNeedDefinition = () => {
         legend: {
           display: false,
         },
-        dataLabels: {
-          display: false
-        }
+        datalabels: {
+          display: false,
+        },
       },
     };
   }, []);
@@ -403,8 +529,8 @@ const UnmetNeedDefinition = () => {
           display: false,
         },
         datalabels: {
-          display: false
-        }
+          display: false,
+        },
       },
     };
   }, []);
@@ -445,8 +571,8 @@ const UnmetNeedDefinition = () => {
           display: false,
         },
         datalabels: {
-          display: false
-        }
+          display: false,
+        },
       },
     };
   }, []);
@@ -487,8 +613,8 @@ const UnmetNeedDefinition = () => {
           display: false,
         },
         datalabels: {
-          display: false
-        }
+          display: false,
+        },
       },
     };
   }, []);
@@ -529,8 +655,8 @@ const UnmetNeedDefinition = () => {
           display: false,
         },
         datalabels: {
-          display: false
-        }
+          display: false,
+        },
       },
     };
   }, []);
@@ -580,8 +706,8 @@ const UnmetNeedDefinition = () => {
           },
         },
         datalabels: {
-          display: false
-        }
+          display: false,
+        },
       },
     };
   }, []);
@@ -633,8 +759,8 @@ const UnmetNeedDefinition = () => {
           },
         },
         datalabels: {
-          display: false
-        }
+          display: false,
+        },
       },
     };
   }, []);
@@ -655,13 +781,17 @@ const UnmetNeedDefinition = () => {
     setStatsData9(null);
     setStatsData10(null);
     setStatsData11(null);
-    setStatsData12(null)
-    setStatsData13(null)
-    setStatsData14(null)
-    setStatsData15(null)
-    setStatsData16(null)
-    setStatsData18(null)
-    setStatsData19(null)
+    setStatsData12(null);
+    setStatsData13(null);
+    setStatsData14(null);
+    setStatsData15(null);
+    setStatsData16(null);
+    setStatsData18(null);
+    setStatsData19(null);
+    setStatsData20(null);
+    setStatsData21(null);
+    setStatsData22(null);
+    setStatsData23(null);
     setModalId(null);
   };
 
@@ -766,13 +896,17 @@ const UnmetNeedDefinition = () => {
       datasets: [
         {
           data: responseData.map((item) => item[type2]),
-          borderColor: sortFn ?"rgb(542, 62, 35, 0.8)":  responseData.map((item) =>
-            getIntValue(item[type1]) <= 450
-              ? "rgb(542, 62, 35, 0.8)"
-              : "rgb(0,212,100, 0.7)"
-          ),
+          borderColor: sortFn
+            ? "rgb(542, 62, 35, 0.8)"
+            : responseData.map((item) =>
+                getIntValue(item[type1]) <= 450
+                  ? "rgb(542, 62, 35, 0.8)"
+                  : "rgb(0,212,100, 0.7)"
+              ),
           backgroundColor: responseData.map((item) =>
-           sortFn ? "rgb(542, 62, 35, 0.8)" : getIntValue(item[type1]) <= 450
+            sortFn
+              ? "rgb(542, 62, 35, 0.8)"
+              : getIntValue(item[type1]) <= 450
               ? "rgb(542, 62, 35)"
               : "rgb(0,212,100)"
           ),
@@ -792,7 +926,56 @@ const UnmetNeedDefinition = () => {
           unmetLabels[UnmetNeedDefinitionData[key].buttonText].percent
         ],
     });
-    
+
+    if (UnmetNeedDefinitionData[key].id == "id17") {
+      getDataStats(
+        "ics_patient_ocs_max_days_supply",
+        accessToken,
+        refreshToken
+      ).then((res) => {
+        if (res) {
+          let _data = getBarChart(res, res.headers[0], res.headers[1]);
+
+          setStatsData20(_data);
+        }
+      });
+      getDataStats(
+        "ics_patient_ocs_distinct_months",
+        accessToken,
+        refreshToken
+      ).then((res) => {
+        if (res) {
+          let _data = getBarChart(res, res.headers[0], res.headers[1]);
+
+          setStatsData21(_data);
+        }
+      });
+    }
+    if (UnmetNeedDefinitionData[key].id == "id18") {
+      getDataStats(
+        "ics_laba_patient_ocs_max_days_supply",
+        accessToken,
+        refreshToken
+      ).then((res) => {
+        if (res) {
+          let _data = getBarChart(res, res.headers[0], res.headers[1]);
+
+          setStatsData22(_data);
+        }
+      });
+      getDataStats(
+        "ics_laba_patient_ocs_distinct_months",
+        accessToken,
+        refreshToken
+      ).then((res) => {
+        if (res) {
+          let _data = getBarChart(res, res.headers[0], res.headers[1]);
+
+          setStatsData23(_data);
+        }
+      });
+    }
+
     if (UnmetNeedDefinitionData[key].id === "id15") {
       getDataStats("data_stats_33", accessToken, refreshToken).then((res) => {
         if (res) {
@@ -819,7 +1002,7 @@ const UnmetNeedDefinition = () => {
         }
       });
     }
-    
+
     if (UnmetNeedDefinitionData[key].id === "id31") {
       getDataStats("data_stats_35", accessToken, refreshToken).then((res) => {
         if (res) {
@@ -872,7 +1055,7 @@ const UnmetNeedDefinition = () => {
         }
       });
     }
-    
+
     if (UnmetNeedDefinitionData[key].id === "id30") {
       getDataStats("data_stats_32", accessToken, refreshToken).then((res) => {
         if (res) {
@@ -1185,7 +1368,8 @@ const UnmetNeedDefinition = () => {
                     {UnmetNeedDefinitionData[key].buttonText}
                     {showTooltip.index == index && nationalData && (
                       <div className="absolute -top-[1rem] bg-[#fff] text-[#000] border px-2 py-2">
-                       Number of Patients: {showTooltip ? showTooltip.id.toLocaleString() : ""}
+                        Number of Patients:{" "}
+                        {showTooltip ? showTooltip.id.toLocaleString() : ""}
                       </div>
                     )}
                   </button>
@@ -1221,7 +1405,7 @@ const UnmetNeedDefinition = () => {
                 <div>
                   Eligible Patients:{" "}
                   <strong>
-                    {Math.round(dataValue.id / (dataValue.percent/100))}
+                    {Math.round(dataValue.id / (dataValue.percent / 100))}
                   </strong>
                 </div>
                 <div>
@@ -1327,10 +1511,10 @@ const UnmetNeedDefinition = () => {
                   />
                 </>
               )}
-               {statsData14 && (
+              {statsData14 && (
                 <>
                   <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Persistence on Therapy
+                    Persistence on Therapy
                   </div>
                   <BarChart
                     height={window.innerWidth > 1400 ? 120 : 80}
@@ -1339,10 +1523,10 @@ const UnmetNeedDefinition = () => {
                   />
                 </>
               )}
-                {statsData16 && (
+              {statsData16 && (
                 <>
                   <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Persistence on Therapy
+                    Persistence on Therapy
                   </div>
                   <BarChart
                     height={window.innerWidth > 1400 ? 120 : 80}
@@ -1351,10 +1535,37 @@ const UnmetNeedDefinition = () => {
                   />
                 </>
               )}
-                {statsData19 && (
+              {statsData20 && (
                 <>
                   <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Persistence on Therapy
+                    Days Supply in first Year after receiving OCS (Single
+                    patients)'
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData20}
+                    options={excessive_options}
+                  />
+                </>
+              )}
+              {statsData21 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Distinct Calendar Months with OCS Prescription (Single
+                    patients)
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData21}
+                    options={excessive_options_2}
+                  />
+                </>
+              )}
+
+              {statsData19 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Persistence on Therapy
                   </div>
                   <BarChart
                     height={window.innerWidth > 1400 ? 120 : 80}
@@ -1442,6 +1653,32 @@ const UnmetNeedDefinition = () => {
                   data={statsData3}
                   options={chart_2_options}
                 />
+              )}
+              {statsData22 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Days Supply in first Year after receiving OCS (Double
+                    patients)'
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData22}
+                    options={excessive_double_2}
+                  />
+                </>
+              )}
+              {statsData23 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Distinct Calendar Months with OCS Prescription (Double
+                    patients)
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData23}
+                    options={excessive_options_2}
+                  />
+                </>
               )}
             </div>
           </div>

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { patientTotals } from '../../constants/appConstants';
+import { filterColors, mapLabels, mapSelectLabels, patientTotals } from '../../constants/appConstants';
 
-const CustomDropdown = ({ showColors = false, labelClassName, className, error, value, input, handleSelect, dotColors = {} }) => {
+const CustomDropdown = ({showImpactColors = false, showColors = false, labelClassName, className, error, value, input, handleSelect, dotColors = {} }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(value);
   const dropdownRef = useRef(null);
@@ -50,7 +50,10 @@ const CustomDropdown = ({ showColors = false, labelClassName, className, error, 
         </button>
         {isOpen && (
           <div className="absolute max-h-[20rem] overflow-y-auto z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
-            {input.options.map((option) => (
+            {input.options.map((option) => {
+              console.log(filterColors[mapSelectLabels[mapLabels[option.value]]], "option")
+              
+              return (
               <div
                 key={option.name}
                 className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
@@ -76,17 +79,34 @@ const CustomDropdown = ({ showColors = false, labelClassName, className, error, 
                     }}
                   ></span>
                 )}
+                {showImpactColors && (
+                  <span
+                    style={{
+                      height: '10px',
+                      minHeight: '10px',
+                      maxHeight: "10px",
+                      width: '10px',
+                      minWidth: '10px',
+                      maxWidth: '10px',
+                      display: 'inline-block',
+                      backgroundColor: filterColors[mapSelectLabels[mapLabels[option.value]]],
+                      borderRadius: '50%',
+                      display: 'inline-block',
+                      marginRight: '10px',
+                    }}
+                  ></span>
+                )}
                 <span
                  
                 >
                   {option.name}
                 </span>
               </div>
-            ))}
+            )})}
           </div>
         )}
       </div>
-      <p className="mt-1 text-xs h-6 text-red-700">{error}</p>
+      {/* <p className="mt-1 text-xs h-6 text-red-700">{error}</p> */}
     </div>
   );
 };
