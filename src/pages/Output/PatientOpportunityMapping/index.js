@@ -195,6 +195,7 @@ const PatientOpportunityMapping = () => {
         if (res) {
         
           // let _data = JSON.parse(res.replaceAll("NaN", 0));
+      
           setRegionData(res.data);
         }
       })
