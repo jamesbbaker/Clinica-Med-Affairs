@@ -309,6 +309,8 @@ const levelToggles = {
 };
 
 const Map = ({
+  impactLayer=() => {},
+  impactMap,
   currentLevel,
   setCurrentLevel,
   stateData,
@@ -342,6 +344,12 @@ const Map = ({
   const [layerAdded, setLayerAdded] = useState(false);
   const [modalDetails, setModalDetails] = useState(null);
   const [data1, setData1] = useState(null);
+
+  useEffect(() => {
+    if (impactMap) {
+      impactLayer()
+    } 
+  }, [])
  
 
   useEffect(() => {
@@ -775,6 +783,8 @@ const Map = ({
     setMapMarkers(newMapMarkers);
   };
 
+ 
+
   useEffect(() => {
     if (mapData) {
       setData((prev) => {
@@ -849,7 +859,7 @@ const Map = ({
         _value.push(data[0][mapLabels[item]]);
       });
       let labels =  array.map((item) => mapSelectLabels[mapLabels[item]])
-      console.log(data)
+   
       return {
         labels,
         datasets: [
