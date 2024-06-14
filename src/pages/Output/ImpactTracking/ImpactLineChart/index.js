@@ -3,6 +3,7 @@ import CustomDropdown from "../../../../components/CustomDropdown";
 import { LineChart } from "../../../../components/LineChart";
 import {
   filterColors,
+  invertedMapLabels,
   mapLabels,
   selectLabels,
 } from "../../../../constants/appConstants";
@@ -91,11 +92,9 @@ const filterOptions = [...Object.keys(selectLabels)];
 
 const ImpactLineChart = ({ lineData, type = "National" }) => {
   const [lineChartData, setLineChartData] = useState();
-  const [unmetNeed, setUnmetNeed] = useState(
-    type == "National"
-      ? filterOptions[0]
-      : [{ label: filterOptions[0], value: filterOptions[0] }]
-  );
+  const [unmetNeed, setUnmetNeed] = useState([
+    { label: filterOptions[0], value: filterOptions[0] },
+  ]);
   const [RegionsList, setRegionsList] = useState();
   const [stateList, setStatesList] = useState();
   const [selectedStates, setSelectedStates] = useState();
@@ -109,7 +108,13 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
     });
     let lineDataFilter = lineData.filter((item) => {
       const year = parseInt(item.Quarter.split("-")[0]);
-      return year >= 2016;
+      const month = parseInt(item.Quarter.split("-")[1]);
+
+      // Filter for years from 2016 to 2023 (inclusive) and exclude January 2024
+      return (
+        (year > 2016 || (year === 2016 && month >= 1)) &&
+        (year < 2024 || (year === 2023 && month <= 12))
+      );
     });
     lineDataFilter.sort((a, b) => new Date(a.Quarter) - new Date(b.Quarter));
     let _labels = lineDataFilter.map((item) => item.Quarter);
@@ -232,16 +237,21 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
     } else {
       data = {
         labels: _labels,
-        datasets: [
-          {
-            label: "National",
-            data: lineDataFilter.map((item) => item[filtersName[unmetNeed]]),
-            borderColor: "rgb(15,255, 122)",
-            backgroundColor: "rgb(15,255, 122, 0.2)",
-          },
-        ],
+        datasets: unmetNeed.map((item, index) => {
+          return {
+            label: item.label,
+            data: lineDataFilter.map(
+              (_item) => _item[invertedMapLabels[item.value]]
+            ),
+            borderColor: randomColors[index] ? randomColors[index] : "#c4c4c4",
+            backgroundColor: randomColors[index]
+              ? randomColors[index]
+              : "#c4c4c4",
+          };
+        }),
       };
     }
+
     setLineChartData(data);
   }
 
@@ -276,8 +286,6 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
   const handleSelectMultipleUnmet = (val) => {
     setUnmetNeed(val);
   };
-
- 
 
   return lineChartData ? (
     <div className="my-8">
@@ -324,11 +332,11 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
               className="w-40 font-[600] h-10 border border-black rounded-md hover:bg-[#c4c4c4]"
             >
               {loading ? (
-                <div class="text-center">
+                <div className="text-center">
                   <div role="status">
                     <svg
                       aria-hidden="true"
-                      class="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                      className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
                       viewBox="0 0 100 101"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
@@ -342,7 +350,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
                         fill="currentFill"
                       />
                     </svg>
-                    <span class="sr-only">Loading...</span>
+                    <span className="sr-only">Loading...</span>
                   </div>
                 </div>
               ) : (
@@ -351,53 +359,32 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
             </button>
           )}
         </div>
-
-        {type == "National" ? (
-          <CustomDropdown
-            showImpactColors
-            labelClassName="mb-0"
-            className={"flex mb-4 items-center gap-2"}
-            input={{
-              label: "Unmet Need select",
-              name: "Unmet Need select",
-              type: "select",
-              options: filterOptions.map((item) => ({
-                name: selectLabels[item] ? selectLabels[item] : item,
-                value: item,
-              })),
-              id: "xLabel",
-            }}
-            value={unmetNeed}
-            handleSelect={(val) => handleSelect(val)}
+        <div className="flex mt-4 items-center gap-4">
+          <label className="block text-sm font-medium text-gray-900 dark:text-white">
+            Select Unmet Need
+          </label>
+          <MultiSelect
+            labelledBy=""
+            options={filterOptions.map((item) => ({
+              label: selectLabels[item] ? selectLabels[item] : item,
+              value: item,
+            }))}
+            className="w-[20rem] z-[5]"
+            value={unmetNeed || []}
+            onChange={(val) => handleSelectMultipleUnmet(val)}
           />
-        ) : (
-          <div className="flex mt-4 items-center gap-4">
-            <label className="block text-sm font-medium text-gray-900 dark:text-white">
-              Select Unmet Need
-            </label>
-            <MultiSelect
-              labelledBy=""
-              options={filterOptions.map((item) => ({
-                label: selectLabels[item] ? selectLabels[item] : item,
-                value: item,
-              }))}
-              className="w-[20rem] z-[5]"
-              value={unmetNeed || []}
-              onChange={(val) => handleSelectMultipleUnmet(val)}
-            />
-          </div>
-        )}
+        </div>
       </div>
 
       <LineChart options={options} data={lineChartData} arbitrary={false} />
     </div>
   ) : (
     <div className="h-[200px] flex flex-col items-center justify-center">
-      <div class="text-center">
+      <div className="text-center">
         <div role="status">
           <svg
             aria-hidden="true"
-            class="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+            className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
             viewBox="0 0 100 101"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -411,7 +398,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
               fill="currentFill"
             />
           </svg>
-          <span class="sr-only">Loading...</span>
+          <span className="sr-only">Loading...</span>
         </div>
       </div>
     </div>

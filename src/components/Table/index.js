@@ -5,13 +5,65 @@ import { useEffect } from "react";
 import { useTable, usePagination, useSortBy } from "react-table";
 import Popup from "reactjs-popup";
 import BarChart from "../BarChart";
-import { EPL_TABLE_COLUMNS, patientTotals, selectLabels } from "../../constants/appConstants";
+import {
+  EPL_TABLE_COLUMNS,
+  invertedMapLabels,
+  patientTotals,
+  selectLabels,
+} from "../../constants/appConstants";
 import SelectionButtons from "../SelectionButtons";
 import { breakString, removeCommasFromString } from "../../utils/StringUtils";
 import { AiOutlineDelete } from "react-icons/ai";
 import MinMaxSlider from "../MinMaxSlider";
 import { MultiSelect } from "react-multi-select-component";
+import interpolate from "color-interpolate";
 
+
+let colormap = interpolate(['green', 'white', 'red']);
+
+const getMinValue = (data, label) => {
+  
+  let minValue = 0;
+  data.map((item) => {
+    if (parseFloat(item[label]) < minValue) {
+      minValue = parseFloat(item[label]);
+    }
+  });
+  return minValue;
+};
+
+const getMaxValue = (data, label) => {
+  let minValue = 0;
+  data.map((item) => {
+    if (parseFloat(item[label]) > minValue) {
+      minValue = parseFloat(item[label]);
+    }
+  });
+  return minValue;
+};
+
+const minColor = [0, 255, 0]; // Green in RGB
+const midColor = [255, 255, 0]; 
+const maxColor = [255, 0, 0]; // Red in RGB
+
+function calculatePercentage(value, minValue, maxValue) {
+  if (minValue === maxValue) {
+    throw new Error("minValue and maxValue cannot be the same");
+  }
+  return ((value - minValue) / (maxValue - minValue)) * 100;
+}
+
+// Function to interpolate color
+function interpolateColor(value, minValue, midValue, maxValue,) {
+  if (maxValue ==0 ) {
+    maxValue = 1
+  }
+  let percentage = calculatePercentage(value, minValue, maxValue)
+  let _value = percentage/100
+  let colro = colormap(_value)
+ return colormap(_value)
+ 
+}
 const BarChartOptions = {
   indexAxis: "y",
   elements: {
@@ -65,7 +117,9 @@ const BarChartOptions = {
 };
 
 const Table = ({
+  colorCells,
   setFilterList,
+  cellClicked = () => {},
   filterList,
   filterState,
   showTopBtnsToggle = false,
@@ -122,7 +176,6 @@ const Table = ({
 }) => {
   const data = React.useMemo(() => TableData, [TableData]);
   const columns = React.useMemo(() => TableColummns, [TableColummns]);
-
   const {
     getTableProps,
     allColumns,
@@ -238,25 +291,24 @@ const Table = ({
   const handleOrganisationSelect = (val) => {
     setorganisation(val);
   };
-  const firstRef = React.useRef(true)
+  const firstRef = React.useRef(true);
 
   const handleToggleSelect = (val) => {
-      if (firstRef.current) {
-        // selectedIds.map(item => item.to)
-        setSelectedIds(val);
-        setValue(val)
-      }
-    let headerName = selectedIds.map((item) => item.col.Header)
+    if (firstRef.current) {
+      // selectedIds.map(item => item.to)
+      setSelectedIds(val);
+      setValue(val);
+    }
+    let headerName = selectedIds.map((item) => item.col.Header);
 
-      val.map((item) => {
-        !headerName.includes(item.col.Header) && item.col.toggleHidden();
-      });
-  
-    firstRef.current = true
+    val.map((item) => {
+      !headerName.includes(item.col.Header) && item.col.toggleHidden();
+    });
+
+    firstRef.current = true;
     let valHeaders = val.map((item) => item.col.Header);
 
     selectedIds.map((item) => {
-  
       !valHeaders.includes(item.col.Header) && item.col.toggleHidden();
     });
     setSelectedIds(val);
@@ -264,13 +316,12 @@ const Table = ({
     setValue(val);
   };
 
-
   useEffect(() => {
     if (showTopBtnsToggle) {
       let valHeaders = [];
       if (value) {
         valHeaders = value.map((item) => item.col.Header);
-        firstRef.current = false
+        firstRef.current = false;
       }
       allColumns
         .filter((item) => selectionBtnsArray.includes(item.id))
@@ -305,7 +356,7 @@ const Table = ({
     option: (provided, state) => ({
       ...provided,
       backgroundColor: state.data.color,
-      color: 'red',
+      color: "red",
     }),
     multiValue: (provided, state) => ({
       ...provided,
@@ -313,15 +364,25 @@ const Table = ({
     }),
     multiValueLabel: (provided, state) => ({
       ...provided,
-      color: patientTotals.includes(state.data.value) ?"#00008B" : "#800000",
+      color: patientTotals.includes(state.data.value) ? "#00008B" : "#800000",
     }),
   };
 
   const customOptionRenderer = ({ checked, option, onClick }) => (
     <div
       onClick={onClick}
-      className={`flex items-center p-2 cursor-pointer ${checked ? 'bg-gray-200' : ''}`}
-      style={{ fontWeight: 600, color: option.label == "Select All" ? "#000" : patientTotals.includes(option.label) ?"#00008B" : "#800000" }}
+      className={`flex items-center p-2 cursor-pointer ${
+        checked ? "bg-gray-200" : ""
+      }`}
+      style={{
+        fontWeight: 600,
+        color:
+          option.label == "Select All"
+            ? "#000"
+            : patientTotals.includes(option.label)
+            ? "#00008B"
+            : "#800000",
+      }}
     >
       <input
         type="checkbox"
@@ -331,8 +392,7 @@ const Table = ({
       />
       {option.label}
     </div>
-  );  
-
+  );
 
   return (
     <div style={{ marginTop }} className="w-full max-w-full overflow-auto">
@@ -371,7 +431,12 @@ const Table = ({
                         value: item.Header,
                       }
                   )
-                  .filter((item) => typeof item !== "boolean").sort((a, b) => selectionBtnsArray.indexOf(a.col.id) - selectionBtnsArray.indexOf(b.col.id))}
+                  .filter((item) => typeof item !== "boolean")
+                  .sort(
+                    (a, b) =>
+                      selectionBtnsArray.indexOf(a.col.id) -
+                      selectionBtnsArray.indexOf(b.col.id)
+                  )}
                 className="w-[20rem] z-[5]"
                 value={value || []}
                 onChange={(val) => handleToggleSelect(val)}
@@ -474,7 +539,9 @@ const Table = ({
               {headerGroup.headers.map((column) =>
                 totalPage ? (
                   <th onClick={() => handleSort(column)}>
-                    {selectLabels[column.render("Header")]  ? selectLabels[column.render("Header")] : column.render("Header")}
+                    {selectLabels[column.render("Header")]
+                      ? selectLabels[column.render("Header")]
+                      : column.render("Header")}
                     <span>
                       {sortBy === column.id ||
                       (column.id == "Name" && sortBy === "First Name")
@@ -506,14 +573,38 @@ const Table = ({
             return (
               <tr
                 className="hover:bg-slate-300 relative cursor-pointer pr-20"
-                onClick={() => activeCells && handleClick(row)}
+                onClick={() =>
+                  activeCells ? handleClick(row) : cellClicked(row)
+                }
                 {...row.getRowProps()}
               >
                 {row.cells.map((cell, index) => {
                   let cellValue = cell.render("Cell").props.value;
+                  let _header = cell.render("Cell").props.column.Header;
+                  let minValue = getMinValue(
+                    cell.render("Cell").props.data,
+                    invertedMapLabels[_header]
+                  );
+                  let maxValue = getMaxValue(
+                    cell.render("Cell").props.data,
+                    invertedMapLabels[_header]
+                  );
+                  let currentValue = parseFloat(cellValue)
+          
+                
+                  let midValue = (maxValue - Math.abs(minValue))/2
+                  let background = colorCells
+                    ? Object.values(selectLabels).includes(_header)
+                      ? interpolateColor(currentValue, minValue,midValue,maxValue)
+                      : "transparent"
+                    : "transparent";
 
                   return (
-                    <td key={index} {...cell.getCellProps()}>
+                    <td
+                      style={{ background }}
+                      key={index}
+                      {...cell.getCellProps()}
+                    >
                       {typeof cellValue === "number"
                         ? cell.render("Cell").props &&
                           cell.render("Cell").props.column.Header &&
