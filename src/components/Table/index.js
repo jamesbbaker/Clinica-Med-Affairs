@@ -118,6 +118,7 @@ const BarChartOptions = {
 
 const Table = ({
   colorCells,
+  isEligible = false,
   setFilterList,
   cellClicked = () => {},
   filterList,
@@ -204,7 +205,7 @@ const Table = ({
   }, [currentSize]);
 
   const handleClick = (row) => {
-    if (totalPage) {
+    if (isEligible) {
       handleRowClicked(row);
     } else {
       setOpenPopup((o) => !o);
@@ -413,7 +414,7 @@ const Table = ({
           onClick={handleFilterClick}
         />
       )}
-      {totalPage && (
+      {isEligible  ? (
         <div className="flex flex-col items-start">
           <div className="flex items-center gap-8">
             <div className="flex items-center mt-2 gap-8">
@@ -465,14 +466,15 @@ const Table = ({
                 if (!_newFilterValue.includes(item.id)) {
                   return;
                 }
+                console.log(item.id)
                 return (
                   <MinMaxSlider
-                    handleValueChange={(min, max) =>
+                    handleValueChange={(min,max) =>
                       handleFilterValueChange(min, max, item.id)
                     }
                     minValue={item.min}
                     maxValue={item.max}
-                    label={item.id}
+                    label={selectLabels[item.id]}
                   />
                 );
               })}
@@ -531,13 +533,13 @@ const Table = ({
             </div>
           </div>
         </div>
-      )}
+      )  : <div></div>}
       <table className="text-sm mt-4" {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) =>
-                totalPage ? (
+                isEligible ? (
                   <th onClick={() => handleSort(column)}>
                     {selectLabels[column.render("Header")]
                       ? selectLabels[column.render("Header")]
@@ -590,8 +592,6 @@ const Table = ({
                     invertedMapLabels[_header]
                   );
                   let currentValue = parseFloat(cellValue)
-          
-                
                   let midValue = (maxValue - Math.abs(minValue))/2
                   let background = colorCells
                     ? Object.values(selectLabels).includes(_header)
@@ -704,7 +704,7 @@ const Table = ({
             ))}
           </select>
         </div>
-        {totalPage && (
+        {isEligible && (
           <h2
             onClick={handleApplyFilters}
             className="text-[0.95rem] self-center px-3 py-1 border w-[8rem] grid place-content-center border-[#000] cursor-pointer hover:scale-[1.025] transition-all ease-linear duration-200 mr-3"

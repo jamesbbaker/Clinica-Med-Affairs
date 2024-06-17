@@ -90,7 +90,7 @@ const EligiblePatientLocator = () => {
   const [data1, setData1] = useState(null);
 
   useEffect(() => {
-    if (!statsData1) {
+    if (statsData1 == null) {
       setLoading(true);
     } else {
       setLoading(false);
@@ -531,9 +531,10 @@ const EligiblePatientLocator = () => {
     );
   };
 
-  return statsData1 && !loading ? (
+  return statsData1 !== null && !loading ? (
     <>
       <Table
+      isEligible={true}
         dispatch={dispatch}
         setFilterList={setFilterList}
         filterList={filterList}

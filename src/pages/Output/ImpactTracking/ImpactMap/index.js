@@ -304,8 +304,6 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
           let minVal = getMinValue(generateJSON);
           let maxVal = getMaxValue(generateJSON);
           let midValue = (maxVal - Math.abs(minVal)) / 2;
-
-          console.log(minVal, maxVal, midValue);
           map.setPaintProperty("countries-layer", "fill-color", [
             "interpolate",
             ["linear"],
