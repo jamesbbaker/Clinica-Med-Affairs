@@ -604,23 +604,38 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
             return;
           }
           filteredCountries.forEach((feature) => {
-            feature.geometry.coordinates.forEach((polygon) => {
-              polygon.forEach((ring) => {
-                ring.forEach((coord) => {
-                  if (
-                    Array.isArray(coord) &&
-                    coord.length === 2 &&
-                    !isNaN(coord[0]) &&
-                    !isNaN(coord[1])
-                  ) {
-                    bounds.extend(coord);
-                  }
+            if (feature.geometry.type === "Polygon") {
+                feature.geometry.coordinates.forEach((ring) => {
+                    ring.forEach((coord) => {
+                        if (Array.isArray(coord) && coord.length === 2 && !isNaN(coord[0]) && !isNaN(coord[1])) {
+                            bounds.extend(coord);
+                        }
+                    });
                 });
-              });
-            });
-          });
+            } else if (feature.geometry.type === "MultiPolygon") {
+                feature.geometry.coordinates.forEach((polygon) => {
+                    polygon.forEach((ring) => {
+                        ring.forEach((coord) => {
+                            if (Array.isArray(coord) && coord.length === 2 && !isNaN(coord[0]) && !isNaN(coord[1])) {
+                                bounds.extend(coord);
+                            }
+                        });
+                    });
+                });
+            }
+        });
 
-          map.fitBounds(bounds, { padding: 20 });
+          if (bounds.isEmpty()) {
+            console.error('Bounds are not valid');
+            return;
+        }
+
+          map.fitBounds(bounds, { padding: 0, maxZoom: 5 });
+
+       
+            // // Optionally, center the map if not centered correctly
+            // map.setCenter(bounds.getCenter());
+
         });
 
         // Hover info for countries

@@ -25,12 +25,9 @@ const Output = () => {
       {currentMenu == APP_ROUTES.patient_opportunity_mapping_and_strategy && (
       <PatientOpportunityMapping />
       )}
-      {currentMenu === APP_ROUTES.hcp_segmentation && (
-        <div className="flex flex-col items-center ">
-          <RadarChart />
-          <LineChart height={100} />
-        </div>
-      )}
+      {/* {currentMenu === APP_ROUTES.hcp_segmentation && (
+       
+      )} */}
       {currentMenu === APP_ROUTES.data_quality && <DataQuality />}
       {currentMenu === APP_ROUTES.hcp_insights && <HcpInsight />}
       {currentMenu === APP_ROUTES.eligible_patient_locator && <EligiblePatientLocator />}

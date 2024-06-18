@@ -377,7 +377,7 @@ const ScatterChart = ({
   ];
 
   return (
-    <div className="h-[800px] relative w-full">
+    <div className="min-h-[400px] relative w-full">
       <div className="w-full flex -mb-[1%] justify-center gap-4">
         {shapes.map((item, index) => (
           <div key={index} className="flex gap-1 items-center">

@@ -1,5 +1,6 @@
 import React from "react";
 import Sankey from "../../components/Sankey";
+import HcpInsight from "./HcpInsights";
 
 const PatientTracking = () => {
 
@@ -27,6 +28,9 @@ const PatientTracking = () => {
             count: "Patient_Count",
           }}
         />
+      </div>
+      <div className="mt-10">
+      <HcpInsight />
       </div>
     </div>
   );

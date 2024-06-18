@@ -253,6 +253,8 @@ const UnmetNeedDefinition = () => {
   const [statsData21, setStatsData21] = useState(null);
   const [statsData22, setStatsData22] = useState(null);
   const [statsData23, setStatsData23] = useState(null);
+  const [statsData24, setStatsData24] = useState(null);
+  const [statsData25, setStatsData25] = useState(null);
   const [dataValue, setDataValue] = useState(null);
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [showTooltip, setTooltip] = useState({
@@ -346,6 +348,48 @@ const UnmetNeedDefinition = () => {
           title: {
             display: true,
             text: "Days Supply in Year after receiving OCS",
+          },
+          grid: {
+            display: false, // Turn off grid lines for x-axis
+          },
+          ticks: {
+            font: {
+              size: 10,
+            },
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+        datalabels: {
+          display: false,
+        },
+      },
+    };
+  }, []);
+
+  const excessive_ocs_options_2 = useMemo(() => {
+    return {
+      indexAxis: "x",
+      elements: {
+        bar: {
+          borderWidth: 1,
+        },
+      },
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: "patients",
+          },
+        },
+        x: {
+          title: {
+            display: true,
+            text: "Number of distinct OCS bursts in year on treatment",
           },
           grid: {
             display: false, // Turn off grid lines for x-axis
@@ -792,6 +836,8 @@ const UnmetNeedDefinition = () => {
     setStatsData21(null);
     setStatsData22(null);
     setStatsData23(null);
+    setStatsData24(null)
+    setStatsData25(null)
     setModalId(null);
   };
 
@@ -939,17 +985,30 @@ const UnmetNeedDefinition = () => {
           setStatsData20(_data);
         }
       });
+      getDataStats("ics_patient_ocs_distinct_months", accessToken, refreshToken)
+        .then((res) => {
+          if (res) {
+            let _data = getBarChart(res, res.headers[0], res.headers[1]);
+
+            setStatsData21(_data);
+          }
+        })
+        .catch((Err) => {
+          console.log(Err);
+        });
       getDataStats(
-        "ics_patient_ocs_distinct_months",
+        "ics_patient_ocs_num_encounters",
         accessToken,
         refreshToken
-      ).then((res) => {
-        if (res) {
+      )
+        .then((res) => {
           let _data = getBarChart(res, res.headers[0], res.headers[1]);
 
-          setStatsData21(_data);
-        }
-      });
+            setStatsData24(_data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
     if (UnmetNeedDefinitionData[key].id == "id18") {
       getDataStats(
@@ -974,6 +1033,19 @@ const UnmetNeedDefinition = () => {
           setStatsData23(_data);
         }
       });
+      getDataStats(
+        "ics_laba_patient_ocs_num_encounters",
+        accessToken,
+        refreshToken
+      )
+        .then((res) => {
+          let _data = getBarChart(res, res.headers[0], res.headers[1]);
+
+            setStatsData25(_data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
 
     if (UnmetNeedDefinitionData[key].id === "id15") {
@@ -1677,6 +1749,30 @@ const UnmetNeedDefinition = () => {
                     height={window.innerWidth > 1400 ? 120 : 80}
                     data={statsData23}
                     options={excessive_options_2}
+                  />
+                </>
+              )}
+              {statsData24 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                  Number of patients by distinct OCS bursts in year on treatment (Single)
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData24}
+                    options={excessive_ocs_options_2}
+                  />
+                </>
+              )}
+               {statsData25 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                  Number of patients by distinct OCS bursts in year on treatment (Double)
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData25}
+                    options={excessive_ocs_options_2}
                   />
                 </>
               )}
