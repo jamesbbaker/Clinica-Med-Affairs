@@ -6,6 +6,8 @@ import { highestValue } from "../../../utils/MathUtils";
 import { MultiSelect } from "react-multi-select-component";
 import CustomDropdown from "../../../components/CustomDropdown";
 import { selectLabels } from "../../../constants/appConstants";
+import { RadarChart } from "../../../components/RadarChart";
+import { LineChart } from "../../../components/LineChart";
 
 const filterOptions = [...Object.keys(selectLabels)];
 
@@ -371,7 +373,14 @@ const MedicalAffairToolbox = () => {
             setLineY={setLineY}
             data={state.data}
           />
+           <div className="w-full mt-4">
+           <div className="flex flex-col items-center ">
+          <RadarChart />
+          <LineChart height={100} />
+        </div>
+        </div>
         </>
+       
       ) : (
         <div className="w-full h-[400px] grid place-content-center">
           <div className="text-center">

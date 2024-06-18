@@ -47,18 +47,18 @@ export const menuList = [
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.patient_opportunity_mapping_and_strategy}`,
         icon: () => <AiOutlineGlobal />,
       },
-      {
-        name: APP_ROUTES_LABEL.hcp_segmentation,
-        id: APP_ROUTES.hcp_segmentation,
-        route: `${APP_ROUTES.outputs}/${APP_ROUTES.hcp_segmentation}`,
-        icon: () => <AiOutlineBarChart />,
-      },
-      {
-        name: APP_ROUTES_LABEL.hcp_insights,
-        id: APP_ROUTES.hcp_insights,
-        route: `${APP_ROUTES.outputs}/${APP_ROUTES.hcp_insights}`,
-        icon: () => <AiOutlineContainer />,
-      },
+      // {
+      //   name: APP_ROUTES_LABEL.hcp_segmentation,
+      //   id: APP_ROUTES.hcp_segmentation,
+      //   route: `${APP_ROUTES.outputs}/${APP_ROUTES.hcp_segmentation}`,
+      //   icon: () => <AiOutlineBarChart />,
+      // },
+      // {
+      //   name: APP_ROUTES_LABEL.hcp_insights,
+      //   id: APP_ROUTES.hcp_insights,
+      //   route: `${APP_ROUTES.outputs}/${APP_ROUTES.hcp_insights}`,
+      //   icon: () => <AiOutlineContainer />,
+      // },
       {
         name: APP_ROUTES_LABEL.eligible_patient_locator,
         id: APP_ROUTES.eligible_patient_locator,
@@ -93,7 +93,7 @@ export const menuList = [
         name: APP_ROUTES_LABEL.data_quality,
         id: APP_ROUTES.data_quality,
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.data_quality}`,
-        icon: () => <AiOutlineFundProjectionScreen />,
+        icon: () => <AiOutlineBarChart />,
       },
       {
         name: APP_ROUTES_LABEL.unmet_need_definition,

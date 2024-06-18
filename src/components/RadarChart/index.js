@@ -110,8 +110,7 @@ export function RadarChart() {
   return (
     <div className="w-full flex flex-col items-left gap-2 py-2">
       <div className="text-sm font-medium">
-        Al-based HCP segments and top features (potential drivers) of each
-        segment
+      HCP segmentation
       </div>
       <div className="relative mt-2 flex items-center gap-5 mb-10">
         <div>
