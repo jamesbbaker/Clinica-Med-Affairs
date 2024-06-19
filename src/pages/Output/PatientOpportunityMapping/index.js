@@ -377,7 +377,7 @@ const PatientOpportunityMapping = () => {
   };
 
   const handleToggle = (e) => {
-    console.log(e);
+  
     setCurrentToggle(e);
   };
 

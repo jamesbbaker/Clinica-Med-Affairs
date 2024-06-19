@@ -255,7 +255,7 @@ const InstitutionalVariation = () => {
                         label: item,
                         value: item,
                       }))}
-                      className="w-[10rem] z-[5]"
+                      className="w-[20rem] z-[5]"
                       value={selectedSpeciality || []}
                       onChange={(val) => handleToggleSelect(val, "primary")}
                     />

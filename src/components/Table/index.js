@@ -369,31 +369,7 @@ const Table = ({
     }),
   };
 
-  const customOptionRenderer = ({ checked, option, onClick }) => (
-    <div
-      onClick={onClick}
-      className={`flex items-center p-2 cursor-pointer ${
-        checked ? "bg-gray-200" : ""
-      }`}
-      style={{
-        fontWeight: 600,
-        color:
-          option.label == "Select All"
-            ? "#000"
-            : patientTotals.includes(option.label)
-            ? "#00008B"
-            : "#800000",
-      }}
-    >
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={() => {}}
-        className="mr-2"
-      />
-      {option.label}
-    </div>
-  );
+  
 
   return (
     <div style={{ marginTop }} className="w-full max-w-full overflow-auto">
@@ -765,3 +741,30 @@ const Table = ({
 };
 
 export default Table;
+
+
+export const customOptionRenderer = ({ checked, option, onClick }) => (
+  <div
+    onClick={onClick}
+    className={`flex items-center p-2 cursor-pointer ${
+      checked ? "bg-gray-200" : ""
+    }`}
+    style={{
+      fontWeight: 600,
+      color:
+        option.label == "Select All"
+          ? "#000"
+          : patientTotals.includes(option.label)
+          ? "#00008B"
+          : "#800000",
+    }}
+  >
+    <input
+      type="checkbox"
+      checked={checked}
+      onChange={() => {}}
+      className="mr-2"
+    />
+    {option.label}
+  </div>
+);

@@ -18,7 +18,6 @@ const HcpInsight = () => {
     getDataStats("data_stats_23", accessToken, refreshToken)
       .then((responseData) => {
         if (responseData) {
-          console.log(responseData);
           let _data = responseData.data.map(item => {
             let newItem = {...item}
             responseData.headers.map(header => {

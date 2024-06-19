@@ -131,7 +131,7 @@ const Sankey = ({API, title,height="500px", OPTIONS}) => {
             let dataArr = res.map(item => [item[OPTIONS.from],item[OPTIONS.to], item[OPTIONS.count]])
             dataArr.forEach(item => {
             if (item[0] == "ICS_1") {
-            console.log(item)
+           
             }
             })
             

@@ -8,6 +8,8 @@ import {
   selectLabels,
 } from "../../../../constants/appConstants";
 import { MultiSelect } from "react-multi-select-component";
+import { convertToQuarter } from "../../PatientOpportunityMapping/Popup";
+import { customOptionRenderer } from "../../../../components/Table";
 
 const options = {
   responsive: true,
@@ -16,10 +18,12 @@ const options = {
       title: {
         display: false,
       },
-      type: "time",
-      time: {
-        unit: "month",
+      type: "category",
+      scaleLabel: {
+        display: true,
+        labelString: 'Date',
       },
+     
 
       grid: {
         display: false,
@@ -28,26 +32,27 @@ const options = {
       //   drawOnChartArea: false,
       //   drawOnAxisArea: false,
       // },
-      ticks: {
-        callback: function (value) {
-          const date = new Date(value);
-          const year = date.getFullYear();
-          const month = date.getMonth();
+      // ticks: {
+      //   callback: function (value) {
+      //     console.log(value, "value")
+      //     const date = new Date(value);
+      //     const year = date.getFullYear();
+      //     const month = date.getMonth();
 
-          let quarter;
-          if (month < 3) {
-            quarter = "Q1";
-          } else if (month < 6) {
-            quarter = "Q2";
-          } else if (month < 9) {
-            quarter = "Q3";
-          } else {
-            quarter = "Q4";
-          }
+      //     let quarter;
+      //     if (month < 3) {
+      //       quarter = "Q1";
+      //     } else if (month < 6) {
+      //       quarter = "Q2";
+      //     } else if (month < 9) {
+      //       quarter = "Q3";
+      //     } else {
+      //       quarter = "Q4";
+      //     }
 
-          return `${quarter}-${year}`;
-        },
-      },
+      //     return `${quarter}-${year}`;
+      //   },
+      // },
     },
     y: {
       ticks: {
@@ -117,7 +122,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
       );
     });
     lineDataFilter.sort((a, b) => new Date(a.Quarter) - new Date(b.Quarter));
-    let _labels = lineDataFilter.map((item) => item.Quarter);
+    let _labels = lineDataFilter.map((item) => convertToQuarter(item.Quarter));
     let data = {};
     if (type == "Region") {
       const lineDataByRegion = {};
@@ -251,6 +256,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
         }),
       };
     }
+  
 
     setLineChartData(data);
   }
@@ -364,6 +370,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
             Select Unmet Need
           </label>
           <MultiSelect
+              ItemRenderer={customOptionRenderer}
             labelledBy=""
             options={filterOptions.map((item) => ({
               label: selectLabels[item] ? selectLabels[item] : item,
