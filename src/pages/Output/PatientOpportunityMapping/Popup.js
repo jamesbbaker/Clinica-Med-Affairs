@@ -26,6 +26,31 @@ const randomColors = [
   "#473e27",
 ];
 
+export function convertToQuarter(dateStr) {
+  // Split the input date string
+  let [year, month] = dateStr.split('-');
+
+  // Convert month to zero-indexed integer
+  let monthIndex = parseInt(month, 10) - 1; // Subtract 1 because months are zero-indexed in JavaScript
+  
+  // Check if the parsed values are valid
+  if (isNaN(year) || isNaN(monthIndex) || monthIndex < 0 || monthIndex > 11) {
+      return "Invalid Date";
+  }
+
+  // Create a new Date object with extracted year and month
+  let date = new Date(year, monthIndex);
+
+  // Get the quarter and year
+  let quarter = Math.floor(date.getMonth() / 3) + 1; // Calculate quarter
+  let formattedYear = date.getFullYear();
+
+  // Construct the quarter-year string
+  let quarterStr = `Q${quarter}-${formattedYear}`;
+
+  return quarterStr;
+}
+
 const options = {
   responsive: true,
   scales: {
@@ -33,7 +58,7 @@ const options = {
       title: {
         display: false,
       },
-      type: "time",
+      type: "category",
       time: {
         unit: "month",
       },
@@ -45,26 +70,12 @@ const options = {
       //   drawOnChartArea: false,
       //   drawOnAxisArea: false,
       // },
-      ticks: {
-        callback: function (value) {
-          const date = new Date(value);
-          const year = date.getFullYear();
-          const month = date.getMonth();
-
-          let quarter;
-          if (month < 3) {
-            quarter = "Q1";
-          } else if (month < 6) {
-            quarter = "Q2";
-          } else if (month < 9) {
-            quarter = "Q3";
-          } else {
-            quarter = "Q4";
-          }
-
-          return `${quarter}-${year}`;
-        },
-      },
+      // ticks: {
+      //   callback: function (value) {
+      //     console.log(value)
+      //     return `${convertToQuarter(value)}`;
+      //   },
+      // },
     },
     y: {
       ticks: {
@@ -119,7 +130,8 @@ const BarChartPopup = ({ data1 }) => {
       );
     });
     lineDataFilter.sort((a, b) => new Date(a.Quarter) - new Date(b.Quarter));
-    let _labels = lineDataFilter.map((item) => item.Quarter);
+    let _labels = lineDataFilter.map((item) => convertToQuarter(item.Quarter));
+   
     let data = {
       labels: _labels,
       datasets: unmetNeed.map((item, index) => {
@@ -133,6 +145,7 @@ const BarChartPopup = ({ data1 }) => {
         };
       }),
     };
+
     setLineChartData(data);
   }
 

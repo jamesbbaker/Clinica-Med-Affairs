@@ -9,8 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { Bar, getElementAtEvent } from "react-chartjs-2";
-import ChartDataLabels from 'chartjs-plugin-datalabels';
-
+import ChartDataLabels from "chartjs-plugin-datalabels";
 
 ChartJS.register(
   CategoryScale,
@@ -48,12 +47,18 @@ export const _options = {
         text: "Patients",
       },
       ticks: {
-        callback: function(value) {
+        callback: function(value, index, values) {
           if (value === 0) return '0';
-          else if (value >= 1e6) return `${Math.round(value / 1e6)}m`;
-          else if (value >= 1e3) return `${Math.round(value / 1e3)}k`;
-          else return `${value}`;
-      },
+          else if (value >= 1e6 || value <= -1e6) {
+            // Convert to million with one decimal place
+            return `${(value / 1e6).toFixed(value % 1e6 !== 0 ? 1 : 0)}m`;
+          } else if (value >= 1e3 || value <= -1e3) {
+            // Convert to thousand with one decimal place
+            return `${(value / 1e3).toFixed(value % 1e3 !== 0 ? 1 : 0)}k`;
+          } else {
+            return `${value}`;
+          }
+        },
         font: {
           size: 10,
         },
@@ -94,14 +99,19 @@ export const _data = {
         28795, 34325, 43017, 18139, 37761, 16982, 20873, 21435, 31948, 14192,
         12540, 22449, 29210,
       ],
-      barThickness: 10, 
+      barThickness: 10,
       borderColor: "rgb(255, 99, 132)",
       backgroundColor: "rgba(255, 99, 132, 0.5)",
     },
   ],
 };
 
-const BarChart = ({ label,height = 250, data = _data, options = _options }) => {
+const BarChart = ({
+  label,
+  height = 250,
+  data = _data,
+  options = _options,
+}) => {
   const chartRef = useRef(null);
   const [selectedValue, setSelectedValue] = useState(0);
 
@@ -115,7 +125,9 @@ const BarChart = ({ label,height = 250, data = _data, options = _options }) => {
 
   return (
     <div className="px-4 w-full h-full mt-2 rounded-lg py-4">
-      {label && <div className="text-[500] text-[#555555] text-md">{label}</div>}
+      {label && (
+        <div className="text-[500] text-[#555555] text-md">{label}</div>
+      )}
       <Bar
         height={height}
         ref={chartRef}

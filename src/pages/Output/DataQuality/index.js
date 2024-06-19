@@ -16,7 +16,7 @@ const DataQuality = () => {
   const [statsData4, setStatsData4] = useState(null);
   const [statsData5, setStatsData5] = useState(null);
   const [statsData6, setStatsData6] = useState(null);
-  const [statsData7, setStatsData7] = useState(null);
+
   const [statsData8, setStatsData8] = useState(null);
   const [mapData, setMapData] = useState(null);
 
@@ -148,9 +148,6 @@ const DataQuality = () => {
     return generateStatsOptions("Treatment Types over Time");
   }, []);
 
-  const Line_options_2 = useMemo(() => {
-    return generateStatsOptions("Patient Starts by Therapy Type");
-  }, []);
 
   useEffect(() => {
     getDataStats("data_stats_1", accessToken, refreshToken)
@@ -249,23 +246,7 @@ const DataQuality = () => {
         console.log(err, "err");
       });
 
-    getDataStats("data_stats_13", accessToken, refreshToken)
-      .then((res) => {
-        if (res) {
-          
-          let Types = [];
-          const responseData = res.data;
-
-          responseData.forEach((entry) => {
-            return Types.push(entry["Type"]);
-          });
-          let _data = setLineData(res, Types[0], "Patients");
-          setStatsData7(_data);
-        }
-      })
-      .catch((err) => {
-        console.log(err, "err");
-      });
+   
 
     getDataStats("data_stats_10", accessToken, refreshToken)
       .then((res) => {
@@ -413,16 +394,7 @@ const DataQuality = () => {
           />
         </>
       )}
-      {statsData7 && (
-        <>
-          <LineChart
-            height={150}
-            arbitrary={false}
-            data={statsData7}
-            options={Line_options_2}
-          />
-        </>
-      )}
+     
     </div>
   );
 };

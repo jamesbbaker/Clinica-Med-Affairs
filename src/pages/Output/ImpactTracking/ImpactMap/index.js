@@ -9,7 +9,7 @@ import {
   selectLabels,
 } from "../../../../constants/appConstants";
 import { MultiSelect } from "react-multi-select-component";
-import Table from "../../../../components/Table";
+import Table, { customOptionRenderer } from "../../../../components/Table";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
@@ -119,10 +119,10 @@ const quartersWithDates = [
   { quarter: "Q2-2023", date: "2023-04-01" },
   { quarter: "Q3-2023", date: "2023-07-01" },
   { quarter: "Q4-2023", date: "2023-10-01" },
-  { quarter: "Q1-2024", date: "2024-01-01" },
-  { quarter: "Q2-2024", date: "2024-04-01" },
-  { quarter: "Q3-2024", date: "2024-07-01" },
-  { quarter: "Q4-2024", date: "2024-10-01" },
+  // { quarter: "Q1-2024", date: "2024-01-01" },
+  // { quarter: "Q2-2024", date: "2024-04-01" },
+  // { quarter: "Q3-2024", date: "2024-07-01" },
+  // { quarter: "Q4-2024", date: "2024-10-01" },
 ];
 
 const ImpactMap = ({ handleReset, regionData, stateData }) => {
@@ -771,7 +771,7 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
       <div className="flex flex-col items-start gap-4">
         <div className="flex my-4 items-center gap-4">
           <CustomDropdown
-            showImpactColors
+            showColors
             labelClassName="mb-0"
             className={"flex mb-4 items-center gap-2"}
             input={{
@@ -866,6 +866,7 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
                 Select Unmet Need
               </label>
               <MultiSelect
+              ItemRenderer={customOptionRenderer}
                 labelledBy=""
                 options={filterOptions.map((item) => ({
                   label: selectLabels[item] ? selectLabels[item] : item,
