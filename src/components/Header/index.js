@@ -26,7 +26,7 @@ const Header = () => {
     setOpenDialog((prev) => !prev);
   };
   return (
-    <header className="sticky max-w-[100vw] md:max-w-[unset] top-0 z-10 backdrop-blur bg-white shadow-md">
+    <header className="md:sticky fixed left-0 right-0 max-w-[100vw] md:max-w-[unset] top-0 z-10 backdrop-blur bg-white shadow-md">
       <div className="md:w-full h-14 px-6 py-4 flex justify-between items-center">
         <span>
           <Link href="/" className="app__logo">
