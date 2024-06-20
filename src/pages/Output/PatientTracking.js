@@ -26,13 +26,24 @@ const PatientTracking = () => {
       .then((res) => {
         if (res) {
           let _res = [];
+      
+    
+          let newRes = {}
+          Object.keys(selectLabels).map((item) =>
+            {
+              if (res.hasOwnProperty(item)) {
+                newRes[item] = {...res[item]}
+              }
+            }
+          );
+       
           Object.values(res).map((item) =>
             _res.push(Object.keys(item).map((key) => item[key]))
           );
           setStatsData1(_res);
           setLabels({
-            xLabels: Object.keys(res).map((item) => selectLabels[item]),
-            yLabels: Object.keys(res).map((item) => selectLabels[item]),
+            xLabels: Object.keys(selectLabels).filter(item => res.hasOwnProperty(item)).map((item) =>  selectLabels[item]),
+            yLabels:  Object.keys(selectLabels).filter(item => res.hasOwnProperty(item)).map((item) =>  selectLabels[item]),
           });
         }
       })
