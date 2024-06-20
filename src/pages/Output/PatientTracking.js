@@ -27,7 +27,6 @@ const PatientTracking = () => {
         if (res) {
           let _res = [];
           let newRes = []
-          console.log(res, "Res")
           Object.keys(selectLabels).map((item) =>
             {
               if (res.hasOwnProperty(item)) {
@@ -40,9 +39,7 @@ const PatientTracking = () => {
                 newRes.push(newObj)
               }
             }
-          );
-          console.log(newRes)
-       
+          );     
           newRes.map((item) =>
             _res.push(Object.keys(item).map((key) => item[key]))
           );
