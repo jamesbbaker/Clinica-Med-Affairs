@@ -147,7 +147,6 @@ const InputForm = ({ handleClose }) => {
       page_view: state.formData.page_view.map((item) => item.value),
     };
 
-   
     const response = await fetch(
       "https://clinica-server.replit.app/create_user",
       {
@@ -166,11 +165,11 @@ const InputForm = ({ handleClose }) => {
   };
 
   const handleChange = (e) => {
-    let value = e.target.id == "admin" ? e.target.checked: e.target.value
+    let value = e.target.id == "admin" ? e.target.checked : e.target.value;
     dispatch({
       type: ActionTypes.SET_FIELD_VALUE,
       payload: {
-        [e.target.id]: value
+        [e.target.id]: value,
       },
     });
   };
@@ -185,7 +184,6 @@ const InputForm = ({ handleClose }) => {
   };
 
   const handleMultipleSelect = (val, input) => {
-  
     dispatch({
       type: ActionTypes.SET_FIELD_VALUE,
       payload: {
@@ -201,12 +199,13 @@ const InputForm = ({ handleClose }) => {
         {inputs.map((input) =>
           input.type == "select" ? (
             <SelectBox
+              key={input.id}
               error={state.errors[input.name]}
               handleSelect={handleSelect}
               input={input}
             />
           ) : input.type === "multiSelect" ? (
-            <div className="w-full mt-2">
+            <div key={input.id} className="w-full mt-2">
               <div className={`font-medium text-sm`}>{input.label}</div>
               <MultiSelect
                 options={input.options}
@@ -218,6 +217,7 @@ const InputForm = ({ handleClose }) => {
             </div>
           ) : (
             <InputField
+              key={input.id}s
               error={state.errors[input.name]}
               onChange={handleChange}
               input={input}

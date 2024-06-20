@@ -21,23 +21,10 @@ const PatientTracking = () => {
     return generateStatsOptions("Patient Starts by Therapy Type");
   }, []);
 
-  const xLabels = new Array(24).fill(0).map((_, i) => `${i}`);
-  const yLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
-  const data = new Array(yLabels.length)
-    .fill(0)
-    .map(() =>
-      new Array(xLabels.length)
-        .fill(0)
-        .map(() => Math.floor(Math.random() * 50 + 50))
-    );
-
-  console.log(data, "data");
-
   useEffect(() => {
     getDataStats("hcp_correlation_matrix", accessToken, refreshToken)
       .then((res) => {
         if (res) {
-     
           let _res = [];
           Object.values(res).map((item) =>
             _res.push(Object.keys(item).map((key) => item[key]))
