@@ -107,6 +107,22 @@ const AuthProvider = () => {
     }
   }
 
+
+  const logOut = () => {
+    setUser(null);
+    setAccessToken(null);
+    setRefreshToken(null);
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
+    dispatch(
+      updateMenu({
+        currentMenu: "users",
+        currentMenuLabel: "Users",
+      })
+    );
+    navigate("/", {replace: true});
+  };
  
 
   const fetchUserData = async (token, refreshToken) => {
@@ -147,21 +163,7 @@ const AuthProvider = () => {
   };
 
 
-  const logOut = () => {
-    setUser(null);
-    setAccessToken(null);
-    setRefreshToken(null);
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("user");
-    dispatch(
-      updateMenu({
-        currentMenu: "users",
-        currentMenuLabel: "Users",
-      })
-    );
-    navigate("/", {replace: true});
-  };
+  
 
   return (
     <AuthContext.Provider
