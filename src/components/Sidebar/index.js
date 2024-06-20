@@ -7,7 +7,6 @@ import {
   AiOutlineHome,
   AiOutlineTable,
   AiOutlineGlobal,
-  AiOutlineContainer,
   AiOutlineBarChart,
   AiOutlineFundProjectionScreen,
   AiOutlineRise,
@@ -47,18 +46,6 @@ export const menuList = [
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.patient_opportunity_mapping_and_strategy}`,
         icon: () => <AiOutlineGlobal />,
       },
-      // {
-      //   name: APP_ROUTES_LABEL.hcp_segmentation,
-      //   id: APP_ROUTES.hcp_segmentation,
-      //   route: `${APP_ROUTES.outputs}/${APP_ROUTES.hcp_segmentation}`,
-      //   icon: () => <AiOutlineBarChart />,
-      // },
-      // {
-      //   name: APP_ROUTES_LABEL.hcp_insights,
-      //   id: APP_ROUTES.hcp_insights,
-      //   route: `${APP_ROUTES.outputs}/${APP_ROUTES.hcp_insights}`,
-      //   icon: () => <AiOutlineContainer />,
-      // },
       {
         name: APP_ROUTES_LABEL.eligible_patient_locator,
         id: APP_ROUTES.eligible_patient_locator,
@@ -146,18 +133,9 @@ const Sidebar = () => {
     }
   }, [user]);
 
-  // const handelHome = () => {
-  //   navigate("/dashboard")
-  //   dispatch(
-  //     updateMenu({
-  //       currentMenu: user.admin ? "users" : "home",
-  //       currentMenuLabel: user.admin ? "Users" : "Home",
-  //     })
-  //   );
-  // }
-
+ 
   return (
-    <aside className="w-full bg-primary sticky overflow-y-auto">
+    <aside className="md:w-full w-[5rem] z-50 min-w-[5rem] bg-primary fixed left-0 top-0  md:sticky overflow-y-auto">
       <div className="flex flex-col py-4">
         {user &&
           menuList.map((item, index) => (
