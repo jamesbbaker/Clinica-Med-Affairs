@@ -26,8 +26,6 @@ const PatientTracking = () => {
       .then((res) => {
         if (res) {
           let _res = [];
-      
-    
           let newRes = {}
           Object.keys(selectLabels).map((item) =>
             {

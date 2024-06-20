@@ -126,6 +126,7 @@ const AuthProvider = () => {
         dispatch(addMultipleUsers(userData));
       } else {
         if (response.status === 401) {
+          logOut()
           // Unauthorized error
           // Refresh the token
           const refreshedToken = await refreshTokenFunction(refreshToken);
