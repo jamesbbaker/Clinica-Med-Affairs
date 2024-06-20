@@ -18,11 +18,9 @@ import MinMaxSlider from "../MinMaxSlider";
 import { MultiSelect } from "react-multi-select-component";
 import interpolate from "color-interpolate";
 
-
-let colormap = interpolate(['green', 'white', 'red']);
+let colormap = interpolate(["green", "white", "red"]);
 
 const getMinValue = (data, label) => {
-  
   let minValue = 0;
   data.map((item) => {
     if (parseFloat(item[label]) < minValue) {
@@ -43,7 +41,7 @@ const getMaxValue = (data, label) => {
 };
 
 const minColor = [0, 255, 0]; // Green in RGB
-const midColor = [255, 255, 0]; 
+const midColor = [255, 255, 0];
 const maxColor = [255, 0, 0]; // Red in RGB
 
 function calculatePercentage(value, minValue, maxValue) {
@@ -54,15 +52,14 @@ function calculatePercentage(value, minValue, maxValue) {
 }
 
 // Function to interpolate color
-function interpolateColor(value, minValue, midValue, maxValue,) {
-  if (maxValue ==0 ) {
-    maxValue = 1
+function interpolateColor(value, minValue, midValue, maxValue) {
+  if (maxValue == 0) {
+    maxValue = 1;
   }
-  let percentage = calculatePercentage(value, minValue, maxValue)
-  let _value = percentage/100
-  let colro = colormap(_value)
- return colormap(_value)
- 
+  let percentage = calculatePercentage(value, minValue, maxValue);
+  let _value = percentage / 100;
+  let colro = colormap(_value);
+  return colormap(_value);
 }
 const BarChartOptions = {
   indexAxis: "y",
@@ -295,6 +292,7 @@ const Table = ({
   const firstRef = React.useRef(true);
 
   const handleToggleSelect = (val) => {
+    console.log(val);
     if (firstRef.current) {
       // selectedIds.map(item => item.to)
       setSelectedIds(val);
@@ -326,11 +324,24 @@ const Table = ({
       }
       allColumns
         .filter((item) => selectionBtnsArray.includes(item.id))
-        .map(
-          (item) => !valHeaders.includes(item.Header) && item.toggleHidden()
-        );
+        .map((item, index) => {
+          if (!valHeaders.includes(item.Header) && index !== 2) {
+            item.toggleHidden();
+          }
+          if (index == 2) {
+            console.log(item)
+            // if (!item.isSorted) {
+            //       handleSort(item) 
+            // }
+            setValue([{
+              col: item,
+              label: selectLabels[item.Header],
+              value: item.Header,
+            }])
+          }
+        });
     }
-  }, [showTopBtnsToggle]);
+  }, []);
 
   const handleFilterValueChange = (min, max, id) => {
     dispatch({
@@ -369,8 +380,6 @@ const Table = ({
     }),
   };
 
-  
-
   return (
     <div style={{ marginTop }} className="w-full max-w-full overflow-auto">
       {Title && (
@@ -390,7 +399,7 @@ const Table = ({
           onClick={handleFilterClick}
         />
       )}
-      {isEligible  ? (
+      {isEligible ? (
         <div className="flex flex-col items-start">
           <div className="flex items-center gap-8">
             <div className="flex items-center mt-2 gap-8">
@@ -442,10 +451,10 @@ const Table = ({
                 if (!_newFilterValue.includes(item.id)) {
                   return;
                 }
-                console.log(item.id)
+                console.log(item.id);
                 return (
                   <MinMaxSlider
-                    handleValueChange={(min,max) =>
+                    handleValueChange={(min, max) =>
                       handleFilterValueChange(min, max, item.id)
                     }
                     minValue={item.min}
@@ -509,11 +518,13 @@ const Table = ({
             </div>
           </div>
         </div>
-      )  : <div></div>}
+      ) : (
+        <div></div>
+      )}
       <table className="text-sm mt-4" {...getTableProps()}>
         <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+          {headerGroups.map((headerGroup, index) => (
+            <tr key={index} {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) =>
                 isEligible ? (
                   <th onClick={() => handleSort(column)}>
@@ -546,10 +557,11 @@ const Table = ({
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {page.map((row) => {
+          {page.map((row, index) => {
             prepareRow(row);
             return (
               <tr
+                key={index}
                 className="hover:bg-slate-300 relative cursor-pointer pr-20"
                 onClick={() =>
                   activeCells ? handleClick(row) : cellClicked(row)
@@ -567,11 +579,16 @@ const Table = ({
                     cell.render("Cell").props.data,
                     invertedMapLabels[_header]
                   );
-                  let currentValue = parseFloat(cellValue)
-                  let midValue = (maxValue - Math.abs(minValue))/2
+                  let currentValue = parseFloat(cellValue);
+                  let midValue = (maxValue - Math.abs(minValue)) / 2;
                   let background = colorCells
                     ? Object.values(selectLabels).includes(_header)
-                      ? interpolateColor(currentValue, minValue,midValue,maxValue)
+                      ? interpolateColor(
+                          currentValue,
+                          minValue,
+                          midValue,
+                          maxValue
+                        )
                       : "transparent"
                     : "transparent";
 
@@ -741,7 +758,6 @@ const Table = ({
 };
 
 export default Table;
-
 
 export const customOptionRenderer = ({ checked, option, onClick }) => (
   <div
