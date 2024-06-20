@@ -76,8 +76,8 @@ const EligiblePatientLocator = () => {
   const [stateName, setstateName] = useState(null);
   const [organisation, setorganisation] = useState(null);
   const [totalPage, settotalPage] = useState(1);
-  const [sortBy, setSortBy] = useState(null);
-  const [sortOrder, setsortOrder] = useState("asc");
+  const [sortBy, setSortBy] = useState("Number of ICS-LABA Patients");
+  const [sortOrder, setsortOrder] = useState("desc");
   const [value, setValue] = useState(null);
   const [selectedIds, setSelectedIds] = useState([]);
   const [specialityList, setSpecialityList] = useState(null);
@@ -530,6 +530,8 @@ const EligiblePatientLocator = () => {
       organisation
     );
   };
+
+ 
 
   return statsData1 !== null && !loading ? (
     <>

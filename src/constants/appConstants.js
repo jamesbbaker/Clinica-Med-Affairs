@@ -29,7 +29,7 @@ export const EPL_TABLE_COLUMNS = [
   {
     Header: "Repeated cardioversions without treatment escalation",
     accessor: "repeatedCardioversions",
-  }, 
+  },
   { Header: "Improper support of therapy", accessor: "supportTherapy" },
   { Header: "Failure to manage AEs", accessor: "manageAEs" },
   {
@@ -101,8 +101,9 @@ export const patientTotals = [
   "Total ICS Patients",
   "Total ICS Exacerbations",
   "Total ICS-LABA Patients",
-"Total ICS-LABA LAMA Patients",
-"Number of ICS-LABA LAMA Patients"
+  "Total ICS-LABA LAMA Patients",
+  "Number of ICS-LABA LAMA Patients",
+  "Number of ICS-LABA-LAMA Patients",
 ];
 
 export const unmetLabels = {
@@ -127,11 +128,10 @@ export const unmetLabels = {
     id: "Total ICS Exacerbation Failed Escalation",
     percent: "Percent ICS Exacerbation Failed Escalation",
   },
-  "Delay in Escalating Patients from Single to Double Therapy":
-    {
-      id: "Total ICS Escalation Delay",
-      percent: "Percent ICS Escalation Delay",
-    },
+  "Delay in Escalating Patients from Single to Double Therapy": {
+    id: "Total ICS Escalation Delay",
+    percent: "Percent ICS Escalation Delay",
+  },
   "Failure to Escalate Uncontrolled/Severe Patients from Double to Triple Therapy":
     {
       id: "Total ICS-LABA High Steroid Usage",
@@ -240,8 +240,7 @@ export const mapSelectLabels = {
     "Non-adherence to triple therapy (compliance)",
   "Percent of ICS-LABA LAMA Compliance < 240":
     "Non-adherence to triple therapy (compliance) percent",
-}
-
+};
 
 export const selectLabels = {
   "Number of Asthma Patients": "Number of Asthma Patients",
@@ -311,44 +310,53 @@ export const selectLabels = {
 };
 
 export const mapLabels = {
-    "Total Asthma Patients": "Number of Asthma Patients",
-    "Total No Spirometry": "Number of No Spirometry",
-    "Percent No Spirometry": "Percent of No Spirometry",
-    "Total No EOS Testing": "Number of No EOS Testing",
-    "Percent No EOS Testing": "Percent of No EOS Testing",
-    "Total No Treatment": "Number of No Treatment",
-    "Percent No Treatment": "Percent of No Treatment",
-    "Total ICS Patients": "Number of ICS Patients",
-    "Total ICS Compliance < 240": "Number of ICS Compliance < 240",
-    "Percent ICS Compliance < 240": "Percent of ICS Compliance < 240",
-    "Total ICS Persistence < 360": "Number of ICS Persistence < 360",
-    "Percent ICS Persistence < 360": "Percent of ICS Persistence < 360",
-    "Total ICS High Steroid Usage": "Number of ICS High Steroid Usage",
-    "Percent ICS High Steroid Usage": "Percent of ICS High Steroid Usage",
-    "Total ICS Exacerbations": "Number of ICS Exacerbation",
-    "Total ICS Exacerbation Failed Escalation": "Number of ICS Exacerbation Failed Escalation",
-    "Percent ICS Exacerbation Failed Escalation": "Percent of ICS Exacerbation Failed Escalation",
-    "Total ICS Escalation Delay": "Number of ICS Escalation Delay",
-    "Percent ICS Escalation Delay": "Percent of ICS Escalation Delay",
-    "Total ICS-LABA Patients": "Number of ICS-LABA Patients",
-    "Total ICS-LABA Compliance < 240": "Number of ICS-LABA Compliance < 240",
-    "Percent ICS-LABA Compliance < 240": "Percent of ICS-LABA Compliance < 240",
-    "Total ICS-LABA Persistence < 360": "Number of ICS-LABA Persistence < 360",
-    "Percent ICS-LABA Persistence < 360": "Percent of ICS-LABA Persistence < 360",
-    "Total ICS-LABA High Steroid Usage": "Number of ICS-LABA High Steroid Usage",
-    "Percent ICS-LABA High Steroid Usage": "Percent of ICS-LABA High Steroid Usage",
-    "Total ICS-LABA Exacerbations": "Number of ICS-LABA Exacerbation",
-    "Total ICS-LABA Exacerbation Failed Escalation": "Number of ICS-LABA Exacerbation Failed Escalation",
-    "Percent ICS-LABA Exacerbation Failed Escalation": "Percent of ICS-LABA Exacerbation Failed Escalation",
-    "Total ICS-LABA Escalation Delay": "Number of ICS-LABA Escalation Delay",
-    "Percent ICS-LABA Escalation Delay": "Percent of ICS-LABA Escalation Delay",
-    "Total ICS-LABA LAMA Patients": "Number of ICS-LABA LAMA Patients",
-    "Total ICS-LABA LAMA Compliance < 240": "Number of ICS-LABA LAMA Compliance < 240",
-    "Percent ICS-LABA LAMA Compliance < 240": "Percent of ICS-LABA LAMA Compliance < 240",
-    "Total ICS-LABA LAMA Persistence < 360": "Number of ICS-LABA LAMA Persistence < 360",
-    "Percent ICS-LABA LAMA Persistence < 360": "Percent of ICS-LABA LAMA Persistence < 360",
-    "Total ICS-LABA With LAMA": "Number of ICS-LABA Patients with LAMA",
-    "Percent ICS-LABA With LAMA": "Percent of ICS-LABA Patients with LAMA"  
+  "Total Asthma Patients": "Number of Asthma Patients",
+  "Total No Spirometry": "Number of No Spirometry",
+  "Percent No Spirometry": "Percent of No Spirometry",
+  "Total No EOS Testing": "Number of No EOS Testing",
+  "Percent No EOS Testing": "Percent of No EOS Testing",
+  "Total No Treatment": "Number of No Treatment",
+  "Percent No Treatment": "Percent of No Treatment",
+  "Total ICS Patients": "Number of ICS Patients",
+  "Total ICS Compliance < 240": "Number of ICS Compliance < 240",
+  "Percent ICS Compliance < 240": "Percent of ICS Compliance < 240",
+  "Total ICS Persistence < 360": "Number of ICS Persistence < 360",
+  "Percent ICS Persistence < 360": "Percent of ICS Persistence < 360",
+  "Total ICS High Steroid Usage": "Number of ICS High Steroid Usage",
+  "Percent ICS High Steroid Usage": "Percent of ICS High Steroid Usage",
+  "Total ICS Exacerbations": "Number of ICS Exacerbation",
+  "Total ICS Exacerbation Failed Escalation":
+    "Number of ICS Exacerbation Failed Escalation",
+  "Percent ICS Exacerbation Failed Escalation":
+    "Percent of ICS Exacerbation Failed Escalation",
+  "Total ICS Escalation Delay": "Number of ICS Escalation Delay",
+  "Percent ICS Escalation Delay": "Percent of ICS Escalation Delay",
+  "Total ICS-LABA Patients": "Number of ICS-LABA Patients",
+  "Total ICS-LABA Compliance < 240": "Number of ICS-LABA Compliance < 240",
+  "Percent ICS-LABA Compliance < 240": "Percent of ICS-LABA Compliance < 240",
+  "Total ICS-LABA Persistence < 360": "Number of ICS-LABA Persistence < 360",
+  "Percent ICS-LABA Persistence < 360": "Percent of ICS-LABA Persistence < 360",
+  "Total ICS-LABA High Steroid Usage": "Number of ICS-LABA High Steroid Usage",
+  "Percent ICS-LABA High Steroid Usage":
+    "Percent of ICS-LABA High Steroid Usage",
+  "Total ICS-LABA Exacerbations": "Number of ICS-LABA Exacerbation",
+  "Total ICS-LABA Exacerbation Failed Escalation":
+    "Number of ICS-LABA Exacerbation Failed Escalation",
+  "Percent ICS-LABA Exacerbation Failed Escalation":
+    "Percent of ICS-LABA Exacerbation Failed Escalation",
+  "Total ICS-LABA Escalation Delay": "Number of ICS-LABA Escalation Delay",
+  "Percent ICS-LABA Escalation Delay": "Percent of ICS-LABA Escalation Delay",
+  "Total ICS-LABA LAMA Patients": "Number of ICS-LABA LAMA Patients",
+  "Total ICS-LABA LAMA Compliance < 240":
+    "Number of ICS-LABA LAMA Compliance < 240",
+  "Percent ICS-LABA LAMA Compliance < 240":
+    "Percent of ICS-LABA LAMA Compliance < 240",
+  "Total ICS-LABA LAMA Persistence < 360":
+    "Number of ICS-LABA LAMA Persistence < 360",
+  "Percent ICS-LABA LAMA Persistence < 360":
+    "Percent of ICS-LABA LAMA Persistence < 360",
+  "Total ICS-LABA With LAMA": "Number of ICS-LABA Patients with LAMA",
+  "Percent ICS-LABA With LAMA": "Percent of ICS-LABA Patients with LAMA",
 };
 
 export const invertedMapLabels = {
@@ -367,8 +375,10 @@ export const invertedMapLabels = {
   "Number of ICS High Steroid Usage": "Total ICS High Steroid Usage",
   "Percent of ICS High Steroid Usage": "Percent ICS High Steroid Usage",
   "Number of ICS Exacerbation": "Total ICS Exacerbations",
-  "Number of ICS Exacerbation Failed Escalation": "Total ICS Exacerbation Failed Escalation",
-  "Percent of ICS Exacerbation Failed Escalation": "Percent ICS Exacerbation Failed Escalation",
+  "Number of ICS Exacerbation Failed Escalation":
+    "Total ICS Exacerbation Failed Escalation",
+  "Percent of ICS Exacerbation Failed Escalation":
+    "Percent ICS Exacerbation Failed Escalation",
   "Number of ICS Escalation Delay": "Total ICS Escalation Delay",
   "Percent of ICS Escalation Delay": "Percent ICS Escalation Delay",
   "Number of ICS-LABA Patients": "Total ICS-LABA Patients",
@@ -377,21 +387,27 @@ export const invertedMapLabels = {
   "Number of ICS-LABA Persistence < 360": "Total ICS-LABA Persistence < 360",
   "Percent of ICS-LABA Persistence < 360": "Percent ICS-LABA Persistence < 360",
   "Number of ICS-LABA High Steroid Usage": "Total ICS-LABA High Steroid Usage",
-  "Percent of ICS-LABA High Steroid Usage": "Percent ICS-LABA High Steroid Usage",
+  "Percent of ICS-LABA High Steroid Usage":
+    "Percent ICS-LABA High Steroid Usage",
   "Number of ICS-LABA Exacerbation": "Total ICS-LABA Exacerbations",
-  "Number of ICS-LABA Exacerbation Failed Escalation": "Total ICS-LABA Exacerbation Failed Escalation",
-  "Percent of ICS-LABA Exacerbation Failed Escalation": "Percent ICS-LABA Exacerbation Failed Escalation",
+  "Number of ICS-LABA Exacerbation Failed Escalation":
+    "Total ICS-LABA Exacerbation Failed Escalation",
+  "Percent of ICS-LABA Exacerbation Failed Escalation":
+    "Percent ICS-LABA Exacerbation Failed Escalation",
   "Number of ICS-LABA Escalation Delay": "Total ICS-LABA Escalation Delay",
   "Percent of ICS-LABA Escalation Delay": "Percent ICS-LABA Escalation Delay",
   "Number of ICS-LABA LAMA Patients": "Total ICS-LABA LAMA Patients",
-  "Number of ICS-LABA LAMA Compliance < 240": "Total ICS-LABA LAMA Compliance < 240",
-  "Percent of ICS-LABA LAMA Compliance < 240": "Percent ICS-LABA LAMA Compliance < 240",
-  "Number of ICS-LABA LAMA Persistence < 360": "Total ICS-LABA LAMA Persistence < 360",
-  "Percent of ICS-LABA LAMA Persistence < 360": "Percent ICS-LABA LAMA Persistence < 360",
+  "Number of ICS-LABA LAMA Compliance < 240":
+    "Total ICS-LABA LAMA Compliance < 240",
+  "Percent of ICS-LABA LAMA Compliance < 240":
+    "Percent ICS-LABA LAMA Compliance < 240",
+  "Number of ICS-LABA LAMA Persistence < 360":
+    "Total ICS-LABA LAMA Persistence < 360",
+  "Percent of ICS-LABA LAMA Persistence < 360":
+    "Percent ICS-LABA LAMA Persistence < 360",
   "Number of ICS-LABA Patients with LAMA": "Total ICS-LABA With LAMA",
-  "Percent of ICS-LABA Patients with LAMA": "Percent ICS-LABA With LAMA"  
+  "Percent of ICS-LABA Patients with LAMA": "Percent ICS-LABA With LAMA",
 };
-
 
 export const filterColors = {
   "Total Asthma Patients": "#5b0c0f",
@@ -431,15 +447,15 @@ export const filterColors = {
   "Total ICS-LABA LAMA Persistence < 360": "#05950f",
   "Percent ICS-LABA LAMA Persistence < 360": "#27d953",
   "Total ICS-LABA With LAMA": "#bddc13",
-  "Percent ICS-LABA With LAMA": "#82820d"
-}
+  "Percent ICS-LABA With LAMA": "#82820d",
+};
 
 export const mapBarCharts = {
   chart1: [
     "Total Asthma Patients",
     "Total No Spirometry",
     "Total No EOS Testing",
-    "Total No Treatment"
+    "Total No Treatment",
   ],
   chart2: ["Total Asthma Patients", "Total No Treatment"],
   chart3: [
@@ -449,7 +465,6 @@ export const mapBarCharts = {
     "Total ICS Escalation Delay",
     "Total ICS Persistence < 360",
     "Total ICS Compliance < 240",
-    
   ],
   chart4: [
     "Total ICS-LABA Patients",
@@ -458,14 +473,11 @@ export const mapBarCharts = {
     "Total ICS-LABA Escalation Delay",
     "Total ICS-LABA Persistence < 360",
     "Total ICS-LABA Compliance < 240",
-    
   ],
   chart5: [
     "Total ICS-LABA LAMA Patients",
     "Total ICS-LABA LAMA Persistence < 360",
     "Total ICS-LABA LAMA Compliance < 240",
-    'Total ICS-LABA With LAMA',
+    "Total ICS-LABA With LAMA",
   ],
 };
-
-

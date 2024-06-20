@@ -292,27 +292,39 @@ const Table = ({
   const firstRef = React.useRef(true);
 
   const handleToggleSelect = (val) => {
-    console.log(val);
-    if (firstRef.current) {
-      // selectedIds.map(item => item.to)
-      setSelectedIds(val);
-      setValue(val);
-    }
-    let headerName = selectedIds.map((item) => item.col.Header);
-
-    val.map((item) => {
-      !headerName.includes(item.col.Header) && item.col.toggleHidden();
+    allColumns.map((item) => {
+      if (selectionBtnsArray.includes(item.id)) {
+        if (item.isVisible) {
+          item.toggleHidden();
+        }
+        val.map((_item) => {
+          if (_item.value == item.Header) {
+            item.toggleHidden();
+          }
+        });
+      }
     });
-
-    firstRef.current = true;
-    let valHeaders = val.map((item) => item.col.Header);
-
-    selectedIds.map((item) => {
-      !valHeaders.includes(item.col.Header) && item.col.toggleHidden();
-    });
-    setSelectedIds(val);
-
     setValue(val);
+    // if (firstRef.current) {
+    //   // selectedIds.map(item => item.to)
+    //   setSelectedIds(val);
+    //   setValue(val);
+    // }
+    // let headerName = selectedIds.map((item) => item.col.Header);
+
+    // val.map((item) => {
+    //   !headerName.includes(item.col.Header) && item.col.toggleHidden();
+    // });
+
+    // firstRef.current = true;
+    // let valHeaders = val.map((item) => item.col.Header);
+
+    // selectedIds.map((item) => {
+    //   !valHeaders.includes(item.col.Header) && item.col.toggleHidden();
+    // });
+    // setSelectedIds(val);
+
+    // setValue(val);
   };
 
   useEffect(() => {
@@ -329,15 +341,13 @@ const Table = ({
             item.toggleHidden();
           }
           if (index == 2) {
-            console.log(item)
-            // if (!item.isSorted) {
-            //       handleSort(item) 
-            // }
-            setValue([{
-              col: item,
-              label: selectLabels[item.Header],
-              value: item.Header,
-            }])
+            setValue([
+              {
+                col: item,
+                label: selectLabels[item.Header],
+                value: item.Header,
+              },
+            ]);
           }
         });
     }
@@ -451,7 +461,7 @@ const Table = ({
                 if (!_newFilterValue.includes(item.id)) {
                   return;
                 }
-                console.log(item.id);
+
                 return (
                   <MinMaxSlider
                     handleValueChange={(min, max) =>
@@ -759,28 +769,31 @@ const Table = ({
 
 export default Table;
 
-export const customOptionRenderer = ({ checked, option, onClick }) => (
-  <div
-    onClick={onClick}
-    className={`flex items-center p-2 cursor-pointer ${
-      checked ? "bg-gray-200" : ""
-    }`}
-    style={{
-      fontWeight: 600,
-      color:
-        option.label == "Select All"
-          ? "#000"
-          : patientTotals.includes(option.label)
-          ? "#00008B"
-          : "#800000",
-    }}
-  >
-    <input
-      type="checkbox"
-      checked={checked}
-      onChange={() => {}}
-      className="mr-2"
-    />
-    {option.label}
-  </div>
-);
+export const customOptionRenderer = ({ checked, option, onClick }) => {
+
+  return (
+    <div
+      onClick={onClick}
+      className={`flex items-center p-2 cursor-pointer ${
+        checked ? "bg-gray-200" : ""
+      }`}
+      style={{
+        fontWeight: 600,
+        color:
+          option.label == "Select All"
+            ? "#000"
+            : patientTotals.includes(option.label)
+            ? "#00008B"
+            : "#800000",
+      }}
+    >
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={() => {}}
+        className="mr-2"
+      />
+      {option.label}
+    </div>
+  );
+};
