@@ -200,28 +200,28 @@ const BarChartPopup = ({ data1 }) => {
         <div>
           <BarChart
             label={`Diagnosis and Investigation`}
-            height={80}
+            height={100}
             data={data1.mapValue1}
           />
         </div>
         <div>
           <BarChart
             label={`Treatment (ICS or beta-agonist)`}
-            height={80}
+            height={100}
             data={data1.mapValue3}
           />
         </div>
         <div>
           <BarChart
             label={`Treatment (ICS-LABA)`}
-            height={80}
+            height={100}
             data={data1.mapValue4}
           />
         </div>
         <div>
           <BarChart
             label={`Treatment (ICS-LABA-LAMA)`}
-            height={80}
+            height={100}
             data={data1.mapValue5}
           />
         </div>

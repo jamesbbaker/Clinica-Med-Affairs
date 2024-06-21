@@ -93,7 +93,7 @@ const PayerVariation = () => {
   const { accessToken, refreshToken } = useContext(AuthContext);
 
   const handleTreeData = (data, toggleFilter, page) => {
-    console.log(data)
+
     let _treeData = [
       [
         "Region",
@@ -103,28 +103,32 @@ const PayerVariation = () => {
       ],
       ["Global", null, 0, 0],
     ];
-    console.log(data)
+
+    let sizeValue =  {}
 
     Object.keys(data).forEach(item => {
-       
         let newItem = []
         let collectiveSize = 0
         let collectiveFilter = 0
-        // data[item].map(_payerItem => {
-        //     console.log(_payerItem)
-        //     newItem.push([data[_payerItem["Plan Name"]], _payerItem,_payerItem["Number of ICS-LABA Patients"], _payerItem[toggleFilter] ])
-        //     collectiveSize+=_payerItem["Number of ICS-LABA Patients"]
-        //     collectiveFilter+=_payerItem[toggleFilter] 
-        // })
+        data[item].map(_payerItem => {
+           
+            newItem.push([`${_payerItem["Plan Name"]}_${item}`, item,_payerItem["Number of ICS-LABA Patients"], _payerItem[toggleFilter] ])
+            collectiveSize+=_payerItem["Number of ICS-LABA Patients"]
+            collectiveFilter+=_payerItem[toggleFilter] 
+        })
+        _treeData.push(...newItem)
+      
+        sizeValue[item["Number of ICS-LABA Patients"] + "_" + item[toggleFilter]] = item
         _treeData.push([
             `${item}`,
             `Global`,
-            item["Number of ICS-LABA Patients"],
-            item[toggleFilter],
+            collectiveSize,
+            collectiveFilter,
           ]);
+        //   console.log(_treeData)
     })
-    console.log(_treeData)
-    // setSizeValueMap(sizeValue);
+    // console.log(_treeData)
+    setSizeValueMap(sizeValue);
     setTreeData(JSON.parse(JSON.stringify(_treeData)));
   };
 
@@ -225,72 +229,8 @@ const PayerVariation = () => {
     <div className="w-full flex flex-col gap-4">
       {TreeData ? (
         <>
-          <div className="flex flex-col w-full justify-between items-start">
-            <div className="flex mb-6 items-center gap-8">
-              <CustomDropdown
-                showColors
-                labelClassName="mb-0"
-                className={"flex items-center"}
-                input={{
-                  label: "Select Unmet Needs",
-                  id: "unmet",
-                  options: filters.map((item) => ({
-                    name: selectLabels[item],
-                    value: item,
-                  })),
-                }}
-                handleSelect={(e) => handleToggleFilter(e)}
-                value={toggleFilter}
-              />
-            </div>
-            <div className="flex items-center justify-between w-full">
-              <div className="flex items-center gap-4">
-                <div className="font-[600] text-[18px]">Filters:</div>
-                {regionOptions && (
-                  <div className="flex items-center gap-2">
-                    <label className="block text-sm font-medium text-gray-900 dark:text-white">
-                      Region Select
-                    </label>
-                    <MultiSelect
-                      labelledBy=""
-                      options={regionOptions.map((item) => ({
-                        label: item,
-                        value: item,
-                      }))}
-                      className="w-[10rem] z-[5]"
-                      value={region || []}
-                      onChange={(val) => handleToggleSelect(val, "region")}
-                    />
-                  </div>
-                )}
-                {specialityOptions && (
-                  <div className="flex items-center gap-2">
-                    <label className="block text-sm font-medium text-gray-900 dark:text-white">
-                      Primary Select
-                    </label>
-                    <MultiSelect
-                      labelledBy=""
-                      options={specialityOptions.map((item) => ({
-                        label: item,
-                        value: item,
-                      }))}
-                      className="w-[20rem] z-[5]"
-                      value={selectedSpeciality || []}
-                      onChange={(val) => handleToggleSelect(val, "primary")}
-                    />
-                  </div>
-                )}
-              </div>
-              <button
-                onClick={handleApplyFilter}
-                className="border border-[#000] px-4 py-2 rounded-xs"
-              >
-                Apply Filters
-              </button>
-            </div>
-          </div>
+    
           <TreeMap
-            preventDrill={true}
             data={TreeData}
             options={toggleFilter == filters[0] ? options1 : options2}
             handleOpen={handleOpen}

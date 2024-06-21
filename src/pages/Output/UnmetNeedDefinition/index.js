@@ -7,7 +7,7 @@ import { generateStatsOptions, setLineData } from "../../../utils/ChartUtils";
 import { LineChart } from "../../../components/LineChart";
 import BarChart from "../../../components/BarChart";
 import Table from "../../../components/Table";
-import { unmetLabels } from "../../../constants/appConstants";
+import { selectLabels, unmetLabels } from "../../../constants/appConstants";
 
 const UnmetNeedDefinitionData = {
   id1: {
@@ -389,7 +389,7 @@ const UnmetNeedDefinition = () => {
         x: {
           title: {
             display: true,
-            text: "Number of distinct OCS bursts in year on treatment",
+            text: "Number of distinct OCS prescriptions in year on treatment",
           },
           grid: {
             display: false, // Turn off grid lines for x-axis
@@ -836,8 +836,8 @@ const UnmetNeedDefinition = () => {
     setStatsData21(null);
     setStatsData22(null);
     setStatsData23(null);
-    setStatsData24(null)
-    setStatsData25(null)
+    setStatsData24(null);
+    setStatsData25(null);
     setModalId(null);
   };
 
@@ -930,13 +930,19 @@ const UnmetNeedDefinition = () => {
   }
 
   function getBarChart(res, type1, type2, sortFn) {
-
+   
     let responseData = res.data;
     if (sortFn) {
       responseData = sortFn(res.data);
     } else {
       responseData.sort((a, b) => a[type1] - b[type1]);
     }
+    let zeroIndex = responseData[0][type2]
+
+    if (zeroIndex ==0) {
+      responseData.shift()
+    }
+    
 
     let _data = {
       labels: responseData.map((item) => item[type1]),
@@ -966,9 +972,12 @@ const UnmetNeedDefinition = () => {
 
   const handleClick = (key) => {
     if (nationalData) {
+     
       setModalId(key);
       setDataValue({
-        id: nationalData[unmetLabels[UnmetNeedDefinitionData[key].buttonText].id],
+        id: nationalData[
+          unmetLabels[UnmetNeedDefinitionData[key].buttonText].id
+        ],
         percent:
           nationalData[
             unmetLabels[UnmetNeedDefinitionData[key].buttonText].percent
@@ -999,15 +1008,12 @@ const UnmetNeedDefinition = () => {
         .catch((Err) => {
           console.log(Err);
         });
-      getDataStats(
-        "ics_patient_ocs_num_encounters",
-        accessToken,
-        refreshToken
-      )
+      getDataStats("ics_patient_ocs_num_encounters", accessToken, refreshToken)
         .then((res) => {
           let _data = getBarChart(res, res.headers[0], res.headers[1]);
+          
 
-            setStatsData24(_data);
+          setStatsData24(_data);
         })
         .catch((err) => {
           console.log(err);
@@ -1044,7 +1050,7 @@ const UnmetNeedDefinition = () => {
         .then((res) => {
           let _data = getBarChart(res, res.headers[0], res.headers[1]);
 
-            setStatsData25(_data);
+          setStatsData25(_data);
         })
         .catch((err) => {
           console.log(err);
@@ -1758,7 +1764,8 @@ const UnmetNeedDefinition = () => {
               {statsData24 && (
                 <>
                   <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Number of patients by distinct OCS bursts in year on treatment (Single)
+                    Number of patients by distinct OCS prescriptions in year on
+                    treatment (Single)
                   </div>
                   <BarChart
                     height={window.innerWidth > 1400 ? 120 : 80}
@@ -1767,10 +1774,11 @@ const UnmetNeedDefinition = () => {
                   />
                 </>
               )}
-               {statsData25 && (
+              {statsData25 && (
                 <>
                   <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Number of patients by distinct OCS bursts in year on treatment (Double)
+                    Number of patients by distinct OCS prescriptions in year on
+                    treatment (Double)
                   </div>
                   <BarChart
                     height={window.innerWidth > 1400 ? 120 : 80}
@@ -1780,6 +1788,82 @@ const UnmetNeedDefinition = () => {
                 </>
               )}
             </div>
+            {dataValue && (modalId =="id18") &&  (
+              <div className="flex py-4 flex-col mb-2 items-start w-full">
+                <div>
+                  {selectLabels["Number of ICS-LABA >900mg/year steroids"]}:{" "}
+                  <strong>
+                    {nationalData["Number of ICS-LABA >900mg/year steroids"]}
+                  </strong>
+                </div>
+                <div>
+                  {selectLabels["Percent of ICS-LABA >900mg/year steroids"]}:{" "}
+                  <strong>
+                    {nationalData["Percent of ICS-LABA >900mg/year steroids"].toFixed(2)}%
+                  </strong>
+                </div>
+                <div>
+                  {
+                    selectLabels[
+                      "Number of ICS-LABA High Steroid Usage with ER visit"
+                    ]
+                  }
+                  :{" "}
+                  <strong>
+                    {
+                      nationalData[
+                        "Number of ICS-LABA High Steroid Usage with ER visit"
+                      ]
+                    }
+                  </strong>
+                </div>
+                <div>
+                  {
+                    selectLabels[
+                      "Percent of ICS-LABA High Steroid Usage with ER visit"
+                    ]
+                  }
+                  :{" "}
+                  <strong>
+                    {
+                      nationalData[
+                        "Percent of ICS-LABA High Steroid Usage with ER visit"
+                      ].toFixed(2)
+                    }%
+                  </strong>
+                </div>
+                <div>
+                  {
+                    selectLabels[
+                      "Number of ICS-LABA High Steroid Usage without ER visit"
+                    ]
+                  }
+                  :{" "}
+                  <strong>
+                    {
+                      nationalData[
+                        "Number of ICS-LABA High Steroid Usage without ER visit"
+                      ]
+                    }
+                  </strong>
+                </div>
+                <div>
+                  {
+                    selectLabels[
+                      "Percent of ICS-LABA High Steroid Usage without ER visit"
+                    ]
+                  }
+                  :{" "}
+                  <strong>
+                    {
+                      nationalData[
+                        "Percent of ICS-LABA High Steroid Usage without ER visit"
+                      ].toFixed(2)
+                    }%
+                  </strong>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </Popup>
