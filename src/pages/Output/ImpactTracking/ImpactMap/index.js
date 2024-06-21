@@ -132,10 +132,10 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
   const [tableUnmetNeed, setTableUnmetNeed] = useState([
     { label: filterOptions[0], value: filterOptions[0] },
   ]);
-  const [period1, setPeriod1] = useState("2023-10-01");
-  const [period2, setPeriod2] = useState("2023-07-01");
-  const [tablePeriod1, setTablePeriod1] = useState("2023-10-01");
-  const [tablePerioid2, setTablePeriod2] = useState("2023-07-01");
+  const [period1, setPeriod1] = useState("2023-07-01");
+  const [period2, setPeriod2] = useState("2023-10-01");
+  const [tablePeriod1, setTablePeriod1] = useState("2023-07-01");
+  const [tablePerioid2, setTablePeriod2] = useState("2023-10-01");
   const [tableData, setTableData] = useState(null);
   const [region, setRegion] = useState(null);
   const [hoverInfo, setHoverInfo] = useState(null);
@@ -264,7 +264,7 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
         period2,
         unmetNeed
       );
-      if (map &&  map.getSource("regions")) {
+      if (map && map.getSource("regions")) {
         map.getSource("regions").setData(updatedRegionsGeoJSON);
         let minVal = getMinValue(updatedRegionsGeoJSON);
         let maxVal = getMaxValue(updatedRegionsGeoJSON);
@@ -605,37 +605,45 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
           }
           filteredCountries.forEach((feature) => {
             if (feature.geometry.type === "Polygon") {
-                feature.geometry.coordinates.forEach((ring) => {
-                    ring.forEach((coord) => {
-                        if (Array.isArray(coord) && coord.length === 2 && !isNaN(coord[0]) && !isNaN(coord[1])) {
-                            bounds.extend(coord);
-                        }
-                    });
+              feature.geometry.coordinates.forEach((ring) => {
+                ring.forEach((coord) => {
+                  if (
+                    Array.isArray(coord) &&
+                    coord.length === 2 &&
+                    !isNaN(coord[0]) &&
+                    !isNaN(coord[1])
+                  ) {
+                    bounds.extend(coord);
+                  }
                 });
+              });
             } else if (feature.geometry.type === "MultiPolygon") {
-                feature.geometry.coordinates.forEach((polygon) => {
-                    polygon.forEach((ring) => {
-                        ring.forEach((coord) => {
-                            if (Array.isArray(coord) && coord.length === 2 && !isNaN(coord[0]) && !isNaN(coord[1])) {
-                                bounds.extend(coord);
-                            }
-                        });
-                    });
+              feature.geometry.coordinates.forEach((polygon) => {
+                polygon.forEach((ring) => {
+                  ring.forEach((coord) => {
+                    if (
+                      Array.isArray(coord) &&
+                      coord.length === 2 &&
+                      !isNaN(coord[0]) &&
+                      !isNaN(coord[1])
+                    ) {
+                      bounds.extend(coord);
+                    }
+                  });
                 });
+              });
             }
-        });
+          });
 
           if (bounds.isEmpty()) {
-            console.error('Bounds are not valid');
+            console.error("Bounds are not valid");
             return;
-        }
+          }
 
           map.fitBounds(bounds, { padding: 0, maxZoom: 5 });
 
-       
-            // // Optionally, center the map if not centered correctly
-            // map.setCenter(bounds.getCenter());
-
+          // // Optionally, center the map if not centered correctly
+          // map.setCenter(bounds.getCenter());
         });
 
         // Hover info for countries
@@ -866,7 +874,7 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
                 Select Unmet Need
               </label>
               <MultiSelect
-              ItemRenderer={customOptionRenderer}
+                ItemRenderer={customOptionRenderer}
                 labelledBy=""
                 options={filterOptions.map((item) => ({
                   label: selectLabels[item] ? selectLabels[item] : item,
@@ -914,11 +922,11 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
               />
             </div>
             <button
-          onClick={handleReset}
-          className="flex px-2 py-2 rounded-sm border"
-        >
-          Reset Table
-        </button>
+              onClick={handleReset}
+              className="flex px-2 py-2 rounded-sm border"
+            >
+              Reset Table
+            </button>
             <Table
               initialState={{
                 pageSize: 10,

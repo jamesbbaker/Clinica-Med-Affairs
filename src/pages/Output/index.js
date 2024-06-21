@@ -12,6 +12,7 @@ import EligiblePatientLocator from "./EligiblePatientLocator";
 import PatientOpportunityMapping from "./PatientOpportunityMapping";
 import HcpInsight from "./HcpInsights";
 import MedicalAffairToolbox from "./MedicalAffairsToolbox";
+import PayerVariation from "./PayerVariation";
 
 
 
@@ -31,6 +32,7 @@ const Output = () => {
       {currentMenu === APP_ROUTES.data_quality && <DataQuality />}
       {currentMenu === APP_ROUTES.hcp_insights && <HcpInsight />}
       {currentMenu === APP_ROUTES.eligible_patient_locator && <EligiblePatientLocator />}
+      {currentMenu === APP_ROUTES.payer_variation && <PayerVariation />}
       {currentMenu === APP_ROUTES.institutional_variation && (
         <InstitutionalVariation />
       )}

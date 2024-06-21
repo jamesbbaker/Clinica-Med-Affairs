@@ -930,6 +930,7 @@ const UnmetNeedDefinition = () => {
   }
 
   function getBarChart(res, type1, type2, sortFn) {
+
     let responseData = res.data;
     if (sortFn) {
       responseData = sortFn(res.data);
@@ -964,14 +965,16 @@ const UnmetNeedDefinition = () => {
   }
 
   const handleClick = (key) => {
-    setModalId(key);
-    setDataValue({
-      id: nationalData[unmetLabels[UnmetNeedDefinitionData[key].buttonText].id],
-      percent:
-        nationalData[
-          unmetLabels[UnmetNeedDefinitionData[key].buttonText].percent
-        ],
-    });
+    if (nationalData) {
+      setModalId(key);
+      setDataValue({
+        id: nationalData[unmetLabels[UnmetNeedDefinitionData[key].buttonText].id],
+        percent:
+          nationalData[
+            unmetLabels[UnmetNeedDefinitionData[key].buttonText].percent
+          ],
+      });
+    }
 
     if (UnmetNeedDefinitionData[key].id == "id17") {
       getDataStats(

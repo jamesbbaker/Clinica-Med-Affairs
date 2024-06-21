@@ -13,6 +13,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   grid-template-columns: 1fr 5fr;
+  overflow-x: hidden;
   grid-template-areas: 
     "header  header"
     "sidebar content";

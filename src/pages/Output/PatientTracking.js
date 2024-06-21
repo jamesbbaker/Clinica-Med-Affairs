@@ -25,25 +25,21 @@ const PatientTracking = () => {
     getDataStats("hcp_correlation_matrix", accessToken, refreshToken)
       .then((res) => {
         if (res) {
+          console.log(res)
           let _res = [];
           let newRes = []
           Object.keys(selectLabels).map((item) =>
             {
               if (res.hasOwnProperty(item)) {
-                let newObj = {}
-                Object.keys(selectLabels).map(_item => {
-                  if (res[item].hasOwnProperty(_item)) {
-                    newObj[_item] = res[item][_item]
-                  }
-                })
-                newRes.push(newObj)
+                newRes.push(res[item])
               }
             }
           );     
-          newRes.map((item) =>
-            _res.push(Object.keys(item).map((key) => item[key]))
-          );
-          setStatsData1(_res);
+          // newRes.map((item) =>
+          //   _res.push(Object.keys(item).map((key) => item[key]))
+          // );
+          console.log(newRes)
+          setStatsData1(newRes);
           setLabels({
             xLabels: Object.keys(selectLabels).filter(item => res.hasOwnProperty(item)).map((item) =>  selectLabels[item]),
             yLabels:  Object.keys(selectLabels).filter(item => res.hasOwnProperty(item)).map((item) =>  selectLabels[item]),
