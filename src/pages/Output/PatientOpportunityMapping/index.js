@@ -530,28 +530,28 @@ const PatientOpportunityMapping = () => {
               <div className="w-[50%]">
                 <BarChart
                   label={`Diagnosis and Investigation (N = ${formatNumber(data1.mapValue1.datasets[0].data[0])})`}
-                  height={80}
+                  height={100}
                   data={data1.mapValue1}
                 />
               </div>
               <div className="w-[50%]">
                 <BarChart
                   label={`Treatment (ICS or beta-agonist) (N = ${formatNumber(data1.mapValue3.datasets[0].data[0])})`}
-                  height={80}
+                  height={100}
                   data={data1.mapValue3}
                 />
               </div>
               <div className="w-[50%]">
                 <BarChart
                   label={`Treatment (ICS-LABA) (N = ${formatNumber(data1.mapValue4.datasets[0].data[0])})`}
-                  height={80}
+                  height={100}
                   data={data1.mapValue4}
                 />
               </div>
               <div className="w-[50%]">
                 <BarChart
                   label={`Treatment (ICS-LABA-LAMA) (N = ${formatNumber(data1.mapValue5.datasets[0].data[0])})`}
-                  height={80}
+                  height={100}
                   data={data1.mapValue5}
                 />
               </div>
