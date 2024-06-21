@@ -198,6 +198,18 @@ const levelToggles = {
       "Percent ICS-LABA LAMA Persistence < 360",
     "Number of ICS-LABA Patients with LAMA": "Total ICS-LABA With LAMA",
     "Percent of ICS-LABA Patients with LAMA": "Percent ICS-LABA With LAMA",
+    "Number of ICS-LABA >900mg/year steroids":
+    "Number of ICS-LABA >900mg/year steroids",
+  "Percent of ICS-LABA >900mg/year steroids":
+    "Percent of ICS-LABA >900mg/year steroids",
+  "Number of ICS-LABA High Steroid Usage with ER visit":
+    "Number of ICS-LABA High Steroid Usage with ER visit",
+  "Percent of ICS-LABA High Steroid Usage with ER visit":
+    "Percent of ICS-LABA High Steroid Usage with ER visit",
+  "Number of ICS-LABA High Steroid Usage without ER visit":
+    "Number of ICS-LABA High Steroid Usage without ER visit",
+  "Percent of ICS-LABA High Steroid Usage without ER visit":
+    "Percent of ICS-LABA High Steroid Usage without ER visit",
   },
   state: {
     "Number of Asthma Patients": "Total Asthma Patients",
@@ -239,6 +251,18 @@ const levelToggles = {
     "Number of ICS-LABA Escalation Delay": "Total ICS-LABA Escalation Delay",
     "Percent of ICS-LABA Escalation Delay": "Percent ICS-LABA Escalation Delay",
     "Number of ICS-LABA LAMA Patients": "Total ICS-LABA LAMA Patients",
+    "Number of ICS-LABA >900mg/year steroids":
+    "Number of ICS-LABA >900mg/year steroids",
+  "Percent of ICS-LABA >900mg/year steroids":
+    "Percent of ICS-LABA >900mg/year steroids",
+  "Number of ICS-LABA High Steroid Usage with ER visit":
+    "Number of ICS-LABA High Steroid Usage with ER visit",
+  "Percent of ICS-LABA High Steroid Usage with ER visit":
+    "Percent of ICS-LABA High Steroid Usage with ER visit",
+  "Number of ICS-LABA High Steroid Usage without ER visit":
+    "Number of ICS-LABA High Steroid Usage without ER visit",
+  "Percent of ICS-LABA High Steroid Usage without ER visit":
+    "Percent of ICS-LABA High Steroid Usage without ER visit",
     "Number of ICS-LABA LAMA Compliance < 240":
       "Total ICS-LABA LAMA Compliance < 240",
     "Percent of ICS-LABA LAMA Compliance < 240":

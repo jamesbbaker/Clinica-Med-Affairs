@@ -183,8 +183,8 @@ export default function Index() {
             {/* Content */}
             <div className="max-w-xl h-[200vh] md:max-w-none md:w-full mx-auto">
               <div  id={`solution-wrapper`} className="mb-8 overflow-hidden md:mb-0">
-                {SolutionsList.map(item => {
-                  return <div  id={`solution-${item.id}`} className="grid min-w-[50%] grid-cols-2 gap-10 mb-10"><a
+                {SolutionsList.map((item, index) => {
+                  return <div  key={index} id={`solution-${item.id}`} className="grid min-w-[50%] grid-cols-2 gap-10 mb-10"><a
                   className={`flex flex-col-reverse justify-between md:flex-row items-center  md:h-[10rem] text-lg p-5 rounded border transition duration-300 ease-in-out `}
                   href="#0"
                 >

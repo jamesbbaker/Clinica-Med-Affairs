@@ -59,22 +59,28 @@ export const menuList = [
         icon: () => <AiOutlineProject />,
       },
       {
+        name: APP_ROUTES_LABEL.payer_variation,
+        id: APP_ROUTES.payer_variation,
+        route: `${APP_ROUTES.outputs}/${APP_ROUTES.payer_variation}`,
+        icon: () => <AiOutlineProject />,
+      },
+      {
         name: APP_ROUTES_LABEL.medical_affair_toolbox,
         id: APP_ROUTES.medical_affair_toolbox,
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.medical_affair_toolbox}`,
         icon: () => <AiOutlineDotChart />,
       },
       {
-        name: APP_ROUTES_LABEL.patient_journey,
-        id: APP_ROUTES.patient_journey,
-        route: `${APP_ROUTES.outputs}/${APP_ROUTES.patient_journey}`,
-        icon: () => <AiOutlineRise />,
-      },
-      {
         name: APP_ROUTES_LABEL.impact_tracking,
         id: APP_ROUTES.impact_tracking,
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.impact_tracking}`,
         icon: () => <AiOutlineFundProjectionScreen />,
+      },
+      {
+        name: APP_ROUTES_LABEL.patient_journey,
+        id: APP_ROUTES.patient_journey,
+        route: `${APP_ROUTES.outputs}/${APP_ROUTES.patient_journey}`,
+        icon: () => <AiOutlineRise />,
       },
       {
         name: APP_ROUTES_LABEL.data_quality,
@@ -159,6 +165,7 @@ const Sidebar = () => {
                       user.page_view &&
                       subItem.id !== APP_ROUTES.hcp_insights &&
                         subItem.id !== APP_ROUTES.medical_affair_toolbox &&
+                        subItem.id !== APP_ROUTES.payer_variation &&
                       !user.page_view.includes(subItem.id)
                     ) {
                       return false;
@@ -173,7 +180,7 @@ const Sidebar = () => {
                     return (
                       <div
                         key={`menu-subitem-${index}`}
-                        style={{ fontSize: "0.75rem" }}
+                        style={{ fontSize: "0.75rem",marginTop: subItem.id ==  APP_ROUTES.patient_journey ? "0.75rem" : 0 }}
                         onClick={() => handleClick(subItem)}
                         className={`${
                           currentMenu !== subItem.id && "text-slate-50"
@@ -181,11 +188,12 @@ const Sidebar = () => {
                           currentMenu === subItem.id
                             ? "bg-slate-50"
                             : "hover:bg-slate-200 hover:bg-opacity-40 "
-                        } flex cursor-pointer rounded-md transition-all ease-in-out duration-200 px-2 py-2 font-semibold items-center gap-2  w-full text-left`}
+                        } flex cursor-pointer relative rounded-md transition-all ease-in-out duration-200 px-2 py-2 font-semibold items-center gap-2  w-full text-left`}
                       >
                         <div className="w-full md:w-auto grid place-content-center">
                           <subItem.icon />
                         </div>
+                        {subItem.id ==  APP_ROUTES.patient_journey && <div className="absolute rounded-[20px] left-0 h-[0.25rem] w-[100%] -top-[0.5rem] bg-[#c4c4c4]"></div>}
                         <div className="w-full hidden md:block">
                           {subItem.name}
                         </div>

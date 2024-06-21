@@ -339,6 +339,8 @@ const EligiblePatientLocator = () => {
       page_size: size,
     };
 
+   
+
     // Concatenate additional parameters (filter out undefined values)
     const urlParams = Object.entries(additionalParams)
       .filter(
@@ -351,6 +353,8 @@ const EligiblePatientLocator = () => {
     const finalUrl = `${queryString}${
       urlParams.length > 0 ? "&" : ""
     }${urlParams}`;
+
+    console.log(finalUrl)
 
     getDataStats(finalUrl, accessToken, refreshToken)
       .then((res) => {

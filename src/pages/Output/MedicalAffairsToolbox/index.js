@@ -235,6 +235,7 @@ const MedicalAffairToolbox = () => {
       },
     });
 
+    console.log(id, val)
     let labelValue = {
       xLabel: id == "xLabel" ? val : state.xLabel,
       yLabel: id == "yLabel" ? val : state.yLabel,

@@ -31,6 +31,7 @@ const getMinValue = (data, label) => {
 };
 
 const getMaxValue = (data, label) => {
+ 
   let minValue = 0;
   data.map((item) => {
     if (parseFloat(item[label]) > minValue) {
@@ -48,18 +49,31 @@ function calculatePercentage(value, minValue, maxValue) {
   if (minValue === maxValue) {
     throw new Error("minValue and maxValue cannot be the same");
   }
+  if (minValue < 0) {
+    console.log((Math.abs(value) / Math.abs(minValue)) * 100, minValue, value);
+  }
   return ((value - minValue) / (maxValue - minValue)) * 100;
+}
+
+function normalizeValue(value, minValue, maxValue) {
+  if (maxValue === minValue) {
+    return 0.5;
+  }
+
+  if (value < 0) {
+    // Normalize negative values to [0, 0.5]
+    return (0.5 * (value - minValue)) / Math.abs(minValue);
+  } else {
+    // Normalize positive values to [0.5, 1]
+    return 0.5 + 0.5 * (value / maxValue);
+  }
 }
 
 // Function to interpolate color
 function interpolateColor(value, minValue, midValue, maxValue) {
-  if (maxValue == 0) {
-    maxValue = 1;
-  }
-  let percentage = calculatePercentage(value, minValue, maxValue);
-  let _value = percentage / 100;
-  let colro = colormap(_value);
-  return colormap(_value);
+  
+  let normalizedValue = normalizeValue(value, minValue, maxValue);
+  return colormap(normalizedValue);
 }
 const BarChartOptions = {
   indexAxis: "y",
@@ -263,14 +277,7 @@ const Table = ({
 
   const handleApplyFilters = () => {
     // if (icsNumber.max > 0 || steroidPercent.max > 0 || speciality) {
-    handleFilter(
-      icsNumber,
-      steroidPercent,
-      speciality,
-      region,
-      stateName,
-      organisation
-    );
+    handleFilter(speciality, region, stateName, organisation);
     // }
   };
 
@@ -589,6 +596,7 @@ const Table = ({
                     cell.render("Cell").props.data,
                     invertedMapLabels[_header]
                   );
+           
                   let currentValue = parseFloat(cellValue);
                   let midValue = (maxValue - Math.abs(minValue)) / 2;
                   let background = colorCells
@@ -608,7 +616,10 @@ const Table = ({
                       key={index}
                       {...cell.getCellProps()}
                     >
-                      {typeof cellValue === "number"
+                      {colorCells &&
+                     Object.values(selectLabels).includes(_header)
+                        ? `${(cellValue * 100).toFixed(1)}%`
+                        : typeof cellValue === "number"
                         ? cell.render("Cell").props &&
                           cell.render("Cell").props.column.Header &&
                           cell
@@ -616,7 +627,7 @@ const Table = ({
                             .props.column.Header.includes("Percent")
                           ? `${cellValue}%`
                           : cellValue.toLocaleString()
-                        : cell.render("Cell")}{" "}
+                        : cell.render("Cell")}
                     </td>
                   );
                 })}
@@ -770,7 +781,6 @@ const Table = ({
 export default Table;
 
 export const customOptionRenderer = ({ checked, option, onClick }) => {
-
   return (
     <div
       onClick={onClick}
