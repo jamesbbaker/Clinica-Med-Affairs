@@ -172,7 +172,9 @@ const BarChartOptions = {
 };
 
 const TreeMap = ({
+  values,
   chartEvents,
+  payerTable=false,
   preventDrill = false,
   needCallbacks = true,
   options = defaultOptions,
@@ -183,7 +185,7 @@ const TreeMap = ({
 
   const [barChartConfig, setBarChartConfig] = useState(null);
   const handleClick = (row, value, data) => {
-   
+    
     if(preventDrill) {
       handleOpen(row, value, data);
       return
@@ -215,8 +217,13 @@ const TreeMap = ({
     console.log("first");
   };
 
+
   return (
-    <div>
+    <div className="relative">
+      {/* {values && <div className="flex absolute justify-between -top-5 w-[32%] right-[2%]">
+        <div>{values.min}</div>
+        <div>{values.max}</div>
+        </div>} */}
       <Chart
         chartType="TreeMap"
         width="100%"

@@ -2,6 +2,10 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import TreeMap from "../../../components/TreeMap";
 import {
   EPL_TABLE_COLUMNS,
+  mapBarCharts,
+  mapLabels,
+  mapSelectLabels,
+  patientTotals,
   selectLabels,
 } from "../../../constants/appConstants";
 import { removeOrAddColumn } from "../../../utils/MapUtils";
@@ -10,18 +14,24 @@ import { AuthContext } from "../../../context/AuthContext";
 import { MultiSelect } from "react-multi-select-component";
 import Popup from "reactjs-popup";
 import CustomDropdown from "../../../components/CustomDropdown";
+import BarChartPopup from "../PatientOpportunityMapping/Popup";
+import { getLowestValue, highestValue } from "../../../utils/MathUtils";
 
 const filters = [...Object.keys(selectLabels)];
 
 const PayerVariation = () => {
   const [TreeData, setTreeData] = useState(null);
-  const [specialityOptions, setSpecialityOptions] = useState(null);
-  const [selectedSpeciality, setSelectedSpeciality] = useState(null);
-  const [regionOptions, setRegionOptions] = useState(null);
-  const [region, setRegion] = useState(null);
+
   const [rawData, setRawData] = useState(null);
   const [toggleFilter, setToggleFilter] = useState(filters[0]);
+  const [values, setValues] = useState({
+    min: 0,
+    max: 0
+  })
+  const [treeDataById, setTreeDataById] = useState({});
+  const [data1, setData1] = useState(null)
   const [showModal, setShowModal] = useState(false);
+  const [loading , setLoading] = useState(false)
   const [modalDetails, setModalDetails] = useState({});
   const [sizeValueMap, setSizeValueMap] = useState({});
   const options1 = {
@@ -39,28 +49,21 @@ const PayerVariation = () => {
       textAlign: "center",
     },
     useWeightedAverageForAggregation: true,
-    showScale: false,
+    showScale: true,
     generateTooltip: (_row, _size, value) => {
-      let hcpValue = sizeValueMap[
-        TreeData[_row + 1][2] + "_" + TreeData[_row + 1][3]
-      ] || {
-        "First Name": "",
-        "Last Name": "",
-        "Number of ICS-LABA Patients": 0,
-        toggleFilter: 0,
-      };
+    
+      let hcpValue = TreeData[_row + 1]
 
       return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
-    <div><strong>NAME</strong>:  ${hcpValue["Assigned Physician Name"]}</div>
-    <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue["Number of ICS-LABA Patients"]}</div>
-    <div><strong>${selectLabels[toggleFilter]}</strong>:  ${hcpValue[toggleFilter]}</div>
+    <div><strong>NAME</strong>:  ${hcpValue[0]}</div>
+    <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue[2]}</div>
+    <div><strong>${selectLabels[toggleFilter]}</strong>:  ${hcpValue[3]}</div>
      </div>`;
     },
   };
   const options2 = {
     minColor: "#00FF00",
     midColor: "#FFA500",
-
     maxColor: "#FF0000",
     headerHeight: 15,
     fontColor: "black",
@@ -69,21 +72,15 @@ const PayerVariation = () => {
       color: "#888",
       textAlign: "center",
     },
-    //  rawData[_row - 1 - Math.floor(rawData.length/100)]
-    showScale: false,
+    showScale: true,
     generateTooltip: (_row, _size, value) => {
-      let hcpValue = sizeValueMap[
-        TreeData[_row + 1][2] + "_" + TreeData[_row + 1][3]
-      ] || {
-        "First Name": "",
-        "Last Name": "",
-        "Number of ICS-LABA Patients": 0,
-        toggleFilter: 0,
-      };
+    
+      let hcpValue = TreeData[_row + 1]
+
       return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
-    <div><strong>NAME</strong>:  ${hcpValue["Assigned Physician Name"]}</div>
-    <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue["Number of ICS-LABA Patients"]}</div>
-    <div><strong>${selectLabels[toggleFilter]}</strong>:  ${hcpValue[toggleFilter]}</div>
+    <div><strong>NAME</strong>:  ${hcpValue[0]}</div>
+    <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue[2]}</div>
+    <div><strong>${selectLabels[toggleFilter]}</strong>:  ${hcpValue[3]}</div>
      </div>`;
     },
   };
@@ -93,44 +90,33 @@ const PayerVariation = () => {
   const { accessToken, refreshToken } = useContext(AuthContext);
 
   const handleTreeData = (data, toggleFilter, page) => {
+    if (data) {
+      let treemapData = [
+        [
+          "Region",
+          "Parent",
+          "Number of ICS-LABA Patients (size)",
+          "Number of Severe Exacerbations (color)",
+        ],
+        ["PAYER", null, 0, 0],
+      ];
+      let newObj = {};
 
-    let _treeData = [
-      [
-        "Region",
-        "Parent",
-        "Number of ICS-LABA Patients (size)",
-        "Number of Severe Exacerbations (color)",
-      ],
-      ["Global", null, 0, 0],
-    ];
-
-    let sizeValue =  {}
-
-    Object.keys(data).forEach(item => {
-        let newItem = []
-        let collectiveSize = 0
-        let collectiveFilter = 0
-        data[item].map(_payerItem => {
-           
-            newItem.push([`${_payerItem["Plan Name"]}_${item}`, item,_payerItem["Number of ICS-LABA Patients"], _payerItem[toggleFilter] ])
-            collectiveSize+=_payerItem["Number of ICS-LABA Patients"]
-            collectiveFilter+=_payerItem[toggleFilter] 
-        })
-        _treeData.push(...newItem)
-      
-        sizeValue[item["Number of ICS-LABA Patients"] + "_" + item[toggleFilter]] = item
-        _treeData.push([
-            `${item}`,
-            `Global`,
-            collectiveSize,
-            collectiveFilter,
-          ]);
-        //   console.log(_treeData)
-    })
-    // console.log(_treeData)
-    setSizeValueMap(sizeValue);
-    setTreeData(JSON.parse(JSON.stringify(_treeData)));
-  };
+      data.map((item, index) => {
+        newObj[item.Item] = item;
+        let newArr = [
+          item.Item,
+          item.Parent && item.Parent.toLowerCase() == "global" ? "PAYER" : item.Parent,
+          item["Number of ICS-LABA Patients"],
+          item[toggleFilter],
+        ];
+        treemapData.push(newArr);
+      });
+      setTreeDataById(newObj);
+    
+      setTreeData(treemapData);
+    }
+  }
 
   useEffect(() => {
     fetchData();
@@ -140,9 +126,9 @@ const PayerVariation = () => {
     if (row === modalDetails.name) {
       return;
     }
-
     setShowModal(true);
-    let _data = sizeValueMap[value + "_" + data];
+    let _data = treeDataById[`${row}_Plan`];
+    setChartDataValue(setData1, null, [_data]);
     setModalDetails(_data);
   };
 
@@ -152,59 +138,56 @@ const PayerVariation = () => {
   };
 
   const closeModal = () => {
+    setLoading(true) 
+    setTimeout(() => {
+        setLoading(false)
+    }, 500);
     setShowModal(false);
   };
 
   const fetchData = (
-    filterValues = {
-      specialty: selectedSpeciality,
-      region: region,
-      // organisation: organisation,
-      // stateName: stateName,
-    }
+    
   ) => {
-    const specialties = filterValues.specialty;
-    const _region = filterValues.region;
-    let queryString = `payer_variation_data?`; // Start with 'hcp_data?&'
 
-    if (specialties && specialties.length > 0) {
-      queryString += specialties
-        .map((specialty) => `Primary Specialty Description=${specialty.value}`)
-        .join("&");
-    }
-    if (_region && _region.length > 0) {
-      queryString += `&${_region
-        .map((region) => `Region=${region.value}`)
-        .join("&")}`;
-    }
-    // if (_organisation && _organisation.length > 0) {
-    //   queryString += `&${_organisation
-    //     .map((organisation) => `Organization Name=${organisation.value}`)
-    //     .join("&")}`;
-    // }
-    // if (_stateName && _stateName.length > 0) {
-    //   queryString += `&${_stateName
-    //     .map((statename) => `State Name=${statename.value}`)
-    //     .join("&")}`;
-    // }
+    let queryString = `payer_level_data?`; // Start with 'hcp_data?&'
 
     getDataStats(queryString, accessToken, refreshToken)
       .then((res) => {
         if (res) {
           let _data = JSON.parse(res.replaceAll("NaN", 0));
+          setRawData(_data.data)
           if (_data) {
-            let payerData = {}
-            _data.data.map(item => {
-                if (payerData.hasOwnProperty(item["Payer Name"])) {
-                    payerData[item["Payer Name"]].push(item)
-                } else {
-                    payerData[item["Payer Name"]] = [item]
-                }
-            })
-            // setRawData(_data.data);
-            // setSpecialityOptions(_data.specialty_list);
-            // setRegionOptions(_data.region_list);
-            handleTreeData(payerData, toggleFilter);
+            let treemapData = [
+              [
+                "Region",
+                "Parent",
+                "Number of ICS-LABA Patients (size)",
+                "Number of Severe Exacerbations (color)",
+              ],
+              ["PAYER", null, 0, 0],
+            ];
+            let newObj = {};
+            let data = _data.data;
+           let lowestValue =  getLowestValue(data, toggleFilter )
+           let _highestValue =  highestValue(data, toggleFilter )
+           setValues({
+            min: lowestValue,
+            max: _highestValue
+           })
+
+            data.map((item, index) => {
+              newObj[item.Item] = item;
+              let newArr = [
+                item.Item,
+                item.Parent &&  item.Parent.toLowerCase() == "global" ? "PAYER" : item.Parent,
+                item["Number of ICS-LABA Patients"],
+                item[toggleFilter],
+              ];
+              treemapData.push(newArr);
+            });
+            setTreeDataById(newObj);
+          
+            setTreeData(treemapData);
           }
         }
       })
@@ -213,24 +196,65 @@ const PayerVariation = () => {
       });
   };
 
-  const handleApplyFilter = () => {
-    fetchData();
-  };
-
-  const handleToggleSelect = (val, index) => {
-    if (index == "region") {
-      setRegion(val);
-    } else {
-      setSelectedSpeciality(val);
+  function setChartDataValue(setValue, API_labels, data) {
+    function generateChartData(array) {
+      let _value = [];
+      // console.log(array, data[0])
+      array.forEach((item) => {
+        _value.push(data[0][mapLabels[item]]);
+      });
+      return {
+        labels: array.map((item) => mapSelectLabels[mapLabels[item]]),
+        datasets: [
+          {
+            data: _value,
+            borderColor: array.map((item) =>
+              !patientTotals.includes(item) ? "#800000" : "#00008B"
+            ),
+            backgroundColor: array.map((item) =>
+              !patientTotals.includes(item) ? "#800000" : "#00008B"
+            ),
+            barThickness: 20, // Set a specific thickness for the bar
+            maxBarThickness: 20,
+          },
+        ],
+      };
     }
-  };
+
+    setValue({
+      mapValue1: generateChartData(mapBarCharts.chart1),
+      mapValue2: generateChartData(mapBarCharts.chart2),
+      mapValue3: generateChartData(mapBarCharts.chart3),
+      mapValue4: generateChartData(mapBarCharts.chart4),
+      mapValue5: generateChartData(mapBarCharts.chart5),
+      ...data
+    });
+  }
+
+
 
   return (
     <div className="w-full flex flex-col gap-4">
-      {TreeData ? (
+      {TreeData && !loading ? (
         <>
-    
+         <div className="flex mb-6 items-center gap-8">
+              <CustomDropdown
+              showColors
+                labelClassName="mb-0"
+                className={"flex items-center"}
+                input={{
+                  label: "Select Unmet Needs",
+                  id: "unmet",
+                  options: filters.map((item) => ({ name: selectLabels[item], value: item })),
+                }}
+                handleSelect={(e) => handleToggleFilter(e)}
+                value={toggleFilter}
+              />
+            </div>
+
           <TreeMap
+          values={values}
+          preventDrill={true}
             data={TreeData}
             options={toggleFilter == filters[0] ? options1 : options2}
             handleOpen={handleOpen}
@@ -242,20 +266,7 @@ const PayerVariation = () => {
             position="center center"
           >
             {modalDetails && (
-              <div className="flex px-4 py-8 flex-col items-start gap-4">
-                <div>
-                  <strong className="mr-2">Name:</strong>{" "}
-                  {modalDetails["Assigned Physician Name"]}
-                </div>
-                <div>
-                  <strong className="mr-2">Number of ICS-LABA Patients:</strong>{" "}
-                  {modalDetails["Number of ICS-LABA Patients"]}
-                </div>
-                <div>
-                  <strong className="mr-2">{toggleFilter}:</strong>{" "}
-                  {modalDetails[toggleFilter]}
-                </div>
-              </div>
+              <BarChartPopup closeModal={closeModal} payerData data1={data1} />
             )}
           </Popup>
         </>
