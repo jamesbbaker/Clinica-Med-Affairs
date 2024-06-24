@@ -110,13 +110,14 @@ const formatNumber = (num) => {
 
 const filterOptions = [...Object.keys(selectLabels)];
 
-const BarChartPopup = ({ data1 }) => {
+const BarChartPopup = ({closeModal, data1, payerData=false }) => {
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [fetchedData, setFetchedData] = useState(null);
   const [unmetNeed, setUnmetNeed] = useState([
     { label: filterOptions[0], value: filterOptions[0] },
   ]);
   const [lineChartData, setLineChartData] = useState(null);
+
 
   function addLineData(_data) {
     let lineDataFilter = _data.filter((item) => {
@@ -150,7 +151,7 @@ const BarChartPopup = ({ data1 }) => {
   }
 
   useEffect(() => {
-    if (data1) {
+    if (data1 &&  !payerData) {
       getDataStats(
         `hcp_quarterly?Provider_ID=${data1[0]["Provider ID"]}`,
         accessToken,
@@ -179,14 +180,18 @@ const BarChartPopup = ({ data1 }) => {
 
   return (
     <div className="flex flex-col h-[80vh] overflow-y-auto items-start gap-4">
-      <div className="flex text-lg py-6 flex-col mt-4 items-start gap-4">
+      <div style={{ justifyContent: payerData ? "space-between" : 'flex-start', width: payerData ? "100%" : "auto" , gap: payerData ? "unset" : "1rem",flexDirection: payerData ? "row" : "column"}} className="flex text-lg py-6 flex-col mt-4 items-start">
         <div className="flex items-center">
           Name:{" "}
           <strong className="ml-2">
-            {data1["0"]["Assigned Physician Name"]}
+            {payerData ? data1[0]["Item"].split("_")[0]: data1["0"]["Assigned Physician Name"]}
           </strong>
         </div>
-        <div className="flex items-center">
+        <button onClick={closeModal} className="flex-end border px-5 py-1 text-md rounded-sm">
+          RESET
+        </button>
+      
+        {!payerData  && <><div className="flex items-center">
           Primary Specialty Description:{" "}
           <strong className="ml-2">
             {data1["0"]["Primary Specialty Description"]}
@@ -194,7 +199,7 @@ const BarChartPopup = ({ data1 }) => {
         </div>
         <div className="flex items-center">
           Region: <strong className="ml-2">{data1["0"]["Region"]}</strong>
-        </div>
+        </div></>}
       </div>
       <div className="w-[80vw] gap-5 grid grid-cols-2">
         <div>
@@ -226,7 +231,7 @@ const BarChartPopup = ({ data1 }) => {
           />
         </div>
       </div>
-      <div className="flex mt-4 items-center gap-4">
+      {!payerData && <><div className="flex mt-4 items-center gap-4">
         <label className="block text-sm font-medium text-gray-900 dark:text-white">
           Select Unmet Need
         </label>
@@ -267,7 +272,7 @@ const BarChartPopup = ({ data1 }) => {
             </div>
           </div>
         </div>
-      )}
+      )}</>}
     </div>
   );
 };
