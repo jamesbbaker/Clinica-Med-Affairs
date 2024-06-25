@@ -3,11 +3,10 @@ import ScatterChart from "../../../components/ScatterChart";
 import { getDataStats } from "../../../API/Outputs";
 import { AuthContext } from "../../../context/AuthContext";
 import { highestValue } from "../../../utils/MathUtils";
-import { MultiSelect } from "react-multi-select-component";
 import CustomDropdown from "../../../components/CustomDropdown";
 import { selectLabels } from "../../../constants/appConstants";
-import { RadarChart } from "../../../components/RadarChart";
-import { LineChart } from "../../../components/LineChart";
+import { IoTriangle } from "react-icons/io5";
+import { FaCircle, FaSquare } from "react-icons/fa";
 
 const filterOptions = [...Object.keys(selectLabels)];
 
@@ -40,7 +39,7 @@ const reducer = (state, action) => {
   }
 };
 
-const MedicalAffairToolbox = () => {
+const PayerVariationBubbleChart = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
@@ -103,10 +102,9 @@ const MedicalAffairToolbox = () => {
     // Combine the base URL, dynamic specialties, and additional parameters
     const finalUrl = `${queryString}`;
 
-    getDataStats(finalUrl, accessToken, refreshToken)
+    getDataStats("payer_variation_data", accessToken, refreshToken)
       .then((res) => {
         let _data = JSON.parse(res.replaceAll("NaN", 0));
-
         setRawData(_data.data);
         if (_data) {
           dispatch({
@@ -131,32 +129,16 @@ const MedicalAffairToolbox = () => {
   };
 
   const generateShape = (val) => {
-    let shape1 = [
-      "PULMONARY DISEASE",
-      "PEDIATRIC PULMONOLOGY",
-      "PULMONARY CRITICAL CARE MEDICINE",
-    ];
-    if (shape1.includes(val)) {
+    if (!val) return
+    let shape1 = "MEDICARE"
+    if (val.toLocaleLowerCase().includes(shape1.toLocaleLowerCase())) {
       return "triangle";
     }
-    let shape2 = ["ALLERGY & IMMUNOLOGY"];
-    if (shape2.includes(val)) {
+    let shape2 = "MEDICAID";
+    if (val.toLocaleLowerCase().includes(shape2.toLocaleLowerCase())) {
       return "circle";
     }
-    let shape3 = [
-      "FAMILY MEDICINE",
-      "PEDIATRICS",
-      "INTERNAL MEDICINE",
-      "GENERAL PRACTICE",
-      "INTERNAL MEDICINE/PEDIATRICS",
-      "GERIATRIC MEDICINE (INTERNAL MEDICINE)",
-      "GERIATRIC MEDICINE (FAMILY MEDICINE)",
-    ];
-    if (shape3.includes(val)) {
-      return "rect";
-    }
-
-    return "star";
+    return "rect";
   };
 
   const calculateRadius = (value, maxValue) => {
@@ -176,9 +158,8 @@ const MedicalAffairToolbox = () => {
   ) => {
     let radius = "Number of ICS-LABA Patients";
     const maxValue = highestValue(data, radius);
-
     let _data = data.map((item) => ({
-      name: item["Assigned Physician Name"],
+      name: item["Payer Name"],
       x: item[vabelValues.xLabel],
       y: item[vabelValues.yLabel],
       r: calculateRadius(item[radius], maxValue),
@@ -203,7 +184,7 @@ const MedicalAffairToolbox = () => {
             }
           }),
           pointStyle: _data.map((item) =>
-            generateShape(item["Primary Specialty Description"])
+            generateShape(item["Payer Name"])
           ),
           // borderColor: "rgba(75, 192, 192, 1)",
           borderWidth: 1,
@@ -243,86 +224,11 @@ const MedicalAffairToolbox = () => {
     handleDispatchData(labelValue);
   };
 
-  const handleToggleSelect = (val, id) => {
-    dispatch({
-      type: actions.handleUpdate,
-      payload: {
-        [id]: val,
-      },
-    });
-  };
-
-  const handleApplyFilter = () => {
-    setLoading(true);
-    fetchData({
-      specialties: state.primary,
-      region: state.region,
-    });
-  };
-
+  
   return (
-    <div className="flex flex-col gap-2 items-start">
-      <div className="text-[1.25rem] font-[600]">HCP Prioritization</div>
+    <div className="flex flex-col mt-10 gap-2 items-start">
       {state.data ? (
         <>
-          <div className="flex items-center w-full justify-between">
-            <div className="flex items-center gap-8">
-              <div className="font-[600] text-[18px]">Filters:</div>
-              {state.regionList && (
-                <div className="flex items-center gap-4">
-                  <label className="block text-sm font-medium text-gray-900 dark:text-white">
-                    Region Select
-                  </label>
-                  <MultiSelect
-                    labelledBy=""
-                    options={state.regionList.map((item) => ({
-                      label: item,
-                      value: item,
-                    }))}
-                    className="w-[10rem] z-[5]"
-                    value={state.region || []}
-                    onChange={(val) => handleToggleSelect(val, "region")}
-                  />
-                </div>
-              )}
-              {state.primaryList && (
-                <div className="flex items-center gap-4">
-                  <label className="block text-sm font-medium text-gray-900 dark:text-white">
-                    Primary Select
-                  </label>
-                  <MultiSelect
-                    labelledBy=""
-                    options={state.primaryList.map((item) => ({
-                      label: item,
-                      value: item,
-                    }))}
-                    className="w-[20rem] z-[5]"
-                    value={state.primary || []}
-                    onChange={(val) => handleToggleSelect(val, "primary")}
-                  />
-                </div>
-              )}
-            </div>
-            <button
-              disabled={loading}
-              onClick={handleApplyFilter}
-              className="w-40 font-[600] h-10 border border-black rounded-md hover:bg-[#c4c4c4]"
-            >
-              {loading ? (
-             <div className="text-center">
-             <div role="status">
-                 <svg aria-hidden="true" className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                     <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-                     <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
-                 </svg>
-                 <span className="sr-only">Loading...</span>
-             </div>
-         </div>
-              ) : (
-                "Apply Filter"
-              )}
-            </button>
-          </div>
           <div className="flex flex-col mb-4 items-start">
             <div>
               <CustomDropdown
@@ -365,6 +271,21 @@ const MedicalAffairToolbox = () => {
           </div>
 
           <ScatterChart
+          shapes={ [
+            {
+              icon: <IoTriangle />,
+              name: "MEDICARE",
+            },
+            {
+              icon: <FaCircle />,
+              name: "MEDICAID",
+            },
+            {
+              icon: <FaSquare />,
+              name: "Commercial",
+            },
+          ]}
+            payer
             quadrantValues={quadrantValues}
             lineX={lineX}
             handleDispatchData={handleDispatchData}
@@ -374,12 +295,6 @@ const MedicalAffairToolbox = () => {
             setLineY={setLineY}
             data={state.data}
           />
-           <div className="w-full mt-4">
-           <div className="flex flex-col items-center ">
-          <RadarChart />
-          <LineChart height={100} />
-        </div>
-        </div>
         </>
        
       ) : (
@@ -399,4 +314,4 @@ const MedicalAffairToolbox = () => {
   );
 };
 
-export default MedicalAffairToolbox;
+export default PayerVariationBubbleChart;

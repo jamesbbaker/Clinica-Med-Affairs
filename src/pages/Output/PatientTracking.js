@@ -25,24 +25,37 @@ const PatientTracking = () => {
     getDataStats("hcp_correlation_matrix", accessToken, refreshToken)
       .then((res) => {
         if (res) {
-          console.log(res)
           let _res = [];
-          let newRes = []
-          Object.keys(selectLabels).map((item) =>
-            {
-              if (res.hasOwnProperty(item)) {
-                newRes.push(res[item])
-              }
+          let _newObj = {};
+          res.map((item) => {
+            let _item = { ...item };
+            delete _item.index;
+            _newObj[item.index] = _item;
+          });
+
+          let newRes = [];
+          Object.keys(selectLabels).map((item) => {
+            if (_newObj.hasOwnProperty(item)) {
+              let newObj = [];
+              Object.keys(selectLabels).map((_item) => {
+                if (_newObj[item].hasOwnProperty(_item)) {
+                  newObj.push(_newObj[item][_item]);
+                }
+              });
+              newRes.push(newObj);
             }
-          );     
-          // newRes.map((item) =>
-          //   _res.push(Object.keys(item).map((key) => item[key]))
-          // );
-          console.log(newRes)
+          });
+          let newArr = newRes.map((item) =>
+            _res.push(Object.keys(item).map((key) => item[key]))
+          );
           setStatsData1(newRes);
           setLabels({
-            xLabels: Object.keys(selectLabels).filter(item => res.hasOwnProperty(item)).map((item) =>  selectLabels[item]),
-            yLabels:  Object.keys(selectLabels).filter(item => res.hasOwnProperty(item)).map((item) =>  selectLabels[item]),
+            xLabels: Object.keys(selectLabels)
+              .filter((item) => _newObj.hasOwnProperty(item))
+              .map((item) => selectLabels[item]),
+            yLabels: Object.keys(selectLabels)
+              .filter((item) => _newObj.hasOwnProperty(item))
+              .map((item) => selectLabels[item]),
           });
         }
       })
@@ -109,27 +122,34 @@ const PatientTracking = () => {
         <div className="p-6 w-full overflow-auto">
           <HeatMapGrid
             cellRender={(x, y, value) => (
-              <div style={{fontSize: "0.5rem"}} title={`Pos(${x}, ${y}) = ${value}`}>{value.toFixed(2)}</div>
+              <div
+                style={{ fontSize: "0.5rem" }}
+                title={`Pos(${x}, ${y}) = ${value}`}
+              >
+                {value.toFixed(2)}
+              </div>
             )}
             xLabelsPos="bottom"
             yLabelsStyle={() => ({
               fontSize: ".65rem",
-              width: '15rem',
+              width: "15rem",
               textAlign: "center",
               display: "grid",
               placeContent: "center",
               lineHeight: 1,
-                  height: "2.5rem"
+              height: "2.5rem",
             })}
             xLabelsStyle={() => ({
               fontSize: ".5rem",
-          
             })}
             cellStyle={(_x, _y, ratio) => {
-              let value = statsData1[_x][_y]
-           
+              let value = statsData1[_x][_y];
+
               return {
-                background:value > 0 ? `rgb(12, 160, 44, ${ratio})` : `rgba(255,74,48, ${Math.abs(value)})`,
+                background:
+                  value > 0
+                    ? `rgb(12, 160, 44, ${ratio})`
+                    : `rgba(255,74,48, ${Math.abs(value)})`,
                 fontSize: ".8rem",
                 color: `rgb(0, 0, 0, ${ratio / 2 + 0.4})`,
               };
@@ -137,7 +157,6 @@ const PatientTracking = () => {
             cellHeight="2.5rem"
             data={statsData1}
             xLabelWidth={10}
-          
             xLabels={labels.xLabels}
             yLabels={labels.yLabels}
           />

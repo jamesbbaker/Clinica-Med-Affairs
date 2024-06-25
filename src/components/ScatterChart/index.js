@@ -186,8 +186,27 @@ const defaultOptions = {
 
 const ScatterChart = ({
   quadrantValues,
+  shapes= [
+    {
+      icon: <IoTriangle />,
+      name: "Pulmonary Specialist",
+    },
+    {
+      icon: <FaCircle />,
+      name: "Allergy Specialist",
+    },
+    {
+      icon: <FaSquare />,
+      name: "Primary Care Provider",
+    },
+    {
+      icon: <MdOutlineStar />,
+      name: "Others",
+    },
+  ],
   lineX,
   lineY,
+  payer=false,
   setLineX,
   handleDispatchData,
   setLineY,
@@ -284,7 +303,11 @@ const ScatterChart = ({
         tooltip: {
           callbacks: {
             label: function (context) {
-              return `Name: ${context.raw.name}, ${[
+              return payer ? `Payer Name: ${context.raw.name}, Plan Name: ${context.raw["Plan Name"]}, ${[
+                selectLabels[state.xLabel],
+              ]}:${context.raw.x}, ${selectLabels[state.yLabel]}:${
+                context.raw.y
+              }, Number of ICS-LABA Patients: ${context.raw.value}` :   `Name: ${context.raw.name}, ${[
                 selectLabels[state.xLabel],
               ]}:${context.raw.x}, ${selectLabels[state.yLabel]}:${
                 context.raw.y
@@ -357,24 +380,6 @@ const ScatterChart = ({
     setLineY(Number(e.target.value));
   };
 
-  const shapes = [
-    {
-      icon: <IoTriangle />,
-      name: "Pulmonary Specialist",
-    },
-    {
-      icon: <FaCircle />,
-      name: "Allergy Specialist",
-    },
-    {
-      icon: <FaSquare />,
-      name: "Primary Care Provider",
-    },
-    {
-      icon: <MdOutlineStar />,
-      name: "Others",
-    },
-  ];
 
   return (
     <div className="min-h-[400px] relative w-full">
@@ -460,7 +465,7 @@ const ScatterChart = ({
           open={data1 != null}
           position="center center"
         >
-          <BarChartPopup data1={data1} />
+          <BarChartPopup payer={payer} payerData={payer} data1={data1} />
         </Popup>
       </div>
     </div>

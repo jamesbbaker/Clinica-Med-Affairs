@@ -3,9 +3,7 @@ import BarChart, { _data } from "../../../components/BarChart";
 import { getDataStats } from "../../../API/Outputs";
 import { AuthContext } from "../../../context/AuthContext";
 import { LineChart } from "../../../components/LineChart";
-import {
-  selectLabels,
-} from "../../../constants/appConstants";
+import { selectLabels } from "../../../constants/appConstants";
 import { MultiSelect } from "react-multi-select-component";
 
 const randomColors = [
@@ -28,14 +26,14 @@ const randomColors = [
 
 export function convertToQuarter(dateStr) {
   // Split the input date string
-  let [year, month] = dateStr.split('-');
+  let [year, month] = dateStr.split("-");
 
   // Convert month to zero-indexed integer
   let monthIndex = parseInt(month, 10) - 1; // Subtract 1 because months are zero-indexed in JavaScript
-  
+
   // Check if the parsed values are valid
   if (isNaN(year) || isNaN(monthIndex) || monthIndex < 0 || monthIndex > 11) {
-      return "Invalid Date";
+    return "Invalid Date";
   }
 
   // Create a new Date object with extracted year and month
@@ -110,14 +108,18 @@ const formatNumber = (num) => {
 
 const filterOptions = [...Object.keys(selectLabels)];
 
-const BarChartPopup = ({closeModal, data1, payerData=false }) => {
+const BarChartPopup = ({
+  closeModal,
+  data1,
+  payer = false,
+  payerData = false,
+}) => {
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [fetchedData, setFetchedData] = useState(null);
   const [unmetNeed, setUnmetNeed] = useState([
     { label: filterOptions[0], value: filterOptions[0] },
   ]);
   const [lineChartData, setLineChartData] = useState(null);
-
 
   function addLineData(_data) {
     let lineDataFilter = _data.filter((item) => {
@@ -132,7 +134,7 @@ const BarChartPopup = ({closeModal, data1, payerData=false }) => {
     });
     lineDataFilter.sort((a, b) => new Date(a.Quarter) - new Date(b.Quarter));
     let _labels = lineDataFilter.map((item) => convertToQuarter(item.Quarter));
-   
+
     let data = {
       labels: _labels,
       datasets: unmetNeed.map((item, index) => {
@@ -151,7 +153,7 @@ const BarChartPopup = ({closeModal, data1, payerData=false }) => {
   }
 
   useEffect(() => {
-    if (data1 &&  !payerData) {
+    if (data1 && !payerData) {
       getDataStats(
         `hcp_quarterly?Provider_ID=${data1[0]["Provider ID"]}`,
         accessToken,
@@ -178,28 +180,63 @@ const BarChartPopup = ({closeModal, data1, payerData=false }) => {
     setUnmetNeed(val);
   };
 
+
+
   return (
     <div className="flex flex-col h-[80vh] overflow-y-auto items-start gap-4">
-      <div style={{ justifyContent: payerData ? "space-between" : 'flex-start', width: payerData ? "100%" : "auto" , gap: payerData ? "unset" : "1rem",flexDirection: payerData ? "row" : "column"}} className="flex text-lg py-6 flex-col mt-4 items-start">
+      <div
+        style={{
+          justifyContent: payerData && !payer ? "space-between" : "flex-start",
+          width: payerData && !payer ? "100%" : "auto",
+          gap: payerData && !payer ? "unset" : "1rem",
+          flexDirection: payerData && !payer ? "row" : "column",
+        }}
+        className="flex text-lg py-6 flex-col mt-4 items-start"
+      >
         <div className="flex items-center">
           Name:{" "}
           <strong className="ml-2">
-            {payerData ? data1[0]["Item"].split("_")[0]: data1["0"]["Assigned Physician Name"]}
+            {payerData && !payer
+              ? data1[0]["Item"].split("_")[0]
+              : payer
+              ? data1["0"]["Payer Name"]
+              : data1["0"]["Assigned Physician Name"]}
           </strong>
         </div>
-        <button onClick={closeModal} className="flex-end border px-5 py-1 text-md rounded-sm">
-          RESET
-        </button>
-      
-        {!payerData  && <><div className="flex items-center">
-          Primary Specialty Description:{" "}
+        {payer && 
+          <div className="flex items-center">
+          Plan name:{" "}
           <strong className="ml-2">
-            {data1["0"]["Primary Specialty Description"]}
+            {payerData && !payer
+              ? data1[0]["Item"].split("_")[0]
+              : payer
+              ? data1["0"]["Plan Name"]
+              : data1["0"]["Assigned Physician Name"]}
           </strong>
         </div>
-        <div className="flex items-center">
-          Region: <strong className="ml-2">{data1["0"]["Region"]}</strong>
-        </div></>}
+        }
+        {payerData && !payer && (
+          <button
+            onClick={closeModal}
+            className="flex-end border px-5 py-1 text-md rounded-sm"
+          >
+            RESET
+          </button>
+        )}
+
+        {!payerData && (
+          <>
+            <div className="flex items-center">
+              Primary Specialty Description:{" "}
+              <strong className="ml-2">
+                {data1["0"]["Primary Specialty Description"]}
+              </strong>
+            </div>
+            <div className="flex items-center">
+              Region: <strong className="ml-2">{data1["0"]["Region"]}</strong>
+            </div>
+          </>
+        )}
       </div>
       <div className="w-[80vw] gap-5 grid grid-cols-2">
         <div>
@@ -231,48 +268,56 @@ const BarChartPopup = ({closeModal, data1, payerData=false }) => {
           />
         </div>
       </div>
-      {!payerData && <><div className="flex mt-4 items-center gap-4">
-        <label className="block text-sm font-medium text-gray-900 dark:text-white">
-          Select Unmet Need
-        </label>
-        <MultiSelect
-          labelledBy=""
-          options={filterOptions.map((item) => ({
-            label: selectLabels[item] ? selectLabels[item] : item,
-            value: item,
-          }))}
-          className="w-[20rem] z-[5]"
-          value={unmetNeed || []}
-          onChange={(val) => handleSelectMultipleUnmet(val)}
-        />
-      </div>
-      {lineChartData ? (
-        <LineChart data={lineChartData} options={options} arbitrary={false} />
-      ) : (
-        <div className="flex flex-col w-full h-[400px] justify-center items-center">
-          <div className="text-center">
-            <div role="status">
-              <svg
-                aria-hidden="true"
-                className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-                viewBox="0 0 100 101"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                  fill="currentFill"
-                />
-              </svg>
-              <span className="sr-only">Loading...</span>
-            </div>
+      {!payerData && (
+        <>
+          <div className="flex mt-4 items-center gap-4">
+            <label className="block text-sm font-medium text-gray-900 dark:text-white">
+              Select Unmet Need
+            </label>
+            <MultiSelect
+              labelledBy=""
+              options={filterOptions.map((item) => ({
+                label: selectLabels[item] ? selectLabels[item] : item,
+                value: item,
+              }))}
+              className="w-[20rem] z-[5]"
+              value={unmetNeed || []}
+              onChange={(val) => handleSelectMultipleUnmet(val)}
+            />
           </div>
-        </div>
-      )}</>}
+          {lineChartData ? (
+            <LineChart
+              data={lineChartData}
+              options={options}
+              arbitrary={false}
+            />
+          ) : (
+            <div className="flex flex-col w-full h-[400px] justify-center items-center">
+              <div className="text-center">
+                <div role="status">
+                  <svg
+                    aria-hidden="true"
+                    className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                    viewBox="0 0 100 101"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                      fill="currentColor"
+                    />
+                    <path
+                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                      fill="currentFill"
+                    />
+                  </svg>
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 };

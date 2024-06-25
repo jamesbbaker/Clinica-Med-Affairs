@@ -10,6 +10,7 @@ import {
 } from "../../../../constants/appConstants";
 import { MultiSelect } from "react-multi-select-component";
 import Table, { customOptionRenderer } from "../../../../components/Table";
+import { centroid } from "@turf/turf";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
@@ -265,6 +266,20 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
         unmetNeed
       );
       if (map && map.getSource("regions")) {
+        const regionLabelsGeoJSON = {
+          type: "FeatureCollection",
+          features: updatedRegionsGeoJSON.features.map((feature) => {
+            const center = centroid(feature);
+            return {
+              type: "Feature",
+              geometry: center.geometry,
+              properties: {
+                value: `${(feature.properties.stateValue*100).toFixed(1)}%`,
+              },
+            };
+          }),
+        };
+        map.getSource("region-labels").setData(regionLabelsGeoJSON);
         map.getSource("regions").setData(updatedRegionsGeoJSON);
         let minVal = getMinValue(updatedRegionsGeoJSON);
         let maxVal = getMaxValue(updatedRegionsGeoJSON);
@@ -300,6 +315,21 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
           stateData
         );
         if (map && map.getSource("countries")) {
+          const countryLabelsGeoJSON = {
+            type: "FeatureCollection",
+            features: generateJSON.features.map((feature) => {
+      
+              const center = centroid(feature);
+              return {
+                type: "Feature",
+                geometry: center.geometry,
+                properties: {
+                  value: `${(feature.properties.stateValue*100).toFixed(1)}%`,
+                },
+              };
+            }),
+          };
+          map.getSource("country-labels").setData(countryLabelsGeoJSON);
           map.getSource("countries").setData(generateJSON);
           let minVal = getMinValue(generateJSON);
           let maxVal = getMaxValue(generateJSON);
@@ -449,6 +479,41 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
           stateData
         );
 
+        const regionLabelsGeoJSON = {
+          type: "FeatureCollection",
+          features: regionsGeoJSON.features.map((feature) => {
+            const center = centroid(feature);
+            return {
+              type: "Feature",
+              geometry: center.geometry,
+              properties: {
+                value: `${(feature.properties.stateValue*100).toFixed(1)}%`,
+              },
+            };
+          }),
+        };
+
+        map.addSource("region-labels", {
+          type: "geojson",
+          data: regionLabelsGeoJSON,
+        });
+
+        map.addLayer({
+          id: "region-labels-layer",
+          type: "symbol",
+          source: "region-labels",
+          layout: {
+            "text-field": ["get", "value"],
+            "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+            "text-size": 14,
+            "text-anchor": "center", // Center the text over the centroid
+            "text-offset": [0, 0],
+          },
+          paint: {
+            "text-color": "#000",
+          },
+        });
+
         // Add countries layer
         map.addSource("countries", {
           type: "geojson",
@@ -497,6 +562,43 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
           },
           layout: {
             visibility: "none", // Initially hide the countries outline layer
+          },
+        });
+
+        // Calculate centroids and create labels data for countries
+        const countryLabelsGeoJSON = {
+          type: "FeatureCollection",
+          features: generateJSON.features.map((feature) => {
+            const center = centroid(feature);
+            return {
+              type: "Feature",
+              geometry: center.geometry,
+              properties: {
+                value: `${(feature.properties.stateValue * 100).toFixed(1)}%`,
+              },
+            };
+          }),
+        };
+
+        map.addSource("country-labels", {
+          type: "geojson",
+          data: countryLabelsGeoJSON,
+        });
+
+        map.addLayer({
+          id: "country-labels-layer",
+          type: "symbol",
+          source: "country-labels",
+          layout: {
+            "text-field": ["get", "value"],
+            "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+            "text-size": 15,
+            "text-anchor": "center", // Center the text over the centroid
+            "text-offset": [0, 0], // Ensure no offset
+            visibility: "none",
+          },
+          paint: {
+            "text-color": "#000",
           },
         });
 
@@ -570,9 +672,6 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
 
         // Click region to show countries
         map.on("click", "regions-layer", (e) => {
-          map.setLayoutProperty("countries-layer", "visibility", "visible");
-          map.setLayoutProperty("countries-outline", "visibility", "visible");
-
           const regionName = e.features[0].properties.name;
           const countriesInRegion = regionsData[regionName];
           setRegion({
@@ -584,7 +683,7 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
           const filteredCountries = countryGeoJSON.features.filter((feature) =>
             countriesInRegion.includes(feature.properties.name)
           );
-          const generateJSON = generateStateJSON(
+          const filteredCountriesGeoJSON = generateStateJSON(
             {
               type: "FeatureCollection",
               features: filteredCountries,
@@ -595,8 +694,31 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
             stateData
           );
 
-          // Update the data of the countries layer to show only countries in the region
-          map.getSource("countries").setData(generateJSON);
+          map.getSource("countries").setData(filteredCountriesGeoJSON);
+
+          const countryLabelsGeoJSON = {
+            type: "FeatureCollection",
+            features: filteredCountriesGeoJSON.features.map((feature) => {
+      
+              const center = centroid(feature);
+              return {
+                type: "Feature",
+                geometry: center.geometry,
+                properties: {
+                  value: `${(feature.properties.stateValue*100).toFixed(1)}%`,
+                },
+              };
+            }),
+          };
+          map.getSource("country-labels").setData(countryLabelsGeoJSON);
+          map.setLayoutProperty("countries-layer", "visibility", "visible");
+          map.setLayoutProperty("countries-outline", "visibility", "visible");
+          map.setLayoutProperty("region-labels-layer", "visibility", "none");
+          map.setLayoutProperty(
+            "country-labels-layer",
+            "visibility",
+            "visible"
+          );
 
           const bounds = new mapboxgl.LngLatBounds();
 
@@ -853,7 +975,7 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
                 return (
                   <div className="flex items-center gap-2">
                     <div className="font-[600]">{item.item}: </div>
-                    <div className="font-[400]">{item.percentageChange}</div>
+                    <div className="font-[400]">{`${(item.percentageChange * 100).toFixed(1)}%`}</div>
                   </div>
                 );
               })}
