@@ -227,3 +227,7 @@ th {
 .rmsc .dropdown-heading {
   max-width: unset !important;
 }
+
+.dropdown-content {
+  z-index:1000 !important;
+}

@@ -255,6 +255,8 @@ const UnmetNeedDefinition = () => {
   const [statsData23, setStatsData23] = useState(null);
   const [statsData24, setStatsData24] = useState(null);
   const [statsData25, setStatsData25] = useState(null);
+  const [statsData26, setStatsData26] = useState(null);
+  const [statsData27, setStatsData27] = useState(null);
   const [dataValue, setDataValue] = useState(null);
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [showTooltip, setTooltip] = useState({
@@ -348,6 +350,48 @@ const UnmetNeedDefinition = () => {
           title: {
             display: true,
             text: "Days Supply in Year after receiving OCS",
+          },
+          grid: {
+            display: false, // Turn off grid lines for x-axis
+          },
+          ticks: {
+            font: {
+              size: 10,
+            },
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+        datalabels: {
+          display: false,
+        },
+      },
+    };
+  }, []);
+
+  const optionsmgdays = useMemo(() => {
+    return {
+      indexAxis: "x",
+      elements: {
+        bar: {
+          borderWidth: 1,
+        },
+      },
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: "patients",
+          },
+        },
+        x: {
+          title: {
+            display: true,
+            text: "Average MG per days supply of OCS prescriptions",
           },
           grid: {
             display: false, // Turn off grid lines for x-axis
@@ -838,6 +882,8 @@ const UnmetNeedDefinition = () => {
     setStatsData23(null);
     setStatsData24(null);
     setStatsData25(null);
+    setStatsData26(null);
+    setStatsData27(null)
     setModalId(null);
   };
 
@@ -930,19 +976,17 @@ const UnmetNeedDefinition = () => {
   }
 
   function getBarChart(res, type1, type2, sortFn) {
-   
     let responseData = res.data;
     if (sortFn) {
       responseData = sortFn(res.data);
     } else {
       responseData.sort((a, b) => a[type1] - b[type1]);
     }
-    let zeroIndex = responseData[0][type2]
+    let zeroIndex = responseData[0][type2];
 
-    if (zeroIndex ==0) {
-      responseData.shift()
+    if (zeroIndex == 0) {
+      responseData.shift();
     }
-    
 
     let _data = {
       labels: responseData.map((item) => item[type1]),
@@ -972,7 +1016,6 @@ const UnmetNeedDefinition = () => {
 
   const handleClick = (key) => {
     if (nationalData) {
-     
       setModalId(key);
       setDataValue({
         id: nationalData[
@@ -1011,9 +1054,21 @@ const UnmetNeedDefinition = () => {
       getDataStats("ics_patient_ocs_num_encounters", accessToken, refreshToken)
         .then((res) => {
           let _data = getBarChart(res, res.headers[0], res.headers[1]);
-          
 
           setStatsData24(_data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      getDataStats(
+        "ics_patient_ocs_avg_mg_days_supply",
+        accessToken,
+        refreshToken
+      )
+        .then((res) => {
+          let _data = getBarChart(res, res.headers[0], res.headers[1]);
+
+          setStatsData26(_data);
         })
         .catch((err) => {
           console.log(err);
@@ -1055,6 +1110,19 @@ const UnmetNeedDefinition = () => {
         .catch((err) => {
           console.log(err);
         });
+        getDataStats(
+          "ics_laba_patient_ocs_avg_mg_days_supply",
+          accessToken,
+          refreshToken
+        )
+          .then((res) => {
+            let _data = getBarChart(res, res.headers[0], res.headers[1]);
+  
+            setStatsData27(_data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
     }
 
     if (UnmetNeedDefinitionData[key].id === "id15") {
@@ -1787,8 +1855,34 @@ const UnmetNeedDefinition = () => {
                   />
                 </>
               )}
+              {statsData26 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Number of patients by average MG per days supply of OCS
+                    prescriptions (Single)
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData26}
+                    options={optionsmgdays}
+                  />
+                </>
+              )}
+               {statsData27 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Number of patients by average MG per days supply of OCS
+                    prescriptions (Double)
+                </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData27}
+                    options={optionsmgdays}
+                  />
+                </>
+              )}
             </div>
-            {dataValue && (modalId =="id18") &&  (
+            {dataValue && modalId == "id18" && (
               <div className="flex py-4 flex-col mb-2 items-start w-full">
                 <div>
                   {selectLabels["Number of ICS-LABA >900mg/year steroids"]}:{" "}
@@ -1799,7 +1893,10 @@ const UnmetNeedDefinition = () => {
                 <div>
                   {selectLabels["Percent of ICS-LABA >900mg/year steroids"]}:{" "}
                   <strong>
-                    {nationalData["Percent of ICS-LABA >900mg/year steroids"].toFixed(2)}%
+                    {nationalData[
+                      "Percent of ICS-LABA >900mg/year steroids"
+                    ].toFixed(2)}
+                    %
                   </strong>
                 </div>
                 <div>
@@ -1825,11 +1922,10 @@ const UnmetNeedDefinition = () => {
                   }
                   :{" "}
                   <strong>
-                    {
-                      nationalData[
-                        "Percent of ICS-LABA High Steroid Usage with ER visit"
-                      ].toFixed(2)
-                    }%
+                    {nationalData[
+                      "Percent of ICS-LABA High Steroid Usage with ER visit"
+                    ].toFixed(2)}
+                    %
                   </strong>
                 </div>
                 <div>
@@ -1855,11 +1951,10 @@ const UnmetNeedDefinition = () => {
                   }
                   :{" "}
                   <strong>
-                    {
-                      nationalData[
-                        "Percent of ICS-LABA High Steroid Usage without ER visit"
-                      ].toFixed(2)
-                    }%
+                    {nationalData[
+                      "Percent of ICS-LABA High Steroid Usage without ER visit"
+                    ].toFixed(2)}
+                    %
                   </strong>
                 </div>
               </div>

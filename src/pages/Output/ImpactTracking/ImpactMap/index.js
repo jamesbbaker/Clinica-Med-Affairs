@@ -5,12 +5,12 @@ import countryGeoJSON from "../../../../components/Map/data.json"; // Load your 
 import CustomDropdown from "../../../../components/CustomDropdown";
 import {
   invertedMapLabels,
-  mapLabels,
+
   selectLabels,
 } from "../../../../constants/appConstants";
 import { MultiSelect } from "react-multi-select-component";
 import Table, { customOptionRenderer } from "../../../../components/Table";
-import { centroid } from "@turf/turf";
+
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
@@ -126,7 +126,7 @@ const quartersWithDates = [
   // { quarter: "Q4-2024", date: "2024-10-01" },
 ];
 
-const ImpactMap = ({ handleReset, regionData, stateData }) => {
+const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionData, stateData }) => {
   const mapContainerRef = useRef(null);
   const [map, setMap] = useState(null);
   const [unmetNeed, setUnmetNeed] = useState(filterOptions[0]);
@@ -243,7 +243,7 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
   };
 
   useEffect(() => {
-    if (stateData && regionData) {
+    if (stateData && regionData && regionDataCoordinates && stateCoordinates) {
       let regionsData = {};
       let _stateData = { ...stateData };
       stateData.data.map((item) => {
@@ -269,10 +269,13 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
         const regionLabelsGeoJSON = {
           type: "FeatureCollection",
           features: updatedRegionsGeoJSON.features.map((feature) => {
-            const center = centroid(feature);
+            const center = regionDataCoordinates[feature.properties.name]
             return {
               type: "Feature",
-              geometry: center.geometry,
+              geometry: {
+                type: "Point",
+                coordinates: center,
+              },
               properties: {
                 value: `${(feature.properties.stateValue*100).toFixed(1)}%`,
               },
@@ -318,11 +321,14 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
           const countryLabelsGeoJSON = {
             type: "FeatureCollection",
             features: generateJSON.features.map((feature) => {
-      
-              const center = centroid(feature);
+   
+              const center = stateCoordinates[feature.properties.name]
               return {
                 type: "Feature",
-                geometry: center.geometry,
+                geometry: {
+                  type: "Point",
+                  coordinates: center,
+                },
                 properties: {
                   value: `${(feature.properties.stateValue*100).toFixed(1)}%`,
                 },
@@ -482,10 +488,14 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
         const regionLabelsGeoJSON = {
           type: "FeatureCollection",
           features: regionsGeoJSON.features.map((feature) => {
-            const center = centroid(feature);
+          
+            const center = regionDataCoordinates[feature.properties.name]
             return {
               type: "Feature",
-              geometry: center.geometry,
+              geometry:  {
+                type: "Point",
+                coordinates: center
+              },
               properties: {
                 value: `${(feature.properties.stateValue*100).toFixed(1)}%`,
               },
@@ -569,10 +579,14 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
         const countryLabelsGeoJSON = {
           type: "FeatureCollection",
           features: generateJSON.features.map((feature) => {
-            const center = centroid(feature);
+        
+            const center = stateCoordinates[feature.properties.name]
             return {
               type: "Feature",
-              geometry: center.geometry,
+              geometry: {
+                type: "Point",
+                coordinates: center,
+              },
               properties: {
                 value: `${(feature.properties.stateValue * 100).toFixed(1)}%`,
               },
@@ -700,10 +714,13 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
             type: "FeatureCollection",
             features: filteredCountriesGeoJSON.features.map((feature) => {
       
-              const center = centroid(feature);
+              const center = stateCoordinates[feature.properties.name]
               return {
                 type: "Feature",
-                geometry: center.geometry,
+                geometry: {
+                  type: "Point",
+                  coordinates: center,
+                },
                 properties: {
                   value: `${(feature.properties.stateValue*100).toFixed(1)}%`,
                 },
@@ -817,7 +834,7 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
       });
     };
 
-    if (!map && regionData && regionData.data && stateData) {
+    if (!map && regionData && regionData.data && stateData && regionDataCoordinates && stateCoordinates) {
       let filteredData = regionData.data.filter(
         (item) => item.Quarter == tablePeriod1 || item.Quarter == tablePerioid2
       );
@@ -845,11 +862,11 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
       });
 
       setTableData(newArr);
-      initializeMap(regionData, stateData, period1, period2, unmetNeed);
+      initializeMap(regionData, stateData, period1, period2, unmetNeed,);
     }
 
     // return () => map && map.remove();
-  }, [map, regionData, stateData]);
+  }, [map, regionData, stateData, regionDataCoordinates, stateCoordinates]);
 
   function generatTableData(data, tableKey) {
     let filteredData = data.filter(
@@ -989,7 +1006,7 @@ const ImpactMap = ({ handleReset, regionData, stateData }) => {
           Reset Map
         </button>
         <div ref={mapContainerRef} style={{ width: "100%", height: "70vh" }} />
-        {tableData && (
+        {tableData && false && (
           <div className="flex mt-8 flex-col items-start">
             <div className="flex mt-4 items-center gap-4">
               <label className="block text-sm font-medium text-gray-900 dark:text-white">
