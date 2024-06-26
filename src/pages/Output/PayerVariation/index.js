@@ -40,7 +40,7 @@ const PayerVariation = () => {
     minColor: "#00FF00",
     maxDepth: 0,
     maxPostDepth: 0,
-    midColor: "#fff",
+    midColor: "#808000",
     maxColor: "#FF0000",
     headerHeight: 15,
     fontColor: "black",
@@ -63,7 +63,7 @@ const PayerVariation = () => {
   };
   const options2 = {
     minColor: "#00FF00",
-    midColor: "#ddd",
+    midColor: "#808000",
     maxColor: "#FF0000",
     headerHeight: 15,
     fontColor: "black",

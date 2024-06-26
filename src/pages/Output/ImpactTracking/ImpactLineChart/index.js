@@ -11,6 +11,13 @@ import { MultiSelect } from "react-multi-select-component";
 import { convertToQuarter } from "../../PatientOpportunityMapping/Popup";
 import { customOptionRenderer } from "../../../../components/Table";
 
+const customStyles = {
+  menu: (provided) => ({
+    ...provided,
+    zIndex: 1000, // Increase this value as needed
+  }),
+};
+
 const options = {
   responsive: true,
   scales: {
@@ -256,8 +263,6 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
         }),
       };
     }
-  
-
     setLineChartData(data);
   }
 
@@ -294,7 +299,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
   };
 
   return lineChartData ? (
-    <div className="my-8">
+    <div className="mt-4 mb-8 w-full">
       <div className="flex flex-col items-start w-full justify-between">
         <div className="flex items-center gap-8">
           {RegionsList && type == "Region" && (
@@ -308,9 +313,10 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
                   label: item,
                   value: item,
                 }))}
-                className="w-[10rem] z-[5]"
+                className="w-[10rem] z-[10]"
                 value={selectedRegion || []}
                 onChange={(val) => handleToggleSelect(val, "region")}
+                styles={customStyles} 
               />
             </div>
           )}
@@ -325,9 +331,10 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
                   label: item,
                   value: item,
                 }))}
-                className="w-[10rem] z-[5]"
+                className="w-[10rem] z-[10]"
                 value={selectedStates || []}
                 onChange={(val) => handleToggleSelect(val, "state")}
+                styles={customStyles} 
               />
             </div>
           )}
@@ -379,6 +386,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
             className="w-[20rem] z-[5]"
             value={unmetNeed || []}
             onChange={(val) => handleSelectMultipleUnmet(val)}
+            styles={customStyles} 
           />
         </div>
       </div>
