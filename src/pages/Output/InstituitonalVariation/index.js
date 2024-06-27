@@ -33,6 +33,7 @@ const InstitutionalVariation = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalDetails, setModalDetails] = useState(null);
   const [sizeValueMap, setSizeValueMap] = useState({});
+  const [loading,setLoading] = useState(false);
   const [treeDataById, setTreeDataById] = useState({});
   const [values, setValues] = useState({
     min: 0,
@@ -199,7 +200,12 @@ const InstitutionalVariation = () => {
   };
 
   const closeModal = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
     setShowModal(false);
+    setModalDetails(null)
   };
 
   const fetchData = (
@@ -283,7 +289,7 @@ const InstitutionalVariation = () => {
 
   return (
     <div className="w-full flex flex-col gap-4">
-      {TreeData ? (
+      {TreeData && !loading ? (
         <>
           <div className="flex flex-col mb-8  w-full justify-between items-start">
             <div className="flex mb-6 items-center gap-8">
