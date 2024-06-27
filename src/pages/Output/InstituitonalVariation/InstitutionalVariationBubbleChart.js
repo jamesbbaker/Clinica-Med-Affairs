@@ -79,14 +79,14 @@ const InstitutionalVariationBubbleChart = ({StateName, region,selectedSpeciality
     }
   }, [lineX, lineY, state.data]);
 
-//   useEffect(() => {
-
-//   },[StateName, region,selectedSpeciality ])
+  useEffect(() => {
+    fetchData()
+  },[StateName, region,selectedSpeciality ])
 
   const fetchData = (
     filters = {
-      specialties: state.primary,
-      region: state.region,
+      specialties:selectedSpeciality ,
+      region: region,
     }
   ) => {
     const specialties = filters.specialties;
