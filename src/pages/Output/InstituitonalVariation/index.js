@@ -16,6 +16,7 @@ import Popup from "reactjs-popup";
 import CustomDropdown from "../../../components/CustomDropdown";
 import InstitutionalVariationBubbleChart from "./InstitutionalVariationBubbleChart";
 import BarChartPopup from "../PatientOpportunityMapping/Popup";
+import { getLowestValue, highestValue } from "../../../utils/MathUtils";
 
 const filters = [...Object.keys(selectLabels)];
 
@@ -30,9 +31,13 @@ const InstitutionalVariation = () => {
   const [rawData, setRawData] = useState(null);
   const [toggleFilter, setToggleFilter] = useState(filters[0]);
   const [showModal, setShowModal] = useState(false);
-  const [modalDetails, setModalDetails] = useState({});
+  const [modalDetails, setModalDetails] = useState(null);
   const [sizeValueMap, setSizeValueMap] = useState({});
   const [treeDataById, setTreeDataById] = useState({});
+  const [values, setValues] = useState({
+    min: 0,
+    max: 0,
+  });
   const [data1, setData1] = useState({});
 
   function formatPercentage(value) {
@@ -123,6 +128,7 @@ const InstitutionalVariation = () => {
         ],
       };
     }
+    
 
     setValue({
       mapValue1: generateChartData(mapBarCharts.chart1),
@@ -168,17 +174,27 @@ const InstitutionalVariation = () => {
   }, []);
 
   const handleOpen = (row, value, data) => {
-    if (row === modalDetails.name) {
+    if (modalDetails && row === modalDetails.name) {
       return;
     }
     setShowModal(true);
-    let _data = treeDataById[`${row}_Plan`];
+    let _data = treeDataById[`${row}_Site`];
+
     setChartDataValue(setData1, null, [_data]);
     setModalDetails(_data);
   };
 
   const handleToggleFilter = (e) => {
     setToggleFilter(e);
+    let secondlevelData = rawData.filter(
+      (item) => item.Parent && item.Parent !== "GLOBAL"
+    );
+    let lowestValue = getLowestValue(secondlevelData, toggleFilter);
+    let _highestValue = highestValue(secondlevelData, toggleFilter);
+    setValues({
+      min: lowestValue,
+      max: _highestValue,
+    });
     handleTreeData(rawData, e);
   };
 
@@ -228,6 +244,16 @@ const InstitutionalVariation = () => {
           let _data = JSON.parse(res.replaceAll("NaN",0))
           if (_data) {
             setRawData(_data.data);
+            let secondlevelData = _data.data.filter(
+              (item) => item.Parent && item.Parent !== "GLOBAL"
+            );
+            let lowestValue = getLowestValue(secondlevelData, toggleFilter);
+            let _highestValue = highestValue(secondlevelData, toggleFilter);
+            setValues({
+              min: lowestValue,
+              max: _highestValue,
+            });
+
             setSpecialityOptions(_data.specialty_list.filter(item => isNaN(item)));
             setRegionOptions(_data.region_list.filter(item => isNaN(item)));
             setStateOptions(_data.state_name_list.filter(item => isNaN(item)))
@@ -341,6 +367,7 @@ const InstitutionalVariation = () => {
             </div>
           </div>
           <TreeMap
+          values={values}
             preventDrill={true}
             data={TreeData}
             options={toggleFilter == filters[0] ? options1 : options2}
@@ -350,11 +377,12 @@ const InstitutionalVariation = () => {
           <Popup
             onClose={closeModal}
             modal
-            open={false}
+            open={modalDetails != null}
             position="center center"
           >
           {data1 &&  <BarChartPopup
               insititutional={true}
+              InstitutionalTreeMap={true}
               payer={false}
               payerData={false}
               data1={data1}
