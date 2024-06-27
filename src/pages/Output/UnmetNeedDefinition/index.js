@@ -92,7 +92,7 @@ const UnmetNeedDefinitionData = {
     title:
       "Are uncontrolled or severe patients receiving ICS/beta-agonists escalated to double therapy?",
     buttonText:
-      "Failure to Escalate Uncontrolled / Severe Patients from Single Therapy",
+      "Failure to Escalate Uncontrolled/Severe Patients from Single to Double Therapy",
     column: "ICS failed escalation",
     description:
       "Patients on ICS or beta-agonists with at least one exacerbations that are not escalated to double therapy. Exacerbations are defined as visits to the ED/ER with a primary asthma diagnosis code or specific asthma treatments (e.g., emergency airway insertion, airway inhalation treatment, or nebulizer with compression).",
@@ -130,7 +130,7 @@ const UnmetNeedDefinitionData = {
     title:
       "Are uncontrolled or severe patients receiving double therapies escalated to triple therapy?",
     buttonText:
-      "Failure to Escalate Uncontrolled / Severe Patients from Double Therapy",
+      "Failure to Escalate Uncontrolled/Severe Patients from Double to Triple Therapy",
     Column: "ICS-LABA failed escalation",
     description:
       "Patients on double therapy who experience exacerbations but are not escalated to triple therapy or biologics. Exacerbations are defined as visits to the ED/ER with a primary asthma diagnosis code or specific asthma treatments (e.g., emergency airway insertion, airway inhalation treatment, or nebulizer with compression).",
@@ -883,7 +883,7 @@ const UnmetNeedDefinition = () => {
     setStatsData24(null);
     setStatsData25(null);
     setStatsData26(null);
-    setStatsData27(null)
+    setStatsData27(null);
     setModalId(null);
   };
 
@@ -1110,19 +1110,19 @@ const UnmetNeedDefinition = () => {
         .catch((err) => {
           console.log(err);
         });
-        getDataStats(
-          "ics_laba_patient_ocs_avg_mg_days_supply",
-          accessToken,
-          refreshToken
-        )
-          .then((res) => {
-            let _data = getBarChart(res, res.headers[0], res.headers[1]);
-  
-            setStatsData27(_data);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+      getDataStats(
+        "ics_laba_patient_ocs_avg_mg_days_supply",
+        accessToken,
+        refreshToken
+      )
+        .then((res) => {
+          let _data = getBarChart(res, res.headers[0], res.headers[1]);
+
+          setStatsData27(_data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
 
     if (UnmetNeedDefinitionData[key].id === "id15") {
@@ -1868,12 +1868,12 @@ const UnmetNeedDefinition = () => {
                   />
                 </>
               )}
-               {statsData27 && (
+              {statsData27 && (
                 <>
                   <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
                     Number of patients by average MG per days supply of OCS
                     prescriptions (Double)
-                </div>
+                  </div>
                   <BarChart
                     height={window.innerWidth > 1400 ? 120 : 80}
                     data={statsData27}
@@ -1885,13 +1885,13 @@ const UnmetNeedDefinition = () => {
             {dataValue && modalId == "id18" && (
               <div className="flex py-4 flex-col mb-2 items-start w-full">
                 <div>
-                  {selectLabels["Number of ICS-LABA >900mg/year steroids"]}:{" "}
+                  {">900mg / year steroids on Double Therapy"}:{" "}
                   <strong>
                     {nationalData["Number of ICS-LABA >900mg/year steroids"]}
                   </strong>
                 </div>
                 <div>
-                  {selectLabels["Percent of ICS-LABA >900mg/year steroids"]}:{" "}
+                  {">900mg / year steroids on Double Therapy percent"}:{" "}
                   <strong>
                     {nationalData[
                       "Percent of ICS-LABA >900mg/year steroids"
@@ -1900,12 +1900,7 @@ const UnmetNeedDefinition = () => {
                   </strong>
                 </div>
                 <div>
-                  {
-                    selectLabels[
-                      "Number of ICS-LABA High Steroid Usage with ER visit"
-                    ]
-                  }
-                  :{" "}
+                  {"Excessive Steroids with <5mg / OCS day on Double Therapy"}:{" "}
                   <strong>
                     {
                       nationalData[
@@ -1916,9 +1911,7 @@ const UnmetNeedDefinition = () => {
                 </div>
                 <div>
                   {
-                    selectLabels[
-                      "Percent of ICS-LABA High Steroid Usage with ER visit"
-                    ]
+                    "Excessive Steroids with <5mg / OCS day on Double Therapy percent"
                   }
                   :{" "}
                   <strong>
@@ -1929,12 +1922,7 @@ const UnmetNeedDefinition = () => {
                   </strong>
                 </div>
                 <div>
-                  {
-                    selectLabels[
-                      "Number of ICS-LABA High Steroid Usage without ER visit"
-                    ]
-                  }
-                  :{" "}
+                  {"Excessive steroids with >5mg / OCS day on Double Therapy"}:{" "}
                   <strong>
                     {
                       nationalData[
@@ -1945,9 +1933,7 @@ const UnmetNeedDefinition = () => {
                 </div>
                 <div>
                   {
-                    selectLabels[
-                      "Percent of ICS-LABA High Steroid Usage without ER visit"
-                    ]
+                    "Excessive steroids with >5mg / OCS day on Double Therapy percent"
                   }
                   :{" "}
                   <strong>

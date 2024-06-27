@@ -33,7 +33,7 @@ const InstitutionalVariation = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalDetails, setModalDetails] = useState(null);
   const [sizeValueMap, setSizeValueMap] = useState({});
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [treeDataById, setTreeDataById] = useState({});
   const [values, setValues] = useState({
     min: 0,
@@ -129,7 +129,6 @@ const InstitutionalVariation = () => {
         ],
       };
     }
-    
 
     setValue({
       mapValue1: generateChartData(mapBarCharts.chart1),
@@ -190,8 +189,8 @@ const InstitutionalVariation = () => {
     let secondlevelData = rawData.filter(
       (item) => item.Parent && item.Parent !== "GLOBAL"
     );
-    let lowestValue = getLowestValue(secondlevelData, toggleFilter);
-    let _highestValue = highestValue(secondlevelData, toggleFilter);
+    let lowestValue = getLowestValue(secondlevelData, e);
+    let _highestValue = highestValue(secondlevelData, e);
     setValues({
       min: lowestValue,
       max: _highestValue,
@@ -205,7 +204,7 @@ const InstitutionalVariation = () => {
       setLoading(false);
     }, 500);
     setShowModal(false);
-    setModalDetails(null)
+    setModalDetails(null);
   };
 
   const fetchData = (
@@ -216,9 +215,10 @@ const InstitutionalVariation = () => {
       stateName: StateName,
     }
   ) => {
+    setLoading(true);
     const specialties = filterValues.specialty;
     const _region = filterValues.region;
-    const _stateName = filterValues.stateName
+    const _stateName = filterValues.stateName;
     let queryString = `institutional_treemap_data?&`; // Start with 'hcp_data?&'
 
     if (specialties && specialties.length > 0) {
@@ -247,7 +247,7 @@ const InstitutionalVariation = () => {
     getDataStats(finalUrl, accessToken, refreshToken)
       .then((res) => {
         if (res) {
-          let _data = JSON.parse(res.replaceAll("NaN",0))
+          let _data = JSON.parse(res.replaceAll("NaN", 0));
           if (_data) {
             setRawData(_data.data);
             let secondlevelData = _data.data.filter(
@@ -260,10 +260,15 @@ const InstitutionalVariation = () => {
               max: _highestValue,
             });
 
-            setSpecialityOptions(_data.specialty_list.filter(item => isNaN(item)));
-            setRegionOptions(_data.region_list.filter(item => isNaN(item)));
-            setStateOptions(_data.state_name_list.filter(item => isNaN(item)))
+            setSpecialityOptions(
+              _data.specialty_list.filter((item) => isNaN(item))
+            );
+            setRegionOptions(_data.region_list.filter((item) => isNaN(item)));
+            setStateOptions(
+              _data.state_name_list.filter((item) => isNaN(item))
+            );
             handleTreeData(_data.data, toggleFilter);
+            setLoading(false);
           }
         }
       })
@@ -280,9 +285,8 @@ const InstitutionalVariation = () => {
     if (index == "region") {
       setRegion(val);
     } else if (index == "state") {
-      setStateName(val)
-    } 
-    else {
+      setStateName(val);
+    } else {
       setSelectedSpeciality(val);
     }
   };
@@ -346,7 +350,7 @@ const InstitutionalVariation = () => {
                     />
                   </div>
                 )}
-                {StateOptions && (
+                {/* {StateOptions && (
                   <div className="flex items-center gap-2">
                     <label className="block text-sm font-medium text-gray-900 dark:text-white">
                       State Select
@@ -362,7 +366,7 @@ const InstitutionalVariation = () => {
                       onChange={(val) => handleToggleSelect(val, "state")}
                     />
                   </div>
-                )}
+                )} */}
               </div>
               <button
                 onClick={handleApplyFilter}
@@ -373,7 +377,7 @@ const InstitutionalVariation = () => {
             </div>
           </div>
           <TreeMap
-          values={values}
+            values={values}
             preventDrill={true}
             data={TreeData}
             options={toggleFilter == filters[0] ? options1 : options2}
@@ -386,16 +390,17 @@ const InstitutionalVariation = () => {
             open={modalDetails != null}
             position="center center"
           >
-          {data1 &&  <BarChartPopup
-              insititutional={true}
-              InstitutionalTreeMap={true}
-              payer={false}
-              payerData={false}
-              data1={data1}
-            />}
+            {data1 && (
+              <BarChartPopup
+                insititutional={true}
+                InstitutionalTreeMap={true}
+                payer={false}
+                payerData={false}
+                closeModal={closeModal}
+                data1={data1}
+              />
+            )}
           </Popup>
-
-          <InstitutionalVariationBubbleChart StateName={StateName} region={region} primary={selectedSpeciality} />
         </>
       ) : (
         <div role="status" className="grid place-content-center h-[200px]">
@@ -417,6 +422,13 @@ const InstitutionalVariation = () => {
           </svg>
           <span className="sr-only">Loading...</span>
         </div>
+      )}
+      {StateName && region && selectedSpeciality && (
+        <InstitutionalVariationBubbleChart
+          StateName={StateName}
+          region={region}
+          primary={selectedSpeciality}
+        />
       )}
     </div>
   );

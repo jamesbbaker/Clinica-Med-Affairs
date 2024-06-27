@@ -234,9 +234,9 @@ export const mapSelectLabels = {
   "Percent of ICS-LABA High Steroid Usage with ER visit":
     "Excessive Steroids with <5mg/OCS day on Double Therapy percent",
   "Number of ICS-LABA High Steroid Usage without ER visit":
-    "Excessive Steroidd with >5mg/OCS day on Double Therapy",
+    "excessive steroids with >5mg/OCS day on Double Therapy",
   "Percent of ICS-LABA High Steroid Usage without ER visit":
-    "Excessive Steroidd with >5mg/OCS day on Double Therapy percent",
+    "excessive steroids with >5mg/OCS day on Double Therapy percent",
   "Number of ICS-LABA Escalation Delay":
     "Delay in Escalating Patients from Double to Triple Therapy",
   "Percent of ICS-LABA Escalation Delay":
@@ -313,9 +313,9 @@ export const selectLabels = {
   "Percent of ICS-LABA High Steroid Usage with ER visit":
     "Excessive Steroids with <5mg/OCS day on Double Therapy percent",
   "Number of ICS-LABA High Steroid Usage without ER visit":
-    "Excessive Steroidd with >5mg/OCS day on Double Therapy",
+    "excessive steroids with >5mg/OCS day on Double Therapy",
   "Percent of ICS-LABA High Steroid Usage without ER visit":
-    "Excessive Steroidd with >5mg/OCS day on Double Therapy percent",
+    "excessive steroids with >5mg/OCS day on Double Therapy percent",
   "Number of ICS-LABA Escalation Delay":
     "Delay in Escalating Patients from Double to Triple Therapy",
   "Percent of ICS-LABA Escalation Delay":

@@ -183,7 +183,7 @@ const BarChartPopup = ({
   };
 
   return (
-    <div className="flex flex-col h-[80vh] overflow-y-auto items-start gap-4">
+    <div className={`flex flex-col h-[80vh] overflow-y-auto ${!InstitutionalTreeMap && `items-start`} gap-4`}>
       <div
         style={{
           justifyContent: payerData && !payer ? "space-between" : "flex-start",
@@ -194,7 +194,8 @@ const BarChartPopup = ({
         className="flex text-lg py-6 flex-col mt-4 items-start"
       >
         {insititutional ? (
-          <>
+          <div className="flex w-full justify-between items-start">
+          <div className="flex flex-col items-start">
             <div className="flex items-center">
               Hospital / Clinic Affiliation
               <strong className="ml-2">
@@ -211,7 +212,13 @@ const BarChartPopup = ({
                   : data1[0]["Cleaned IDN/Parent Hospital"]}
               </strong>
             </div>
-          </>
+          </div>
+          <button
+          onClick={closeModal}
+          className="flex-end border px-5 py-1 text-md rounded-sm"
+        >
+          RESET
+        </button></div>
         ) : (
           <>
             <div className="flex items-center">
