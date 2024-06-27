@@ -121,7 +121,7 @@ export const unmetLabels = {
     id: "Total No Treatment",
     percent: "Percent No Treatment",
   },
-  "Failure to Escalate Uncontrolled/Severe Patients from Single to Double Therapy":
+  "Failure to Escalate Uncontrolled / Severe Patients from Single Therapy":
     {
       id: "Total ICS High Steroid Usage",
       percent: "Percent ICS High Steroid Usage",
@@ -134,7 +134,7 @@ export const unmetLabels = {
     id: "Total ICS Escalation Delay",
     percent: "Percent ICS Escalation Delay",
   },
-  "Failure to Escalate Uncontrolled/Severe Patients from Double to Triple Therapy":
+  "Failure to Escalate Uncontrolled / Severe Patients from Double Therapy":
     {
       id: "Total ICS-LABA High Steroid Usage",
       percent: "Percent ICS-LABA High Steroid Usage",
@@ -230,13 +230,13 @@ export const mapSelectLabels = {
   "Percent of ICS-LABA >900mg/year steroids":
     ">900mg/year steroids on Double Therapy percent",
   "Number of ICS-LABA High Steroid Usage with ER visit":
-    "Excessive Steroid Usage with ER visit on Double Therapy",
+    "Excessive Steroids with <5mg/OCS day on Double Therapy",
   "Percent of ICS-LABA High Steroid Usage with ER visit":
-    "Excessive Steroid Usage with ER visit on Double Therapy percent",
+    "Excessive Steroids with <5mg/OCS day on Double Therapy percent",
   "Number of ICS-LABA High Steroid Usage without ER visit":
-    "Excessive Steroid Usage without ER visit on Double Therapy",
+    "Excessive Steroidd with >5mg/OCS day on Double Therapy",
   "Percent of ICS-LABA High Steroid Usage without ER visit":
-    "Excessive Steroid Usage without ER visit on Double Therapy percent",
+    "Excessive Steroidd with >5mg/OCS day on Double Therapy percent",
   "Number of ICS-LABA Escalation Delay":
     "Delay in Escalating Patients from Double to Triple Therapy",
   "Percent of ICS-LABA Escalation Delay":
@@ -285,9 +285,9 @@ export const selectLabels = {
   "Percent of No Treatment":
     "Exacerbation Prior to Receiving Single Therapy percent",
   "Number of ICS High Steroid Usage":
-    "Failure to Escalate Uncontrolled/Severe Patients from Single to Double Therapy",
+    "Failure to Escalate Uncontrolled / Severe Patients from Single Therapy",
   "Percent of ICS High Steroid Usage":
-    "Failure to Escalate Uncontrolled/Severe Patients from Single to Double Therapy percent",
+    "Failure to Escalate Uncontrolled / Severe Patients from Single Therapy percent",
   "Number of ICS Exacerbation Failed Escalation":
     "Excessive Steroid Usage on Single Therapy",
   "Percent of ICS Exacerbation Failed Escalation":
@@ -297,9 +297,9 @@ export const selectLabels = {
   "Percent of ICS Escalation Delay":
     "Delay in Escalating Patients from Single to Double Therapy percent",
   "Number of ICS-LABA High Steroid Usage":
-    "Failure to Escalate Uncontrolled/Severe Patients from Double to Triple Therapy",
+    "Failure to Escalate Uncontrolled / Severe Patients from Double Therapy",
   "Percent of ICS-LABA High Steroid Usage":
-    "Failure to Escalate Uncontrolled/Severe Patients from Double to Triple Therapy percent",
+    "Failure to Escalate Uncontrolled / Severe Patients from Double Therapy percent",
   "Number of ICS-LABA Exacerbation Failed Escalation":
     "Excessive Steroid Usage on Double Therapy",
   "Percent of ICS-LABA Exacerbation Failed Escalation":
@@ -309,13 +309,13 @@ export const selectLabels = {
   "Percent of ICS-LABA >900mg/year steroids":
     ">900mg/year steroids on Double Therapy percent",
   "Number of ICS-LABA High Steroid Usage with ER visit":
-    "Excessive Steroid Usage with ER visit on Double Therapy",
+    "Excessive Steroids with <5mg/OCS day on Double Therapy",
   "Percent of ICS-LABA High Steroid Usage with ER visit":
-    "Excessive Steroid Usage with ER visit on Double Therapy percent",
+    "Excessive Steroids with <5mg/OCS day on Double Therapy percent",
   "Number of ICS-LABA High Steroid Usage without ER visit":
-    "Excessive Steroid Usage without ER visit on Double Therapy",
+    "Excessive Steroidd with >5mg/OCS day on Double Therapy",
   "Percent of ICS-LABA High Steroid Usage without ER visit":
-    "Excessive Steroid Usage without ER visit on Double Therapy percent",
+    "Excessive Steroidd with >5mg/OCS day on Double Therapy percent",
   "Number of ICS-LABA Escalation Delay":
     "Delay in Escalating Patients from Double to Triple Therapy",
   "Percent of ICS-LABA Escalation Delay":

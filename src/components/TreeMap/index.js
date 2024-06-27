@@ -220,10 +220,10 @@ const TreeMap = ({
 
   return (
     <div className="relative">
-      {/* {values && <div className="flex absolute justify-between -top-5 w-[32%] right-[2%]">
+      {values && <div className="flex absolute justify-between -top-5 w-[32%] right-[2%]">
         <div>{values.min}</div>
         <div>{values.max}</div>
-        </div>} */}
+        </div>}
       <Chart
         chartType="TreeMap"
         width="100%"

@@ -92,7 +92,7 @@ const UnmetNeedDefinitionData = {
     title:
       "Are uncontrolled or severe patients receiving ICS/beta-agonists escalated to double therapy?",
     buttonText:
-      "Failure to Escalate Uncontrolled/Severe Patients from Single to Double Therapy",
+      "Failure to Escalate Uncontrolled / Severe Patients from Single Therapy",
     column: "ICS failed escalation",
     description:
       "Patients on ICS or beta-agonists with at least one exacerbations that are not escalated to double therapy. Exacerbations are defined as visits to the ED/ER with a primary asthma diagnosis code or specific asthma treatments (e.g., emergency airway insertion, airway inhalation treatment, or nebulizer with compression).",
@@ -130,7 +130,7 @@ const UnmetNeedDefinitionData = {
     title:
       "Are uncontrolled or severe patients receiving double therapies escalated to triple therapy?",
     buttonText:
-      "Failure to Escalate Uncontrolled/Severe Patients from Double to Triple Therapy",
+      "Failure to Escalate Uncontrolled / Severe Patients from Double Therapy",
     Column: "ICS-LABA failed escalation",
     description:
       "Patients on double therapy who experience exacerbations but are not escalated to triple therapy or biologics. Exacerbations are defined as visits to the ED/ER with a primary asthma diagnosis code or specific asthma treatments (e.g., emergency airway insertion, airway inhalation treatment, or nebulizer with compression).",

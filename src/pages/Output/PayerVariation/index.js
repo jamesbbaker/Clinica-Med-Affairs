@@ -34,13 +34,21 @@ const PayerVariation = () => {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [modalDetails, setModalDetails] = useState({});
-  const [sizeValueMap, setSizeValueMap] = useState({});
+
+  function formatPercentage(value) {
+    if (selectLabels[toggleFilter].includes("percent")) {
+      return `${value.toFixed(1)}%`;
+    } else {
+      return value;
+    }
+  }
+
   const options1 = {
     enableHighlight: true,
-    minColor: "#00FF00",
+    minColor: "#fff",
     maxDepth: 0,
     maxPostDepth: 0,
-    midColor: "#808000",
+    // midColor: "#888",
     maxColor: "#FF0000",
     headerHeight: 15,
     fontColor: "black",
@@ -57,13 +65,15 @@ const PayerVariation = () => {
       return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
     <div><strong>NAME</strong>:  ${hcpValue[0]}</div>
     <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue[2]}</div>
-    <div><strong>${selectLabels[toggleFilter]}</strong>:  ${hcpValue[3]}</div>
+    <div><strong>${selectLabels[toggleFilter]}</strong>:  ${formatPercentage(
+        hcpValue[3]
+      )}</div>
      </div>`;
     },
   };
   const options2 = {
-    minColor: "#00FF00",
-    midColor: "#808000",
+    minColor: "#fff",
+    // midColor: "#888",
     maxColor: "#FF0000",
     headerHeight: 15,
     fontColor: "black",
@@ -79,16 +89,18 @@ const PayerVariation = () => {
       return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
     <div><strong>NAME</strong>:  ${hcpValue[0]}</div>
     <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue[2]}</div>
-    <div><strong>${selectLabels[toggleFilter]}</strong>:  ${hcpValue[3]}</div>
+    <div><strong>${selectLabels[toggleFilter]}</strong>:  ${formatPercentage(
+        hcpValue[3]
+      )}</div>
      </div>`;
     },
   };
-  const [selectedValues, setSelectedValues] = useState(
-    EPL_TABLE_COLUMNS.map((col) => col.accessor)
-  );
+
   const { accessToken, refreshToken } = useContext(AuthContext);
 
   const handleTreeData = (data, toggleFilter, page) => {
+    setLoading(true);
+
     if (data) {
       let treemapData = [
         [
@@ -114,7 +126,7 @@ const PayerVariation = () => {
         treemapData.push(newArr);
       });
       setTreeDataById(newObj);
-
+      setLoading(false);
       setTreeData(treemapData);
     }
   };
@@ -166,8 +178,11 @@ const PayerVariation = () => {
             ];
             let newObj = {};
             let data = _data.data;
-            let lowestValue = getLowestValue(data, toggleFilter);
-            let _highestValue = highestValue(data, toggleFilter);
+            let secondlevelData = data.filter(
+              (item) => item.Parent && item.Parent.toLowerCase() !== "global"
+            );
+            let lowestValue = getLowestValue(secondlevelData, toggleFilter);
+            let _highestValue = highestValue(secondlevelData, toggleFilter);
             setValues({
               min: lowestValue,
               max: _highestValue,
