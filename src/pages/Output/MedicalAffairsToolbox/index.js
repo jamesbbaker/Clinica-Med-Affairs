@@ -88,7 +88,7 @@ const MedicalAffairToolbox = () => {
   ) => {
     const specialties = filters.specialties;
     const region = filters.region;
-    let queryString = `institutional_variation_data?&`; // Start with 'hcp_data?&'
+    let queryString = `hcp_variation_data?&`; // Start with 'hcp_data?&'
 
     if (specialties && specialties.length > 0) {
       queryString += specialties
