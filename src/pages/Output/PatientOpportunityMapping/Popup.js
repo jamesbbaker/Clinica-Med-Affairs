@@ -109,6 +109,7 @@ const formatNumber = (num) => {
 const filterOptions = [...Object.keys(selectLabels)];
 
 const BarChartPopup = ({
+  insititutional = false,
   closeModal,
   data1,
   payer = false,
@@ -180,8 +181,6 @@ const BarChartPopup = ({
     setUnmetNeed(val);
   };
 
-
-
   return (
     <div className="flex flex-col h-[80vh] overflow-y-auto items-start gap-4">
       <div
@@ -193,48 +192,68 @@ const BarChartPopup = ({
         }}
         className="flex text-lg py-6 flex-col mt-4 items-start"
       >
-        <div className="flex items-center">
-          Name:{" "}
-          <strong className="ml-2">
-            {payerData && !payer
-              ? data1[0]["Item"].split("_")[0]
-              : payer
-              ? data1["0"]["Payer Name"]
-              : data1["0"]["Assigned Physician Name"]}
-          </strong>
-        </div>
-        {payer && 
-          <div className="flex items-center">
-          Plan name:{" "}
-          <strong className="ml-2">
-            {payerData && !payer
-              ? data1[0]["Item"].split("_")[0]
-              : payer
-              ? data1["0"]["Plan Name"]
-              : data1["0"]["Assigned Physician Name"]}
-          </strong>
-        </div>
-        }
-        {payerData && !payer && (
-          <button
-            onClick={closeModal}
-            className="flex-end border px-5 py-1 text-md rounded-sm"
-          >
-            RESET
-          </button>
-        )}
-
-        {!payerData && (
+        {insititutional ? (
           <>
             <div className="flex items-center">
-              Primary Specialty Description:{" "}
+              Hospital / Clinic Affiliation
               <strong className="ml-2">
-                {data1["0"]["Primary Specialty Description"]}
+                {data1[0]["Cleaned Affiliation"]}
               </strong>
             </div>
             <div className="flex items-center">
-              Region: <strong className="ml-2">{data1["0"]["Region"]}</strong>
+              Cleaned IDN/Parent Hospital
+              <strong className="ml-2">
+                {data1[0]["Cleaned IDN/Parent Hospital"]}
+              </strong>
             </div>
+          </>
+        ) : (
+          <>
+            <div className="flex items-center">
+              Name:{" "}
+              <strong className="ml-2">
+                {payerData && !payer
+                  ? data1[0]["Item"].split("_")[0]
+                  : payer
+                  ? data1["0"]["Payer Name"]
+                  : data1["0"]["Assigned Physician Name"]}
+              </strong>
+            </div>
+            {payer && (
+              <div className="flex items-center">
+                Plan name:{" "}
+                <strong className="ml-2">
+                  {payerData && !payer
+                    ? data1[0]["Item"].split("_")[0]
+                    : payer
+                    ? data1["0"]["Plan Name"]
+                    : data1["0"]["Assigned Physician Name"]}
+                </strong>
+              </div>
+            )}
+            {payerData && !payer && (
+              <button
+                onClick={closeModal}
+                className="flex-end border px-5 py-1 text-md rounded-sm"
+              >
+                RESET
+              </button>
+            )}
+
+            {!payerData  && (
+              <>
+                <div className="flex items-center">
+                  Primary Specialty Description:{" "}
+                  <strong className="ml-2">
+                    {data1["0"]["Primary Specialty Description"]}
+                  </strong>
+                </div>
+                <div className="flex items-center">
+                  Region:{" "}
+                  <strong className="ml-2">{data1["0"]["Region"]}</strong>
+                </div>
+              </>
+            )}
           </>
         )}
       </div>
@@ -268,7 +287,7 @@ const BarChartPopup = ({
           />
         </div>
       </div>
-      {!payerData && (
+      {!payerData && !insititutional && (
         <>
           <div className="flex mt-4 items-center gap-4">
             <label className="block text-sm font-medium text-gray-900 dark:text-white">

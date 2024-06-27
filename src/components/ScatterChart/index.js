@@ -186,7 +186,7 @@ const defaultOptions = {
 
 const ScatterChart = ({
   quadrantValues,
-  shapes= [
+  shapes = [
     {
       icon: <IoTriangle />,
       name: "Pulmonary Specialist",
@@ -206,11 +206,12 @@ const ScatterChart = ({
   ],
   lineX,
   lineY,
-  payer=false,
+  payer = false,
   setLineX,
   handleDispatchData,
   setLineY,
   state,
+  insititutional,
   data = defaultData,
   options = defaultOptions,
 }) => {
@@ -248,7 +249,7 @@ const ScatterChart = ({
       mapValue3: generateChartData(mapBarCharts.chart3),
       mapValue4: generateChartData(mapBarCharts.chart4),
       mapValue5: generateChartData(mapBarCharts.chart5),
-      ...data
+      ...data,
     });
   }
 
@@ -303,15 +304,30 @@ const ScatterChart = ({
         tooltip: {
           callbacks: {
             label: function (context) {
-              return payer ? `Payer Name: ${context.raw.name}, Plan Name: ${context.raw["Plan Name"]}, ${[
-                selectLabels[state.xLabel],
-              ]}:${context.raw.x}, ${selectLabels[state.yLabel]}:${
-                context.raw.y
-              }, Number of ICS-LABA Patients: ${context.raw.value}` :   `Name: ${context.raw.name}, ${[
-                selectLabels[state.xLabel],
-              ]}:${context.raw.x}, ${selectLabels[state.yLabel]}:${
-                context.raw.y
-              }, Number of ICS-LABA Patients: ${context.raw.value}`;
+          
+              return payer
+                ? `Payer Name: ${context.raw.name}, Plan Name: ${
+                    context.raw["Plan Name"]
+                  }, ${[selectLabels[state.xLabel]]}:${context.raw.x}, ${
+                    selectLabels[state.yLabel]
+                  }:${context.raw.y}, Number of ICS-LABA Patients: ${
+                    context.raw.value
+                  }`
+                : insititutional
+                ? `Hospital / Clinic Affiliation: ${
+                    context.raw["Cleaned Affiliation"]
+                  }, Cleaned IDN/Parent Hospital: ${
+                    context.raw["Cleaned IDN/Parent Hospital"]
+                  }, ${[selectLabels[state.xLabel]]}:${context.raw.x}, ${
+                    selectLabels[state.yLabel]
+                  }:${context.raw.y}, Number of ICS-LABA Patients: ${
+                    context.raw.value
+                  }`
+                : `Name: ${context.raw.name}, ${[selectLabels[state.xLabel]]}:${
+                    context.raw.x
+                  }, ${selectLabels[state.yLabel]}:${
+                    context.raw.y
+                  }, Number of ICS-LABA Patients: ${context.raw.value}`;
             },
           },
         },
@@ -379,7 +395,6 @@ const ScatterChart = ({
   const handleChangeY = (e) => {
     setLineY(Number(e.target.value));
   };
-
 
   return (
     <div className="min-h-[400px] relative w-full">
@@ -465,7 +480,7 @@ const ScatterChart = ({
           open={data1 != null}
           position="center center"
         >
-          <BarChartPopup payer={payer} payerData={payer} data1={data1} />
+          <BarChartPopup insititutional={insititutional} payer={payer} payerData={payer} data1={data1} />
         </Popup>
       </div>
     </div>
