@@ -183,7 +183,11 @@ const BarChartPopup = ({
   };
 
   return (
-    <div className={`flex flex-col h-[80vh] overflow-y-auto ${!InstitutionalTreeMap && `items-start`} gap-4`}>
+    <div
+      className={`flex flex-col h-[80vh] overflow-y-auto ${
+        !InstitutionalTreeMap && `items-start`
+      } gap-4`}
+    >
       <div
         style={{
           justifyContent: payerData && !payer ? "space-between" : "flex-start",
@@ -195,30 +199,33 @@ const BarChartPopup = ({
       >
         {insititutional ? (
           <div className="flex w-full justify-between items-start">
-          <div className="flex flex-col items-start">
-            <div className="flex items-center">
-              Hospital / Clinic Affiliation
-              <strong className="ml-2">
-                {InstitutionalTreeMap
-                  ? data1[0]["Item"] && data1[0]["Item"].split("_")[0]
-                  : data1[0]["Cleaned Affiliation"]}
-              </strong>
+            <div className="flex flex-col items-start">
+              <div className="flex items-center">
+                Hospital / Clinic Affiliation
+                <strong className="ml-2">
+                  {InstitutionalTreeMap
+                    ? data1[0]["Item"] && data1[0]["Item"].split("_")[0]
+                    : data1[0]["Cleaned Affiliation"]}
+                </strong>
+              </div>
+              <div className="flex items-center">
+                Cleaned IDN/Parent Hospital
+                <strong className="ml-2">
+                  {InstitutionalTreeMap
+                    ? data1[0]["Parent"] && data1[0]["Parent"] === "GLOBAL"
+                      ? data1[0]["Item"] && data1[0]["Item"].split("_")[0]
+                      : data1[0]["Parent"].split("_")[0]
+                    : data1[0]["Cleaned IDN/Parent Hospital"]}
+                </strong>
+              </div>
             </div>
-            <div className="flex items-center">
-              Cleaned IDN/Parent Hospital
-              <strong className="ml-2">
-                {InstitutionalTreeMap
-                  ? data1[0]["Parent"] && data1[0]["Parent"].split("_")[0]
-                  : data1[0]["Cleaned IDN/Parent Hospital"]}
-              </strong>
-            </div>
+            <button
+              onClick={closeModal}
+              className="flex-end border px-5 py-1 text-md rounded-sm"
+            >
+              RESET
+            </button>
           </div>
-          <button
-          onClick={closeModal}
-          className="flex-end border px-5 py-1 text-md rounded-sm"
-        >
-          RESET
-        </button></div>
         ) : (
           <>
             <div className="flex items-center">

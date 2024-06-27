@@ -178,8 +178,7 @@ const InstitutionalVariation = () => {
       return;
     }
     setShowModal(true);
-    let _data = treeDataById[`${row}_Site`];
-
+    let _data = treeDataById[`${row}_Site`] ? treeDataById[`${row}_Site`]: treeDataById[`${row}_Parent`];
     setChartDataValue(setData1, null, [_data]);
     setModalDetails(_data);
   };
