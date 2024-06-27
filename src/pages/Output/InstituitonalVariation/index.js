@@ -50,11 +50,11 @@ const InstitutionalVariation = () => {
   }
   const options1 = {
     enableHighlight: true,
-    minColor: "#fff",
     maxDepth: 0,
     maxPostDepth: 0,
-    // midColor: "#808000",
-    maxColor: "#FF0000",
+    minColor: "#fff",
+    midColor: "#FF6666",
+    maxColor: "#8B0000",
     headerHeight: 15,
     fontColor: "black",
     title: "Asthma Patients by States",
@@ -79,8 +79,8 @@ const InstitutionalVariation = () => {
 
   const options2 = {
     minColor: "#fff",
-    // midColor: "#808000",
-    maxColor: "#FF0000",
+    midColor: "#FF6666",
+    maxColor: "#8B0000",
     headerHeight: 15,
     fontColor: "black",
     title: "Asthma Patients by States",
@@ -423,7 +423,7 @@ const InstitutionalVariation = () => {
           <span className="sr-only">Loading...</span>
         </div>
       )}
-      {StateName && region && selectedSpeciality && (
+      { region && selectedSpeciality && (
         <InstitutionalVariationBubbleChart
           StateName={StateName}
           region={region}
