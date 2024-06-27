@@ -48,8 +48,8 @@ const PayerVariation = () => {
     minColor: "#fff",
     maxDepth: 0,
     maxPostDepth: 0,
-    // midColor: "#888",
-    maxColor: "#FF0000",
+    midColor: "#FF6666",
+    maxColor: "#8B0000",
     headerHeight: 15,
     fontColor: "black",
     title: "Asthma Patients by States",
@@ -73,8 +73,8 @@ const PayerVariation = () => {
   };
   const options2 = {
     minColor: "#fff",
-    // midColor: "#888",
-    maxColor: "#FF0000",
+    midColor: "#FF6666",
+    maxColor: "#8B0000",
     headerHeight: 15,
     fontColor: "black",
     title: "Asthma Patients by States",
@@ -147,12 +147,12 @@ const PayerVariation = () => {
 
   const handleToggleFilter = (e) => {
     setToggleFilter(e);
-    let data = { ...rawData };
+    let data = [...rawData];
     let secondlevelData = data.filter(
       (item) => item.Parent && item.Parent.toLowerCase() !== "global"
     );
-    let lowestValue = getLowestValue(secondlevelData, toggleFilter);
-    let _highestValue = highestValue(secondlevelData, toggleFilter);
+    let lowestValue = getLowestValue(secondlevelData, e);
+    let _highestValue = highestValue(secondlevelData, e);
     setValues({
       min: lowestValue,
       max: _highestValue,
@@ -303,7 +303,7 @@ const PayerVariation = () => {
               <BarChartPopup closeModal={closeModal} payerData data1={data1} />
             )}
           </Popup>
-          <PayerVariationBubbleChart />
+        
         </>
       ) : (
         <div role="status" className="grid place-content-center h-[200px]">
@@ -326,6 +326,7 @@ const PayerVariation = () => {
           <span className="sr-only">Loading...</span>
         </div>
       )}
+        <PayerVariationBubbleChart />
     </div>
   );
 };
