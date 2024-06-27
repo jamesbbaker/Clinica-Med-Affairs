@@ -147,6 +147,16 @@ const PayerVariation = () => {
 
   const handleToggleFilter = (e) => {
     setToggleFilter(e);
+    let data = { ...rawData };
+    let secondlevelData = data.filter(
+      (item) => item.Parent && item.Parent.toLowerCase() !== "global"
+    );
+    let lowestValue = getLowestValue(secondlevelData, toggleFilter);
+    let _highestValue = highestValue(secondlevelData, toggleFilter);
+    setValues({
+      min: lowestValue,
+      max: _highestValue,
+    });
     handleTreeData(rawData, e);
   };
 
