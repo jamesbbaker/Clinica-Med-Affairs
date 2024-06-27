@@ -110,6 +110,7 @@ const filterOptions = [...Object.keys(selectLabels)];
 
 const BarChartPopup = ({
   insititutional = false,
+  InstitutionalTreeMap = false,
   closeModal,
   data1,
   payer = false,
@@ -197,13 +198,17 @@ const BarChartPopup = ({
             <div className="flex items-center">
               Hospital / Clinic Affiliation
               <strong className="ml-2">
-                {data1[0]["Cleaned Affiliation"]}
+                {InstitutionalTreeMap
+                  ? data1[0]["Item"] && data1[0]["Item"].split("_")[0]
+                  : data1[0]["Cleaned Affiliation"]}
               </strong>
             </div>
             <div className="flex items-center">
               Cleaned IDN/Parent Hospital
               <strong className="ml-2">
-                {data1[0]["Cleaned IDN/Parent Hospital"]}
+                {InstitutionalTreeMap
+                  ? data1[0]["Parent"] && data1[0]["Parent"].split("_")[0]
+                  : data1[0]["Cleaned IDN/Parent Hospital"]}
               </strong>
             </div>
           </>
@@ -240,7 +245,7 @@ const BarChartPopup = ({
               </button>
             )}
 
-            {!payerData  && (
+            {!payerData && (
               <>
                 <div className="flex items-center">
                   Primary Specialty Description:{" "}
