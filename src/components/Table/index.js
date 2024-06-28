@@ -544,7 +544,7 @@ const Table = ({
             <tr key={index} {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) =>
                 isEligible ? (
-                  <th onClick={() => handleSort(column)}>
+                  <th style={{cursor: "pointer"}} className={"hover:bg-slate-200"} onClick={() => handleSort(column)}>
                     {selectLabels[column.render("Header")]
                       ? selectLabels[column.render("Header")]
                       : column.render("Header")}

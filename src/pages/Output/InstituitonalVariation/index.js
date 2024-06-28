@@ -276,7 +276,14 @@ const InstitutionalVariation = () => {
       });
   };
 
+  const [update, setUpdate] = useState(true)
+
+
   const handleApplyFilter = () => {
+    setUpdate(false)
+    setTimeout(() => {
+      setUpdate(true)
+    },500)
     fetchData();
   };
 
@@ -422,9 +429,8 @@ const InstitutionalVariation = () => {
           <span className="sr-only">Loading...</span>
         </div>
       )}
-      { regionOptions && specialityOptions && (
+      { regionOptions && update && specialityOptions && (
         <InstitutionalVariationBubbleChart
-          StateName={StateName}
           region={region}
           primary={selectedSpeciality}
         />

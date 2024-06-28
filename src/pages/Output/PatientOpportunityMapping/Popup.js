@@ -219,12 +219,12 @@ const BarChartPopup = ({
                 </strong>
               </div>
             </div>
-            <button
+           {InstitutionalTreeMap &&  <button
               onClick={closeModal}
               className="flex-end border px-5 py-1 text-md rounded-sm"
             >
               RESET
-            </button>
+            </button>}
           </div>
         ) : (
           <>
