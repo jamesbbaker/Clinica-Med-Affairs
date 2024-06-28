@@ -38,7 +38,7 @@ export const menuList = [
   },
   {
     name: "outputs",
-    label: "Outputs",
+    label: "",
     children: [
       {
         name: APP_ROUTES_LABEL.patient_opportunity_mapping_and_strategy,
