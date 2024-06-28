@@ -422,7 +422,7 @@ const InstitutionalVariation = () => {
           <span className="sr-only">Loading...</span>
         </div>
       )}
-      { region && selectedSpeciality && (
+      { regionOptions && specialityOptions && (
         <InstitutionalVariationBubbleChart
           StateName={StateName}
           region={region}

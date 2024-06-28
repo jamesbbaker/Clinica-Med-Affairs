@@ -347,7 +347,7 @@ const Table = ({
           if (!valHeaders.includes(item.Header) && index !== 2) {
             item.toggleHidden();
           }
-          if (index == 2) {
+          if (index == 2 && !value) {
             setValue([
               {
                 col: item,

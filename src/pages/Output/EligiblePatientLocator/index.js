@@ -134,7 +134,8 @@ const EligiblePatientLocator = () => {
 
     // Add other query parameters as needed
     const additionalParams = {
-      min_Number_of_Asthma_Patients: filterState["Number of Asthma Patients"].min,
+      min_Number_of_Asthma_Patients:
+        filterState["Number of Asthma Patients"].min,
       max_Number_of_Asthma_Patients:
         filterState["Number of Asthma Patients"]?.max !== undefined &&
         filterState["Number of Asthma Patients"].max !== 0
@@ -339,8 +340,6 @@ const EligiblePatientLocator = () => {
       page_size: size,
     };
 
-   
-
     // Concatenate additional parameters (filter out undefined values)
     const urlParams = Object.entries(additionalParams)
       .filter(
@@ -353,8 +352,6 @@ const EligiblePatientLocator = () => {
     const finalUrl = `${queryString}${
       urlParams.length > 0 ? "&" : ""
     }${urlParams}`;
-
-    console.log(finalUrl)
 
     getDataStats(finalUrl, accessToken, refreshToken)
       .then((res) => {
@@ -413,7 +410,7 @@ const EligiblePatientLocator = () => {
       mapValue3: generateChartData(mapBarCharts.chart3),
       mapValue4: generateChartData(mapBarCharts.chart4),
       mapValue5: generateChartData(mapBarCharts.chart5),
-      ...data
+      ...data,
     });
   }
 
@@ -492,12 +489,7 @@ const EligiblePatientLocator = () => {
     return USERS_TABLE_COLUMNS;
   }, []);
 
-  const handleFilter = (
-    speciality,
-    region,
-    stateName,
-    organisation
-  ) => {
+  const handleFilter = (speciality, region, stateName, organisation) => {
     fetchData(
       currentPage,
       currentSize,
@@ -515,13 +507,19 @@ const EligiblePatientLocator = () => {
   };
 
   const handleSort = (column) => {
-    let _sortOrder = "asc";
+    let _sortOrder = "desc";
     let columnId = column.id == "Name" ? "First Name" : column.id;
     if (sortBy == columnId) {
-      setsortOrder("desc");
-      _sortOrder = "desc";
+      setsortOrder((prev) => {
+        if (prev == "desc") {
+          _sortOrder = "asc";
+          return "asc";
+        } else {
+          _sortOrder = "desc";
+          return "desc";
+        }
+      });
     }
-
     setSortBy(columnId);
     fetchData(
       currentPage,
@@ -535,12 +533,10 @@ const EligiblePatientLocator = () => {
     );
   };
 
- 
-
   return statsData1 !== null && !loading ? (
     <>
       <Table
-      isEligible={true}
+        isEligible={true}
         dispatch={dispatch}
         setFilterList={setFilterList}
         filterList={filterList}
