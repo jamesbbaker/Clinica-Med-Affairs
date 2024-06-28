@@ -502,6 +502,14 @@ const PatientOpportunityMapping = () => {
                       },
                       y: {
                         stacked: true,
+                        ticks: {
+                          font: {
+                            size: 13.5,
+                            weight: 500,
+                            // family: "Montserrat"
+                          },
+                        },
+                        color: '#000',
                       },
                     },
                     plugins: {
@@ -513,7 +521,7 @@ const PatientOpportunityMapping = () => {
                           label: function (tooltipItem) {
                             const value = tooltipItem.raw;
                             const total = 1680000;
-                            const percentage = ((value / total) * 100).toFixed(
+                            const percentage = ((value / total) * 10).toFixed(
                               2
                             );
                             return `${percentage}% (${value.toLocaleString()})`;

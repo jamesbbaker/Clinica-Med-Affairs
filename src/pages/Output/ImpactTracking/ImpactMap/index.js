@@ -142,6 +142,7 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
   const [hoverInfo, setHoverInfo] = useState(null);
   const [selectedRegion, setSelectedRegion] = useState(null);
   const mapref = useRef(null);
+  const [update, setUpdate] = useState(false);
 
   const handleSelect = (val) => {
     setUnmetNeed(val);
@@ -157,11 +158,11 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
 
   const generateStateJSON = (
     countryGeoJSON,
-    period1,
-    period2,
+   
     unmetNeed,
     stateData
   ) => {
+   
     let stateByName = {};
     stateData.data.map((item) => {
       if (stateByName[item["State Name"]]) {
@@ -193,6 +194,7 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
   };
 
   const generatePercentageChange = (hoverInfo) => {
+    
     if (hoverInfo.stateFeatures) {
       let _period2 = hoverInfo.stateFeatures.filter(
         (item) => item.Quarter == period2
@@ -312,8 +314,7 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
             type: "FeatureCollection",
             features: filteredCountries,
           },
-          period1,
-          period2,
+       
           unmetNeed,
           stateData
         );
@@ -354,7 +355,7 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
         }
       }
     }
-  }, [period1, period2, unmetNeed]);
+  }, [period1,update, period2, unmetNeed]);
 
   useEffect(() => {
     if (tablePeriod1 && tablePerioid2 && regionData && stateData) {
@@ -479,8 +480,7 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
 
         const generateJSON = generateStateJSON(
           countryGeoJSON,
-          period1,
-          period2,
+         
           unmetNeed,
           stateData
         );
@@ -686,6 +686,7 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
 
         // Click region to show countries
         map.on("click", "regions-layer", (e) => {
+          setUpdate(prev => !prev)
           const regionName = e.features[0].properties.name;
           const countriesInRegion = regionsData[regionName];
           setRegion({
@@ -697,13 +698,13 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
           const filteredCountries = countryGeoJSON.features.filter((feature) =>
             countriesInRegion.includes(feature.properties.name)
           );
+       
           const filteredCountriesGeoJSON = generateStateJSON(
             {
               type: "FeatureCollection",
               features: filteredCountries,
             },
-            period1,
-            period2,
+           
             unmetNeed,
             stateData
           );

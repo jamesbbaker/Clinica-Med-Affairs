@@ -480,7 +480,7 @@ const ScatterChart = ({
           open={data1 != null}
           position="center center"
         >
-          <BarChartPopup insititutional={insititutional} payer={payer} payerData={payer} data1={data1} />
+          <BarChartPopup InstitutionalTreeMap={false} insititutional={insititutional} payer={payer} payerData={payer} data1={data1} />
         </Popup>
       </div>
     </div>

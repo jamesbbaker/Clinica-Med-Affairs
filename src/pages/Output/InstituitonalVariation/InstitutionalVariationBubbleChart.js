@@ -39,7 +39,7 @@ const reducer = (state, action) => {
   }
 };
 
-const InstitutionalVariationBubbleChart = ({StateName, region,selectedSpeciality}) => {
+const InstitutionalVariationBubbleChart = ({StateName, applyFilter, region,selectedSpeciality}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
@@ -79,9 +79,10 @@ const InstitutionalVariationBubbleChart = ({StateName, region,selectedSpeciality
     }
   }, [lineX, lineY, state.data]);
 
-  useEffect(() => {
-    fetchData()
-  },[StateName, region,selectedSpeciality ])
+useEffect(() => {
+  fetchData()
+}, [applyFilter])
+  
 
   const fetchData = (
     filters = {
@@ -89,9 +90,10 @@ const InstitutionalVariationBubbleChart = ({StateName, region,selectedSpeciality
       region: region,
     }
   ) => {
+  
     const specialties = filters.specialties;
     const region = filters.region;
-    let queryString = `institutional_variation_data?&`; // Start with 'hcp_data?&'
+    let queryString = `institutional_barchart_data?&`; // Start with 'hcp_data?&'
 
     if (specialties && specialties.length > 0) {
       queryString += specialties
@@ -106,7 +108,7 @@ const InstitutionalVariationBubbleChart = ({StateName, region,selectedSpeciality
     // Combine the base URL, dynamic specialties, and additional parameters
     const finalUrl = `${queryString}`;
 
-    getDataStats("institutional_barchart_data", accessToken, refreshToken)
+    getDataStats(finalUrl, accessToken, refreshToken)
       .then((res) => {
         let _data = JSON.parse(res.replaceAll("NaN", 0));
       

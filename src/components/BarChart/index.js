@@ -36,9 +36,10 @@ export const _options = {
         min: 0,
         autoSkip: false,
         font: {
-          size: 11,
-          weight: 700,
+          size: 13.5,
+          weight: 500,
         },
+        color: "#000",
       },
     },
     x: {
@@ -47,8 +48,8 @@ export const _options = {
         text: "Patients",
       },
       ticks: {
-        callback: function(value, index, values) {
-          if (value === 0) return '0';
+        callback: function (value, index, values) {
+          if (value === 0) return "0";
           else if (value >= 1e6 || value <= -1e6) {
             // Convert to million with one decimal place
             return `${(value / 1e6).toFixed(value % 1e6 !== 0 ? 1 : 0)}m`;
@@ -60,7 +61,7 @@ export const _options = {
           }
         },
         font: {
-          size: 10,
+          size: 12,
         },
       },
     },
@@ -124,10 +125,8 @@ const BarChart = ({
   };
 
   return (
-    <div className="px-4 w-full h-full mt-2 rounded-lg py-4">
-      {label && (
-        <div className="text-[500] text-[#555555] text-md">{label}</div>
-      )}
+    <div className="px-2 w-full h-full mt-2 rounded-lg">
+      {label && <div className="text-[500] text-[#000] text-md">{label}</div>}
       <Bar
         height={height}
         ref={chartRef}
