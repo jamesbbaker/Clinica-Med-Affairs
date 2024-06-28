@@ -32,6 +32,7 @@ const ListItems = ({ items }) => {
         />
       </Popup>
       <Table
+      marginTop="3rem"
       setItemId={setItemId}
         TableData={items}
         TableColummns={USERS_TABLE_COLUMNS}

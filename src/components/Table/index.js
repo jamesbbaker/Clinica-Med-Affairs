@@ -31,7 +31,6 @@ const getMinValue = (data, label) => {
 };
 
 const getMaxValue = (data, label) => {
- 
   let minValue = 0;
   data.map((item) => {
     if (parseFloat(item[label]) > minValue) {
@@ -71,7 +70,6 @@ function normalizeValue(value, minValue, maxValue) {
 
 // Function to interpolate color
 function interpolateColor(value, minValue, midValue, maxValue) {
-  
   let normalizedValue = normalizeValue(value, minValue, maxValue);
   return colormap(normalizedValue);
 }
@@ -544,7 +542,11 @@ const Table = ({
             <tr key={index} {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) =>
                 isEligible ? (
-                  <th style={{cursor: "pointer"}} className={"hover:bg-slate-200"} onClick={() => handleSort(column)}>
+                  <th
+                    style={{ cursor: "pointer" }}
+                    className={"hover:bg-slate-200"}
+                    onClick={() => handleSort(column)}
+                  >
                     {selectLabels[column.render("Header")]
                       ? selectLabels[column.render("Header")]
                       : column.render("Header")}
@@ -570,6 +572,7 @@ const Table = ({
                   </th>
                 )
               )}
+              {UserTable && <th></th>}
             </tr>
           ))}
         </thead>
@@ -596,7 +599,7 @@ const Table = ({
                     cell.render("Cell").props.data,
                     invertedMapLabels[_header]
                   );
-           
+
                   let currentValue = parseFloat(cellValue);
                   let midValue = (maxValue - Math.abs(minValue)) / 2;
                   let background = colorCells
@@ -617,7 +620,7 @@ const Table = ({
                       {...cell.getCellProps()}
                     >
                       {colorCells &&
-                     Object.values(selectLabels).includes(_header)
+                      Object.values(selectLabels).includes(_header)
                         ? `${(cellValue * 100).toFixed(1)}%`
                         : typeof cellValue === "number"
                         ? cell.render("Cell").props &&
@@ -632,12 +635,13 @@ const Table = ({
                   );
                 })}
                 {UserTable && (
-                  <div
+                  <td
+                    role="cell"
                     onClick={() => setItemId(row.values.email)}
-                    className="absolute w-[1rem] z-[4] h-[100%] hover:scale-[1.2] transition-all ease-in-out duration-300 right-4 grid place-content-center"
+                    className="w-[1rem] z-[4]  hover:scale-[1.2] transition-all ease-in-out duration-300 "
                   >
                     <AiOutlineDelete />
-                  </div>
+                  </td>
                 )}
               </tr>
             );
