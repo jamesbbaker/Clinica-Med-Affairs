@@ -101,6 +101,10 @@ export function LineChart({
 }) {
   const [selectedValue, setSelectedValue] = useState(0);
   const [chartData, setChartData] = useState(data);
+  const [arbitraryLineValues, setArbitraryLine] = useState({
+    min:0,
+    max: 0
+  })
   const [loading, setLoading] = useState(false);
   let arbitraryLine = {
     id: "arbitraryLine",
@@ -109,6 +113,10 @@ export function LineChart({
 
   useEffect(() => {
     setChartData(data);
+    setArbitraryLine(prev => ({
+      ...prev,
+      max: data.labels.length
+    }))
   }, [data]);
 
   const intersectDataVerticalLine = {
@@ -173,7 +181,7 @@ export function LineChart({
               id="labels-range-input"
               type="range"
               min={0}
-              max={2500}
+              max={arbitraryLineValues.max}
               onChange={handleChange}
               defaultValue={0}
               className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-500"
