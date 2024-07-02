@@ -995,17 +995,19 @@ const UnmetNeedDefinition = () => {
           data: responseData.map((item) => item[type2]),
           borderColor: sortFn
             ? "rgb(542, 62, 35, 0.8)"
-            : responseData.map((item) =>
-                getIntValue(item[type1]) <= 450
-                  ? "rgb(542, 62, 35, 0.8)"
-                  : "rgb(0,212,100, 0.7)"
+            : responseData.map(
+                (item) => "rgb(542, 62, 35, 0.8)"
+                // getIntValue(item[type1]) <= 450
+                //   ? "rgb(542, 62, 35, 0.8)"
+                //   : "rgb(0,212,100, 0.7)"
               ),
-          backgroundColor: responseData.map((item) =>
-            sortFn
-              ? "rgb(542, 62, 35, 0.8)"
-              : getIntValue(item[type1]) <= 450
-              ? "rgb(542, 62, 35)"
-              : "rgb(0,212,100)"
+          backgroundColor: responseData.map(
+            (item) =>"rgb(542, 62, 35, 0.8)"
+            // sortFn
+            //   ? "rgb(542, 62, 35, 0.8)"
+            //   : getIntValue(item[type1]) <= 450
+            //   ? "rgb(542, 62, 35)"
+            //   : "rgb(0,212,100)"
           ),
           borderWidth: 2,
         },
@@ -1017,7 +1019,10 @@ const UnmetNeedDefinition = () => {
   const handleClick = (key) => {
     if (nationalData) {
       setModalId(key);
-      console.log(nationalData, unmetLabels[UnmetNeedDefinitionData[key].buttonText])
+      console.log(
+        nationalData,
+        unmetLabels[UnmetNeedDefinitionData[key].buttonText]
+      );
       setDataValue({
         id: nationalData[
           unmetLabels[UnmetNeedDefinitionData[key].buttonText].id
