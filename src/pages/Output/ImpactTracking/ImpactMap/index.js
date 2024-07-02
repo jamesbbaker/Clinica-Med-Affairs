@@ -989,9 +989,9 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
           >
             <div className="flex font-[600] flex-col items-start">
               <div>{hoverInfo.name}</div>
-              {generatePercentageChange(hoverInfo).map((item) => {
+              {generatePercentageChange(hoverInfo).map((item, index) => {
                 return (
-                  <div className="flex items-center gap-2">
+                  <div key={index} className="flex items-center gap-2">
                     <div className="font-[600]">{item.item}: </div>
                     <div className="font-[400]">{`${(item.percentageChange * 100).toFixed(1)}%`}</div>
                   </div>

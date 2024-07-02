@@ -1253,9 +1253,9 @@ const DetailsComponent = ({ item, currentLevel, currentToggle }) => {
   return currentLevel == "hcp" ? (
     <div className="flex max-h-[40vh] flex-wrap flex-col items-start">
       {item.length == 1 ? (
-        item.map((_detail) => {
+        item.map((_detail, index) => {
           return (
-            <div className="text-sm max-w-[10rem]">
+            <div key={index} className="text-sm max-w-[10rem]">
               <h4 className="text-xs">
                 Name:{" "}
                 <span className="font-bold">

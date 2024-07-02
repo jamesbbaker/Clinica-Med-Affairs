@@ -540,9 +540,10 @@ const Table = ({
         <thead>
           {headerGroups.map((headerGroup, index) => (
             <tr key={index} {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) =>
+              {headerGroup.headers.map((column, index) =>
                 isEligible ? (
                   <th
+                  key={index}
                     style={{ cursor: "pointer" }}
                     className={"hover:bg-slate-200"}
                     onClick={() => handleSort(column)}
