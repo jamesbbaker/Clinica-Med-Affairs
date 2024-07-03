@@ -5,8 +5,6 @@ import { AuthContext } from "../../../context/AuthContext";
 import { highestValue } from "../../../utils/MathUtils";
 import CustomDropdown from "../../../components/CustomDropdown";
 import { selectLabels } from "../../../constants/appConstants";
-import { IoTriangle } from "react-icons/io5";
-import { FaCircle, FaSquare } from "react-icons/fa";
 
 const filterOptions = [...Object.keys(selectLabels)];
 
@@ -39,10 +37,9 @@ const reducer = (state, action) => {
   }
 };
 
-const InstitutionalVariationBubbleChart = ({StateName, applyFilter, region,selectedSpeciality}) => {
+const InstitutionalVariationBubbleChart = ({isScatterMapOpen=false, setIsScatterMapOpen,applyFilter, region,selectedSpeciality}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { accessToken, refreshToken } = useContext(AuthContext);
-  const [loading, setLoading] = useState(true);
   const [rawData, setRawData] = useState(null);
   const [lineX, setLineX] = useState(10);
   const [lineY, setLineY] = useState(10);
@@ -59,7 +56,7 @@ const InstitutionalVariationBubbleChart = ({StateName, applyFilter, region,selec
       let topRight = 0;
       let bottomLeft = 0;
       let bottomRight = 0;
-      state.data.datasets[0].data.map((item) => {
+      state.data.datasets[0].data.forEach((item) => {
         if (item.x < lineX && item.y < lineY) {
           bottomLeft += 1;
         } else if (item.x >= lineX && item.y < lineY) {
@@ -127,7 +124,7 @@ useEffect(() => {
             type: actions.handleUpdateData,
             payload: data,
           });
-          setLoading(false);
+        
         }
       })
       .catch((err) => {
@@ -135,18 +132,6 @@ useEffect(() => {
       });
   };
 
-  const generateShape = (val) => {
-    if (!val) return
-    let shape1 = "MEDICARE"
-    if (val.toLocaleLowerCase().includes(shape1.toLocaleLowerCase())) {
-      return "triangle";
-    }
-    let shape2 = "MEDICAID";
-    if (val.toLocaleLowerCase().includes(shape2.toLocaleLowerCase())) {
-      return "circle";
-    }
-    return "rect";
-  };
 
   const calculateRadius = (value, maxValue) => {
     const maxRadius = 30;
@@ -207,7 +192,6 @@ useEffect(() => {
   }, []);
 
   const handleDispatchData = (labelValue, chartData) => {
-    let _data = chartData ? chartData : rawData;
     let data = handleChartData(rawData, labelValue);
     dispatch({
       type: actions.handleUpdateData,
@@ -225,8 +209,8 @@ useEffect(() => {
 
    
     let labelValue = {
-      xLabel: id == "xLabel" ? val : state.xLabel,
-      yLabel: id == "yLabel" ? val : state.yLabel,
+      xLabel: id === "xLabel" ? val : state.xLabel,
+      yLabel: id === "yLabel" ? val : state.yLabel,
     };
     handleDispatchData(labelValue);
   };
@@ -234,9 +218,9 @@ useEffect(() => {
   
   return (
     <div className="flex flex-col mt-10 gap-2 items-start">
-      {state.data ? (
+      {state.data  ? (
         <>
-          <div className="flex flex-col mb-4 items-start">
+          {!isScatterMapOpen && <div className="flex flex-col mb-4 items-start">
             <div>
               <CustomDropdown
                 showColors
@@ -275,9 +259,11 @@ useEffect(() => {
                 handleSelect={(val) => handleSelect("yLabel", val)}
               />
             </div>
-          </div>
+          </div>}
 
           <ScatterChart
+       
+          setIsScatterMapOpen={setIsScatterMapOpen}
           shapes={[]}
             insititutional={true}
             quadrantValues={quadrantValues}

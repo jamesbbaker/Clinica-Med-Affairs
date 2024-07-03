@@ -3,11 +3,11 @@ import unmetChart from "../../../assets/images/unmetChart.png";
 import Popup from "reactjs-popup";
 import { getDataStats } from "../../../API/Outputs";
 import { AuthContext } from "../../../context/AuthContext";
-import { generateStatsOptions, setLineData } from "../../../utils/ChartUtils";
+import { generateStatsOptions } from "../../../utils/ChartUtils";
 import { LineChart } from "../../../components/LineChart";
 import BarChart from "../../../components/BarChart";
 import Table from "../../../components/Table";
-import { selectLabels, unmetLabels } from "../../../constants/appConstants";
+import {  unmetLabels } from "../../../constants/appConstants";
 
 const UnmetNeedDefinitionData = {
   id1: {
@@ -165,6 +165,15 @@ const UnmetNeedDefinitionData = {
       "Patients on double therapy who are escalated to a separate LAMA therapy.",
     color: "#94D3A2",
   },
+  id40: {
+    id: "id40",
+    title: "Do patients receive a biologic prior to receiving a triple therapy for their asthma treatment?",
+    buttonText: "Biologic before Triple Therapy",
+    column: "ICS-LABA with LAMA",
+    description:
+      "Patients on double therapy who receive a biologic prior to receiving a triple therapy.",
+    color: "#94D3A2",
+  },
   id12: {
     id: "id12",
     title: "Therapy support and adherence",
@@ -257,6 +266,7 @@ const UnmetNeedDefinition = () => {
   const [statsData25, setStatsData25] = useState(null);
   const [statsData26, setStatsData26] = useState(null);
   const [statsData27, setStatsData27] = useState(null);
+  const [statsData28, setStatsData28] = useState(null);
   const [dataValue, setDataValue] = useState(null);
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [showTooltip, setTooltip] = useState({
@@ -350,6 +360,48 @@ const UnmetNeedDefinition = () => {
           title: {
             display: true,
             text: "Days Supply in Year after receiving OCS",
+          },
+          grid: {
+            display: false, // Turn off grid lines for x-axis
+          },
+          ticks: {
+            font: {
+              size: 10,
+            },
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+        datalabels: {
+          display: false,
+        },
+      },
+    };
+  }, []);
+
+  const icslabalama_monoclonal_hist = useMemo(() => {
+    return {
+      indexAxis: "x",
+      elements: {
+        bar: {
+          borderWidth: 1,
+        },
+      },
+      responsive: true,
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: "patients",
+          },
+        },
+        x: {
+          title: {
+            display: true,
+            text: "Days between Triple Therapy and Biologic",
           },
           grid: {
             display: false, // Turn off grid lines for x-axis
@@ -884,6 +936,7 @@ const UnmetNeedDefinition = () => {
     setStatsData25(null);
     setStatsData26(null);
     setStatsData27(null);
+    setStatsData28(null);
     setModalId(null);
   };
 
@@ -984,7 +1037,7 @@ const UnmetNeedDefinition = () => {
     }
     let zeroIndex = responseData[0][type2];
 
-    if (zeroIndex == 0) {
+    if (zeroIndex === 0) {
       responseData.shift();
     }
 
@@ -1021,7 +1074,6 @@ const UnmetNeedDefinition = () => {
       setModalId(key);
       console.log(
         nationalData,
-        unmetLabels[UnmetNeedDefinitionData[key].buttonText]
       );
       setDataValue({
         id: nationalData[
@@ -1034,7 +1086,7 @@ const UnmetNeedDefinition = () => {
       });
     }
 
-    if (UnmetNeedDefinitionData[key].id == "id17") {
+    if (UnmetNeedDefinitionData[key].id === "id17") {
       getDataStats(
         "ics_patient_ocs_max_days_supply",
         accessToken,
@@ -1080,7 +1132,7 @@ const UnmetNeedDefinition = () => {
           console.log(err);
         });
     }
-    if (UnmetNeedDefinitionData[key].id == "id18") {
+    if (UnmetNeedDefinitionData[key].id === "id18") {
       getDataStats(
         "ics_laba_patient_ocs_max_days_supply",
         accessToken,
@@ -1130,7 +1182,17 @@ const UnmetNeedDefinition = () => {
           console.log(err);
         });
     }
+    if (UnmetNeedDefinitionData[key].id === "id40") {
+      getDataStats("icslabalama_monoclonal_hist", accessToken, refreshToken).then(res => {
+        if (res) {
+        
+          let _data = getBarChart(res, res.headers[0], res.headers[1]);
+          setStatsData28(_data);
+        }
+      }).catch(err => {
 
+      })
+    }
     if (UnmetNeedDefinitionData[key].id === "id15") {
       getDataStats("data_stats_33", accessToken, refreshToken).then((res) => {
         if (res) {
@@ -1335,7 +1397,7 @@ const UnmetNeedDefinition = () => {
         }
       });
     }
-    if (UnmetNeedDefinitionData[key].id == "id7") {
+    if (UnmetNeedDefinitionData[key].id === "id7") {
       getDataStats("data_stats_28", accessToken, refreshToken).then((res) => {
         if (res) {
           const sortFn = (data) => {
@@ -1358,7 +1420,7 @@ const UnmetNeedDefinition = () => {
         }
       });
     }
-    if (UnmetNeedDefinitionData[key].id == "id9") {
+    if (UnmetNeedDefinitionData[key].id === "id9") {
       getDataStats("data_stats_29", accessToken, refreshToken).then((res) => {
         if (res) {
           const sortFn = (data) => {
@@ -1462,6 +1524,7 @@ const UnmetNeedDefinition = () => {
   };
 
   const mouseOver = (key, index) => {
+    console.log(nationalData)
     if (
       nationalData &&
       UnmetNeedDefinitionData[key].buttonText &&
@@ -1521,7 +1584,7 @@ const UnmetNeedDefinition = () => {
                     className={`text-gray-700 hover:scale-105 transition-all ease-linear border-2 px-4 py-2`}
                   >
                     {UnmetNeedDefinitionData[key].buttonText}
-                    {showTooltip.index == index && nationalData && (
+                    {showTooltip.index === index && nationalData && (
                       <div className="absolute -top-[1rem] bg-[#fff] text-[#000] border px-2 py-2">
                         Number of Patients:{" "}
                         {showTooltip ? showTooltip.id.toLocaleString() : ""}
@@ -1569,7 +1632,7 @@ const UnmetNeedDefinition = () => {
                 </div>
               </div>
             )}
-            <p className="px-2 w-full text-[#808080] pb-4 text-left text-sm">
+            <p className=" w-full text-[#808080] pb-4 text-left text-sm">
               {UnmetNeedDefinitionData[modalId].description}
             </p>
             <div className="w-full max-h-[80vh] pb-10 overflow-auto h-[auto] flex flex-col gap-2 items-center bg-white">
@@ -1887,8 +1950,20 @@ const UnmetNeedDefinition = () => {
                   />
                 </>
               )}
+                 {statsData28 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                  Delay between Triple therapy and Biologic
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData28}
+                    options={icslabalama_monoclonal_hist}
+                  />
+                </>
+              )}
             </div>
-            {dataValue && modalId == "id18" && (
+            {dataValue && modalId === "id18" && (
               <div className="flex py-4 flex-col mb-2 items-start w-full">
                 <div>
                   {">900mg / year steroids on Double Therapy"}:{" "}

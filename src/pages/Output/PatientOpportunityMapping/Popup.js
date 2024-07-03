@@ -5,6 +5,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import { LineChart } from "../../../components/LineChart";
 import { selectLabels } from "../../../constants/appConstants";
 import { MultiSelect } from "react-multi-select-component";
+import { IoArrowBackCircle } from "react-icons/io5";
 
 const randomColors = [
   "#d43c1b",
@@ -184,14 +185,14 @@ const BarChartPopup = ({
 
   return (
     <div
-      className={`flex flex-col h-[80vh] overflow-y-auto ${
+      className={`flex flex-col ${
         !InstitutionalTreeMap && `items-start`
       } gap-4`}
     >
       <div
         style={{
           justifyContent: payerData && !payer ? "space-between" : "flex-start",
-          width: payerData && !payer ? "100%" : "auto",
+          width: "100%",
           gap: payerData && !payer ? "unset" : "1rem",
           flexDirection: payerData && !payer ? "row" : "column",
         }}
@@ -219,24 +220,36 @@ const BarChartPopup = ({
                 </strong>
               </div>
             </div>
-           {InstitutionalTreeMap &&  <button
-              onClick={closeModal}
-              className="flex-end border px-5 py-1 text-md rounded-sm"
-            >
-              RESET
-            </button>}
+            {insititutional && (
+              <button
+                onClick={closeModal}
+                className="flex-end  text-md rounded-sm"
+              >
+                <IoArrowBackCircle size={50} />
+              </button>
+            )}
           </div>
         ) : (
           <>
-            <div className="flex items-center">
-              Name:{" "}
-              <strong className="ml-2">
-                {payerData && !payer
-                  ? data1[0]["Item"].split("_")[0]
-                  : payer
-                  ? data1["0"]["Payer Name"]
-                  : data1["0"]["Assigned Physician Name"]}
-              </strong>
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center">
+                Name:{" "}
+                <strong className="ml-2">
+                  {payerData && !payer
+                    ? data1[0]["Item"].split("_")[0]
+                    : payer
+                    ? data1["0"]["Payer Name"]
+                    : data1["0"]["Assigned Physician Name"]}
+                </strong>
+              </div>
+              {!insititutional && (
+                <button
+                  onClick={closeModal}
+                  className="flex-end text-md rounded-sm"
+                >
+                  <IoArrowBackCircle  size={50}/>
+                </button>
+              )}
             </div>
             {payer && (
               <div className="flex items-center">
@@ -249,14 +262,6 @@ const BarChartPopup = ({
                     : data1["0"]["Assigned Physician Name"]}
                 </strong>
               </div>
-            )}
-            {payerData && !payer && (
-              <button
-                onClick={closeModal}
-                className="flex-end border px-5 py-1 text-md rounded-sm"
-              >
-                RESET
-              </button>
             )}
 
             {!payerData && (
@@ -280,28 +285,28 @@ const BarChartPopup = ({
         <div>
           <BarChart
             label={`Diagnosis and Investigation`}
-            height={100}
+            height={110}
             data={data1.mapValue1}
           />
         </div>
         <div>
           <BarChart
             label={`Treatment (ICS or beta-agonist)`}
-            height={100}
+            height={110}
             data={data1.mapValue3}
           />
         </div>
         <div>
           <BarChart
             label={`Treatment (ICS-LABA)`}
-            height={100}
+            height={110}
             data={data1.mapValue4}
           />
         </div>
         <div>
           <BarChart
             label={`Treatment (ICS-LABA-LAMA)`}
-            height={100}
+            height={110}
             data={data1.mapValue5}
           />
         </div>

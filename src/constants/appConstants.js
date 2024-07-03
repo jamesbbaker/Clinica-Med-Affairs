@@ -162,6 +162,10 @@ export const unmetLabels = {
     id: "Total ICS-LABA With LAMA",
     percent: "Percent ICS-LABA With LAMA",
   },
+  "Biologic before Triple Therapy" :{
+    id: "Number of Biologic Before Triple",
+    percent: 'Percent of Biologic Before Triple'
+  },
   "Non-adherence to single therapy (persistence)": {
     id: "Total ICS Persistence < 360",
     percent: "Percent ICS Persistence < 360",
@@ -197,6 +201,10 @@ export const mapSelectLabels = {
   "Number of ICS-LABA LAMA Patients": "Number of ICS-LABA-LAMA Patients",
   "Number of No Spirometry": "Incomplete initial asthma testing",
   "Percent of No Spirometry": "Incomplete initial asthma testing percent",
+  "Number of Exacerbation Without Spirometry":
+    "Exacerbation with no Spirometry",
+  "Percent of Exacerbation Without Spirometry":
+    "Exacerbation with no Spirometry percent",
   "Number of No EOS Testing": "Incomplete severe asthma testing",
   "Percent of No EOS Testing": "Incomplete severe asthma testing percent",
   "Number of No Treatment": "Exacerbation Prior to Receiving Single Therapy",
@@ -218,6 +226,10 @@ export const mapSelectLabels = {
     "Failure to Escalate Patients from Double to Triple Therapy",
   "Percent of ICS-LABA High Steroid Usage":
     "Failure to Escalate from Double to Triple Therapy percent",
+  "Number of Failure To Escalate With 3 Exacerbations":
+    "Failure to Escalate 3+ Exacerbation on Double Therapy",
+  "Percent of Failure To Escalate With 3 Exacerbations":
+    "Failure to Escalate 3+ Exacerbation on Double Therapy percent",
   "Number of ICS-LABA Exacerbation Failed Escalation":
     "Excessive Steroid Usage on Double Therapy",
   "Percent of ICS-LABA Exacerbation Failed Escalation":
@@ -238,9 +250,12 @@ export const mapSelectLabels = {
     "Delay in Escalating Patients from Double to Triple Therapy",
   "Percent of ICS-LABA Escalation Delay":
     "Delay in Escalating Patients from Double to Triple Therapy percent",
+
   "Number of ICS-LABA Patients with LAMA": "Use of open triple therapy",
   "Percent of ICS-LABA Patients with LAMA":
     "Use of open triple therapy percent",
+  "Number of Biologic Before Triple": "Biologic before Triple Therapy",
+  "Percent of Biologic Before Triple": "Biologic before Triple Therapy percent",
   "Number of ICS Persistence < 360":
     "Non-adherence to single therapy (persistence)",
   "Percent of ICS Persistence < 360":
@@ -276,6 +291,10 @@ export const selectLabels = {
   "Number of ICS-LABA LAMA Patients": "Number of ICS-LABA-LAMA Patients",
   "Number of No Spirometry": "Incomplete initial asthma testing",
   "Percent of No Spirometry": "Incomplete initial asthma testing percent",
+  "Number of Exacerbation Without Spirometry":
+    "Exacerbation with no Spirometry",
+  "Percent of Exacerbation Without Spirometry":
+    "Exacerbation with no Spirometry percent",
   "Number of No EOS Testing": "Incomplete severe asthma testing",
   "Percent of No EOS Testing": "Incomplete severe asthma testing percent",
   "Number of No Treatment": "Exacerbation Prior to Receiving Single Therapy",
@@ -297,6 +316,10 @@ export const selectLabels = {
     "Failure to Escalate Uncontrolled / Severe Patients from Double Therapy",
   "Percent of ICS-LABA High Steroid Usage":
     "Failure to Escalate Uncontrolled / Severe Patients from Double Therapy percent",
+  "Number of Failure To Escalate With 3 Exacerbations":
+    "Failure to Escalate 3+ Exacerbation on Double Therapy",
+  "Percent of Failure To Escalate With 3 Exacerbations":
+    "Failure to Escalate 3+ Exacerbation on Double Therapy percent" ,
   "Number of ICS-LABA Exacerbation Failed Escalation":
     "Excessive Steroid Usage on Double Therapy",
   "Percent of ICS-LABA Exacerbation Failed Escalation":
@@ -320,6 +343,8 @@ export const selectLabels = {
   "Number of ICS-LABA Patients with LAMA": "Use of open triple therapy",
   "Percent of ICS-LABA Patients with LAMA":
     "Use of open triple therapy percent",
+  "Number of Biologic Before Triple": "Biologic before Triple Therapy",
+  "Percent of Biologic Before Triple": "Biologic before Triple Therapy percent",
   "Number of ICS Persistence < 360":
     "Non-adherence to single therapy (persistence)",
   "Percent of ICS Persistence < 360":
@@ -406,6 +431,14 @@ export const mapLabels = {
     "Percent of ICS-LABA LAMA Persistence < 360",
   "Total ICS-LABA With LAMA": "Number of ICS-LABA Patients with LAMA",
   "Percent ICS-LABA With LAMA": "Percent of ICS-LABA Patients with LAMA",
+  "Number of Failure To Escalate With 3 Exacerbations":
+  "Number of Failure To Escalate With 3 Exacerbations",
+"Percent of Failure To Escalate With 3 Exacerbations":
+  "Percent of Failure To Escalate With 3 Exacerbations",
+  "Number of Biologic Before Triple":'Number of Biologic Before Triple',
+  "Percent of Biologic Before Triple":"Percent of Biologic Before Triple",
+  "Number of Exacerbation Without Spirometry":"Number of Exacerbation Without Spirometry",
+  "Percent of Exacerbation Without Spirometry":"Percent of Exacerbation Without Spirometry"
 };
 
 export const invertedMapLabels = {
@@ -468,6 +501,14 @@ export const invertedMapLabels = {
     "Percent ICS-LABA LAMA Persistence < 360",
   "Number of ICS-LABA Patients with LAMA": "Total ICS-LABA With LAMA",
   "Percent of ICS-LABA Patients with LAMA": "Percent ICS-LABA With LAMA",
+  "Number of Failure To Escalate With 3 Exacerbations":
+  "Number of Failure To Escalate With 3 Exacerbations",
+"Percent of Failure To Escalate With 3 Exacerbations":
+  "Percent of Failure To Escalate With 3 Exacerbations",
+  "Number of Biologic Before Triple":'Number of Biologic Before Triple',
+  "Percent of Biologic Before Triple":"Percent of Biologic Before Triple",
+  "Number of Exacerbation Without Spirometry":"Number of Exacerbation Without Spirometry",
+  "Percent of Exacerbation Without Spirometry":"Percent of Exacerbation Without Spirometry"
 };
 
 export const filterColors = {
@@ -515,6 +556,7 @@ export const mapBarCharts = {
   chart1: [
     "Total Asthma Patients",
     "Total No Spirometry",
+    "Number of Exacerbation Without Spirometry",
     "Total No EOS Testing",
     "Total No Treatment",
   ],
@@ -531,6 +573,7 @@ export const mapBarCharts = {
     "Total ICS-LABA Patients",
     "Total ICS-LABA Exacerbation Failed Escalation",
     "Total ICS-LABA High Steroid Usage",
+    "Number of Failure To Escalate With 3 Exacerbations",
     "Number of ICS-LABA >900mg/year steroids",
     "Number of ICS-LABA High Steroid Usage with ER visit",
     "Number of ICS-LABA High Steroid Usage without ER visit",
@@ -543,5 +586,6 @@ export const mapBarCharts = {
     "Total ICS-LABA LAMA Persistence < 360",
     "Total ICS-LABA LAMA Compliance < 240",
     "Total ICS-LABA With LAMA",
+    "Number of Biologic Before Triple",
   ],
 };

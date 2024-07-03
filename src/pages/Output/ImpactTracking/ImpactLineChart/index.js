@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import CustomDropdown from "../../../../components/CustomDropdown";
 import { LineChart } from "../../../../components/LineChart";
 import {
-  filterColors,
   invertedMapLabels,
   mapLabels,
   selectLabels,
@@ -131,9 +129,9 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
     lineDataFilter.sort((a, b) => new Date(a.Quarter) - new Date(b.Quarter));
     let _labels = lineDataFilter.map((item) => convertToQuarter(item.Quarter));
     let data = {};
-    if (type == "Region") {
+    if (type === "Region") {
       const lineDataByRegion = {};
-      lineDataFilter.map((item) => {
+      lineDataFilter.forEach((item) => {
         if (!lineDataByRegion[item.Region]) {
           lineDataByRegion[item.Region] = {
             id: item.Region,
@@ -169,7 +167,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
       unmetNeed.map((unmet, index) =>
         Object.values(lineDataByRegion)
           .filter((item) => _selectedRegions.includes(item.id))
-          .map((item) => {
+          .forEach((item) => {
             datasets.push({
               label: `${item.id} (${unmet.value})`,
               data: item.data.map((_item) => _item[filtersName[unmet.value]]),
@@ -187,7 +185,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
         labels: [...new Set(_labels)],
         datasets: datasets,
       };
-    } else if (type == "State") {
+    } else if (type === "State") {
       const lineDataByState = {};
 
       lineDataFilter.map((item) => {
@@ -227,7 +225,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
       unmetNeed.map((unmet, index) =>
         Object.values(lineDataByState)
           .filter((item) => _selectedStates.includes(item.id))
-          .map((item) => {
+          .forEach((item) => {
             datasets.push({
               label: `${item.id} (${unmet.value})`,
               data: item.data.map((_item) => _item[filtersName[unmet.value]]),
@@ -264,6 +262,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
       };
     }
     setLineChartData(data);
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -278,12 +277,9 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
     }
   }, [lineData]);
 
-  const handleSelect = (val) => {
-    setUnmetNeed(val);
-  };
 
   const handleToggleSelect = (val, type) => {
-    if (type == "region") {
+    if (type === "region") {
       setSelectedRegion(val);
     } else {
       setSelectedStates(val);
@@ -291,6 +287,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
   };
 
   const handleApplyFilter = () => {
+    setLoading(true)
     addLineData();
   };
 
@@ -302,7 +299,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
     <div className="mt-4 mb-8 w-full">
       <div className="flex flex-col items-start w-full justify-between">
         <div className="flex items-center gap-8">
-          {RegionsList && type == "Region" && (
+          {RegionsList && type === "Region" && (
             <div className="flex items-center gap-4">
               <label className="block text-sm font-medium text-gray-900 dark:text-white">
                 Region Select
@@ -320,7 +317,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
               />
             </div>
           )}
-          {stateList && type == "State" && (
+          {stateList && type === "State" && (
             <div className="flex items-center gap-4">
               <label className="block text-sm font-medium text-gray-900 dark:text-white">
                 State Select

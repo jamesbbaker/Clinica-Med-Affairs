@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { Chart } from "react-google-charts";
 import { getDataStats } from "../../API/Outputs";
 import { AuthContext } from "../../context/AuthContext";
-import { useRef } from "react";
 
 export const data = [
   ["From", "To", "Percentage"],
@@ -20,25 +19,6 @@ export const data = [
   ["Z", "V", 1],
   ["Z", "T", 3],
 ];
-
-var colors = ['blue', 'green', 'red', "yellow" ]
-
-
-
-var options = {
-  height: 500,
-  sankey: {
-    // iterations: 0,
-    node: {
-      colors: colors,
-      
-    },
-    link: {
-      colorMode: 'target',
-      colors: colors
-    }
-  }
-};
 
 
 const colorsOutput = [
@@ -65,7 +45,6 @@ const Sankey = ({API, title,height="500px", OPTIONS}) => {
 
   useEffect(() => {
     if ( SankeyData) {
-      const defaultColor = '#000000'; // Default color for links
       const colors = {
         "Emergency and Critical Care": '#00796B',
         "Specialty Care": '#FF6F61',
@@ -74,18 +53,9 @@ const Sankey = ({API, title,height="500px", OPTIONS}) => {
         "Primary Care Provider": '#6A0572',
         "Hospital Services":"#87CEEB"
       }; 
-
-      const otherColors = {
-        "ICS-LABA-LAMA + SABA-SAMA": '#00796B',
-        "PDE4 Inhibitor + SABA-SAMA": '#FF6F61',
-        "ICS-LABA + Monoclonal Antibody": '#A2DED0',
-        "3+ Therapies": '#FFB347',
-        "LTRA + SABA-SAMA": '#6A0572',
-      }; 
-
     
       // Process data to include color information
-      const processedData = SankeyData.map((ITEM, index) => {
+      const processedData = SankeyData.map((ITEM) => {
         
         const FROM = ITEM[OPTIONS.from]
         const TO = ITEM[OPTIONS.to]
@@ -130,7 +100,7 @@ const Sankey = ({API, title,height="500px", OPTIONS}) => {
        
             let dataArr = res.map(item => [item[OPTIONS.from],item[OPTIONS.to], item[OPTIONS.count]])
             dataArr.forEach(item => {
-            if (item[0] == "ICS_1") {
+            if (item[0] === "ICS_1") {
            
             }
             })
@@ -142,7 +112,7 @@ const Sankey = ({API, title,height="500px", OPTIONS}) => {
         console.log(err,"err")
       })
     }
-  }, [API])
+  }, [])
 
 
 

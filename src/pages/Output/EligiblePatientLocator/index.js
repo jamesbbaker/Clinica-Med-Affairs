@@ -90,7 +90,7 @@ const EligiblePatientLocator = () => {
   const [data1, setData1] = useState(null);
 
   useEffect(() => {
-    if (statsData1 == null) {
+    if (statsData1 === null) {
       setLoading(true);
     } else {
       setLoading(false);
@@ -503,15 +503,16 @@ const EligiblePatientLocator = () => {
   };
 
   const closeModal = () => {
+    setData1(null)
     setRowDetails(null);
   };
 
   const handleSort = (column) => {
     let _sortOrder = "desc";
-    let columnId = column.id == "Name" ? "First Name" : column.id;
-    if (sortBy == columnId) {
+    let columnId = column.id === "Name" ? "First Name" : column.id;
+    if (sortBy === columnId) {
       setsortOrder((prev) => {
-        if (prev == "desc") {
+        if (prev === "desc") {
           _sortOrder = "asc";
           return "asc";
         } else {
@@ -533,65 +534,63 @@ const EligiblePatientLocator = () => {
     );
   };
 
+ 
+
   return statsData1 !== null && !loading ? (
     <>
-      <Table
-        isEligible={true}
-        dispatch={dispatch}
-        setFilterList={setFilterList}
-        filterList={filterList}
-        filterState={filterState}
-        value={value}
-        setValue={setValue}
-        selectedIds={selectedIds}
-        setSelectedIds={setSelectedIds}
-        handleRowClicked={handleRowClicked}
-        showTopBtnsToggle={true}
-        setcurrentSize={setcurrentSize}
-        speciality={speciality}
-        setSpeciality={setSpeciality}
-        specialityList={specialityList}
-        stateName={stateName}
-        setStateName={setstateName}
-        stateNameList={stateNameList}
-        organisationList={organisationList}
-        organisation={organisation}
-        setorganisation={setorganisation}
-        regionList={regionList}
-        region={region}
-        setRegion={setRegion}
-        icsNumber={icsNumber}
-        setIcsNumber={setIcsNumber}
-        steroidPercent={steroidPercent}
-        setsteroidPercent={setsteroidPercent}
-        handleFilter={handleFilter}
-        sortBy={sortBy}
-        sortOrder={sortOrder}
-        handleSort={handleSort}
-        totalPage={totalPage}
-        currentSize={currentSize}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        marginTop="2rem"
-        Title="Summary of Unmet Need by HCP"
-        activeCells={true}
-        initialState={{
-          pageSize: 10,
-          pageIndex: 0,
-        }}
-        selectionBtnsArray={[...Object.keys(selectLabels)]}
-        showSelectionBtns={true}
-        TableData={statsData1}
-        TableColummns={Table_Columns_1}
-      />
-      <Popup
-        onClose={closeModal}
-        modal
-        open={rowDetails != null}
-        position="center center"
-      >
-        <BarChartPopup data1={data1} />
-      </Popup>
+      {data1 ? (
+        <BarChartPopup closeModal={closeModal} data1={data1} />
+      ) : (
+        <Table
+          isEligible={true}
+          dispatch={dispatch}
+          setFilterList={setFilterList}
+          filterList={filterList}
+          filterState={filterState}
+          value={value}
+          setValue={setValue}
+          selectedIds={selectedIds}
+          setSelectedIds={setSelectedIds}
+          handleRowClicked={handleRowClicked}
+          showTopBtnsToggle={true}
+          setcurrentSize={setcurrentSize}
+          speciality={speciality}
+          setSpeciality={setSpeciality}
+          specialityList={specialityList}
+          stateName={stateName}
+          setStateName={setstateName}
+          stateNameList={stateNameList}
+          organisationList={organisationList}
+          organisation={organisation}
+          setorganisation={setorganisation}
+          regionList={regionList}
+          region={region}
+          setRegion={setRegion}
+          icsNumber={icsNumber}
+          setIcsNumber={setIcsNumber}
+          steroidPercent={steroidPercent}
+          setsteroidPercent={setsteroidPercent}
+          handleFilter={handleFilter}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          handleSort={handleSort}
+          totalPage={totalPage}
+          currentSize={currentSize}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          marginTop="2rem"
+          Title="Summary of Unmet Need by HCP"
+          activeCells={true}
+          initialState={{
+            pageSize: 10,
+            pageIndex: 0,
+          }}
+          selectionBtnsArray={[...Object.keys(selectLabels)]}
+          showSelectionBtns={true}
+          TableData={statsData1}
+          TableColummns={Table_Columns_1}
+        />
+      )}
     </>
   ) : (
     <div role="status" className="grid place-content-center h-[200px]">

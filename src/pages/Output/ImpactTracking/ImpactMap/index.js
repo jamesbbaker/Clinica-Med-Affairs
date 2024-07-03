@@ -1,16 +1,14 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import countryGeoJSON from "../../../../components/Map/data.json"; // Load your country GeoJSON
 import CustomDropdown from "../../../../components/CustomDropdown";
 import {
   invertedMapLabels,
-
   selectLabels,
 } from "../../../../constants/appConstants";
 import { MultiSelect } from "react-multi-select-component";
 import Table, { customOptionRenderer } from "../../../../components/Table";
-
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
@@ -31,7 +29,7 @@ const generateRegionsGeoJSON = (
 
   let regionValues = {};
 
-  region.data.map((item) => {
+  region.data.forEach((item) => {
     if (regionValues.hasOwnProperty(item.Region)) {
       regionValues[item.Region].push(item);
     } else {
@@ -62,10 +60,10 @@ const generateRegionsGeoJSON = (
       coordinates: coordinates,
     };
     let _period2 = regionValues[regionName].filter(
-      (item) => item.Quarter == period2
+      (item) => item.Quarter === period2
     )[0][invertedMapLabels[unmetNeed]];
     let _period1 = regionValues[regionName].filter(
-      (item) => item.Quarter == period1
+      (item) => item.Quarter === period1
     )[0][invertedMapLabels[unmetNeed]];
     let percentageChange = (_period2 - _period1) / _period1;
 
@@ -126,7 +124,13 @@ const quartersWithDates = [
   // { quarter: "Q4-2024", date: "2024-10-01" },
 ];
 
-const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionData, stateData }) => {
+const ImpactMap = ({
+  regionDataCoordinates,
+  stateCoordinates,
+  handleReset,
+  regionData,
+  stateData,
+}) => {
   const mapContainerRef = useRef(null);
   const [map, setMap] = useState(null);
   const [unmetNeed, setUnmetNeed] = useState(filterOptions[0]);
@@ -149,58 +153,61 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
   };
 
   const handlePeriod = (val, type) => {
-    if (type == "period1") {
+    if (type === "period1") {
       setPeriod1(val);
     } else {
       setPeriod2(val);
     }
   };
 
-  const generateStateJSON = (
-    countryGeoJSON,
-   
-    unmetNeed,
-    stateData
-  ) => {
-   
-    let stateByName = {};
-    stateData.data.map((item) => {
-      if (stateByName[item["State Name"]]) {
-        stateByName[item["State Name"]].push(item);
-      } else {
-        stateByName[item["State Name"]] = [];
-        stateByName[item["State Name"]].push(item);
-      }
-    });
-    let newFeatures = countryGeoJSON.features.map((item) => {
-      if (stateByName.hasOwnProperty(item.properties.name)) {
-        let _state = stateByName[item.properties.name];
-        let _peroid1 = _state.filter((_item) => _item.Quarter == period1)[0][
-          invertedMapLabels[unmetNeed]
-        ];
-        let _peroid2 = _state.filter((_item) => _item.Quarter == period2)[0][
-          invertedMapLabels[unmetNeed]
-        ];
-        let percentageChange = (_peroid2 - _peroid1) / _peroid1;
-        return {
-          ...item,
-          properties: { ...item.properties, stateValue: percentageChange },
-        };
-      }
-    });
+  const generateStateJSON = useCallback(
+    (
+      countryGeoJSON,
 
-    let newGeoJson = { type: "FeatureCollection", features: newFeatures };
-    return newGeoJson;
-  };
+      unmetNeed,
+      stateData
+    ) => {
+      if (!countryGeoJSON || !unmetNeed || !stateData) {
+        return;
+      }
+      let stateByName = {};
+      stateData.data.forEach((item) => {
+        if (stateByName[item["State Name"]]) {
+          stateByName[item["State Name"]].push(item);
+        } else {
+          stateByName[item["State Name"]] = [];
+          stateByName[item["State Name"]].push(item);
+        }
+      });
+      let newFeatures = countryGeoJSON.features
+        .filter((item) => stateByName.hasOwnProperty(item.properties.name))
+        .map((item) => {
+          let _state = stateByName[item.properties.name];
+          let _peroid1 = _state.filter((_item) => _item.Quarter === period1)[0][
+            invertedMapLabels[unmetNeed]
+          ];
+          let _peroid2 = _state.filter((_item) => _item.Quarter === period2)[0][
+            invertedMapLabels[unmetNeed]
+          ];
+          let percentageChange = (_peroid2 - _peroid1) / _peroid1;
+          return {
+            ...item,
+            properties: { ...item.properties, stateValue: percentageChange },
+          };
+        });
+      let newGeoJson = { type: "FeatureCollection", features: newFeatures };
+      return newGeoJson;
+    },
+    [period1, period2]
+  );
 
   const generatePercentageChange = (hoverInfo) => {
-    
     if (hoverInfo.stateFeatures) {
       let _period2 = hoverInfo.stateFeatures.filter(
-        (item) => item.Quarter == period2
+        (item) => item.Quarter === period2
       )[0][invertedMapLabels[unmetNeed]];
       let _period1 = hoverInfo.stateFeatures.filter(
-        (item) => item.Quarter == period1
+        (item) => item.Quarter === period1
       )[0][invertedMapLabels[unmetNeed]];
       let percentageChange = (_period2 - _period1) / _period1;
       return [{ percentageChange, item: selectLabels[unmetNeed] }];
@@ -209,11 +216,11 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
     let period1Values = {};
     let period2Values = {};
     let regionName = hoverInfo.name;
-    hoverInfo.item[regionName].map((item) => {
-      if (item.Quarter == period1) {
+    hoverInfo.item[regionName].forEach((item) => {
+      if (item.Quarter === period1) {
         period1Values[regionName] = item;
       }
-      if (item.Quarter == period2) {
+      if (item.Quarter === period2) {
         period2Values[regionName] = item;
       }
     });
@@ -224,31 +231,36 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
     return [{ percentageChange, item: selectLabels[unmetNeed] }];
   };
 
-  const getMinValue = (updatedRegionsGeoJSON) => {
+  const getMinValue = useCallback((updatedRegionsGeoJSON) => {
     let minValue = 0;
-    updatedRegionsGeoJSON.features.map((item) => {
+    updatedRegionsGeoJSON.features.forEach((item) => {
       if (item.properties.stateValue < minValue) {
         minValue = item.properties.stateValue;
       }
     });
     return minValue;
-  };
+  }, []);
 
-  const getMaxValue = (updatedRegionsGeoJSON) => {
+  const getMaxValue = useCallback((updatedRegionsGeoJSON) => {
     let maxValue = 0;
-    updatedRegionsGeoJSON.features.map((item) => {
+    updatedRegionsGeoJSON.features.forEach((item) => {
       if (item.properties.stateValue > maxValue) {
         maxValue = item.properties.stateValue;
       }
     });
     return maxValue;
-  };
+  }, []);
 
   useEffect(() => {
-    if (stateData && regionData && regionDataCoordinates && stateCoordinates) {
+    if (
+      stateData &&
+      regionData &&
+      countryGeoJSON &&
+      regionDataCoordinates &&
+      stateCoordinates
+    ) {
       let regionsData = {};
-      let _stateData = { ...stateData };
-      stateData.data.map((item) => {
+      stateData.data.forEach((item) => {
         if (!item.Region) {
           return;
         }
@@ -271,7 +283,7 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
         const regionLabelsGeoJSON = {
           type: "FeatureCollection",
           features: updatedRegionsGeoJSON.features.map((feature) => {
-            const center = regionDataCoordinates[feature.properties.name]
+            const center = regionDataCoordinates[feature.properties.name];
             return {
               type: "Feature",
               geometry: {
@@ -279,13 +291,14 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
                 coordinates: center,
               },
               properties: {
-                value: `${(feature.properties.stateValue*100).toFixed(1)}%`,
+                value: `${(feature.properties.stateValue * 100).toFixed(1)}%`,
               },
             };
           }),
         };
         map.getSource("region-labels").setData(regionLabelsGeoJSON);
         map.getSource("regions").setData(updatedRegionsGeoJSON);
+
         let minVal = getMinValue(updatedRegionsGeoJSON);
         let maxVal = getMaxValue(updatedRegionsGeoJSON);
         let midValue = (maxVal - Math.abs(minVal)) / 2;
@@ -314,7 +327,7 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
             type: "FeatureCollection",
             features: filteredCountries,
           },
-       
+
           unmetNeed,
           stateData
         );
@@ -322,8 +335,7 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
           const countryLabelsGeoJSON = {
             type: "FeatureCollection",
             features: generateJSON.features.map((feature) => {
-   
-              const center = stateCoordinates[feature.properties.name]
+              const center = stateCoordinates[feature.properties.name];
               return {
                 type: "Feature",
                 geometry: {
@@ -331,13 +343,14 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
                   coordinates: center,
                 },
                 properties: {
-                  value: `${(feature.properties.stateValue*100).toFixed(1)}%`,
+                  value: `${(feature.properties.stateValue * 100).toFixed(1)}%`,
                 },
               };
             }),
           };
           map.getSource("country-labels").setData(countryLabelsGeoJSON);
           map.getSource("countries").setData(generateJSON);
+
           let minVal = getMinValue(generateJSON);
           let maxVal = getMaxValue(generateJSON);
           let midValue = (maxVal - Math.abs(minVal)) / 2;
@@ -355,35 +368,82 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
         }
       }
     }
-  }, [period1,update, period2, unmetNeed]);
+  }, [
+    period1,
+    update,
+    period2,
+    unmetNeed,
+    stateData,
+    regionData,
+    regionDataCoordinates,
+    stateCoordinates,
+    map,
+    region,
+    generateStateJSON,
+    getMinValue,
+    getMaxValue,
+  ]);
+
+  const generatTableData = useCallback(
+    (data, tableKey) => {
+      let filteredData = data.filter(
+        (item) =>
+          item.Quarter === tablePeriod1 || item.Quarter === tablePerioid2
+      );
+      let _period2 = filteredData.filter(
+        (item) => item.Quarter === tablePerioid2
+      );
+      let _period1 = filteredData.filter(
+        (item) => item.Quarter === tablePeriod1
+      );
+
+      let newArr = [];
+      _period2.forEach((item) => {
+        let obj = {};
+        let _region = item[tableKey];
+        Object.values(invertedMapLabels).forEach((label) => {
+          let _peroid1Selected = _period1.filter(
+            (__item) => __item[tableKey] === _region
+          )[0];
+          let calculatedValue =
+            (item[label] - _peroid1Selected[label]) / _peroid1Selected[label];
+          obj[label] = calculatedValue.toFixed(2);
+        });
+        obj[tableKey] = _region;
+        newArr.push(obj);
+      });
+      return newArr;
+    },
+    [tablePeriod1, tablePerioid2]
+  );
 
   useEffect(() => {
     if (tablePeriod1 && tablePerioid2 && regionData && stateData) {
       if (selectedRegion) {
         let _stateData = stateData.data.filter(
-          (item) => item.Region == selectedRegion
+          (item) => item.Region === selectedRegion
         );
         let tableData = generatTableData(_stateData, "State Name");
         setTableData(tableData);
       } else {
         let filteredData = regionData.data.filter(
           (item) =>
-            item.Quarter == tablePeriod1 || item.Quarter == tablePerioid2
+            item.Quarter === tablePeriod1 || item.Quarter === tablePerioid2
         );
         let _period2 = filteredData.filter(
-          (item) => item.Quarter == tablePerioid2
+          (item) => item.Quarter === tablePerioid2
         );
         let _period1 = filteredData.filter(
-          (item) => item.Quarter == tablePeriod1
+          (item) => item.Quarter === tablePeriod1
         );
 
         let newArr = [];
-        _period2.map((item) => {
+        _period2.forEach((item) => {
           let obj = {};
           let _region = item.Region;
-          Object.values(invertedMapLabels).map((label) => {
+          Object.values(invertedMapLabels).forEach((label) => {
             let _peroid1Selected = _period1.filter(
-              (__item) => __item.Region == _region
+              (__item) => __item.Region === _region
             )[0];
             let calculatedValue =
               (item[label] - _peroid1Selected[label]) / _peroid1Selected[label];
@@ -396,12 +456,19 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
         setTableData(newArr);
       }
     }
-  }, [tablePeriod1, tablePerioid2]);
+  }, [
+    generatTableData,
+    regionData,
+    selectedRegion,
+    stateData,
+    tablePeriod1,
+    tablePerioid2,
+  ]);
 
   useEffect(() => {
     const initializeMap = (region, stateData, period1, period2, unmetNeed) => {
       let regionsData = {};
-      stateData.data.map((item) => {
+      stateData.data.forEach((item) => {
         if (!item.Region) {
           return;
         }
@@ -480,7 +547,7 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
 
         const generateJSON = generateStateJSON(
           countryGeoJSON,
-         
+
           unmetNeed,
           stateData
         );
@@ -488,16 +555,15 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
         const regionLabelsGeoJSON = {
           type: "FeatureCollection",
           features: regionsGeoJSON.features.map((feature) => {
-          
-            const center = regionDataCoordinates[feature.properties.name]
+            const center = regionDataCoordinates[feature.properties.name];
             return {
               type: "Feature",
-              geometry:  {
+              geometry: {
                 type: "Point",
-                coordinates: center
+                coordinates: center,
               },
               properties: {
-                value: `${(feature.properties.stateValue*100).toFixed(1)}%`,
+                value: `${(feature.properties.stateValue * 100).toFixed(1)}%`,
               },
             };
           }),
@@ -579,8 +645,7 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
         const countryLabelsGeoJSON = {
           type: "FeatureCollection",
           features: generateJSON.features.map((feature) => {
-        
-            const center = stateCoordinates[feature.properties.name]
+            const center = stateCoordinates[feature.properties.name];
             return {
               type: "Feature",
               geometry: {
@@ -658,7 +723,7 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
           const pixel = map.project(center);
 
           setHoverInfo((prev) => {
-            if (prev && prev.name == region.properties.name) {
+            if (prev && prev.name === region.properties.name) {
               return prev;
             } else {
               return {
@@ -686,7 +751,7 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
 
         // Click region to show countries
         map.on("click", "regions-layer", (e) => {
-          setUpdate(prev => !prev)
+          setUpdate((prev) => !prev);
           const regionName = e.features[0].properties.name;
           const countriesInRegion = regionsData[regionName];
           setRegion({
@@ -698,13 +763,13 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
           const filteredCountries = countryGeoJSON.features.filter((feature) =>
             countriesInRegion.includes(feature.properties.name)
           );
-       
+
           const filteredCountriesGeoJSON = generateStateJSON(
             {
               type: "FeatureCollection",
               features: filteredCountries,
             },
-           
+
             unmetNeed,
             stateData
           );
@@ -714,8 +779,7 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
           const countryLabelsGeoJSON = {
             type: "FeatureCollection",
             features: filteredCountriesGeoJSON.features.map((feature) => {
-      
-              const center = stateCoordinates[feature.properties.name]
+              const center = stateCoordinates[feature.properties.name];
               return {
                 type: "Feature",
                 geometry: {
@@ -723,7 +787,7 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
                   coordinates: center,
                 },
                 properties: {
-                  value: `${(feature.properties.stateValue*100).toFixed(1)}%`,
+                  value: `${(feature.properties.stateValue * 100).toFixed(1)}%`,
                 },
               };
             }),
@@ -803,7 +867,7 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
             );
 
             let stateFeatures = stateData.data.filter(
-              (item) => item["State Name"] == e.features[0].properties.name
+              (item) => item["State Name"] === e.features[0].properties.name
             );
 
             const coordinates = e.lngLat;
@@ -835,24 +899,32 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
       });
     };
 
-    if (!map && regionData && regionData.data && stateData && regionDataCoordinates && stateCoordinates) {
+    if (
+      !map &&
+      regionData &&
+      regionData.data &&
+      stateData &&
+      regionDataCoordinates &&
+      stateCoordinates
+    ) {
       let filteredData = regionData.data.filter(
-        (item) => item.Quarter == tablePeriod1 || item.Quarter == tablePerioid2
+        (item) =>
+          item.Quarter === tablePeriod1 || item.Quarter === tablePerioid2
       );
       let _period2 = filteredData.filter(
-        (item) => item.Quarter == tablePerioid2
+        (item) => item.Quarter === tablePerioid2
       );
       let _period1 = filteredData.filter(
-        (item) => item.Quarter == tablePeriod1
+        (item) => item.Quarter === tablePeriod1
       );
 
       let newArr = [];
-      _period2.map((item) => {
+      _period2.forEach((item) => {
         let obj = {};
         let _region = item.Region;
         Object.values(invertedMapLabels).map((label) => {
           let _peroid1Selected = _period1.filter(
-            (__item) => __item.Region == _region
+            (__item) => __item.Region === _region
           )[0];
           let calculatedValue =
             (item[label] - _peroid1Selected[label]) / _peroid1Selected[label];
@@ -863,41 +935,32 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
       });
 
       setTableData(newArr);
-      initializeMap(regionData, stateData, period1, period2, unmetNeed,);
+      initializeMap(regionData, stateData, period1, period2, unmetNeed);
     }
 
     // return () => map && map.remove();
-  }, [map, regionData, stateData, regionDataCoordinates, stateCoordinates]);
-
-  function generatTableData(data, tableKey) {
-    let filteredData = data.filter(
-      (item) => item.Quarter == tablePeriod1 || item.Quarter == tablePerioid2
-    );
-    let _period2 = filteredData.filter((item) => item.Quarter == tablePerioid2);
-    let _period1 = filteredData.filter((item) => item.Quarter == tablePeriod1);
-
-    let newArr = [];
-    _period2.map((item) => {
-      let obj = {};
-      let _region = item[tableKey];
-      Object.values(invertedMapLabels).map((label) => {
-        let _peroid1Selected = _period1.filter(
-          (__item) => __item[tableKey] == _region
-        )[0];
-        let calculatedValue =
-          (item[label] - _peroid1Selected[label]) / _peroid1Selected[label];
-        obj[label] = calculatedValue.toFixed(2);
-      });
-      obj[tableKey] = _region;
-      newArr.push(obj);
-    });
-    return newArr;
-  }
+  }, [
+    map,
+    regionData,
+    stateData,
+    regionDataCoordinates,
+    stateCoordinates,
+    generateStateJSON,
+    period1,
+    period2,
+    unmetNeed,
+    tablePeriod1,
+    tablePerioid2,
+    getMinValue,
+    getMaxValue,
+  ]);
 
   const handleCellClick = (row) => {
     let regionName = row.original.Region;
     setSelectedRegion(regionName);
-    let _stateData = stateData.data.filter((item) => item.Region == regionName);
+    let _stateData = stateData.data.filter(
+      (item) => item.Region === regionName
+    );
     let tableData = generatTableData(_stateData, "State Name");
     setTableData(tableData);
   };
@@ -907,7 +970,7 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
   };
 
   const handleTablePeriod = (val, type) => {
-    if (type == "period1") {
+    if (type === "period1") {
       setTablePeriod1(val);
     } else {
       setTablePeriod2(val);
@@ -993,7 +1056,9 @@ const ImpactMap = ({ regionDataCoordinates,stateCoordinates,handleReset, regionD
                 return (
                   <div key={index} className="flex items-center gap-2">
                     <div className="font-[600]">{item.item}: </div>
-                    <div className="font-[400]">{`${(item.percentageChange * 100).toFixed(1)}%`}</div>
+                    <div className="font-[400]">{`${(
+                      item.percentageChange * 100
+                    ).toFixed(1)}%`}</div>
                   </div>
                 );
               })}

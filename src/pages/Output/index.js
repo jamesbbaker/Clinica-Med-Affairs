@@ -1,8 +1,6 @@
 import React from "react";
-import { RadarChart } from "../../components/RadarChart";
 import { APP_ROUTES } from "../../constants/appConstants";
 import { useSelector } from "react-redux";
-import { LineChart } from "../../components/LineChart";
 import ImpactTracking from "./ImpactTracking";
 import InstitutionalVariation from "./InstituitonalVariation";
 import DataQuality from "./DataQuality";
@@ -23,7 +21,7 @@ const Output = () => {
   return (
     <>
       {currentMenu === APP_ROUTES.patient_journey && <PatientTracking />}
-      {currentMenu == APP_ROUTES.patient_opportunity_mapping_and_strategy && (
+      {currentMenu === APP_ROUTES.patient_opportunity_mapping_and_strategy && (
       <PatientOpportunityMapping />
       )}
       {/* {currentMenu === APP_ROUTES.hcp_segmentation && (
