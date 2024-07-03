@@ -1,18 +1,7 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Line } from "react-chartjs-2";
 
-import {
-  Chart as ChartJS,
-  LineElement,
-  PointElement,
-  LinearScale,
-  Title,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  TimeScale,
-  registerables,
-} from "chart.js";
+import { Chart as ChartJS, registerables } from "chart.js";
 import "chartjs-adapter-date-fns"; // Import the date-fns adapter
 
 ChartJS.register(...registerables);
@@ -102,10 +91,10 @@ export function LineChart({
   const [selectedValue, setSelectedValue] = useState(0);
   const [chartData, setChartData] = useState(data);
   const [arbitraryLineValues, setArbitraryLine] = useState({
-    min:0,
-    max: 0
-  })
-  const [loading, setLoading] = useState(false);
+    min: 0,
+    max: 0,
+  });
+
   let arbitraryLine = {
     id: "arbitraryLine",
     beforeDatasetsDraw(chart, args, pluginOptions) {},
@@ -113,10 +102,10 @@ export function LineChart({
 
   useEffect(() => {
     setChartData(data);
-    setArbitraryLine(prev => ({
+    setArbitraryLine((prev) => ({
       ...prev,
-      max: data.labels.length
-    }))
+      max: data.labels.length,
+    }));
   }, [data]);
 
   const intersectDataVerticalLine = {
@@ -156,18 +145,17 @@ export function LineChart({
 
   return (
     <div className="w-full h-full px-2 pt-4">
-      {!loading && (
-        <div className={`${arbitrary && "pointer-events-none"}`}>
-          <Line
-            key={key}
-            height={height}
-            ref={lineRef}
-            plugins={arbitrary && [intersectDataVerticalLine]}
-            options={options}
-            data={chartData}
-          />
-        </div>
-      )}
+      <div className={`${arbitrary && "pointer-events-none"}`}>
+        <Line
+          key={key}
+          height={height}
+          ref={lineRef}
+          plugins={arbitrary && [intersectDataVerticalLine]}
+          options={options}
+          data={chartData}
+        />
+      </div>
+
       {arbitrary && (
         <div className="px-2 py-4">
           <div className="text-xs border border-slate-200 px-2">

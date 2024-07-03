@@ -22,7 +22,7 @@ let colormap = interpolate(["green", "white", "red"]);
 
 const getMinValue = (data, label) => {
   let minValue = 0;
-  data.map((item) => {
+  data.forEach((item) => {
     if (parseFloat(item[label]) < minValue) {
       minValue = parseFloat(item[label]);
     }
@@ -32,28 +32,13 @@ const getMinValue = (data, label) => {
 
 const getMaxValue = (data, label) => {
   let minValue = 0;
-  data.map((item) => {
+  data.forEach((item) => {
     if (parseFloat(item[label]) > minValue) {
       minValue = parseFloat(item[label]);
     }
   });
   return minValue;
 };
-
-const minColor = [0, 255, 0]; // Green in RGB
-const midColor = [255, 255, 0];
-const maxColor = [255, 0, 0]; // Red in RGB
-
-function calculatePercentage(value, minValue, maxValue) {
-  if (minValue === maxValue) {
-    throw new Error("minValue and maxValue cannot be the same");
-  }
-  if (minValue < 0) {
-    console.log((Math.abs(value) / Math.abs(minValue)) * 100, minValue, value);
-  }
-  return ((value - minValue) / (maxValue - minValue)) * 100;
-}
-
 function normalizeValue(value, minValue, maxValue) {
   if (maxValue === minValue) {
     return 0.5;
@@ -135,9 +120,7 @@ const Table = ({
   showTopBtnsToggle = false,
   stateName,
   setStateName,
-  selectedIds,
   dispatch,
-  setSelectedIds,
   value,
   setValue,
   stateNameList,
@@ -153,10 +136,6 @@ const Table = ({
   speciality,
   handleRowClicked,
   setSpeciality,
-  icsNumber,
-  setIcsNumber,
-  steroidPercent,
-  setsteroidPercent,
   currentSize,
   handleFilter,
   sortBy,
@@ -245,7 +224,7 @@ const Table = ({
 
   const handleNext = () => {
     if (totalPage) {
-      setCurrentPage((prev) => (prev == totalPage ? prev : prev + 1));
+      setCurrentPage((prev) => (prev === totalPage ? prev : prev + 1));
     } else {
       nextPage();
     }
@@ -253,24 +232,10 @@ const Table = ({
 
   const handlePrev = () => {
     if (totalPage) {
-      setCurrentPage((prev) => (prev == 0 ? prev : prev - 1));
+      setCurrentPage((prev) => (prev === 0 ? prev : prev - 1));
     } else {
       previousPage();
     }
-  };
-
-  const handelIcsValueChange = (min, max) => {
-    setIcsNumber({
-      min,
-      max,
-    });
-  };
-
-  const handleSteroidPercent = (min, max) => {
-    setsteroidPercent({
-      min,
-      max,
-    });
   };
 
   const handleApplyFilters = () => {
@@ -297,13 +262,13 @@ const Table = ({
   const firstRef = React.useRef(true);
 
   const handleToggleSelect = (val) => {
-    allColumns.map((item) => {
+    allColumns.forEach((item) => {
       if (selectionBtnsArray.includes(item.id)) {
         if (item.isVisible) {
           item.toggleHidden();
         }
-        val.map((_item) => {
-          if (_item.value == item.Header) {
+        val.forEach((_item) => {
+          if (_item.value === item.Header) {
             item.toggleHidden();
           }
         });
@@ -341,11 +306,11 @@ const Table = ({
       }
       allColumns
         .filter((item) => selectionBtnsArray.includes(item.id))
-        .map((item, index) => {
+        .forEach((item, index) => {
           if (!valHeaders.includes(item.Header) && index !== 2) {
             item.toggleHidden();
           }
-          if (index == 2 && !value) {
+          if (index === 2 && !value) {
             setValue([
               {
                 col: item,
@@ -379,21 +344,6 @@ const Table = ({
     setFilterList(val);
   };
 
-  const customStyles = {
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.data.color,
-      color: "red",
-    }),
-    multiValue: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.data.color,
-    }),
-    multiValueLabel: (provided, state) => ({
-      ...provided,
-      color: patientTotals.includes(state.data.value) ? "#00008B" : "#800000",
-    }),
-  };
 
   return (
     <div style={{ marginTop }} className="w-full max-w-full overflow-auto">
@@ -482,7 +432,7 @@ const Table = ({
             <div className="flex mt-2 items-center gap-4">
               <div className="flex items-center gap-8">
                 <label className="font-[600]">
-                  Primary Specialty Description
+                  Specialty
                 </label>
                 <MultiSelect
                   labelledBy=""
@@ -553,8 +503,8 @@ const Table = ({
                       : column.render("Header")}
                     <span>
                       {sortBy === column.id ||
-                      (column.id == "Name" && sortBy === "First Name")
-                        ? sortOrder == "desc"
+                      (column.id === "Name" && sortBy === "First Name")
+                        ? sortOrder === "desc"
                           ? " 🔽"
                           : " 🔼"
                         : ""}
@@ -795,7 +745,7 @@ export const customOptionRenderer = ({ checked, option, onClick }) => {
       style={{
         fontWeight: 600,
         color:
-          option.label == "Select All"
+          option.label === "Select All"
             ? "#000"
             : patientTotals.includes(option.label)
             ? "#00008B"

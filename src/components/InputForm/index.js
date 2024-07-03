@@ -133,9 +133,9 @@ const InputForm = ({ handleClose }) => {
     });
     dispatch({
       type: ActionTypes.SUBMIT_FORM,
-      payload: { ["errors"]: errors ? { ...errors } : {} },
+      payload: { "errors": errors ? { ...errors } : {} },
     });
-    return Object.values(errors).length == 0;
+    return Object.values(errors).length === 0;
   };
 
   const handleSubmit = async () => {
@@ -158,14 +158,13 @@ const InputForm = ({ handleClose }) => {
         body: JSON.stringify({ ...data }),
       }
     );
-    const res = await response.json();
-
+    await response.json();
     reduxDispatch(addUser(data));
     handleClose();
   };
 
   const handleChange = (e) => {
-    let value = e.target.id == "admin" ? e.target.checked : e.target.value;
+    let value = e.target.id === "admin" ? e.target.checked : e.target.value;
     dispatch({
       type: ActionTypes.SET_FIELD_VALUE,
       payload: {
@@ -197,7 +196,7 @@ const InputForm = ({ handleClose }) => {
       <h1 className="text-2xl font-medium">Add New User</h1>
       <div className="grid gap-4 grid-cols-2">
         {inputs.map((input) =>
-          input.type == "select" ? (
+          input.type === "select" ? (
             <SelectBox
               key={input.id}
               error={state.errors[input.name]}

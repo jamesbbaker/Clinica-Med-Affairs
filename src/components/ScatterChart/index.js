@@ -185,6 +185,8 @@ const defaultOptions = {
 };
 
 const ScatterChart = ({
+
+  setIsScatterMapOpen = () => {},
   quadrantValues,
   shapes = [
     {
@@ -292,6 +294,7 @@ const ScatterChart = ({
           const { datasetIndex, index } = elements[0];
           const dataset = data.datasets[datasetIndex];
           const dataPoint = dataset.data[index];
+          setIsScatterMapOpen(true)
           setChartDataValue(setData1, null, [dataPoint]);
         }
       },
@@ -304,7 +307,6 @@ const ScatterChart = ({
         tooltip: {
           callbacks: {
             label: function (context) {
-          
               return payer
                 ? `Payer Name: ${context.raw.name}, Plan Name: ${
                     context.raw["Plan Name"]
@@ -389,6 +391,7 @@ const ScatterChart = ({
   };
 
   const closeModal = () => {
+    setIsScatterMapOpen(false)
     setData1(null);
   };
 
@@ -398,6 +401,15 @@ const ScatterChart = ({
 
   return (
     <div className="min-h-[400px] relative w-full">
+      {data1 ?  <BarChartPopup
+            InstitutionalTreeMap={false}
+            insititutional={insititutional}
+            payer={payer}
+            payerData={payer}
+            closeModal={closeModal}
+            data1={data1}
+          />
+        : <>
       <div className="w-full flex -mb-[1%] justify-center gap-4">
         {shapes.map((item, index) => (
           <div key={index} className="flex gap-1 items-center">
@@ -452,9 +464,21 @@ const ScatterChart = ({
             max={maxX}
             onChange={handleChangeX}
             defaultValue={0}
+            value={lineX}
             className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-500"
           />
-          <div className="w-40 ml-10">{lineX}</div>
+          <div className="w-40 ml-10">
+            <input
+              id="labels-range-input"
+              type="number"
+              min={0}
+              value={lineX}
+              max={maxX}
+              onChange={(e) => setLineX(Number(e.target.value))}
+              defaultValue={0}
+              className="w-full p-4 h-1 cursor-pointer"
+            />
+          </div>
         </div>
         <div className="flex w-full mt-2 items-center gap-2">
           <label
@@ -472,17 +496,19 @@ const ScatterChart = ({
             defaultValue={0}
             className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-500"
           />
-          <div className="w-40 ml-10">{lineY}</div>
+          <div className="w-40 ml-10"> <input
+              id="labels-range-input"
+              type="number"
+              min={0}
+              value={lineY}
+              max={maxY}
+              onChange={(e) => setLineY(Number(e.target.value))}
+              defaultValue={0}
+              className="w-full p-4 h-1 cursor-pointer"
+            /></div>
         </div>
-        <Popup
-          onClose={closeModal}
-          modal
-          open={data1 != null}
-          position="center center"
-        >
-          <BarChartPopup InstitutionalTreeMap={false} insititutional={insititutional} payer={payer} payerData={payer} data1={data1} />
-        </Popup>
       </div>
+      </>}
     </div>
   );
 };

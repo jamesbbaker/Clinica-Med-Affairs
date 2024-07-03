@@ -157,6 +157,7 @@ export function RadarChart() {
       accessToken,
       refreshToken
     ).then((res) => {
+      console.log(res.clustering_results)
       setClusteringResult(res.clustering_results);
       let _Data = [];
       let clusterArray = Array.from({ length: clusterVal }, (v, i) => i);

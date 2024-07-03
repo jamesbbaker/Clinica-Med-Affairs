@@ -198,7 +198,7 @@ const TreeMap = ({
       datasets: [
         {
           data: Object.values(
-            tableData.find((obj) => parseInt(obj[row].split("%")[0]) == value)
+            tableData.find((obj) => parseInt(obj[row].split("%")[0]) === value)
           ).map((item) => item.split("%")[0]),
           borderColor: "rgb(155, 249, 122)",
           backgroundColor: "rgb(155, 249, 122, 0.4)",

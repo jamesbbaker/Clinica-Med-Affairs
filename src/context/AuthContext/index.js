@@ -35,6 +35,7 @@ const AuthProvider = () => {
 
   const navigate = useNavigate();
   const loginAction = async (data) => {
+    console.log(data)
     try {
       const response = await fetch("https://clinica-server.replit.app/login", {
         method: "POST",

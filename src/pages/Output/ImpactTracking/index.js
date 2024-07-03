@@ -103,7 +103,7 @@ const ImpactTracking = () => {
       .then((res) => {
         if (res) {
           let newObj = {};
-          res.data.map((item) => {
+          res.data.forEach((item) => {
             newObj[item.Region] = [item.LONG, item.LAT];
           });
           setRegionDataCoordinates(newObj);
@@ -117,7 +117,7 @@ const ImpactTracking = () => {
         if (res) {
           let _data = JSON.parse(res.replaceAll("NaN", 0));
           let newObj = {};
-          _data.data.map((item) => {
+          _data.data.forEach((item) => {
             newObj[item["State Name"]] = [item.LONG, item.LAT];
           });
           setStateCoordinates(newObj);
@@ -175,13 +175,13 @@ const ImpactTracking = () => {
             handleSelect={(val) => handleSelectChart(val)}
             value={chartShow}
           />
-          {chartShow == "national" && (
+          {chartShow === "national" && (
             <ImpactLineChart lineData={nationalData} />
           )}
-          {chartShow == "region" && (
+          {chartShow === "region" && (
             <ImpactLineChart type="Region" lineData={regionData.data} />
           )}
-          {chartShow == "state" && (
+          {chartShow === "state" && (
             <ImpactLineChart type="State" lineData={stateData.data} />
           )}
         </div>

@@ -18,6 +18,7 @@ import {
   selectLabels,
 } from "../../../constants/appConstants";
 import CustomDropdown from "../../../components/CustomDropdown";
+import BarChartPopup from "./Popup";
 const options = {
   indexAxis: "y",
   elements: {
@@ -112,31 +113,7 @@ const reducer = (state, action) => {
   }
 };
 
-const toggleBtns = [
-  "Number of Asthma Patients",
-  "Number of ICS Patients",
-  "Number of ICS Exacerbation",
-  "Number of ICS-LABA Patients",
-  "Number of ICS-LABA Exacerbation",
-  "Number of No Spirometry",
-  "Percent of No Spirometry",
-  "Number of No EOS Testing",
-  "Percent of No EOS Testing",
-  "Number of No Treatment",
-  "Percent of No Treatment",
-  "Number of ICS High Steroid Usage",
-  "Percent of ICS High Steroid Usage",
-  "Number of ICS Exacerbation Failed Escalation",
-  "Percent of ICS Exacerbation Failed Escalation",
-  "Number of ICS Escalation Delay",
-  "Percent of ICS Escalation Delay",
-  "Number of ICS-LABA High Steroid Usage",
-  "Percent of ICS-LABA High Steroid Usage",
-  "Number of ICS-LABA Exacerbation Failed Escalation",
-  "Percent of ICS-LABA Exacerbation Failed Escalation",
-  "Number of ICS-LABA Escalation Delay",
-  "Percent of ICS-LABA Escalation Delay",
-].map((item) => ({
+const toggleBtns =[...Object.keys(selectLabels)].map((item) => ({
   label: item,
   id: item,
 }));
@@ -181,6 +158,7 @@ const PatientOpportunityMapping = () => {
   const [regionData, setRegionData] = useState(null);
   const [data1, setData1] = useState();
   const [data2, setData2] = useState();
+  const [popupData, setPopupData] = useState(null)
   const [stateData, setStateData] = useState(null);
   const [markedStates, setMarkedStates] = useState(null);
   const currentStateClicked = useRef(null);
@@ -381,8 +359,15 @@ const PatientOpportunityMapping = () => {
     setCurrentToggle(e);
   };
 
+  const closeModal = () => {
+    setPopupData(null);
+  };
+
   return (
-    <div>
+    <>
+     {popupData && <BarChartPopup data1={popupData} closeModal={closeModal} />}
+    <div style={{visibility: popupData ? "hidden" :"visible", position: popupData ? "absolute" : "initial", top: popupData? 0 : "unset"}}>
+     
       <div
         style={{ display: loading ? "grid" : "none" }}
         className="w-full h-[400px] grid place-content-center"
@@ -432,6 +417,8 @@ const PatientOpportunityMapping = () => {
           </div>
         ) : (
           <Map
+          data1={popupData}
+          setData1={setPopupData}
             currentLevel={currentLevel}
             setCurrentLevel={setCurrentLevel}
             currentToggle={currentToggle}
@@ -538,28 +525,28 @@ const PatientOpportunityMapping = () => {
               <div className="w-[50%]">
                 <BarChart
                   label={`Diagnosis and Investigation (N = ${formatNumber(data1.mapValue1.datasets[0].data[0])})`}
-                  height={100}
+                  height={110}
                   data={data1.mapValue1}
                 />
               </div>
               <div className="w-[50%]">
                 <BarChart
                   label={`Treatment (ICS or beta-agonist) (N = ${formatNumber(data1.mapValue3.datasets[0].data[0])})`}
-                  height={100}
+                  height={110}
                   data={data1.mapValue3}
                 />
               </div>
               <div className="w-[50%]">
                 <BarChart
                   label={`Treatment (ICS-LABA) (N = ${formatNumber(data1.mapValue4.datasets[0].data[0])})`}
-                  height={100}
+                  height={110}
                   data={data1.mapValue4}
                 />
               </div>
               <div className="w-[50%]">
                 <BarChart
                   label={`Treatment (ICS-LABA-LAMA) (N = ${formatNumber(data1.mapValue5.datasets[0].data[0])})`}
-                  height={100}
+                  height={110}
                   data={data1.mapValue5}
                 />
               </div>
@@ -568,6 +555,7 @@ const PatientOpportunityMapping = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

@@ -199,17 +199,25 @@ const levelToggles = {
     "Number of ICS-LABA Patients with LAMA": "Total ICS-LABA With LAMA",
     "Percent of ICS-LABA Patients with LAMA": "Percent ICS-LABA With LAMA",
     "Number of ICS-LABA >900mg/year steroids":
-    "Number of ICS-LABA >900mg/year steroids",
-  "Percent of ICS-LABA >900mg/year steroids":
-    "Percent of ICS-LABA >900mg/year steroids",
-  "Number of ICS-LABA High Steroid Usage with ER visit":
-    "Number of ICS-LABA High Steroid Usage with ER visit",
-  "Percent of ICS-LABA High Steroid Usage with ER visit":
-    "Percent of ICS-LABA High Steroid Usage with ER visit",
-  "Number of ICS-LABA High Steroid Usage without ER visit":
-    "Number of ICS-LABA High Steroid Usage without ER visit",
-  "Percent of ICS-LABA High Steroid Usage without ER visit":
-    "Percent of ICS-LABA High Steroid Usage without ER visit",
+      "Number of ICS-LABA >900mg/year steroids",
+    "Percent of ICS-LABA >900mg/year steroids":
+      "Percent of ICS-LABA >900mg/year steroids",
+    "Number of ICS-LABA High Steroid Usage with ER visit":
+      "Number of ICS-LABA High Steroid Usage with ER visit",
+    "Percent of ICS-LABA High Steroid Usage with ER visit":
+      "Percent of ICS-LABA High Steroid Usage with ER visit",
+    "Number of ICS-LABA High Steroid Usage without ER visit":
+      "Number of ICS-LABA High Steroid Usage without ER visit",
+    "Percent of ICS-LABA High Steroid Usage without ER visit":
+      "Percent of ICS-LABA High Steroid Usage without ER visit",
+    "Number of Failure To Escalate With 3 Exacerbations":
+      "Number of Failure To Escalate With 3 Exacerbations",
+    "Percent of Failure To Escalate With 3 Exacerbations":
+      "Percent of Failure To Escalate With 3 Exacerbations",
+      "Number of Biologic Before Triple":'Number of Biologic Before Triple',
+      "Percent of Biologic Before Triple":"Percent of Biologic Before Triple",
+      "Number of Exacerbation Without Spirometry":"Number of Exacerbation Without Spirometry",
+      "Percent of Exacerbation Without Spirometry":"Percent of Exacerbation Without Spirometry"
   },
   state: {
     "Number of Asthma Patients": "Total Asthma Patients",
@@ -252,17 +260,17 @@ const levelToggles = {
     "Percent of ICS-LABA Escalation Delay": "Percent ICS-LABA Escalation Delay",
     "Number of ICS-LABA LAMA Patients": "Total ICS-LABA LAMA Patients",
     "Number of ICS-LABA >900mg/year steroids":
-    "Number of ICS-LABA >900mg/year steroids",
-  "Percent of ICS-LABA >900mg/year steroids":
-    "Percent of ICS-LABA >900mg/year steroids",
-  "Number of ICS-LABA High Steroid Usage with ER visit":
-    "Number of ICS-LABA High Steroid Usage with ER visit",
-  "Percent of ICS-LABA High Steroid Usage with ER visit":
-    "Percent of ICS-LABA High Steroid Usage with ER visit",
-  "Number of ICS-LABA High Steroid Usage without ER visit":
-    "Number of ICS-LABA High Steroid Usage without ER visit",
-  "Percent of ICS-LABA High Steroid Usage without ER visit":
-    "Percent of ICS-LABA High Steroid Usage without ER visit",
+      "Number of ICS-LABA >900mg/year steroids",
+    "Percent of ICS-LABA >900mg/year steroids":
+      "Percent of ICS-LABA >900mg/year steroids",
+    "Number of ICS-LABA High Steroid Usage with ER visit":
+      "Number of ICS-LABA High Steroid Usage with ER visit",
+    "Percent of ICS-LABA High Steroid Usage with ER visit":
+      "Percent of ICS-LABA High Steroid Usage with ER visit",
+    "Number of ICS-LABA High Steroid Usage without ER visit":
+      "Number of ICS-LABA High Steroid Usage without ER visit",
+    "Percent of ICS-LABA High Steroid Usage without ER visit":
+      "Percent of ICS-LABA High Steroid Usage without ER visit",
     "Number of ICS-LABA LAMA Compliance < 240":
       "Total ICS-LABA LAMA Compliance < 240",
     "Percent of ICS-LABA LAMA Compliance < 240":
@@ -273,6 +281,14 @@ const levelToggles = {
       "Percent ICS-LABA LAMA Persistence < 360",
     "Number of ICS-LABA Patients with LAMA": "Total ICS-LABA With LAMA",
     "Percent of ICS-LABA Patients with LAMA": "Percent ICS-LABA With LAMA",
+    "Number of Failure To Escalate With 3 Exacerbations":
+    "Number of Failure To Escalate With 3 Exacerbations",
+  "Percent of Failure To Escalate With 3 Exacerbations":
+    "Percent of Failure To Escalate With 3 Exacerbations",
+    "Number of Biologic Before Triple":'Number of Biologic Before Triple',
+    "Percent of Biologic Before Triple":"Percent of Biologic Before Triple",
+    "Number of Exacerbation Without Spirometry":"Number of Exacerbation Without Spirometry",
+    "Percent of Exacerbation Without Spirometry":"Percent of Exacerbation Without Spirometry"
   },
   hcp: {
     "Number of Asthma Patients": "Number of Asthma Patients",
@@ -329,11 +345,19 @@ const levelToggles = {
       "Percent of ICS-LABA LAMA Persistence < 360",
     "Number of ICS-LABA Patients with LAMA": "Number of ICS-LABA With LAMA",
     "Percent of ICS-LABA Patients with LAMA": "Percent of ICS-LABA With LAMA",
+    "Number of Failure To Escalate With 3 Exacerbations":
+    "Number of Failure To Escalate With 3 Exacerbations",
+  "Percent of Failure To Escalate With 3 Exacerbations":
+    "Percent of Failure To Escalate With 3 Exacerbations",
+    "Number of Biologic Before Triple":'Number of Biologic Before Triple',
+    "Percent of Biologic Before Triple":"Percent of Biologic Before Triple",
+    "Number of Exacerbation Without Spirometry":"Number of Exacerbation Without Spirometry",
+    "Percent of Exacerbation Without Spirometry":"Percent of Exacerbation Without Spirometry"
   },
 };
 
 const Map = ({
-  impactLayer=() => {},
+  impactLayer = () => {},
   impactMap,
   currentLevel,
   setCurrentLevel,
@@ -345,6 +369,8 @@ const Map = ({
   markers,
   markerClickedFn,
   mapData,
+  data1,
+  setData1,
   LayerFn = MapAddLayer,
   markersEnabled = true,
 }) => {
@@ -367,14 +393,12 @@ const Map = ({
   const mapStateboxglMarker = useRef([]);
   const [layerAdded, setLayerAdded] = useState(false);
   const [modalDetails, setModalDetails] = useState(null);
-  const [data1, setData1] = useState(null);
 
   useEffect(() => {
     if (impactMap) {
-      impactLayer()
-    } 
-  }, [])
- 
+      impactLayer();
+    }
+  }, []);
 
   useEffect(() => {
     if (markers && stateData && layerAdded) {
@@ -460,7 +484,7 @@ const Map = ({
     spiderifier.current = new MapboxglSpiderifier(mapRef.current, {
       onClick: function (e, spiderLeg) {
         var feature = spiderLeg.feature;
-        setChartDataValue(setData1, null,[ feature.properties]);
+        setChartDataValue(setData1, null, [feature.properties]);
         setModalDetails([feature]);
       },
       initializeLeg: function initializeSpiderLeg(spiderLeg) {
@@ -517,7 +541,9 @@ const Map = ({
                 feature.properties["Assigned Physician Name"]
               }</strong></h4><h4 className="text-xs">Primary Specialty Description: <strong className="font-bold">${
                 feature.properties["Assigned Specialty"]
-              }</strong></h4> <h4 className="text-xs">${selectLabels[currentToggle]}: <strong className="font-bold">${
+              }</strong></h4> <h4 className="text-xs">${
+                selectLabels[currentToggle]
+              }: <strong className="font-bold">${
                 feature.properties &&
                 currentToggle &&
                 feature.properties[currentToggle].toLocaleString()
@@ -553,7 +579,7 @@ const Map = ({
   };
 
   const closeModal = () => {
-    setData1(null)
+    setData1(null);
     setModalDetails(null);
   };
 
@@ -727,8 +753,8 @@ const Map = ({
           );
         } else {
           const item = e.features[0];
-        
-          setChartDataValue(setData1, null,[filteredArr[0].properties]);
+
+          setChartDataValue(setData1, null, [filteredArr[0].properties]);
           setModalDetails(filteredArr);
         }
 
@@ -807,8 +833,6 @@ const Map = ({
     setMapMarkers(newMapMarkers);
   };
 
- 
-
   useEffect(() => {
     if (mapData) {
       setData((prev) => {
@@ -873,17 +897,15 @@ const Map = ({
     );
   };
 
-  
   function setChartDataValue(setValue, API_labels, data) {
-    
     function generateChartData(array) {
       let _value = [];
       // console.log(array, data[0])
       array.forEach((item) => {
         _value.push(data[0][mapLabels[item]]);
       });
-      let labels =  array.map((item) => mapSelectLabels[mapLabels[item]])
-   
+      let labels = array.map((item) => mapSelectLabels[mapLabels[item]]);
+
       return {
         labels,
         datasets: [
@@ -908,7 +930,7 @@ const Map = ({
       mapValue3: generateChartData(mapBarCharts.chart3),
       mapValue4: generateChartData(mapBarCharts.chart4),
       mapValue5: generateChartData(mapBarCharts.chart5),
-      ...data
+      ...data,
     });
   }
 
@@ -937,7 +959,7 @@ const Map = ({
       spiderifier.current = new MapboxglSpiderifier(mapRef.current, {
         onClick: function (e, spiderLeg) {
           var feature = spiderLeg.feature;
-          setChartDataValue(setData1, null,[ feature.properties]);
+          setChartDataValue(setData1, null, [feature.properties]);
           setModalDetails([feature]);
         },
         initializeLeg: function initializeSpiderLeg(spiderLeg) {
@@ -993,7 +1015,9 @@ const Map = ({
                   feature.properties["Assigned Physician Name"]
                 }</strong></h4><h4 className="text-xs">Primary Specialty Description: <strong className="font-bold">${
                   feature.properties["Assigned Specialty"]
-                }</strong></h4> <h4 className="text-xs">${selectLabels[currentToggle]}: <strong className="font-bold">${
+                }</strong></h4> <h4 className="text-xs">${
+                  selectLabels[currentToggle]
+                }: <strong className="font-bold">${
                   feature.properties &&
                   currentToggle &&
                   feature.properties[currentToggle].toLocaleString()
@@ -1218,14 +1242,6 @@ const Map = ({
         className="map-container relative w-full h-large"
         ref={mapContainerRef}
       />
-      <Popup
-        onClose={closeModal}
-        modal
-        open={modalDetails != null}
-        position="center center"
-      >
-        <BarChartPopup data1={data1} />
-      </Popup>
     </div>
   );
 };

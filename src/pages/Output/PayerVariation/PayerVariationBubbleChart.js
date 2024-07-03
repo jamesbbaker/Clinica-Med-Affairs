@@ -39,10 +39,9 @@ const reducer = (state, action) => {
   }
 };
 
-const PayerVariationBubbleChart = () => {
+const PayerVariationBubbleChart = ({setIsScatterMapOpen, isScatterMapOpen=false}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { accessToken, refreshToken } = useContext(AuthContext);
-  const [loading, setLoading] = useState(true);
   const [rawData, setRawData] = useState(null);
   const [lineX, setLineX] = useState(10);
   const [lineY, setLineY] = useState(10);
@@ -59,7 +58,7 @@ const PayerVariationBubbleChart = () => {
       let topRight = 0;
       let bottomLeft = 0;
       let bottomRight = 0;
-      state.data.datasets[0].data.map((item) => {
+      state.data.datasets[0].data.forEach((item) => {
         if (item.x < lineX && item.y < lineY) {
           bottomLeft += 1;
         } else if (item.x >= lineX && item.y < lineY) {
@@ -85,22 +84,8 @@ const PayerVariationBubbleChart = () => {
       region: state.region,
     }
   ) => {
-    const specialties = filters.specialties;
-    const region = filters.region;
-    let queryString = `institutional_variation_data?&`; // Start with 'hcp_data?&'
-
-    if (specialties && specialties.length > 0) {
-      queryString += specialties
-        .map((specialty) => `Primary Specialty Description=${specialty.value}`)
-        .join("&");
-    }
-    if (region && region.length > 0) {
-      queryString += `&${region
-        .map((region) => `Region=${region.value}`)
-        .join("&")}`;
-    }
+   
     // Combine the base URL, dynamic specialties, and additional parameters
-    const finalUrl = `${queryString}`;
 
     getDataStats("payer_variation_data", accessToken, refreshToken)
       .then((res) => {
@@ -120,7 +105,7 @@ const PayerVariationBubbleChart = () => {
             type: actions.handleUpdateData,
             payload: data,
           });
-          setLoading(false);
+       
         }
       })
       .catch((err) => {
@@ -200,7 +185,6 @@ const PayerVariationBubbleChart = () => {
   }, []);
 
   const handleDispatchData = (labelValue, chartData) => {
-    let _data = chartData ? chartData : rawData;
     let data = handleChartData(rawData, labelValue);
     dispatch({
       type: actions.handleUpdateData,
@@ -218,8 +202,8 @@ const PayerVariationBubbleChart = () => {
 
    
     let labelValue = {
-      xLabel: id == "xLabel" ? val : state.xLabel,
-      yLabel: id == "yLabel" ? val : state.yLabel,
+      xLabel: id === "xLabel" ? val : state.xLabel,
+      yLabel: id === "yLabel" ? val : state.yLabel,
     };
     handleDispatchData(labelValue);
   };
@@ -229,7 +213,7 @@ const PayerVariationBubbleChart = () => {
     <div className="flex flex-col mt-10 gap-2 items-start">
       {state.data ? (
         <>
-          <div className="flex flex-col mb-4 items-start">
+          {!isScatterMapOpen &&<div className="flex flex-col mb-4 items-start">
             <div>
               <CustomDropdown
                 showColors
@@ -268,9 +252,10 @@ const PayerVariationBubbleChart = () => {
                 handleSelect={(val) => handleSelect("yLabel", val)}
               />
             </div>
-          </div>
+          </div>}
 
           <ScatterChart
+          setIsScatterMapOpen={setIsScatterMapOpen}
           shapes={ [
             {
               icon: <IoTriangle />,

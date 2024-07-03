@@ -63,7 +63,7 @@ const MedicalAffairToolbox = () => {
       let topRight = 0;
       let bottomLeft = 0;
       let bottomRight = 0;
-      state.data.datasets[0].data.map((item) => {
+      state.data.datasets[0].data.forEach((item) => {
         if (item.x < lineX && item.y < lineY) {
           bottomLeft += 1;
         } else if (item.x >= lineX && item.y < lineY) {
@@ -230,8 +230,8 @@ const MedicalAffairToolbox = () => {
               data: res.crf_data["Number of No Spirometry"][
                 "Cumulative Unmet Need"
               ],
-              borderColor: "rgb(15,255, 122)",
-              backgroundColor: "rgb(15,255, 122, 0.2)",
+              borderColor: "rgb(0, 0, 139)",
+              backgroundColor: "rgb(0, 0, 139, 0.2)",
             },
           ],
         };
@@ -244,7 +244,6 @@ const MedicalAffairToolbox = () => {
   }, []);
 
   const handleDispatchData = (labelValue, chartData) => {
-    let _data = chartData ? chartData : rawData;
     let data = handleChartData(rawData, labelValue);
     dispatch({
       type: actions.handleUpdateData,
@@ -261,8 +260,8 @@ const MedicalAffairToolbox = () => {
     });
 
     let labelValue = {
-      xLabel: id == "xLabel" ? val : state.xLabel,
-      yLabel: id == "yLabel" ? val : state.yLabel,
+      xLabel: id === "xLabel" ? val : state.xLabel,
+      yLabel: id === "yLabel" ? val : state.yLabel,
     };
     handleDispatchData(labelValue);
   };
@@ -286,8 +285,8 @@ const MedicalAffairToolbox = () => {
           data: crfData[val][
             "Cumulative Unmet Need"
           ],
-          borderColor: "rgb(15,255, 122)",
-          backgroundColor: "rgb(15,255, 122, 0.2)",
+          borderColor: "rgb(0, 0, 139)",
+          backgroundColor: "rgb(0, 0, 139, 0.2)",
         },
       ],
     };
@@ -319,13 +318,7 @@ const MedicalAffairToolbox = () => {
         //   drawOnAxisArea: false,
         // },
         ticks: {
-          display: false,
-          // stepSize: 1,
-          // min: 0,
-          autoSkip: false,
-          callback: function (value) {
-            return value % 500 !== 0 ? "" : value;
-          },
+          stepSize: 1000 
         },
       },
       y: {
@@ -344,15 +337,21 @@ const MedicalAffairToolbox = () => {
       datalabels: {
         display: false,
       },
+      legend: {
+        display: false // Hide the legend
+    }
     },
   };
+
+  const [isScatterMapOpen, setIsScatterMapOpen] = useState(false)
   
 
   return (
     <div className="flex flex-col gap-2 items-start">
-      <div className="text-[1.25rem] font-[600]">HCP Prioritization</div>
+     {!isScatterMapOpen && <div className="text-[1.25rem] font-[600]">HCP Prioritization</div>}
       {state.data ? (
         <>
+        {!isScatterMapOpen &&<>
           <div className="flex items-center w-full justify-between">
             <div className="flex items-center gap-8">
               <div className="font-[600] text-[18px]">Filters:</div>
@@ -376,7 +375,7 @@ const MedicalAffairToolbox = () => {
               {state.primaryList && (
                 <div className="flex items-center gap-4">
                   <label className="block text-sm font-medium text-gray-900 dark:text-white">
-                    Primary Select
+                  Specialty
                   </label>
                   <MultiSelect
                     labelledBy=""
@@ -462,9 +461,10 @@ const MedicalAffairToolbox = () => {
                 handleSelect={(val) => handleSelect("yLabel", val)}
               />
             </div>
-          </div>
+          </div></>}
 
           <ScatterChart
+          setIsScatterMapOpen={setIsScatterMapOpen}
             quadrantValues={quadrantValues}
             lineX={lineX}
             handleDispatchData={handleDispatchData}
@@ -474,7 +474,7 @@ const MedicalAffairToolbox = () => {
             setLineY={setLineY}
             data={state.data}
           />
-          <div className="w-full mt-4">
+          {!isScatterMapOpen &&<div className="w-full mt-4">
             <div className="flex flex-col items-center ">
               <RadarChart />
               {crfData && crfLineData &&crfUnmetNeed && (
@@ -502,7 +502,7 @@ const MedicalAffairToolbox = () => {
                 </>
               )}
             </div>
-          </div>
+          </div>}
         </>
       ) : (
         <div className="w-full h-[400px] grid place-content-center">
