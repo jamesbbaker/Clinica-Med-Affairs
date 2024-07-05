@@ -1,4 +1,4 @@
-import React, {  useRef, useState } from "react";
+import React, { useRef } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,7 +8,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Bar, getElementAtEvent } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
 ChartJS.register(
@@ -114,26 +114,11 @@ const BarChart = ({
   options = _options,
 }) => {
   const chartRef = useRef(null);
-  const [selectedValue, setSelectedValue] = useState(0);
-
-  const onClick = (event) => {
-    if (getElementAtEvent(chartRef.current, event).length > 0) {
-      setSelectedValue(
-        getElementAtEvent(chartRef.current, event)[0].element.$context.raw
-      );
-    }
-  };
 
   return (
     <div className="px-2 w-full h-full mt-2 rounded-lg">
       {label && <div className="text-[500] text-[#000] text-md">{label}</div>}
-      <Bar
-        height={height}
-        ref={chartRef}
-        options={options}
-        onClick={onClick}
-        data={data}
-      />
+      <Bar height={height} ref={chartRef} options={options} data={data} />
     </div>
   );
 };

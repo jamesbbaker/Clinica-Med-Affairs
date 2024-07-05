@@ -45,7 +45,7 @@ const AuthProvider = () => {
         body: JSON.stringify({ ...data }),
       });
       const res = await response.json();
-      if (res.message == "Login successful") {
+      if (res.message === "Login successful") {
         let userData = {
           ...data,
           region: res.region,

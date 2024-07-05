@@ -190,7 +190,7 @@ const Table = ({
     if (currentSize) {
       setPageSize(currentSize);
     }
-  }, [currentSize]);
+  }, [currentSize, setPageSize]);
 
   const handleClick = (row) => {
     if (isEligible) {
@@ -344,7 +344,6 @@ const Table = ({
     setFilterList(val);
   };
 
-
   return (
     <div style={{ marginTop }} className="w-full max-w-full overflow-auto">
       {Title && (
@@ -411,29 +410,27 @@ const Table = ({
 
           <div className="flex flex-col items-start gap-8">
             <div className="flex items-center gap-4">
-              {Object.values(filterState).map((item) => {
-                let _newFilterValue = filterList.map((item) => item.value);
-                if (!_newFilterValue.includes(item.id)) {
-                  return;
-                }
-
-                return (
-                  <MinMaxSlider
-                    handleValueChange={(min, max) =>
-                      handleFilterValueChange(min, max, item.id)
-                    }
-                    minValue={item.min}
-                    maxValue={item.max}
-                    label={selectLabels[item.id]}
-                  />
-                );
-              })}
+              {Object.values(filterState)
+                .filter((item) => {
+                  let _newFilterValue = filterList.map((item) => item.value);
+                  return _newFilterValue.includes(item.id);
+                })
+                .map((item) => {
+                  return (
+                    <MinMaxSlider
+                      handleValueChange={(min, max) =>
+                        handleFilterValueChange(min, max, item.id)
+                      }
+                      minValue={item.min}
+                      maxValue={item.max}
+                      label={selectLabels[item.id]}
+                    />
+                  );
+                })}
             </div>
             <div className="flex mt-2 items-center gap-4">
               <div className="flex items-center gap-8">
-                <label className="font-[600]">
-                  Specialty
-                </label>
+                <label className="font-[600]">Specialty</label>
                 <MultiSelect
                   labelledBy=""
                   options={specialityList
@@ -493,7 +490,7 @@ const Table = ({
               {headerGroup.headers.map((column, index) =>
                 isEligible ? (
                   <th
-                  key={index}
+                    key={index}
                     style={{ cursor: "pointer" }}
                     className={"hover:bg-slate-200"}
                     onClick={() => handleSort(column)}

@@ -9,7 +9,6 @@ import {
 } from "../../../constants/appConstants";
 import { getDataStats } from "../../../API/Outputs";
 import { AuthContext } from "../../../context/AuthContext";
-import Popup from "reactjs-popup";
 import CustomDropdown from "../../../components/CustomDropdown";
 import BarChartPopup from "../PatientOpportunityMapping/Popup";
 import { getLowestValue, highestValue } from "../../../utils/MathUtils";
@@ -28,7 +27,6 @@ const PayerVariation = () => {
   });
   const [treeDataById, setTreeDataById] = useState({});
   const [data1, setData1] = useState(null);
-  const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [modalDetails, setModalDetails] = useState({});
 
@@ -137,7 +135,7 @@ const PayerVariation = () => {
     if (row === modalDetails.name) {
       return;
     }
-    setShowModal(true);
+ 
     let _data = treeDataById[`${row}_Plan`];
     setChartDataValue(setData1, null, [_data]);
     setModalDetails(_data);
@@ -164,7 +162,7 @@ const PayerVariation = () => {
       setLoading(false);
       setData1(null);
     }, 500);
-    setShowModal(false);
+ 
   };
 
   const fetchData = () => {
@@ -289,6 +287,7 @@ const PayerVariation = () => {
                 </div>
 
                 <TreeMap
+                closeModal={closeModal}
                   values={values}
                   preventDrill={true}
                   data={TreeData}

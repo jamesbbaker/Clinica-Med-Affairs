@@ -9,7 +9,6 @@ import {
   Legend,
 } from "chart.js";
 import { Radar } from "react-chartjs-2";
-import { breakString } from "../../utils/StringUtils";
 import { getDataStats } from "../../API/Outputs";
 import { AuthContext } from "../../context/AuthContext";
 import { selectLabels } from "../../constants/appConstants";
@@ -87,7 +86,6 @@ export function RadarChart() {
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [clusteringResult, setClusteringResult] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [numberOfClusters, setNumberofClusters] = useState(3);
   const [chartData, setChartData] = useState({
     labels: [
       "Failure to escalate therapy",
@@ -103,7 +101,6 @@ export function RadarChart() {
   });
 
   const handleChange = (e) => {
-    setNumberofClusters(3);
     fetchData(e.target.value);
   };
 
@@ -157,11 +154,10 @@ export function RadarChart() {
       accessToken,
       refreshToken
     ).then((res) => {
-      console.log(res.clustering_results)
       setClusteringResult(res.clustering_results);
       let _Data = [];
       let clusterArray = Array.from({ length: clusterVal }, (v, i) => i);
-      clusterArray.map((item, index) => {
+      clusterArray.forEach((item, index) => {
         let _array = [];
 
         let selectLabelsKeys = Object.keys(selectLabels)
@@ -170,7 +166,7 @@ export function RadarChart() {
             return res.clustering_results[item];
           });
 
-        let _data = selectLabelsKeys.map((item) => {
+        selectLabelsKeys.forEach((item) => {
           _array.push(item[index]["Average Percent of Patients"].toFixed(2));
         });
         _Data.push({

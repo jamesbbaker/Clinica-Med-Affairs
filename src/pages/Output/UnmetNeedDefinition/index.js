@@ -1019,15 +1019,7 @@ const UnmetNeedDefinition = () => {
     };
     setStatsData1(data);
   }
-  function getIntValue(item) {
-    let value = item;
-    if (item.includes("-")) {
-      value = item.split("-")[1];
-    }
-    value = parseInt(value.split("mg")[0]);
-    return value;
-  }
-
+ 
   function getBarChart(res, type1, type2, sortFn) {
     let responseData = res.data;
     if (sortFn) {

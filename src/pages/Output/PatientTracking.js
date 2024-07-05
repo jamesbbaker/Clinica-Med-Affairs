@@ -25,19 +25,18 @@ const PatientTracking = () => {
     getDataStats("hcp_correlation_matrix", accessToken, refreshToken)
       .then((res) => {
         if (res) {
-          let _res = [];
           let _newObj = {};
-          res.map((item) => {
+          res.forEach((item) => {
             let _item = { ...item };
             delete _item.index;
             _newObj[item.index] = _item;
           });
 
           let newRes = [];
-          Object.keys(selectLabels).map((item) => {
+          Object.keys(selectLabels).forEach((item) => {
             if (_newObj.hasOwnProperty(item)) {
               let newObj = [];
-              Object.keys(selectLabels).map((_item) => {
+              Object.keys(selectLabels).forEach((_item) => {
                 if (_newObj[item].hasOwnProperty(_item)) {
                   newObj.push(_newObj[item][_item]);
                 }
@@ -45,9 +44,7 @@ const PatientTracking = () => {
               newRes.push(newObj);
             }
           });
-          let newArr = newRes.map((item) =>
-            _res.push(Object.keys(item).map((key) => item[key]))
-          );
+        
           setStatsData1(newRes);
           setLabels({
             xLabels: Object.keys(selectLabels)

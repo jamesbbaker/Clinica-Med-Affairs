@@ -180,7 +180,7 @@ const Sidebar = () => {
                     return (
                       <div
                         key={`menu-subitem-${index}`}
-                        style={{ fontSize: "0.75rem",marginTop: subItem.id ==  APP_ROUTES.patient_journey ? "0.75rem" : 0 }}
+                        style={{ fontSize: "0.75rem",marginTop: subItem.id ===  APP_ROUTES.patient_journey ? "0.75rem" : 0 }}
                         onClick={() => handleClick(subItem)}
                         className={`${
                           currentMenu !== subItem.id && "text-slate-50"
@@ -193,7 +193,7 @@ const Sidebar = () => {
                         <div className="w-full md:w-auto grid place-content-center">
                           <subItem.icon />
                         </div>
-                        {subItem.id ==  APP_ROUTES.patient_journey && <div className="absolute rounded-[20px] left-0 h-[0.25rem] w-[100%] -top-[0.5rem] bg-[#c4c4c4]"></div>}
+                        {subItem.id ===  APP_ROUTES.patient_journey && <div className="absolute rounded-[20px] left-0 h-[0.25rem] w-[100%] -top-[0.5rem] bg-[#c4c4c4]"></div>}
                         <div className="w-full hidden md:block">
                           {subItem.name}
                         </div>

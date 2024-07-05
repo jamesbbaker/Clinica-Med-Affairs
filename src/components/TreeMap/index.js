@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import { Chart } from "react-google-charts";
 import { getRandomInt } from "../../utils/MathUtils";
 import Popup from "reactjs-popup";
-import { breakString, removeCommasFromString } from "../../utils/StringUtils";
+import {  removeCommasFromString } from "../../utils/StringUtils";
 import BarChart from "../BarChart";
-import { EPL_TABLE_COLUMNS } from "../../constants/appConstants";
-import tableData from "../Table/table-data.json";
+import { IoArrowBackCircle } from "react-icons/io5";
 
 export const defaultData = [
   [
@@ -172,9 +171,10 @@ const BarChartOptions = {
 };
 
 const TreeMap = ({
+  closeModal,
   values,
   chartEvents,
-  payerTable=false,
+  payerTable = false,
   preventDrill = false,
   needCallbacks = true,
   options = defaultOptions,
@@ -182,30 +182,14 @@ const TreeMap = ({
   handleOpen = () => {},
 }) => {
   const [openPopup, setOpenPopup] = useState(false);
-
   const [barChartConfig, setBarChartConfig] = useState(null);
   const handleClick = (row, value, data) => {
-    
-    if(preventDrill) {
+    if (preventDrill) {
       handleOpen(row, value, data);
-      return
+      return;
     }
     setOpenPopup((o) => !o);
- 
     return;
-    const barChartData = {
-      labels: EPL_TABLE_COLUMNS.map((item) => breakString(item.Header, 40)),
-      datasets: [
-        {
-          data: Object.values(
-            tableData.find((obj) => parseInt(obj[row].split("%")[0]) === value)
-          ).map((item) => item.split("%")[0]),
-          borderColor: "rgb(155, 249, 122)",
-          backgroundColor: "rgb(155, 249, 122, 0.4)",
-        },
-      ],
-    };
-    setBarChartConfig(barChartData);
   };
 
   const handleClose = () => {
@@ -213,17 +197,23 @@ const TreeMap = ({
     setBarChartConfig(null);
   };
 
-  const handleChartClick = () => {
-    console.log("first");
+  const handleBack = () => {
+    closeModal();
   };
 
 
   return (
     <div className="relative">
-      {values && <div className="flex absolute justify-between -top-5 w-[32%] right-[2%]">
-        <div>{values.min}</div>
-        <div>{values.max}</div>
-        </div>}
+      {values && (
+        <div className="flex absolute justify-between -top-5 w-[32%] right-[2%]">
+          <div>{values.min}</div>
+        <button onClick={handleBack} className="flex items-center gap-1">
+            <IoArrowBackCircle size={30} />
+            Go Back
+          </button>
+          <div>{values.max}</div>
+        </div>
+      )}
       <Chart
         chartType="TreeMap"
         width="100%"
@@ -234,6 +224,7 @@ const TreeMap = ({
           {
             eventName: "select",
             callback: ({ chartWrapper, google }) => {
+             
               if (!needCallbacks) {
                 return;
               }
@@ -247,8 +238,8 @@ const TreeMap = ({
                   if (selection.length > 0) {
                     if (data.getValue(selection[0].row, 0).length > 2) {
                       let column = data
-                      .getValue(selection[0].row, 0)
-                      .split("_")[0];
+                        .getValue(selection[0].row, 0)
+                        .split("_")[0];
                       let value = data.getValue(selection[0].row, 2);
                       let _data = data.getValue(selection[0].row, 3);
                       handleClick(column, value, _data);

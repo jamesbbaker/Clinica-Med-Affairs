@@ -188,10 +188,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
     } else if (type === "State") {
       const lineDataByState = {};
 
-      lineDataFilter.map((item) => {
-        if (!item["State ID"]) {
-          return;
-        }
+      lineDataFilter.filter(item => item["State ID"]).forEach((item) => {
         if (!lineDataByState[item["State ID"]]) {
           lineDataByState[item["State ID"]] = {
             id: item["State ID"],

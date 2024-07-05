@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { users } from "../../pages/Home/usersList";
 
 export const adminSlice = createSlice({
   name: "admin",

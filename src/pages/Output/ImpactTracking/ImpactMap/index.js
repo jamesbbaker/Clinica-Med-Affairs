@@ -922,7 +922,7 @@ const ImpactMap = ({
       _period2.forEach((item) => {
         let obj = {};
         let _region = item.Region;
-        Object.values(invertedMapLabels).map((label) => {
+        Object.values(invertedMapLabels).forEach((label) => {
           let _peroid1Selected = _period1.filter(
             (__item) => __item.Region === _region
           )[0];

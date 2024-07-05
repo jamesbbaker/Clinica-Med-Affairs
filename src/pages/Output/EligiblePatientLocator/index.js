@@ -8,7 +8,6 @@ import React, {
 import Table from "../../../components/Table";
 import { getDataStats } from "../../../API/Outputs";
 import { AuthContext } from "../../../context/AuthContext";
-import Popup from "reactjs-popup";
 import {
   mapBarCharts,
   mapLabels,
@@ -86,7 +85,6 @@ const EligiblePatientLocator = () => {
   const [organisationList, setorganisationList] = useState(null);
   const [icsNumber, setIcsNumber] = useState({ min: 0, max: 0 });
   const [steroidPercent, setsteroidPercent] = useState({ min: 0, max: 0 });
-  const [rowDetails, setRowDetails] = useState(null);
   const [data1, setData1] = useState(null);
 
   useEffect(() => {
@@ -415,7 +413,7 @@ const EligiblePatientLocator = () => {
   }
 
   const handleRowClicked = (col) => {
-    setRowDetails(col.original);
+   
     setChartDataValue(setData1, null, [col.original]);
   };
 
@@ -504,7 +502,7 @@ const EligiblePatientLocator = () => {
 
   const closeModal = () => {
     setData1(null)
-    setRowDetails(null);
+
   };
 
   const handleSort = (column) => {

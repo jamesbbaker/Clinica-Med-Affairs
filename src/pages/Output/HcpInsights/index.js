@@ -20,7 +20,7 @@ const HcpInsight = () => {
         if (responseData) {
           let _data = responseData.data.map(item => {
             let newItem = {...item}
-            responseData.headers.map(header => {
+            responseData.headers.forEach(header => {
               if (header.includes("Percent")) {
                 newItem[header] = `${item[header].toFixed(2)}%`
               }
