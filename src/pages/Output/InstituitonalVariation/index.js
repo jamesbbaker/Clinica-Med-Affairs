@@ -11,7 +11,6 @@ import {
 import { getDataStats } from "../../../API/Outputs";
 import { AuthContext } from "../../../context/AuthContext";
 import { MultiSelect } from "react-multi-select-component";
-import Popup from "reactjs-popup";
 import CustomDropdown from "../../../components/CustomDropdown";
 import InstitutionalVariationBubbleChart from "./InstitutionalVariationBubbleChart";
 import BarChartPopup from "../PatientOpportunityMapping/Popup";
@@ -397,6 +396,7 @@ const InstitutionalVariation = () => {
                   </div>
                 </div>
                 <TreeMap
+                closeModal={closeModal}
                   values={values}
                   preventDrill={true}
                   data={TreeData}

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import BarChart, { _data } from "../../../components/BarChart";
+import BarChart from "../../../components/BarChart";
 import { getDataStats } from "../../../API/Outputs";
 import { AuthContext } from "../../../context/AuthContext";
 import { LineChart } from "../../../components/LineChart";
@@ -98,14 +98,6 @@ const options = {
   },
 };
 
-const formatNumber = (num) => {
-  if (num >= 1000000) {
-    return (num / 1000000).toFixed(1) + "m";
-  } else if (num >= 1000) {
-    return (num / 1000).toFixed(0) + "k";
-  }
-  return num.toLocaleString();
-};
 
 const filterOptions = [...Object.keys(selectLabels)];
 

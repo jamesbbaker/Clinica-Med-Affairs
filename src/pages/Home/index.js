@@ -17,7 +17,7 @@ const Home = () => {
 
   return (
     <div>
-      {currentMenu == sidebarRoutes.USERS ? (
+      {currentMenu === sidebarRoutes.USERS ? (
         <>
           <Popup
             onClose={closeModal}

@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { getDataStats } from "../../../API/Outputs";
 import { AuthContext } from "../../../context/AuthContext";
 import { LineChart } from "../../../components/LineChart";
 import TreeMap from "../../../components/TreeMap";
 import Table from "../../../components/Table";
 import Map from "../../../components/Map";
-import { color } from "chart.js/helpers";
 import { generateStatsOptions, setLineData } from "../../../utils/ChartUtils";
 
 const DataQuality = () => {

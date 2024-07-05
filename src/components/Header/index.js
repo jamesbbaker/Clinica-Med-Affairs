@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { AuthContext } from "../../context/AuthContext";
@@ -11,7 +10,6 @@ import Login from "../../pages/Login";
 const Header = () => {
   const { logOut, user } = useContext(AuthContext);
   const [openDialog, setOpenDialog] = useState(false);
-  const { currentMenuLabel } = useSelector((state) => state.menu);
   const [password, setPassword] = useState(false)
 
   const handlePassword = () => {

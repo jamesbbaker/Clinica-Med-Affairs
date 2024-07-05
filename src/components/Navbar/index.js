@@ -1,11 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
 import logo from "../../assets/images/logo.png"
 
 const Navbar = () => {
   const navigate = useNavigate()
-  const { user } = useContext(AuthContext)
 
   const [top, setTop] = useState(true)
 
@@ -32,10 +30,6 @@ const Navbar = () => {
   const handleSignIn = () => {
     navigate("/auth")
     return
-    if (!user) {
-    } else {
-      navigate("/dashboard")
-    }
   }
 
   return (

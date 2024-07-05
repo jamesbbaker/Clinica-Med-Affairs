@@ -4,7 +4,7 @@ const InputField = ({ error, input, onChange = () => {} }) => {
   return (
     <div
       className={`${
-        input.type == "checkbox" && "flex items-center gap-2 col-span-2"
+        input.type === "checkbox" && "flex items-center gap-2 col-span-2"
       } w-full mt-2`}
     >
       <h1

@@ -107,9 +107,9 @@ const Login = ({ passwordChange }) => {
     });
     dispatch({
       type: ActionTypes.SUBMIT_FORM,
-      payload: { ["errors"]: errors ? { ...errors } : {} },
+      payload: { "errors": errors ? { ...errors } : {} },
     });
-    return Object.values(errors).length == 0;
+    return Object.values(errors).length === 0;
   };
 
   const handleSubmit = (e) => {
@@ -174,11 +174,7 @@ const Login = ({ passwordChange }) => {
     });
   };
 
-  const handleChangePassword = () => {
-    setInputTypes(showBack ? [...inputs] : [...changePasswordInputs]);
-    setShowBack((prev) => !prev);
-  };
-
+  
   return passwordChange ? (
     <form
       onSubmit={handleSubmit}
@@ -227,7 +223,7 @@ const Login = ({ passwordChange }) => {
             onSubmit={handleSubmit}
             className="md:w-1/2 flex flex-col justify-center items-center gap-2 md:gap-8"
           >
-            <img src={logo} className="hidden md:block w-40" />
+            <img src={logo}  alt="logo" className="hidden md:block w-40" />
             <div className="flex w-full flex-col gap-2">
               {inputType.map((input, index) => (
                 <InputField

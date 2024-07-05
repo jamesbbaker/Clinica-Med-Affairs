@@ -19,52 +19,7 @@ import {
 } from "../../../constants/appConstants";
 import CustomDropdown from "../../../components/CustomDropdown";
 import BarChartPopup from "./Popup";
-const options = {
-  indexAxis: "y",
-  elements: {
-    bar: {
-      borderWidth: 1,
-    },
-  },
-  responsive: true,
-  scales: {
-    y: {
-      display: false,
-      ticks: {
-        callback: function (value, index, ticks) {
-          return `${value}%`;
-        },
-        stepSize: 1,
-        min: 0,
-        autoSkip: false,
-        font: {
-          size: 10,
-          weight: 700,
-        },
-      },
-    },
-    x: {
-      title: {
-        display: true,
-        text: "Percent of eligible Patients",
-      },
-      ticks: {
-        // Include a dollar sign in the ticks
-        callback: function (value, index, ticks) {
-          return `${value}%`;
-        },
-        font: {
-          size: 10,
-        },
-      },
-    },
-  },
-  plugins: {
-    legend: {
-      display: false,
-    },
-  },
-};
+
 
 const Initial_State = {
   currentRegion: null,
@@ -134,22 +89,6 @@ let data_1_labels = [
   "Total ICS-LABA Exacerbation Failed Escalation",
   "Total ICS-LABA Escalation Delay",
 ];
-let data_2_labels = [
-  "Percent Asthma Patients",
-  "Percent ICS Patients",
-  "Percent ICS Exacerbations",
-  "Percent ICS-LABA Patients",
-  "Percent ICS-LABA Exacerbations",
-  "Percent No Spirometry",
-  "Percent No EOS Testing",
-  "Percent No Treatment",
-  "Percent ICS High Steroid Usage",
-  "Percent ICS Exacerbation Failed Escalation",
-  "Percent ICS Escalation Delay",
-  "Percent ICS-LABA High Steroid Usage",
-  "Percent ICS-LABA Exacerbation Failed Escalation",
-  "Percent ICS-LABA Escalation Delay",
-];
 
 const PatientOpportunityMapping = () => {
   const [currentLevel, setCurrentLevel] = useState("region");
@@ -157,7 +96,6 @@ const PatientOpportunityMapping = () => {
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [regionData, setRegionData] = useState(null);
   const [data1, setData1] = useState();
-  const [data2, setData2] = useState();
   const [popupData, setPopupData] = useState(null)
   const [stateData, setStateData] = useState(null);
   const [markedStates, setMarkedStates] = useState(null);
@@ -186,8 +124,8 @@ const PatientOpportunityMapping = () => {
      
           let _data = JSON.parse(res.replaceAll("NaN", 0));
           let StateByRegion = {};
-          _data.data.map((entry) => {
-            if (entry.Region != 0) {
+          _data.data.forEach((entry) => {
+            if (entry.Region !== 0) {
               if (
                 StateByRegion[entry.Region] &&
                 StateByRegion[entry.Region].length > 0
@@ -210,7 +148,7 @@ const PatientOpportunityMapping = () => {
       
         if (res) {
           setChartDataValue(setData1, data_1_labels, [res.summary_data]);
-          setChartDataValue(setData2, data_2_labels, [res.summary_data]);
+          
           setSummaryData([res.summary_data]);
         }
       }
@@ -258,21 +196,12 @@ const PatientOpportunityMapping = () => {
     states.map((item) => {
       return (_statesId[item["State Name"]] = item);
     });
-    var filteredFeatures = mapDataJson.features.filter(function (feature) {
-      return _statesId.hasOwnProperty(feature.properties.name);
-    });
-
-    // Create a new GeoJSON FeatureCollection with the filtered features
-    var filteredFeatureCollection = {
-      type: "FeatureCollection",
-      features: filteredFeatures,
-    };
-
+  
     let _filteredArray = regionData.filter(
       (item) => item["Region"] === _region
     );
     setChartDataValue(setData1, data_1_labels, _filteredArray);
-    setChartDataValue(setData2, data_2_labels, _filteredArray);
+  
   };
 
   function setChartDataValue(setValue, API_labels, data) {
@@ -312,7 +241,7 @@ const PatientOpportunityMapping = () => {
 
   const stateClicked = (feature, mapRef) => {
     const clickedState = feature["State Name"];
-    if (currentStateClicked.current == clickedState) {
+    if (currentStateClicked.current === clickedState) {
       return;
     }
     currentStateClicked.current = clickedState;
@@ -321,8 +250,6 @@ const PatientOpportunityMapping = () => {
       (item) => item["State Name"] === clickedState
     );
     setChartDataValue(setData1, data_1_labels, _filteredArray);
-    setChartDataValue(setData2, data_2_labels, _filteredArray);
-
     handleStateLevelData(state, clickedState);
 
     mapRef.current.flyTo({
@@ -350,7 +277,6 @@ const PatientOpportunityMapping = () => {
       setMarkedStates(null);
       currentStateClicked.current = null;
       setChartDataValue(setData1, data_1_labels, summaryData);
-      setChartDataValue(setData2, data_2_labels, summaryData);
     }, 100);
   };
 

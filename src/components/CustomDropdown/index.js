@@ -72,7 +72,6 @@ const CustomDropdown = ({showImpactColors = false, showColors = false, labelClas
                       display: 'inline-block',
                       backgroundColor: (patientTotals.includes(option.value) ? '#00008B' : '#800000'),
                       borderRadius: '50%',
-                      display: 'inline-block',
                       marginRight: '10px',
                     }}
                   ></span>
@@ -89,7 +88,6 @@ const CustomDropdown = ({showImpactColors = false, showColors = false, labelClas
                       display: 'inline-block',
                       backgroundColor: filterColors[mapSelectLabels[mapLabels[option.value]]],
                       borderRadius: '50%',
-                      display: 'inline-block',
                       marginRight: '10px',
                     }}
                   ></span>

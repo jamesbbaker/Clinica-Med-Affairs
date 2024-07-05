@@ -10,7 +10,6 @@ import {
   Legend,
   BubbleController,
   registerables,
-  elements,
 } from "chart.js";
 import {
   mapBarCharts,
@@ -19,7 +18,6 @@ import {
   patientTotals,
   selectLabels,
 } from "../../constants/appConstants";
-import Popup from "reactjs-popup";
 import BarChartPopup from "../../pages/Output/PatientOpportunityMapping/Popup";
 import { IoTriangle } from "react-icons/io5";
 import { FaCircle } from "react-icons/fa";
@@ -258,6 +256,7 @@ const ScatterChart = ({
   const [maxX, setMaxX] = useState();
   const [maxY, setMaxY] = useState();
   const [data1, setData1] = useState();
+  
 
   useEffect(() => {
     const _defaultOptions = {
@@ -471,11 +470,11 @@ const ScatterChart = ({
             <input
               id="labels-range-input"
               type="number"
-              min={0}
+        
               value={lineX}
               max={maxX}
               onChange={(e) => setLineX(Number(e.target.value))}
-              defaultValue={0}
+          
               className="w-full p-4 h-1 cursor-pointer"
             />
           </div>
@@ -499,11 +498,9 @@ const ScatterChart = ({
           <div className="w-40 ml-10"> <input
               id="labels-range-input"
               type="number"
-              min={0}
               value={lineY}
               max={maxY}
               onChange={(e) => setLineY(Number(e.target.value))}
-              defaultValue={0}
               className="w-full p-4 h-1 cursor-pointer"
             /></div>
         </div>

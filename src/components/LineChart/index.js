@@ -115,8 +115,8 @@ export function LineChart({
         const activePoint = chart.getActiveElements()[0];
         const {
           ctx,
-          chartArea: { top, bottom, left, right, width, height },
-          scales: { x, y },
+          chartArea: { top, bottom, },
+          scales: { x, },
         } = chart;
         ctx.save();
         ctx.beginPath();
