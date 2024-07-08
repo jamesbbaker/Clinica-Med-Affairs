@@ -1,8 +1,8 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { Chart } from "react-google-charts";
 import { getRandomInt } from "../../utils/MathUtils";
 import Popup from "reactjs-popup";
-import {  removeCommasFromString } from "../../utils/StringUtils";
+import { removeCommasFromString } from "../../utils/StringUtils";
 import BarChart from "../BarChart";
 import { IoArrowBackCircle } from "react-icons/io5";
 
@@ -201,16 +201,18 @@ const TreeMap = ({
     closeModal();
   };
 
-
   return (
-    <div className="relative">
+    <div className="relative mt-10">
+      <button
+        onClick={handleBack}
+        className="flex absolute right-[1%] -top-[3.5rem] items-center gap-1"
+      >
+        <IoArrowBackCircle size={30} />
+        Go Back
+      </button>
       {values && (
-        <div className="flex absolute justify-between -top-5 w-[32%] right-[2%]">
+        <div className="flex absolute justify-between -top-5 w-[32%] right-[1%]">
           <div>{values.min}</div>
-        <button onClick={handleBack} className="flex items-center gap-1">
-            <IoArrowBackCircle size={30} />
-            Go Back
-          </button>
           <div>{values.max}</div>
         </div>
       )}
@@ -224,7 +226,6 @@ const TreeMap = ({
           {
             eventName: "select",
             callback: ({ chartWrapper, google }) => {
-             
               if (!needCallbacks) {
                 return;
               }

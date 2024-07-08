@@ -71,6 +71,7 @@ export const APP_ROUTES = {
   medical_affair_toolbox: "medical_affair_toolbox",
   data_quality: "data_quality",
   unmet_need_definition: "unmet_need_definition",
+  help: "help"
 };
 
 export const APP_ROUTES_LABEL = {
@@ -91,6 +92,7 @@ export const APP_ROUTES_LABEL = {
   medical_affair_toolbox: "Medical Affairs Toolbox",
   data_quality: "Data Quality",
   unmet_need_definition: "Unmet Need Definitions",
+  help: "Need Help?"
 };
 
 export const patientTotals = [

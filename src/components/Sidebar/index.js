@@ -11,6 +11,7 @@ import {
   AiOutlineFundProjectionScreen,
   AiOutlineRise,
   AiOutlineProject,
+  AiOutlineInfo,
   AiOutlineQuestionCircle,
   AiOutlineDotChart,
 } from "react-icons/ai";
@@ -92,6 +93,12 @@ export const menuList = [
         name: APP_ROUTES_LABEL.unmet_need_definition,
         id: APP_ROUTES.unmet_need_definition,
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.unmet_need_definition}`,
+        icon: () => <AiOutlineInfo />,
+      },
+      {
+        name: APP_ROUTES_LABEL.help,
+        id: APP_ROUTES.help,
+        route: APP_ROUTES.help,
         icon: () => <AiOutlineQuestionCircle />,
       },
     ],
@@ -127,6 +134,7 @@ const Sidebar = () => {
       );
     }
   }, []);
+
 
   useEffect(() => {
     if (user && !id) {
@@ -166,6 +174,7 @@ const Sidebar = () => {
                       subItem.id !== APP_ROUTES.hcp_insights &&
                         subItem.id !== APP_ROUTES.medical_affair_toolbox &&
                         subItem.id !== APP_ROUTES.payer_variation &&
+                        subItem.id !== APP_ROUTES.help &&
                       !user.page_view.includes(subItem.id)
                     ) {
                       return false;

@@ -8,6 +8,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import Landing from "./pages/Landing";
 import About from "./pages/About";
 import 'react-toastify/dist/ReactToastify.css';
+import NeedHelp from "./pages/NeedHelp";
 
 const router = createBrowserRouter([
  
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
           {
             path: "/dashboard",
             element: <Home />,
+          },
+          {
+            path: "/:id",
+            element: <NeedHelp />
           },
           {
             path: "outputs",

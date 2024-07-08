@@ -127,7 +127,7 @@ const PayerVariationBubbleChart = ({setIsScatterMapOpen, isScatterMapOpen=false}
   };
 
   const calculateRadius = (value, maxValue) => {
-    const maxRadius = 30;
+    const maxRadius = 60;
     const minRadius = 0;
     // Scale the value between 0 and 1 based on maxValue
     const normalizedValue = value / maxValue;
