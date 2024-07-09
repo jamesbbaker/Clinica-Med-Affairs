@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import RealTimeBox from "../../components/RealTimeBox";
 import HCPTable from "../../components/HCPTable";
 import { APP_ROUTES, APP_ROUTES_LABEL, sidebarRoutes } from "../../constants/appConstants.js";
-import { AiOutlineBarChart, AiOutlineDotChart, AiOutlineFundProjectionScreen, AiOutlineGlobal, AiOutlineInfo, AiOutlineProject, AiOutlineQuestionCircle, AiOutlineRise, AiOutlineTable } from "react-icons/ai";
+import { AiOutlineFundProjectionScreen, AiOutlineGlobal, AiOutlineProject, AiOutlineQuestionCircle, AiOutlineRise, AiOutlineTable } from "react-icons/ai";
 
 const NavigationMenu = [
   {
@@ -40,13 +40,6 @@ const NavigationMenu = [
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu."
   },
   {
-    name: APP_ROUTES_LABEL.medical_affair_toolbox,
-    id: APP_ROUTES.medical_affair_toolbox,
-    route: `${APP_ROUTES.outputs}/${APP_ROUTES.medical_affair_toolbox}`,
-      icon: () => <AiOutlineDotChart />,
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu."
-  },
-  {
     name: APP_ROUTES_LABEL.impact_tracking,
     id: APP_ROUTES.impact_tracking,
     route: `${APP_ROUTES.outputs}/${APP_ROUTES.impact_tracking}`,
@@ -58,20 +51,6 @@ const NavigationMenu = [
     id: APP_ROUTES.patient_journey,
     route: `${APP_ROUTES.outputs}/${APP_ROUTES.patient_journey}`,
     icon: () => <AiOutlineRise />,
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu.",
-  },
-  {
-    name: APP_ROUTES_LABEL.data_quality,
-    id: APP_ROUTES.data_quality,
-    route: `${APP_ROUTES.outputs}/${APP_ROUTES.data_quality}`,
-    icon: () => <AiOutlineBarChart />,
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu.",
-  },
-  {
-    name: APP_ROUTES_LABEL.unmet_need_definition,
-    id: APP_ROUTES.unmet_need_definition,
-    route: `${APP_ROUTES.outputs}/${APP_ROUTES.unmet_need_definition}`,
-    icon: () => <AiOutlineInfo />,
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu.",
   },
   {

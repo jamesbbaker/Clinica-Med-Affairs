@@ -4,13 +4,11 @@ import opportunity from "../../assets/images/pages/opportunity.jpg";
 import eligible from "../../assets/images/pages/eligible.jpg";
 import institutional from "../../assets/images/pages/institutional.jpg";
 import payer from "../../assets/images/pages/payer.jpg";
-import medical from "../../assets/images/pages/medical.jpg";
 import { IoMdAdd } from "react-icons/io";
-
 import impact from "../../assets/images/pages/impact.jpg";
 import patienttrajectory from "../../assets/images/pages/patienttrajectory.jpg";
-import dataquality from "../../assets/images/pages/dataquality.jpg";
-import unmetneed from "../../assets/images/pages/unmetneed.jpg";
+import { APP_ROUTES_LABEL } from "../../constants/appConstants";
+import ContactSupport from "../../components/ContactSupport";
 
 const pageData = [
   {
@@ -20,59 +18,43 @@ const pageData = [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu. In hac habitasse platea dictumst. Duis et orci mi. Sed ut porttitor quam. Aliquam ac hendrerit erat. Sed leo orci, faucibus at vulputate ac, consequat id sem. Etiam pharetra vehicula finibus.",
   },
   {
-    title: "Patient Opportunity Mapping and Strategy",
+    title: APP_ROUTES_LABEL.patient_opportunity_mapping_and_strategy,
     img: opportunity,
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu. In hac habitasse platea dictumst. Duis et orci mi. Sed ut porttitor quam. Aliquam ac hendrerit erat. Sed leo orci, faucibus at vulputate ac, consequat id sem. Etiam pharetra vehicula finibus.",
   },
   {
-    title: "Eligible Patient Locator",
+    title: APP_ROUTES_LABEL.eligible_patient_locator,
     img: eligible,
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu. In hac habitasse platea dictumst. Duis et orci mi. Sed ut porttitor quam. Aliquam ac hendrerit erat. Sed leo orci, faucibus at vulputate ac, consequat id sem. Etiam pharetra vehicula finibus.",
   },
   {
-    title: "Institutional Variation",
+    title: APP_ROUTES_LABEL.institutional_variation,
     img: institutional,
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu. In hac habitasse platea dictumst. Duis et orci mi. Sed ut porttitor quam. Aliquam ac hendrerit erat. Sed leo orci, faucibus at vulputate ac, consequat id sem. Etiam pharetra vehicula finibus.",
   },
   {
-    title: "Payer Variation",
+    title: APP_ROUTES_LABEL.payer_variation,
     img: payer,
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu. In hac habitasse platea dictumst. Duis et orci mi. Sed ut porttitor quam. Aliquam ac hendrerit erat. Sed leo orci, faucibus at vulputate ac, consequat id sem. Etiam pharetra vehicula finibus.",
   },
+
   {
-    title: "Medical Affairs Toolbox",
-    img: medical,
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu. In hac habitasse platea dictumst. Duis et orci mi. Sed ut porttitor quam. Aliquam ac hendrerit erat. Sed leo orci, faucibus at vulputate ac, consequat id sem. Etiam pharetra vehicula finibus.",
-  },
-  {
-    title: "Impact Tracking",
+    title: APP_ROUTES_LABEL.impact_tracking,
     img: impact,
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu. In hac habitasse platea dictumst. Duis et orci mi. Sed ut porttitor quam. Aliquam ac hendrerit erat. Sed leo orci, faucibus at vulputate ac, consequat id sem. Etiam pharetra vehicula finibus.",
   },
   {
-    title: "Patient Trajectory Insights",
+    title: APP_ROUTES_LABEL.patient_journey,
     img: patienttrajectory,
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu. In hac habitasse platea dictumst. Duis et orci mi. Sed ut porttitor quam. Aliquam ac hendrerit erat. Sed leo orci, faucibus at vulputate ac, consequat id sem. Etiam pharetra vehicula finibus.",
   },
-  {
-    title: "Data Quality",
-    img: dataquality,
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu. In hac habitasse platea dictumst. Duis et orci mi. Sed ut porttitor quam. Aliquam ac hendrerit erat. Sed leo orci, faucibus at vulputate ac, consequat id sem. Etiam pharetra vehicula finibus.",
-  },
-  {
-    title: "Unmet Need Definitions",
-    img: unmetneed,
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu. In hac habitasse platea dictumst. Duis et orci mi. Sed ut porttitor quam. Aliquam ac hendrerit erat. Sed leo orci, faucibus at vulputate ac, consequat id sem. Etiam pharetra vehicula finibus.",
-  },
+
 ];
 
 const NeedHelp = () => {
@@ -121,6 +103,7 @@ const NeedHelp = () => {
           </div>
         );
       })}
+      <ContactSupport />
     </div>
   );
 };

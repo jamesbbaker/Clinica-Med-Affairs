@@ -6,8 +6,7 @@ import { highestValue } from "../../../utils/MathUtils";
 import { MultiSelect } from "react-multi-select-component";
 import CustomDropdown from "../../../components/CustomDropdown";
 import { selectLabels } from "../../../constants/appConstants";
-import { RadarChart } from "../../../components/RadarChart";
-import { LineChart } from "../../../components/LineChart";
+
 
 const filterOptions = [...Object.keys(selectLabels)];
 
@@ -45,11 +44,10 @@ const MedicalAffairToolbox = () => {
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [rawData, setRawData] = useState(null);
-  const [crfData, setCrfData] = useState({});
-  const [crfLineData, setCrfLineData] = useState({});
+
   const [lineX, setLineX] = useState(10);
   const [lineY, setLineY] = useState(10);
-  const [crfUnmetNeed, setCrfUnmetNeed] = useState(null)
+
   const [quadrantValues, setQuadrantValues] = useState({
     topLeft: 0,
     topRight: 0,
@@ -218,28 +216,7 @@ const MedicalAffairToolbox = () => {
   };
 
   useEffect(() => {
-    getDataStats("hcp_crf", accessToken, refreshToken)
-      .then((res) => {
-        setCrfData(res.crf_data);
-        setCrfUnmetNeed("Number of No Spirometry")
-        let _data = {
-          labels: res.crf_data["Number of No Spirometry"]["HCP Index"],
-          datasets: [
-            {
-              label: "Dataset 1",
-              data: res.crf_data["Number of No Spirometry"][
-                "Cumulative Unmet Need"
-              ],
-              borderColor: "rgb(0, 0, 139)",
-              backgroundColor: "rgb(0, 0, 139, 0.2)",
-            },
-          ],
-        };
-        setCrfLineData(_data)
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    
     fetchData();
   }, []);
 
@@ -275,23 +252,7 @@ const MedicalAffairToolbox = () => {
     });
   };
 
-  const handleSelectFilter = (val) => {
-    setCrfUnmetNeed(val)
-    let _data = {
-      labels: crfData[val]["HCP Index"],
-      datasets: [
-        {
-          label: "Dataset 1",
-          data: crfData[val][
-            "Cumulative Unmet Need"
-          ],
-          borderColor: "rgb(0, 0, 139)",
-          backgroundColor: "rgb(0, 0, 139, 0.2)",
-        },
-      ],
-    };
-    setCrfLineData(_data)
-  }
+ 
 
   const handleApplyFilter = () => {
     setLoading(true);
@@ -301,54 +262,13 @@ const MedicalAffairToolbox = () => {
     });
   };
 
-  const defaultOptions = {
-    responsive: true,
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: "HCPs ranked by patients with suboptimal care",
-        },
-  
-        grid: {
-          display: false,
-        },
-        // grid: {
-        //   drawOnChartArea: false,
-        //   drawOnAxisArea: false,
-        // },
-        ticks: {
-          stepSize: 1000 
-        },
-      },
-      y: {
-        ticks: {
-          // Include a dollar sign in the ticks
-          callback: function (value, index, ticks) {
-            return (value / 10) % 2 !== 0 ? "" : `${value}%`;
-          },
-          font: {
-            size: 10,
-          },
-        },
-      },
-    },
-    plugins: {
-      datalabels: {
-        display: false,
-      },
-      legend: {
-        display: false // Hide the legend
-    }
-    },
-  };
 
   const [isScatterMapOpen, setIsScatterMapOpen] = useState(false)
   
 
   return (
-    <div className="flex flex-col gap-2 items-start">
-     {!isScatterMapOpen && <div className="text-[1.25rem] font-[600]">HCP Prioritization</div>}
+    <div className="flex flex-col mt-6 w-full gap-2 items-start">
+     {/* {!isScatterMapOpen && <div className="text-[1.25rem] font-[600]">HCP Prioritization</div>} */}
       {state.data ? (
         <>
         {!isScatterMapOpen &&<>
@@ -474,35 +394,7 @@ const MedicalAffairToolbox = () => {
             setLineY={setLineY}
             data={state.data}
           />
-          {!isScatterMapOpen &&<div className="w-full mt-4">
-            <div className="flex flex-col items-center ">
-              <RadarChart />
-              {crfData && crfLineData &&crfUnmetNeed && (
-                <>
-                  <div className=" self-start">
-                    <CustomDropdown
-                      showColors
-                      labelClassName="mb-0"
-                      className={"flex items-center gap-2"}
-                      input={{
-                        label: "Unmet Need select",
-                        name: "Unmet Need select",
-                        type: "select",
-                        options:Object.keys(selectLabels).filter(item => crfData.hasOwnProperty(item)).map((item) => ({
-                          name: selectLabels[item] ? selectLabels[item] : item,
-                          value: item,
-                        })),
-                        id: "yLabel",
-                      }}
-                      value={crfUnmetNeed}
-                      handleSelect={(val) => handleSelectFilter(val)}
-                    />
-                  </div>
-                  <LineChart options={defaultOptions} data={crfLineData} height={100} />
-                </>
-              )}
-            </div>
-          </div>}
+          
         </>
       ) : (
         <div className="w-full h-[400px] grid place-content-center">
