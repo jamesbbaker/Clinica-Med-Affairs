@@ -591,7 +591,7 @@ const EligiblePatientLocator = () => {
       )}
     </>
   ) : (
-    <div role="status" className="grid place-content-center h-[200px]">
+    <div role="status" className="grid w-full place-content-center h-[200px]">
       <svg
         aria-hidden="true"
         className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"

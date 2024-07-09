@@ -65,12 +65,12 @@ export const menuList = [
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.payer_variation}`,
         icon: () => <AiOutlineProject />,
       },
-      {
-        name: APP_ROUTES_LABEL.medical_affair_toolbox,
-        id: APP_ROUTES.medical_affair_toolbox,
-        route: `${APP_ROUTES.outputs}/${APP_ROUTES.medical_affair_toolbox}`,
-        icon: () => <AiOutlineDotChart />,
-      },
+      // {
+      //   name: APP_ROUTES_LABEL.medical_affair_toolbox,
+      //   id: APP_ROUTES.medical_affair_toolbox,
+      //   route: `${APP_ROUTES.outputs}/${APP_ROUTES.medical_affair_toolbox}`,
+      //   icon: () => <AiOutlineDotChart />,
+      // },
       {
         name: APP_ROUTES_LABEL.impact_tracking,
         id: APP_ROUTES.impact_tracking,
@@ -83,18 +83,18 @@ export const menuList = [
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.patient_journey}`,
         icon: () => <AiOutlineRise />,
       },
-      {
-        name: APP_ROUTES_LABEL.data_quality,
-        id: APP_ROUTES.data_quality,
-        route: `${APP_ROUTES.outputs}/${APP_ROUTES.data_quality}`,
-        icon: () => <AiOutlineBarChart />,
-      },
-      {
-        name: APP_ROUTES_LABEL.unmet_need_definition,
-        id: APP_ROUTES.unmet_need_definition,
-        route: `${APP_ROUTES.outputs}/${APP_ROUTES.unmet_need_definition}`,
-        icon: () => <AiOutlineInfo />,
-      },
+      // {
+      //   name: APP_ROUTES_LABEL.data_quality,
+      //   id: APP_ROUTES.data_quality,
+      //   route: `${APP_ROUTES.outputs}/${APP_ROUTES.data_quality}`,
+      //   icon: () => <AiOutlineBarChart />,
+      // },
+      // {
+      //   name: APP_ROUTES_LABEL.unmet_need_definition,
+      //   id: APP_ROUTES.unmet_need_definition,
+      //   route: `${APP_ROUTES.outputs}/${APP_ROUTES.unmet_need_definition}`,
+      //   icon: () => <AiOutlineInfo />,
+      // },
       {
         name: APP_ROUTES_LABEL.help,
         id: APP_ROUTES.help,

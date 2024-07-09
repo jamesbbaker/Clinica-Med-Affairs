@@ -3,10 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import geoJson from "./map-data.json";
 import mapDataJson from "./data.json";
-import Popup from "reactjs-popup";
 import CustomMarker from "./Marker";
 import MapboxglSpiderifier from "mapboxgl-spiderifier";
-import { highestValue } from "../../utils/MathUtils";
 import {
   mapBarCharts,
   mapLabels,
@@ -14,7 +12,7 @@ import {
   patientTotals,
   selectLabels,
 } from "../../constants/appConstants";
-import BarChartPopup from "../../pages/Output/PatientOpportunityMapping/Popup";
+
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
@@ -91,7 +89,7 @@ function MapAddLayer(
       source: layerId,
       layout: {},
       paint: {
-        "fill-color": "#000000",
+     
         "fill-opacity": 0.2,
       },
       filter: ["==", "name", ""],
@@ -108,7 +106,6 @@ function MapAddLayer(
       const features = map.queryRenderedFeatures(e.point, {
         layers: [layerId],
       });
-      const feature = features[0];
       if (features.length) {
         map.getCanvas().style.cursor = "pointer";
         map.setFilter("country-fills-hover", [
@@ -377,22 +374,16 @@ const Map = ({
   const [data, setData] = useState(mapDataJson);
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
-  const [latitude, setLatitude] = useState(-90);
-  const [longitude, setLongitude] = useState(40);
   const spiderifier = useRef(null);
-  const [zoom, setZoom] = useState(3.5);
   const [mapMarkers, setMapMarkers] = useState([]);
-  const [stateMapMarkers, setStateMapMarkers] = useState([]);
   const [popups, setPopups] = useState([]);
   const [detailsItem, setDetailsItem] = useState(null);
-  const [regionData, setRegionData] = useState(null);
   const [stateMarkers, setStateMarkers] = useState([]);
   const [currentRegion, setCurrentRegion] = useState(null);
   const [detailsPosition, setDetailsPosition] = useState(null);
   const mapboxglMarker = useRef([]);
   const mapStateboxglMarker = useRef([]);
   const [layerAdded, setLayerAdded] = useState(false);
-  const [modalDetails, setModalDetails] = useState(null);
 
   useEffect(() => {
     if (impactMap) {
@@ -404,7 +395,7 @@ const Map = ({
     if (markers && stateData && layerAdded) {
       let _itemValues = [];
 
-      Object.values(stateData).map((item) => {
+      Object.values(stateData).forEach((item) => {
         item.forEach((_state) => {
           if (regionColors[_state.Region]) {
             _itemValues.push([
@@ -450,13 +441,6 @@ const Map = ({
             // }
           });
         }
-
-        var sources = mapRef.current.getStyle()
-          ? mapRef.current.getStyle().sources
-          : [];
-        for (var sourceId in sources) {
-          // console.log(sourceId);
-        }
       };
     }
   }, [mapRef.current]);
@@ -485,7 +469,7 @@ const Map = ({
       onClick: function (e, spiderLeg) {
         var feature = spiderLeg.feature;
         setChartDataValue(setData1, null, [feature.properties]);
-        setModalDetails([feature]);
+     
       },
       initializeLeg: function initializeSpiderLeg(spiderLeg) {
         var pinElem = spiderLeg.elements.pin;
@@ -496,7 +480,7 @@ const Map = ({
         function interpolateRadius(value) {
           const minRadius = 10;
           const maxRadius =
-            currentToggle == "Number of High Steroid Usage Patients" ? 50 : 100;
+            currentToggle === "Number of High Steroid Usage Patients" ? 50 : 100;
           // Maximum value
 
           // Ensure value is within range [0, maxValue]
@@ -578,48 +562,9 @@ const Map = ({
     }
   };
 
-  const closeModal = () => {
-    setData1(null);
-    setModalDetails(null);
-  };
 
-  const createSpiralMarkers = (coordinates, size) => {
-    const spiralMarkers = [];
-    const centerX = coordinates[0];
-    const centerY = coordinates[1];
-    let angle = 0;
-    let radius = 0;
-    const angleIncrement = 0.5; // Adjust the angle increment as needed
 
-    // Iterate through each marker
-    size.forEach((markerSize, index) => {
-      // Calculate position based on spiral pattern
-      const newX = centerX + radius * Math.cos(angle);
-      const newY = centerY + radius * Math.sin(angle);
-
-      // Create GeoJSON feature for the marker
-      const markerFeature = {
-        type: "Feature",
-        geometry: {
-          type: "Point",
-          coordinates: [newX, newY],
-        },
-        properties: {
-          size: markerSize[currentToggle] + 10,
-          index: index, // Optional: to keep track of the original index
-        },
-      };
-
-      // Add marker feature to the array
-      spiralMarkers.push(markerFeature);
-
-      // Update angle and radius for the next marker
-      angle += angleIncrement;
-      radius += 0.01; // Adjust the radius increment as needed
-    });
-
-    return spiralMarkers;
-  };
+ 
 
   const handleStateLevelMarkers = (
     data,
@@ -627,7 +572,7 @@ const Map = ({
     circleColor = "#f28cb1"
   ) => {
     let groupObj = {};
-    data.map((marker, index) => {
+    data.forEach((marker, index) => {
       let size = marker[currentToggle];
       const key = `${marker.LONG},${marker.LAT}`;
       if (groupObj.hasOwnProperty(key)) {
@@ -702,14 +647,14 @@ const Map = ({
         const stateFeature = e.features[0].properties;
         let newArr = [];
         if (stateFeature) {
-          Object.values(stateFeature).map((item) => {
+          Object.values(stateFeature).forEach((item) => {
             newArr.push(JSON.parse(item));
           });
         }
         // newArr.splice(0,2)
         let filteredArr = [
           ...newArr.filter(
-            (item) => item.properties && item.properties.size != 0
+            (item) => item.properties && item.properties.size !== 0
           ),
         ];
         //   console.log(filteredArr)
@@ -734,28 +679,27 @@ const Map = ({
         const stateFeature = e.features[0].properties;
         let newArr = [];
         if (stateFeature) {
-          Object.values(stateFeature).map((item) => {
+          Object.values(stateFeature).forEach((item) => {
             newArr.push(JSON.parse(item));
           });
         }
         // newArr.splice(0,2)
         let filteredArr = [
           ...newArr.filter(
-            (item) => item.properties && item.properties.size != 0
+            (item) => item.properties && item.properties.size !== 0
           ),
         ];
         if (filteredArr.length > 1) {
           spiderifier.current.unspiderfy();
-          setStateMapMarkers(filteredArr);
           spiderifier.current.spiderfy(
             e.features[0].geometry.coordinates,
             filteredArr
           );
         } else {
-          const item = e.features[0];
+
 
           setChartDataValue(setData1, null, [filteredArr[0].properties]);
-          setModalDetails(filteredArr);
+       
         }
 
         // const stateFeature = e.features.find(
@@ -791,22 +735,14 @@ const Map = ({
 
   const handleStateMarkers = (data, markerClass) => {
     setCurrentLevel("state");
-    const newStateMarkers = data.map((feature) => {
-      if (feature.Region != 0) {
-        return feature;
-      }
-    });
+    const newStateMarkers = data.filter(feature => (feature.Region !== 0))
     setStateMarkers(newStateMarkers);
     mapboxglMarker.current.forEach((marker) => marker && marker.remove());
     mapboxglMarker.current = [];
   };
 
   const handleRegionMarkers = (data, markerClass) => {
-    const newMapMarkers = data.map((feature) => {
-      if (feature.Region != 0) {
-        return feature;
-      }
-    });
+    const newMapMarkers = data.filter(feature => (feature.Region !== 0))
     setMapMarkers(newMapMarkers);
   };
 
@@ -941,8 +877,8 @@ const Map = ({
       minZoom: 3.5,
       container: mapContainerRef.current,
       style: "mapbox://styles/mapbox/streets-v9",
-      center: [latitude, longitude],
-      zoom: zoom,
+      center: [-90, 40],
+      zoom: 3.5,
     });
     mapRef.current.on("load", () => {
       LayerFn(
@@ -960,7 +896,7 @@ const Map = ({
         onClick: function (e, spiderLeg) {
           var feature = spiderLeg.feature;
           setChartDataValue(setData1, null, [feature.properties]);
-          setModalDetails([feature]);
+  
         },
         initializeLeg: function initializeSpiderLeg(spiderLeg) {
           var pinElem = spiderLeg.elements.pin;
@@ -1164,10 +1100,7 @@ const Map = ({
     <div className="relative">
       {mapRef.current &&
         mapMarkers &&
-        mapMarkers.map((marker, index) => {
-          if (!marker) {
-            return;
-          }
+        mapMarkers.filter(marker => marker).map((marker, index) => {
           return (
             <CustomMarker
               key={index}
@@ -1190,10 +1123,7 @@ const Map = ({
       {mapRef.current &&
         stateMarkers &&
         currentRegion &&
-        stateMarkers.map((marker, index) => {
-          if (!marker) {
-            return;
-          }
+        stateMarkers.filter(marker => marker).map((marker, index) => {
           return (
             <CustomMarker
               allMarkers={stateMarkers}
@@ -1221,7 +1151,7 @@ const Map = ({
             left: detailsPosition.left,
             top: detailsPosition.top,
             transform:
-              currentLevel == "hcp"
+              currentLevel === "hcp"
                 ? "translateY(-50%) transalteX(-40px)"
                 : "translateY(-120%)",
             zIndex: 9999,
@@ -1254,7 +1184,7 @@ const DetailsComponent = ({ item, currentLevel, currentToggle }) => {
     if (item.length) {
       let totalValue = item.length;
       let val = 0;
-      item.map((_item) => {
+      item.forEach((_item) => {
         val += _item.properties[currentToggle];
       });
       let totalCurrentToggles = val;
@@ -1266,9 +1196,9 @@ const DetailsComponent = ({ item, currentLevel, currentToggle }) => {
     }
   }, [item]);
 
-  return currentLevel == "hcp" ? (
+  return currentLevel === "hcp" ? (
     <div className="flex max-h-[40vh] flex-wrap flex-col items-start">
-      {item.length == 1 ? (
+      {item.length === 1 ? (
         item.map((_detail, index) => {
           return (
             <div key={index} className="text-sm max-w-[10rem]">
@@ -1309,19 +1239,19 @@ const DetailsComponent = ({ item, currentLevel, currentToggle }) => {
     </div>
   ) : (
     <div className="flex flex-col items-start">
-      {currentLevel == "hcp" && (
+      {currentLevel === "hcp" && (
         <h4>
           Name:{" "}
           <span className="font-bold">{item["Assigned Physician Name"]}</span>
         </h4>
       )}
-      {currentLevel == "region" && (
+      {currentLevel === "region" && (
         <h4 className="font-bold">{item["Region"]}</h4>
       )}
-      {currentLevel == "state" && (
+      {currentLevel === "state" && (
         <h4 className="font-bold">{item["State Name"]}</h4>
       )}
-      {currentLevel == "hcp" && (
+      {currentLevel === "hcp" && (
         <h4>
           Primary Specialty Description:{" "}
           <span className="font-bold">{item["Assigned Specialty"]}</span>
