@@ -12,6 +12,8 @@ import { Radar } from "react-chartjs-2";
 import { getDataStats } from "../../API/Outputs";
 import { AuthContext } from "../../context/AuthContext";
 import { selectLabels } from "../../constants/appConstants";
+import { MultiSelect } from "react-multi-select-component";
+import Table, { customOptionRenderer } from "../Table";
 
 ChartJS.register(
   RadialLinearScale,
@@ -81,10 +83,17 @@ export const data = {
   datasets: [datasets[0]],
 };
 
+const filterOptions = [...Object.keys(selectLabels)];
+
 export function RadarChart() {
   const chartRef = useRef(null);
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [clusteringResult, setClusteringResult] = useState(null);
+  const [clusterTable, setClusterTable] = useState(null);
+  const [statsData2, setStatsData2] = useState(null);
+  const [tableColumns, setTableColumns] = useState([{}]);
+  const [rawHeaders, setRawHeaders] = useState([]);
+  const [selectedUnmet, setSelectedUnmet] = useState([]);
   const [loading, setLoading] = useState(false);
   const [chartData, setChartData] = useState({
     labels: [
@@ -99,6 +108,18 @@ export function RadarChart() {
     ],
     datasets: [datasets[0]],
   });
+
+  const handleSelectMultipleUnmet = (val) => {
+    setSelectedUnmet(val);
+    setTableColumns([
+      { Header: "Cluster", accessor: "Cluster" },
+      { Header: "Number of Providers", accessor: "Number of Providers" },
+      ...val.map((item) => ({
+        Header: selectLabels[item.value],
+        accessor: item.value,
+      })),
+    ]);
+  };
 
   const handleChange = (e) => {
     fetchData(e.target.value);
@@ -154,7 +175,28 @@ export function RadarChart() {
       accessToken,
       refreshToken
     ).then((res) => {
+      setStatsData2(res.total_numbers);
+      setTableColumns([
+        { Header: "Cluster", accessor: "Cluster" },
+        { Header: "Number of Providers", accessor: "Number of Providers" },
+        ...Object.keys(selectLabels)
+          .filter(
+            (item) => Object.keys(res.total_numbers[0]).includes(item)
+          )
+          .map((item) => ({
+            Header: selectLabels[item] ? selectLabels[item] : item,
+            accessor: item,
+          })),
+      ]);
       setClusteringResult(res.clustering_results);
+      setSelectedUnmet(
+        filterOptions
+          .filter((item) => Object.keys(res.total_numbers[0]).includes(item))
+          .map((item) => ({
+            label: selectLabels[item] ? selectLabels[item] : item,
+            value: item,
+          }))
+      );
       let _Data = [];
       let clusterArray = Array.from({ length: clusterVal }, (v, i) => i);
       clusterArray.forEach((item, index) => {
@@ -187,12 +229,13 @@ export function RadarChart() {
     });
   };
 
+
   useEffect(() => {
     fetchData(3);
   }, []);
 
   return (
-    <div className="w-full flex flex-col items-left gap-2 py-2">
+    <div className="w-full  flex flex-col items-left gap-2 py-2 mb-10">
       <div className="text-sm font-medium">HCP segmentation</div>
       <div className="relative mt-2 flex items-center gap-5 mb-10">
         <div>
@@ -272,6 +315,38 @@ export function RadarChart() {
           </div>
         )}
       </div>
+      {statsData2 && (
+        <>
+          <div className="flex flex-col gap-2 w-full items-start">
+            <div>Select Unmet Needs</div>
+            <MultiSelect
+              ItemRenderer={customOptionRenderer}
+              labelledBy=""
+              options={filterOptions
+                .filter((item) => Object.keys(statsData2[0]).includes(item))
+                .map((item) => ({
+                  label: selectLabels[item] ? selectLabels[item] : item,
+                  value: item,
+                }))}
+              className="w-[22rem] mb-10 z-[5]"
+              value={selectedUnmet}
+              onChange={(val) => handleSelectMultipleUnmet(val)}
+            />
+          </div>
+          <Table
+            initialState={{
+              pageSize: 10,
+              pageIndex: 0,
+            }}
+            activeCells={false}
+            Title=""
+            showSelectionBtns={false}
+            TableData={statsData2}
+            marginTop={0}
+            TableColummns={tableColumns}
+          />
+        </>
+      )}
     </div>
   );
 }

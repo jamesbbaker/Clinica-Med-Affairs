@@ -48,6 +48,9 @@ const PatientTracking = () => {
           }}
         />
       </div>
+      <div className="mt-4">
+        <HcpInsight />
+      </div>
     
       <div className="mb-10 mt-10">
         <Sankey

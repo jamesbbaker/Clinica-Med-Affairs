@@ -38,7 +38,7 @@ const ContactSupport = () => {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className="shadow appearance-none border-none rounded w-full py-2 px-3 text-[#000] leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none  border-none rounded w-full py-2 px-3 text-[#000] leading-tight focus:outline-none "
             placeholder="Your name"
           />
         </div>

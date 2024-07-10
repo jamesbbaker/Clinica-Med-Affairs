@@ -1,37 +1,73 @@
 import React, { useContext, useEffect, useState } from "react";
-import Table from "../../../components/Table";
+import Table, { customOptionRenderer } from "../../../components/Table";
 import { getDataStats } from "../../../API/Outputs";
 import { AuthContext } from "../../../context/AuthContext";
+import { MultiSelect } from "react-multi-select-component";
+import { invertedMapLabels, mapLabels, selectLabels } from "../../../constants/appConstants";
 
-const filteredArr = [
-  "Percent Severe Exacerbations",
-  "Percent High Steroid Usage",
-  "Percent With High Steroid Usage",
-];
+const filterOptions = [...Object.keys(selectLabels)];
 
 const HcpInsight = () => {
   const [statsData2, setStatsData2] = useState(null);
   const [tableColumns, setTableColumns] = useState([{}]);
   const { accessToken, refreshToken } = useContext(AuthContext);
+  const [rawHeaders, setRawHeaders] = useState([]);
+  const [selectedUnmet, setSelectedUnmet] = useState([]);
+
+  const handleSelectMultipleUnmet = (val) => {
+    setSelectedUnmet(val);
+    setTableColumns([
+      { Header: "Number of Providers", accessor: "Number of Providers" },
+      { Header: "Speciality Bucket", accessor: "Specialty_Bucket" },
+      ...val.map((item) => ({
+        Header: selectLabels[mapLabels[item.value]],
+        accessor: item.value,
+      })),
+    ]);
+  };
+
+  const selectKeys = Object.keys(selectLabels);
+
+  const getKeyFromValue = (value) => {
+    return selectKeys.find((key) => selectLabels[key] === value);
+  };
 
   useEffect(() => {
     getDataStats("data_stats_23", accessToken, refreshToken)
       .then((responseData) => {
         if (responseData) {
-          let _data = responseData.data.map(item => {
-            let newItem = {...item}
-            responseData.headers.forEach(header => {
+          setRawHeaders(responseData.headers);
+          let _data = responseData.data.map((item) => {
+            let newItem = { ...item };
+            responseData.headers.forEach((header) => {
               if (header.includes("Percent")) {
-                newItem[header] = `${item[header].toFixed(2)}%`
+                newItem[header] = `${item[header].toFixed(2)}%`;
               }
-            })
-            return newItem
-          })
+            });
+            return newItem;
+          });
+         
           setStatsData2(_data);
-          setTableColumns(
-            responseData.headers
-              .filter((item) => !filteredArr.includes(item.trim()))
-              .map((item) => ({ Header: item, accessor: item }))
+          setTableColumns([
+            { Header: "Number of Providers", accessor: "Number of Providers" },
+            { Header: "Speciality Bucket", accessor: "Specialty_Bucket" },
+            ...Object.keys(selectLabels)
+              .filter((item) => responseData.headers.includes(item))
+              .map((item) => {
+                console.log(item)
+                return {
+                  Header: selectLabels[item],
+                  accessor: item,
+                };
+              }),
+          ]);
+          setSelectedUnmet(
+            filterOptions
+              .filter((item) => responseData.headers.includes(item))
+              .map((item) => ({
+                label: selectLabels[item] ? selectLabels[item] : item,
+                value: item,
+              }))
           );
         }
       })
@@ -39,18 +75,36 @@ const HcpInsight = () => {
   }, []);
 
   return statsData2 ? (
-    <Table
-      initialState={{
-        pageSize: 10,
-        pageIndex: 0,
-      }}
-      activeCells={false}
-      Title="Summary of Unmet Need by Specialty"
-      showSelectionBtns={false}
-      TableData={statsData2}
-      marginTop={0}
-      TableColummns={tableColumns}
-    />
+    <>
+      <div className="flex flex-col gap-2 w-full items-start">
+        <div>Select Unmet Needs</div>
+        <MultiSelect
+          ItemRenderer={customOptionRenderer}
+          labelledBy=""
+          options={filterOptions
+            .filter((item) => rawHeaders.includes(item))
+            .map((item) => ({
+              label: selectLabels[item] ? selectLabels[item] : item,
+              value: item,
+            }))}
+          className="w-[22rem] mb-10 z-[5]"
+          value={selectedUnmet}
+          onChange={(val) => handleSelectMultipleUnmet(val)}
+        />
+      </div>
+      <Table
+        initialState={{
+          pageSize: 10,
+          pageIndex: 0,
+        }}
+        activeCells={false}
+        Title="Summary of Unmet Need by Specialty"
+        showSelectionBtns={false}
+        TableData={statsData2}
+        marginTop={0}
+        TableColummns={tableColumns}
+      />
+    </>
   ) : (
     <div role="status" className="grid place-content-center h-[200px]">
       <svg
