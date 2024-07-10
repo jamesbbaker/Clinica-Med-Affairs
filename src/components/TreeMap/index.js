@@ -211,7 +211,7 @@ const TreeMap = ({
         Go Back
       </button>
       {values && (
-        <div className="flex absolute justify-between -top-5 w-[32%] right-[1%]">
+        <div className="flex absolute justify-between -top-5 w-[34%] right-[1%]">
           <div>{values.min}</div>
           <div>{values.max}</div>
         </div>

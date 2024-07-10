@@ -317,7 +317,7 @@ const PatientOpportunityMapping = ({ patientPage = false }) => {
         <div className="text-md font-medium mt-4">
           National Summary of Unmet Needs
         </div>
-        {patientPage && (
+        {/* {!patientPage && (
           <div className="flex my-6 items-center justify-between w-full">
             <div className="flex items-center gap-4">
               <div className="font-[600] text-[18px]">Filters:</div>
@@ -363,7 +363,7 @@ const PatientOpportunityMapping = ({ patientPage = false }) => {
               Apply Filters
             </button>
           </div>
-        )}
+        )} */}
 
         <div style={{ opacity: loading ? 0 : 1 }}>
           {!patientPage && (

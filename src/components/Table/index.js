@@ -112,6 +112,7 @@ const BarChartOptions = {
 
 const Table = ({
   colorCells,
+  updateTable=false,
   isEligible = false,
   setFilterList,
   cellClicked = () => {},
@@ -218,6 +219,23 @@ const Table = ({
     setBarChartConfig(null);
   };
 
+  // useEffect(() => {
+  //   if (updateTable && selectionBtnsArray) {
+  //     allColumns.forEach((item) => {
+  //       if (selectionBtnsArray.includes(item.id)) {
+  //         if (item.isVisible) {
+  //           item.toggleHidden();
+  //         }
+  //         updateTable.forEach((_item) => {
+  //           if (_item.value === item.Header) {
+  //             item.toggleHidden();
+  //           }
+  //         });
+  //       }
+  //     });
+  //   }
+  // }, [updateTable, selectionBtnsArray])
+
   const handleFilterClick = (col) => {
     return col.toggleHidden();
   };
@@ -239,9 +257,7 @@ const Table = ({
   };
 
   const handleApplyFilters = () => {
-    // if (icsNumber.max > 0 || steroidPercent.max > 0 || speciality) {
     handleFilter(speciality, region, stateName, organisation);
-    // }
   };
 
   const handleMultipleSelect = (val) => {
@@ -275,26 +291,6 @@ const Table = ({
       }
     });
     setValue(val);
-    // if (firstRef.current) {
-    //   // selectedIds.map(item => item.to)
-    //   setSelectedIds(val);
-    //   setValue(val);
-    // }
-    // let headerName = selectedIds.map((item) => item.col.Header);
-
-    // val.map((item) => {
-    //   !headerName.includes(item.col.Header) && item.col.toggleHidden();
-    // });
-
-    // firstRef.current = true;
-    // let valHeaders = val.map((item) => item.col.Header);
-
-    // selectedIds.map((item) => {
-    //   !valHeaders.includes(item.col.Header) && item.col.toggleHidden();
-    // });
-    // setSelectedIds(val);
-
-    // setValue(val);
   };
 
   useEffect(() => {

@@ -155,7 +155,8 @@ const PatientOpportunityPage = () => {
           </h4>
           <HeatMapGrid
             cellRender={(x, y, value) => {
-              if (x >= y) { // Only render cells where x >= y (bottom-left triangle)
+              if (x >= y) {
+                // Only render cells where x >= y (bottom-left triangle)
                 return (
                   <div
                     style={{ fontSize: "0.5rem" }}
@@ -182,22 +183,22 @@ const PatientOpportunityPage = () => {
             })}
             cellStyle={(_x, _y, ratio) => {
               if (_x >= _y) {
-              let value = statsData1[_x][_y];
-              return {
-                background:
-                  value > 0
-                    ? `rgb(12, 160, 44, ${ratio})`
-                    : `rgba(255,74,48, ${Math.abs(value)})`,
-                fontSize: ".8rem",
-                color: `rgb(0, 0, 0, ${ratio / 2 + 0.4})`,
-              };
-            }else {
-              return {
-                background: "rgba(0,0,0,0)",
-                fontSize: ".8rem",
-                color: "rgba(255,255,255,0.8)",
-              };
-            }
+                let value = statsData1[_x][_y];
+                return {
+                  background:
+                    value > 0
+                      ? `rgb(12, 160, 44, ${ratio})`
+                      : `rgba(255,74,48, ${Math.abs(value)})`,
+                  fontSize: ".8rem",
+                  color: `rgb(0, 0, 0, ${ratio / 2 + 0.4})`,
+                };
+              } else {
+                return {
+                  background: "rgba(0,0,0,0)",
+                  fontSize: ".8rem",
+                  color: "rgba(255,255,255,0.8)",
+                };
+              }
             }}
             cellHeight="2.5rem"
             data={statsData1}
@@ -208,8 +209,8 @@ const PatientOpportunityPage = () => {
         </div>
       )}
       <div className="w-full mt-4">
+     
         <div className="flex flex-col items-center ">
-          <RadarChart />
           {crfData && crfLineData && crfUnmetNeed ? (
             <>
               <div className=" self-start">
@@ -266,12 +267,10 @@ const PatientOpportunityPage = () => {
               </div>
             </>
           )}
+          <RadarChart />
         </div>
+        <Prioitize />
       </div>
-      <div className="mt-4">
-        <HcpInsight />
-      </div>
-      <Prioitize />
     </div>
   );
 };

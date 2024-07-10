@@ -17,7 +17,7 @@ const Prioitize = () => {
 
 
   return (
-    <div className="flex h-[80vh] flex-col items-start w-full">
+    <div className="flex border-b-2 pb-10 flex-col items-start w-full">
       <h4 className="mb-6 font-[500]">Prioritize Unmet Needs</h4>
       <div className="flex w-full justify-between items-center gap-6">
       <MultiSelect
