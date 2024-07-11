@@ -183,6 +183,7 @@ const defaultOptions = {
 };
 
 const ScatterChart = ({
+  setHcpProfilePage = () => {},
 
   setIsScatterMapOpen = () => {},
   quadrantValues,
@@ -256,7 +257,6 @@ const ScatterChart = ({
   const [maxX, setMaxX] = useState();
   const [maxY, setMaxY] = useState();
   const [data1, setData1] = useState();
-  
 
   useEffect(() => {
     const _defaultOptions = {
@@ -293,8 +293,9 @@ const ScatterChart = ({
           const { datasetIndex, index } = elements[0];
           const dataset = data.datasets[datasetIndex];
           const dataPoint = dataset.data[index];
-          setIsScatterMapOpen(true)
+          setIsScatterMapOpen(true);
           setChartDataValue(setData1, null, [dataPoint]);
+          setHcpProfilePage("scatter");
         }
       },
       responsive: true,
@@ -390,8 +391,9 @@ const ScatterChart = ({
   };
 
   const closeModal = () => {
-    setIsScatterMapOpen(false)
+    setIsScatterMapOpen(false);
     setData1(null);
+    setHcpProfilePage(null);
   };
 
   const handleChangeY = (e) => {
@@ -400,112 +402,115 @@ const ScatterChart = ({
 
   return (
     <div className="min-h-[400px] relative w-full">
-      {data1 ?  <BarChartPopup
-            InstitutionalTreeMap={false}
-            insititutional={insititutional}
-            payer={payer}
-            payerData={payer}
-            closeModal={closeModal}
-            data1={data1}
-          />
-        : <>
-      <div className="w-full flex -mb-[1%] justify-center gap-4">
-        {shapes.map((item, index) => (
-          <div key={index} className="flex gap-1 items-center">
-            {item.icon}
-            <div className="text-sm">{item.name}</div>
+      {data1 ? (
+        <BarChartPopup
+          InstitutionalTreeMap={false}
+          insititutional={insititutional}
+          payer={payer}
+          payerData={payer}
+          closeModal={closeModal}
+          data1={data1}
+        />
+      ) : (
+        <>
+          <div className="w-full flex -mb-[1%] justify-center gap-4">
+            {shapes.map((item, index) => (
+              <div key={index} className="flex gap-1 items-center">
+                {item.icon}
+                <div className="text-sm">{item.name}</div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <Bubble ref={chartRef} data={data} options={dataOptions} />
-      <div className="absolute border text-[#4B0082] font-[700] top-[8%] left-[10%]">
-        {quadrantValues.topLeft}
-      </div>
-      {chartRef.current && (
-        <div
-          style={{ left: `calc(${chartRef.current.width}px - 10%)` }}
-          className="absolute border text-[#FF0000] font-[700] top-[8%]"
-        >
-          {quadrantValues.topRight}
-        </div>
-      )}
-      {chartRef.current && (
-        <div
-          style={{ top: `calc(${chartRef.current.height}px - 10%)` }}
-          className="absolute border text-[#000] font-[700] left-[10%]"
-        >
-          {quadrantValues.bottomLeft}
-        </div>
-      )}
-      {chartRef.current && (
-        <div
-          style={{
-            top: `calc(${chartRef.current.height}px - 10%)`,
-            left: `calc(${chartRef.current.width}px - 10%)`,
-          }}
-          className="absolute border text-[#D8BFD8] font-[700]"
-        >
-          {quadrantValues.bottomRight}
-        </div>
-      )}
-      <div className="flex w-full mt-4 flex-col items-start gap-2">
-        <div className="flex w-full mt-2 items-center gap-2">
-          <label
-            className="text-xs font-[500] whitespace-nowrap"
-            htmlFor="labels-range-input"
-          >
-            {selectLabels[state.xLabel]}
-          </label>
-          <input
-            id="labels-range-input"
-            type="range"
-            min={0}
-            max={maxX}
-            onChange={handleChangeX}
-            defaultValue={0}
-            value={lineX}
-            className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-500"
-          />
-          <div className="w-40 ml-10">
-            <input
-              id="labels-range-input"
-              type="number"
-        
-              value={lineX}
-              max={maxX}
-              onChange={(e) => setLineX(Number(e.target.value))}
-          
-              className="w-full p-4 h-1 cursor-pointer"
-            />
+          <Bubble ref={chartRef} data={data} options={dataOptions} />
+          <div className="absolute border text-[#4B0082] font-[700] top-[8%] left-[10%]">
+            {quadrantValues.topLeft}
           </div>
-        </div>
-        <div className="flex w-full mt-2 items-center gap-2">
-          <label
-            className="text-xs font-[500] whitespace-nowrap"
-            htmlFor="labels-range-input"
-          >
-            {selectLabels[state.yLabel]}
-          </label>
-          <input
-            id="labels-range-input"
-            type="range"
-            min={0}
-            max={maxY}
-            onChange={handleChangeY}
-            defaultValue={0}
-            className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-500"
-          />
-          <div className="w-40 ml-10"> <input
-              id="labels-range-input"
-              type="number"
-              value={lineY}
-              max={maxY}
-              onChange={(e) => setLineY(Number(e.target.value))}
-              className="w-full p-4 h-1 cursor-pointer"
-            /></div>
-        </div>
-      </div>
-      </>}
+          {chartRef.current && (
+            <div
+              style={{ left: `calc(${chartRef.current.width}px - 10%)` }}
+              className="absolute border text-[#FF0000] font-[700] top-[8%]"
+            >
+              {quadrantValues.topRight}
+            </div>
+          )}
+          {chartRef.current && (
+            <div
+              style={{ top: `calc(${chartRef.current.height}px - 10%)` }}
+              className="absolute border text-[#000] font-[700] left-[10%]"
+            >
+              {quadrantValues.bottomLeft}
+            </div>
+          )}
+          {chartRef.current && (
+            <div
+              style={{
+                top: `calc(${chartRef.current.height}px - 10%)`,
+                left: `calc(${chartRef.current.width}px - 10%)`,
+              }}
+              className="absolute border text-[#D8BFD8] font-[700]"
+            >
+              {quadrantValues.bottomRight}
+            </div>
+          )}
+          <div className="flex w-full mt-4 flex-col items-start gap-2">
+            <div className="flex w-full mt-2 items-center gap-2">
+              <label
+                className="text-xs font-[500] whitespace-nowrap"
+                htmlFor="labels-range-input"
+              >
+                {selectLabels[state.xLabel]}
+              </label>
+              <input
+                id="labels-range-input"
+                type="range"
+                min={0}
+                max={maxX}
+                onChange={handleChangeX}
+                value={lineX}
+                className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-500"
+              />
+              <div className="w-40 ml-10">
+                <input
+                  id="labels-range-input"
+                  type="number"
+                  value={lineX}
+                  max={maxX}
+                  onChange={(e) => setLineX(Number(e.target.value))}
+                  className="w-full p-4 h-1 cursor-pointer"
+                />
+              </div>
+            </div>
+            <div className="flex w-full mt-2 items-center gap-2">
+              <label
+                className="text-xs font-[500] whitespace-nowrap"
+                htmlFor="labels-range-input"
+              >
+                {selectLabels[state.yLabel]}
+              </label>
+              <input
+                id="labels-range-input"
+                type="range"
+                min={0}
+                max={maxY}
+                onChange={handleChangeY}
+                defaultValue={0}
+                className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-500"
+              />
+              <div className="w-40 ml-10">
+                {" "}
+                <input
+                  id="labels-range-input"
+                  type="number"
+                  value={lineY}
+                  max={maxY}
+                  onChange={(e) => setLineY(Number(e.target.value))}
+                  className="w-full p-4 h-1 cursor-pointer"
+                />
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

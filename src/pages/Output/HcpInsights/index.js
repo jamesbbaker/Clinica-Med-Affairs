@@ -54,7 +54,6 @@ const HcpInsight = () => {
             ...Object.keys(selectLabels)
               .filter((item) => responseData.headers.includes(item))
               .map((item) => {
-                console.log(item)
                 return {
                   Header: selectLabels[item],
                   accessor: item,

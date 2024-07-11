@@ -209,7 +209,8 @@ const PatientOpportunityPage = () => {
         </div>
       )}
       <div className="w-full mt-4">
-     
+        <Prioitize />
+
         <div className="flex flex-col items-center ">
           {crfData && crfLineData && crfUnmetNeed ? (
             <>
@@ -269,7 +270,6 @@ const PatientOpportunityPage = () => {
           )}
           <RadarChart />
         </div>
-        <Prioitize />
       </div>
     </div>
   );

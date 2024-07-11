@@ -35,7 +35,7 @@ const AuthProvider = () => {
 
   const navigate = useNavigate();
   const loginAction = async (data) => {
-    console.log(data)
+   
     try {
       const response = await fetch("https://clinica-server.replit.app/login", {
         method: "POST",
@@ -108,6 +108,29 @@ const AuthProvider = () => {
     }
   }
 
+  const sendEmail =async (data) => {
+    try {
+      const response = await fetch("https://clinica-server.replit.app/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // 'Access-Control-Allow-Origin': '*',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          message: data.message
+         }),
+      });
+      const res = await response.json();
+      return res
+    } catch (err) {
+      console.log(err)
+      throw new Error();
+    }
+  }
+
 
   const logOut = () => {
     setUser(null);
@@ -172,6 +195,7 @@ const AuthProvider = () => {
         accessToken,
         refreshToken,
         user,
+        sendEmail,
         updatePassword,
         refreshTokenFunction,
         fetchUserData,
