@@ -81,7 +81,7 @@ export const APP_ROUTES_LABEL = {
   patient_opportunity_mapping_and_strategy:
     "Patient Opportunity and Unmet Need Strategy",
   hcp_segmentation: "HCP Segmentation",
-  eligible_patient_locator: "Physician Care Profile",
+  eligible_patient_locator: "Physician Care Profiles",
   hcp_insights: "HCP Insights",
   hcp_profiles: "HCP Profiles",
   lead_indicators: "Leading Indicators",

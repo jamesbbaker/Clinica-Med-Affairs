@@ -16,49 +16,49 @@ const NavigationMenu = [
     id: APP_ROUTES.patient_opportunity_mapping_and_strategy,
     route: `${APP_ROUTES.outputs}/${APP_ROUTES.patient_opportunity_mapping_and_strategy}`,
     icon: () => <AiOutlineGlobal />,
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu.",
+    description: "Prioritize key areas of unmet need for Medical intervention",
   },
   {
     name: APP_ROUTES_LABEL.eligible_patient_locator,
     id: APP_ROUTES.eligible_patient_locator,
     route: `${APP_ROUTES.outputs}/${APP_ROUTES.eligible_patient_locator}`,
     icon: () => <AiOutlineTable />,
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu.",
+    description: "Deep clinical profiles for top HCPs by priority unmet needs",
   },
   {
     name: APP_ROUTES_LABEL.institutional_variation,
     id: APP_ROUTES.institutional_variation,
     route: `${APP_ROUTES.outputs}/${APP_ROUTES.institutional_variation}`,
     icon: () => <AiOutlineProject />,
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu."
+    description: "Deep clinical profiles for top hospitals, clinics, IDNs, and systems by priority unmet needs"
   },
   {
     name: APP_ROUTES_LABEL.payer_variation,
     id: APP_ROUTES.payer_variation,
     route: `${APP_ROUTES.outputs}/${APP_ROUTES.payer_variation}`,
     icon: () => <AiOutlineProject />,
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu."
+    description: "Deep clinical profiles for top plans and payers by priority unmet needs"
   },
   {
     name: APP_ROUTES_LABEL.impact_tracking,
     id: APP_ROUTES.impact_tracking,
     route: `${APP_ROUTES.outputs}/${APP_ROUTES.impact_tracking}`,
     icon: () => <AiOutlineFundProjectionScreen/>,
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu.",
+    description: "Measure changes in patient care and the impact of initiatives",
   },
   {
     name: APP_ROUTES_LABEL.patient_journey,
     id: APP_ROUTES.patient_journey,
     route: `${APP_ROUTES.outputs}/${APP_ROUTES.patient_journey}`,
     icon: () => <AiOutlineRise />,
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu.",
+    description: "Gain a deeper understanding of asthma care patterns",
   },
   {
     name: APP_ROUTES_LABEL.help,
     id: APP_ROUTES.help,
     route: APP_ROUTES.help,
     icon: () => <AiOutlineQuestionCircle />,
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu."
+    description: "Learn about the app or contact support"
   },
 ]
 

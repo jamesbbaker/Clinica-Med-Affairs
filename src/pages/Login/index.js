@@ -139,7 +139,7 @@ const Login = ({ passwordChange }) => {
           console.log(err);
         });
     } else {
-      console.log(state.formData)
+    
       loginAction(state.formData)
         .then((res) => {
           setLoading(false);

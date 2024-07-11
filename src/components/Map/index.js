@@ -354,6 +354,7 @@ const levelToggles = {
 };
 
 const Map = ({
+  setHcpProfilePage=() => {},
   impactLayer = () => {},
   impactMap,
   currentLevel,
@@ -469,6 +470,7 @@ const Map = ({
       onClick: function (e, spiderLeg) {
         var feature = spiderLeg.feature;
         setChartDataValue(setData1, null, [feature.properties]);
+        setHcpProfilePage("map")
      
       },
       initializeLeg: function initializeSpiderLeg(spiderLeg) {
@@ -699,6 +701,7 @@ const Map = ({
 
 
           setChartDataValue(setData1, null, [filteredArr[0].properties]);
+          setHcpProfilePage("map")
        
         }
 
@@ -896,6 +899,7 @@ const Map = ({
         onClick: function (e, spiderLeg) {
           var feature = spiderLeg.feature;
           setChartDataValue(setData1, null, [feature.properties]);
+          setHcpProfilePage("map")
   
         },
         initializeLeg: function initializeSpiderLeg(spiderLeg) {

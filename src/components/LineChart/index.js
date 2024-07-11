@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Line } from "react-chartjs-2";
 
 import { Chart as ChartJS, registerables } from "chart.js";
@@ -81,6 +81,11 @@ export const defaultData = {
   ],
 };
 
+let arbitraryLine = {
+  id: "arbitraryLine",
+  beforeDatasetsDraw(chart, args, pluginOptions) {},
+};
+
 export function LineChart({
   key = null,
   arbitrary = true,
@@ -95,18 +100,26 @@ export function LineChart({
     max: 0,
   });
 
-  let arbitraryLine = {
-    id: "arbitraryLine",
-    beforeDatasetsDraw(chart, args, pluginOptions) {},
-  };
+
+  const handleChange = useCallback((e) => {
+    arbitraryLine.beforeDatasetsDraw(lineRef.current);
+    let _val = parseInt(e.target.value);
+    lineRef.current.setActiveElements([
+      { datasetIndex: _val, hovered: false, index: _val + 1 },
+    ]);
+    lineRef.current.update();
+    setSelectedValue(_val);
+  }, [])
+
 
   useEffect(() => {
+    handleChange({target:{value: 0}})
     setChartData(data);
     setArbitraryLine((prev) => ({
       ...prev,
       max: data.labels.length,
     }));
-  }, [data]);
+  }, [data, handleChange]);
 
   const intersectDataVerticalLine = {
     id: "intersectDataVerticalLine",
@@ -115,8 +128,8 @@ export function LineChart({
         const activePoint = chart.getActiveElements()[0];
         const {
           ctx,
-          chartArea: { top, bottom, },
-          scales: { x, },
+          chartArea: { top, bottom },
+          scales: { x },
         } = chart;
         ctx.save();
         ctx.beginPath();
@@ -133,15 +146,6 @@ export function LineChart({
 
   const lineRef = useRef(null);
 
-  const handleChange = (e) => {
-    arbitraryLine.beforeDatasetsDraw(lineRef.current);
-    let _val = parseInt(e.target.value);
-    lineRef.current.setActiveElements([
-      { datasetIndex: _val, hovered: false, index: _val + 1 },
-    ]);
-    lineRef.current.update();
-    setSelectedValue(_val);
-  };
 
   return (
     <div className="w-full h-full px-2 pt-4">
@@ -158,8 +162,16 @@ export function LineChart({
 
       {arbitrary && (
         <div className="px-2 py-4">
-          <div className="text-xs border border-slate-200 px-2">
-            {selectedValue}
+          <div className="text-xs px-2">
+            <input
+              id="labels-range-input"
+              type="number"
+              // value={lineX}
+              value={selectedValue}
+              // max={maxX}
+              onChange={handleChange}
+              className="w-full p-4 h-1 cursor-pointer"
+            />
           </div>
           <div>
             <label className="text-xs" htmlFor="labels-range-input">
@@ -169,9 +181,9 @@ export function LineChart({
               id="labels-range-input"
               type="range"
               min={0}
+              value={selectedValue}
               max={arbitraryLineValues.max}
               onChange={handleChange}
-              defaultValue={0}
               className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-500"
             />
           </div>

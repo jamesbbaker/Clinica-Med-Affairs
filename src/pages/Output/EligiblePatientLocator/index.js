@@ -62,7 +62,7 @@ const reducer = (state, action) => {
   }
 };
 
-const EligiblePatientLocator = () => {
+const EligiblePatientLocator = ({setHcpProfilePage=() => {}}) => {
   const [filterList, setFilterList] = useState([]);
   const [statsData1, setStatsData1] = useState(null);
   const [filterState, dispatch] = useReducer(reducer, initialState);
@@ -413,7 +413,7 @@ const EligiblePatientLocator = () => {
   }
 
   const handleRowClicked = (col) => {
-   
+    setHcpProfilePage("table")
     setChartDataValue(setData1, null, [col.original]);
   };
 
@@ -501,6 +501,7 @@ const EligiblePatientLocator = () => {
   };
 
   const closeModal = () => {
+    setHcpProfilePage(null)
     setData1(null)
 
   };

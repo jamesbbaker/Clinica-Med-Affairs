@@ -9,6 +9,7 @@ import Landing from "./pages/Landing";
 import About from "./pages/About";
 import 'react-toastify/dist/ReactToastify.css';
 import NeedHelp from "./pages/NeedHelp";
+import ContactUs from "./pages/ContactUs";
 
 const router = createBrowserRouter([
  
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         element: <About />,
         path: "/about",
+      },
+      {
+        element: <ContactUs />,
+        path: "/contactus",
       },
       {
         element: <DashboardLayout />,

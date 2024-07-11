@@ -89,7 +89,7 @@ let data_1_labels = [
   "Total ICS-LABA Escalation Delay",
 ];
 
-const PatientOpportunityMapping = ({ patientPage = false }) => {
+const PatientOpportunityMapping = ({ setHcpProfilePage = () => {},patientPage = false }) => {
   const [currentLevel, setCurrentLevel] = useState("region");
   const [state, dispatch] = useReducer(reducer, Initial_State);
   const { accessToken, refreshToken } = useContext(AuthContext);
@@ -282,6 +282,7 @@ const PatientOpportunityMapping = ({ patientPage = false }) => {
   };
 
   const closeModal = () => {
+    setHcpProfilePage(null)
     setPopupData(null);
   };
 
@@ -405,6 +406,7 @@ const PatientOpportunityMapping = ({ patientPage = false }) => {
               ) : (
                 <Map
                   data1={popupData}
+                  setHcpProfilePage={setHcpProfilePage}
                   setData1={setPopupData}
                   currentLevel={currentLevel}
                   setCurrentLevel={setCurrentLevel}
