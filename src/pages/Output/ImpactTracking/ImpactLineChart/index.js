@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { LineChart } from "../../../../components/LineChart";
 import {
   invertedMapLabels,
@@ -7,7 +7,10 @@ import {
 } from "../../../../constants/appConstants";
 import { MultiSelect } from "react-multi-select-component";
 import { convertToQuarter } from "../../PatientOpportunityMapping/Popup";
-import { customOptionRenderer } from "../../../../components/Table";
+
+import { AuthContext } from "../../../../context/AuthContext";
+import { filterOutLabels } from "../../../../utils/MapUtils";
+import { CustomOptionRenderer } from "../../../../components/Table";
 
 const customStyles = {
   menu: (provided) => ({
@@ -26,9 +29,8 @@ const options = {
       type: "category",
       scaleLabel: {
         display: true,
-        labelString: 'Date',
+        labelString: "Date",
       },
-     
 
       grid: {
         display: false,
@@ -110,6 +112,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
   const [selectedStates, setSelectedStates] = useState();
   const [selectedRegion, setSelectedRegion] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { selectedUnmet } = useContext(AuthContext);
 
   function addLineData(initial) {
     let filtersName = {};
@@ -188,15 +191,17 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
     } else if (type === "State") {
       const lineDataByState = {};
 
-      lineDataFilter.filter(item => item["State ID"]).forEach((item) => {
-        if (!lineDataByState[item["State ID"]]) {
-          lineDataByState[item["State ID"]] = {
-            id: item["State ID"],
-            data: [],
-          };
-        }
-        lineDataByState[item["State ID"]].data.push(item);
-      });
+      lineDataFilter
+        .filter((item) => item["State ID"])
+        .forEach((item) => {
+          if (!lineDataByState[item["State ID"]]) {
+            lineDataByState[item["State ID"]] = {
+              id: item["State ID"],
+              data: [],
+            };
+          }
+          lineDataByState[item["State ID"]].data.push(item);
+        });
       setStatesList(Object.keys(lineDataByState));
       let _selectedStates = [];
       if (initial) {
@@ -274,7 +279,6 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
     }
   }, [lineData]);
 
-
   const handleToggleSelect = (val, type) => {
     if (type === "region") {
       setSelectedRegion(val);
@@ -284,7 +288,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
   };
 
   const handleApplyFilter = () => {
-    setLoading(true)
+    setLoading(true);
     addLineData();
   };
 
@@ -310,7 +314,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
                 className="w-[10rem] z-[10]"
                 value={selectedRegion || []}
                 onChange={(val) => handleToggleSelect(val, "region")}
-                styles={customStyles} 
+                styles={customStyles}
               />
             </div>
           )}
@@ -328,7 +332,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
                 className="w-[10rem] z-[10]"
                 value={selectedStates || []}
                 onChange={(val) => handleToggleSelect(val, "state")}
-                styles={customStyles} 
+                styles={customStyles}
               />
             </div>
           )}
@@ -366,23 +370,25 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
             </button>
           )}
         </div>
-        <div className="flex mt-4 items-center gap-4">
+      { selectedUnmet&& <div className="flex mt-4 items-center gap-4">
           <label className="block text-sm font-medium text-gray-900 dark:text-white">
             Select Unmet Need
           </label>
           <MultiSelect
-              ItemRenderer={customOptionRenderer}
+            ItemRenderer={CustomOptionRenderer}
             labelledBy=""
-            options={filterOptions.map((item) => ({
-              label: selectLabels[item] ? selectLabels[item] : item,
-              value: item,
-            }))}
+            options={filterOutLabels(filterOptions, selectedUnmet).map(
+              (item) => ({
+                label: selectLabels[item] ? selectLabels[item] : item,
+                value: item,
+              })
+            )}
             className="w-[20rem] z-[5]"
             value={unmetNeed || []}
             onChange={(val) => handleSelectMultipleUnmet(val)}
-            styles={customStyles} 
+            styles={customStyles}
           />
-        </div>
+        </div>}
       </div>
 
       <LineChart options={options} data={lineChartData} arbitrary={false} />

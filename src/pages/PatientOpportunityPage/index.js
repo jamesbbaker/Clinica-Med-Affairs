@@ -9,8 +9,8 @@ import { HeatMapGrid } from "react-grid-heatmap";
 import { RadarChart } from "../../components/RadarChart";
 import { LineChart } from "../../components/LineChart";
 import CustomDropdown from "../../components/CustomDropdown";
-import HcpInsight from "../Output/HcpInsights";
 import Prioitize from "../../components/Prioritize";
+import { filterOutLabels } from "../../utils/MapUtils";
 
 const defaultOptions = {
   responsive: true,
@@ -63,7 +63,7 @@ const PatientOpportunityPage = () => {
   const [crfData, setCrfData] = useState({});
   const [crfLineData, setCrfLineData] = useState({});
   const [crfUnmetNeed, setCrfUnmetNeed] = useState(null);
-  const { accessToken, refreshToken } = useContext(AuthContext);
+  const { accessToken, refreshToken ,selectedUnmet} = useContext(AuthContext);
 
   const handleSelectFilter = (val) => {
     setCrfUnmetNeed(val);
@@ -223,7 +223,7 @@ const PatientOpportunityPage = () => {
                     label: "Unmet Need select",
                     name: "Unmet Need select",
                     type: "select",
-                    options: Object.keys(selectLabels)
+                    options: filterOutLabels(Object.keys(selectLabels), selectedUnmet)
                       .filter((item) => crfData.hasOwnProperty(item))
                       .map((item) => ({
                         name: selectLabels[item] ? selectLabels[item] : item,

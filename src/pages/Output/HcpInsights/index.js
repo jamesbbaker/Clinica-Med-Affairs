@@ -1,18 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
-import Table, { customOptionRenderer } from "../../../components/Table";
+import Table,{ CustomOptionRenderer } from "../../../components/Table";
 import { getDataStats } from "../../../API/Outputs";
 import { AuthContext } from "../../../context/AuthContext";
 import { MultiSelect } from "react-multi-select-component";
-import { invertedMapLabels, mapLabels, selectLabels } from "../../../constants/appConstants";
+import {  mapLabels, selectLabels } from "../../../constants/appConstants";
+import { filterOutLabels } from "../../../utils/MapUtils";
 
 const filterOptions = [...Object.keys(selectLabels)];
 
 const HcpInsight = () => {
   const [statsData2, setStatsData2] = useState(null);
   const [tableColumns, setTableColumns] = useState([{}]);
-  const { accessToken, refreshToken } = useContext(AuthContext);
+  const { accessToken, selectedUnmet, refreshToken } = useContext(AuthContext);
   const [rawHeaders, setRawHeaders] = useState([]);
-  const [selectedUnmet, setSelectedUnmet] = useState([]);
+  const [selectedUnmetValue, setSelectedUnmet] = useState([]);
 
   const handleSelectMultipleUnmet = (val) => {
     setSelectedUnmet(val);
@@ -26,11 +27,6 @@ const HcpInsight = () => {
     ]);
   };
 
-  const selectKeys = Object.keys(selectLabels);
-
-  const getKeyFromValue = (value) => {
-    return selectKeys.find((key) => selectLabels[key] === value);
-  };
 
   useEffect(() => {
     getDataStats("data_stats_23", accessToken, refreshToken)
@@ -78,16 +74,16 @@ const HcpInsight = () => {
       <div className="flex flex-col gap-2 w-full items-start">
         <div>Select Unmet Needs</div>
         <MultiSelect
-          ItemRenderer={customOptionRenderer}
+          ItemRenderer={CustomOptionRenderer}
           labelledBy=""
-          options={filterOptions
+          options={filterOutLabels(filterOptions, selectedUnmet)
             .filter((item) => rawHeaders.includes(item))
             .map((item) => ({
               label: selectLabels[item] ? selectLabels[item] : item,
               value: item,
             }))}
           className="w-[22rem] mb-10 z-[5]"
-          value={selectedUnmet}
+          value={selectedUnmetValue}
           onChange={(val) => handleSelectMultipleUnmet(val)}
         />
       </div>

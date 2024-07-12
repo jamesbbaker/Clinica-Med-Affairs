@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import PrimaryBtn from "../PrimaryBtn";
 import Popup from "reactjs-popup";
 import { AiOutlineCheckCircle } from "react-icons/ai";
-import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 
 const ContactSupport = ({ contactPage = false }) => {
@@ -14,7 +13,7 @@ const ContactSupport = ({ contactPage = false }) => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const {sendEmail} = useContext(AuthContext)
+  const { sendEmail } = useContext(AuthContext);
 
   const handleChange = (e) => {
     setFormData({
@@ -31,49 +30,40 @@ const ContactSupport = ({ contactPage = false }) => {
       formData.email.length === 0 ||
       formData.message.length === 0
     ) {
-      setError(true);
+      setLoading(false);
+      return;
     }
-    console.log("Form Data:", formData);
-  
-    const res = await sendEmail(formData)
-    console.log(res)
-    setShowAlert(true);
-    setLoading(false)
+    const res = await sendEmail(formData);
+    if (res) {
+      setShowAlert(true);
+      setLoading(false);
+    }
   };
 
   const closeModal = () => {
-    console.log("first");
     setShowAlert(false);
   };
 
   return (
     <div
       className={`w-full h-[60vh] flex items-center mx-auto mt-10  border ${
-        !contactPage ? "rounded-lg bg-slate-300" : "bg-white"
+        !contactPage ? "rounded-lg bg-slate-300" : "bg-white shadow-lg"
       } `}
     >
-      {contactPage && (
-        <div className="min-w-[30%] h-full bg-primary grid place-content-center font-[700] leading-relaxed tracking-wider text-[#fff] relative text-5xl overflow-hidden">
-          <div className="absolute -top-10 -left-12 bg-white opacity-20 w-44 h-44 border-2 rounded-[50%] backdrop-blur-xl"></div>{" "}
-          <div className="absolute -bottom-10 right-20 bg-white opacity-20 w-24 h-24 border-2 rounded-[50%] backdrop-blur-xl"></div>
-          <div className="max-w-[70%] text-center m-auto">GET IN TOUCH!</div>
-        </div>
-      )}
       <div className="flex flex-col items-start px-10 py-5 w-full">
-        {!contactPage && (
-          <h2 className="text-2xl text-[#000] font-bold mb-6">
-            Contact Support
-          </h2>
-        )}
+        <h2 className="text-3xl text-[#000] font-[400] mb-12">
+          Contact Support
+        </h2>
         <form className="w-full" onSubmit={handleSubmit}>
-          <div className="mb-4">
+          <div className={`${contactPage && "w-[40%]"} mb-8`}>
             <label
-              className="block text-[#000] text-sm font-bold mb-2"
+              className="block text-[#000] text-sm font-[500] mb-2"
               htmlFor="name"
             >
               Name
             </label>
             <input
+              required
               type="text"
               id="name"
               name="name"
@@ -83,14 +73,15 @@ const ContactSupport = ({ contactPage = false }) => {
               placeholder="Your name"
             />
           </div>
-          <div className="mb-4">
+          <div className={`${contactPage && "w-[40%]"} mb-8`}>
             <label
-              className="block text-[#000] text-sm font-bold mb-2"
+              className="block text-[#000] text-sm font-[500] mb-2"
               htmlFor="email"
             >
               Email
             </label>
             <input
+              required
               type="email"
               id="email"
               name="email"
@@ -100,14 +91,15 @@ const ContactSupport = ({ contactPage = false }) => {
               placeholder="Your email"
             />
           </div>
-          <div className="mb-6">
+          <div className="mb-10">
             <label
-              className="block text-[#000] text-sm font-bold mb-2"
+              className="block text-[#000] text-sm font-[500] mb-2"
               htmlFor="message"
             >
-              Message
+              Comment or Message
             </label>
             <textarea
+              required
               id="message"
               name="message"
               value={formData.message}

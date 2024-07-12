@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import TreeMap from "../../../components/TreeMap";
 import {
+  excludedLabels,
   mapBarCharts,
   mapLabels,
   mapSelectLabels,
@@ -15,6 +16,7 @@ import CustomDropdown from "../../../components/CustomDropdown";
 import InstitutionalVariationBubbleChart from "./InstitutionalVariationBubbleChart";
 import BarChartPopup from "../PatientOpportunityMapping/Popup";
 import { getLowestValue, highestValue } from "../../../utils/MathUtils";
+import { filterOutLabels } from "../../../utils/MapUtils";
 
 const filters = [...Object.keys(selectLabels)];
 
@@ -46,16 +48,20 @@ const InstitutionalVariation = () => {
   const options1 = {
     enableHighlight: true,
     maxDepth: 0,
-    maxPostDepth: 0,
-    minColor: "#fff",
-    midColor: "#FF6666",
-    maxColor: "#8B0000",
+    maxPostDepth: 0,  
+    // minColor: "#fff",
+    // midColor: '#FFB3B3',
+    // maxColor: "#FF6666",
     headerHeight: 15,
     fontColor: "black",
     title: "Asthma Patients by States",
     titleTextStyle: {
       color: "#888",
       textAlign: "center",
+    },
+    colorAxis: {
+      values: [0, 50, 100], // Define custom values for the color axis
+      colors: ["#fff", "#FF6666","#FF6666"], // Define colors for the color axis
     },
     useWeightedAverageForAggregation: true,
     showScale: true,
@@ -74,8 +80,8 @@ const InstitutionalVariation = () => {
 
   const options2 = {
     minColor: "#fff",
-    midColor: "#FF6666",
-    maxColor: "#8B0000",
+    midColor: '#FFB3B3',
+    maxColor: "#FF6666",
     headerHeight: 15,
     fontColor: "black",
     title: "Asthma Patients by States",
@@ -97,11 +103,10 @@ const InstitutionalVariation = () => {
     },
   };
 
-  const { accessToken, refreshToken } = useContext(AuthContext);
+  const { accessToken, refreshToken,selectedUnmet } = useContext(AuthContext);
   function setChartDataValue(setValue, API_labels, data) {
     function generateChartData(array) {
       let _value = [];
-      // console.log(array, data[0])
       array.forEach((item) => {
         _value.push(data[0][mapLabels[item]]);
       });
@@ -116,7 +121,7 @@ const InstitutionalVariation = () => {
             backgroundColor: array.map((item) =>
               !patientTotals.includes(item) ? "#800000" : "#00008B"
             ),
-            barThickness: 20, // Set a specific thickness for the bar
+            barThickness: 20, 
             maxBarThickness: 20,
           },
         ],
@@ -218,7 +223,7 @@ const InstitutionalVariation = () => {
     const specialties = filterValues.specialty;
     const _region = filterValues.region;
     const _stateName = filterValues.stateName;
-    let queryString = `institutional_treemap_data?&`; // Start with 'hcp_data?&'
+    let queryString = `institutional_treemap_data?&`; 
 
     if (specialties && specialties.length > 0) {
       queryString += specialties
@@ -319,7 +324,7 @@ const InstitutionalVariation = () => {
                       input={{
                         label: "Select Unmet Needs",
                         id: "unmet",
-                        options: filters.map((item) => ({
+                        options: filterOutLabels(filters, selectedUnmet).filter(item => !excludedLabels.includes(item)).map((item) => ({
                           name: selectLabels[item],
                           value: item,
                         })),

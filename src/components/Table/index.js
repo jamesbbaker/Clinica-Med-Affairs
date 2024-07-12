@@ -1,7 +1,7 @@
 import fakeData from "./table-data.json";
 import * as React from "react";
 import { useState } from "react";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { useTable, usePagination, useSortBy } from "react-table";
 import Popup from "reactjs-popup";
 import BarChart from "../BarChart";
@@ -17,6 +17,8 @@ import { AiOutlineDelete } from "react-icons/ai";
 import MinMaxSlider from "../MinMaxSlider";
 import { MultiSelect } from "react-multi-select-component";
 import interpolate from "color-interpolate";
+import { AuthContext } from "../../context/AuthContext";
+import { filterOutLabelsTable } from "../../utils/MapUtils";
 
 let colormap = interpolate(["green", "white", "red"]);
 
@@ -112,7 +114,7 @@ const BarChartOptions = {
 
 const Table = ({
   colorCells,
-  updateTable=false,
+  updateTable = false,
   isEligible = false,
   setFilterList,
   cellClicked = () => {},
@@ -186,6 +188,7 @@ const Table = ({
   const [openPopup, setOpenPopup] = useState(false);
   const [barChartConfig, setBarChartConfig] = useState(null);
   const [filters, setFilters] = useState(false);
+  const { selectedUnmet } = useContext(AuthContext);
 
   useEffect(() => {
     if (currentSize) {
@@ -213,6 +216,8 @@ const Table = ({
       setBarChartConfig(barChartData);
     }
   };
+
+  console.log(value);
 
   const handleClose = () => {
     setOpenPopup((o) => !o);
@@ -298,24 +303,41 @@ const Table = ({
       let valHeaders = [];
       if (value) {
         valHeaders = value.map((item) => item.col.Header);
-        firstRef.current = false;
       }
+      let _obj = {}
+      selectedUnmet.forEach(item => {
+        _obj[item.value] = item
+      })
+      let firstUnmet = Object.keys(selectLabels).filter(element => {
+          return _obj.hasOwnProperty(element)
+        })[0]
+      let _val = [];
       allColumns
         .filter((item) => selectionBtnsArray.includes(item.id))
         .forEach((item, index) => {
-          if (!valHeaders.includes(item.Header) && index !== 2) {
+          if (!valHeaders.includes(item.Header) && item.id !== firstUnmet &&  index !== 2) {
             item.toggleHidden();
           }
-          if (index === 2 && !value) {
-            setValue([
+          if (item.id === firstUnmet) {
+            _val.push(
               {
                 col: item,
                 label: selectLabels[item.Header],
                 value: item.Header,
               },
-            ]);
+            );
+          }
+          if (index === 2 && !value) {
+            _val.push(
+              {
+                col: item,
+                label: selectLabels[item.Header],
+                value: item.Header,
+              },
+            );
           }
         });
+      setValue(_val);
     }
   }, []);
 
@@ -363,26 +385,32 @@ const Table = ({
         <div className="flex flex-col items-start">
           <div className="flex items-center gap-8">
             <div className="flex items-center mt-2 gap-8">
-              <label className="font-[600]">Select Unmet Needs</label>
+              <label className="font-[600]">Select Unmet </label>
               <MultiSelect
                 labelledBy=""
-                ItemRenderer={customOptionRenderer}
-                options={allColumns
-                  .filter((item) => selectionBtnsArray.includes(item.id))
-                  .map(
-                    (item) =>
-                      isNaN(item) && {
-                        col: item,
-                        label: selectLabels[item.Header],
-                        value: item.Header,
-                      }
+                ItemRenderer={CustomOptionRenderer}
+                options={
+                  filterOutLabelsTable(
+                    allColumns.filter((item) =>
+                      selectionBtnsArray.includes(item.id)
+                    ),
+                    selectedUnmet
                   )
-                  .filter((item) => typeof item !== "boolean")
-                  .sort(
-                    (a, b) =>
-                      selectionBtnsArray.indexOf(a.col.id) -
-                      selectionBtnsArray.indexOf(b.col.id)
-                  )}
+                    .map(
+                      (item) =>
+                        isNaN(item) && {
+                          col: item,
+                          label: selectLabels[item.Header],
+                          value: item.Header,
+                        }
+                    )
+                    .filter((item) => typeof item !== "boolean")
+                  // .sort(
+                  //   (a, b) =>
+                  //     selectionBtnsArray.indexOf(a.col.id) -
+                  //     selectionBtnsArray.indexOf(b.col.id)
+                  // )
+                }
                 className="w-[20rem] z-[5]"
                 value={value || []}
                 onChange={(val) => handleToggleSelect(val)}
@@ -392,7 +420,7 @@ const Table = ({
               <label className="font-[600]">Select Filters</label>
               <MultiSelect
                 labelledBy=""
-                ItemRenderer={customOptionRenderer}
+                ItemRenderer={CustomOptionRenderer}
                 options={Object.values(filterState).map((item) => ({
                   label: selectLabels[item.id],
                   value: item.id,
@@ -728,12 +756,31 @@ const Table = ({
 
 export default Table;
 
-export const customOptionRenderer = ({ checked, option, onClick }) => {
+export const CustomOptionRenderer = ({ checked, option, onClick }) => {
+  const { selectedUnmet } = useContext(AuthContext);
+  const [isPrioritized, setIsPrioritized] = useState({});
+
+  useEffect(() => {
+    if (selectedUnmet) {
+      let selectedUnmetsObj = {};
+      selectedUnmet.forEach((element) => {
+        selectedUnmetsObj[element.value] = element;
+      });
+      setIsPrioritized(selectedUnmetsObj);
+    }
+  }, [selectedUnmet]);
+
   return (
     <div
       onClick={onClick}
       className={`flex items-center p-2 cursor-pointer ${
-        checked ? "bg-gray-200" : ""
+        isPrioritized.hasOwnProperty(option.value)
+          ? checked
+            ? "bg-[#C0C0B0]"
+            : "bg-[#FFFFE0]"
+          : checked
+          ? "bg-gray-200"
+          : ""
       }`}
       style={{
         fontWeight: 600,

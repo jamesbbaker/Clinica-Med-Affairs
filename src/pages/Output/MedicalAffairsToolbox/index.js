@@ -6,6 +6,7 @@ import { highestValue } from "../../../utils/MathUtils";
 import { MultiSelect } from "react-multi-select-component";
 import CustomDropdown from "../../../components/CustomDropdown";
 import { selectLabels } from "../../../constants/appConstants";
+import { filterOutLabels } from "../../../utils/MapUtils";
 
 
 const filterOptions = [...Object.keys(selectLabels)];
@@ -41,7 +42,7 @@ const reducer = (state, action) => {
 
 const MedicalAffairToolbox = ({setHcpProfilePage = () => {}}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { accessToken, refreshToken } = useContext(AuthContext);
+  const { accessToken,selectedUnmet, refreshToken } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [rawData, setRawData] = useState(null);
 
@@ -352,7 +353,7 @@ const MedicalAffairToolbox = ({setHcpProfilePage = () => {}}) => {
                   label: "X-axis unmet need select",
                   name: "X-axis unmet need select",
                   type: "select",
-                  options: filterOptions.map((item) => ({
+                  options: filterOutLabels(filterOptions,selectedUnmet ).map((item) => ({
                     name: selectLabels[item] ? selectLabels[item] : item,
                     value: item,
                   })),
@@ -371,7 +372,7 @@ const MedicalAffairToolbox = ({setHcpProfilePage = () => {}}) => {
                   label: "Y-axis unmet need select",
                   name: "Y-axis unmet need select",
                   type: "select",
-                  options: filterOptions.map((item) => ({
+                  options: filterOutLabels(filterOptions,selectedUnmet ).map((item) => ({
                     name: selectLabels[item] ? selectLabels[item] : item,
                     value: item,
                   })),
