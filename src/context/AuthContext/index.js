@@ -4,11 +4,14 @@ import { useDispatch } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import { addMultipleUsers } from "../../features/admin/adminSlice";
 import { updateMenu } from "../../features/menu/menuSlice";
+import { getDataStats } from "../../API/Outputs";
+import { selectLabels } from "../../constants/appConstants";
 
 export const AuthContext = createContext();
 
 const AuthProvider = () => {
   const [user, setUser] = useState(null);
+  const [selectedUnmet, setSelectedUnmet] = useState([]);
   const [accessToken, setAccessToken] = useState(
     localStorage.getItem("accessToken")
   );
@@ -20,6 +23,19 @@ const AuthProvider = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    getDataStats("get_priorities", accessToken, refreshToken)
+    .then((res) => {
+      let prioritiesList = res.priorities.split(",").filter(item => item.length)
+      setSelectedUnmet(
+        prioritiesList.map((item) => ({
+          label: selectLabels[item] ? selectLabels[item] : item,
+          value: item,
+        }))
+      );
+    })
+    .catch((Err) => {
+      console.log(Err);
+    });
     // Check if tokens are already stored in local storage on page load
     const storedAccessToken = localStorage.getItem("accessToken");
 
@@ -196,6 +212,8 @@ const AuthProvider = () => {
         refreshToken,
         user,
         sendEmail,
+        selectedUnmet,
+        setSelectedUnmet,
         updatePassword,
         refreshTokenFunction,
         fetchUserData,

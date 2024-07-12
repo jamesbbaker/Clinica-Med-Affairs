@@ -1,10 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { filterColors, mapLabels, mapSelectLabels, patientTotals } from '../../constants/appConstants';
+import { AuthContext } from '../../context/AuthContext';
 
 const CustomDropdown = ({showImpactColors = false, showColors = false, labelClassName, className, error, value, input, handleSelect, dotColors = {} }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(value);
   const dropdownRef = useRef(null);
+  const {selectedUnmet} = useContext(AuthContext)
 
   useEffect(() => {
     setSelectedOption(value)
@@ -51,13 +53,17 @@ const CustomDropdown = ({showImpactColors = false, showColors = false, labelClas
         {isOpen && (
           <div className="absolute max-h-[20rem] overflow-y-auto z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
             {input.options.map((option) => { 
+              let selectedUnmetsObj = {}
+              selectedUnmet.forEach(element => {
+                selectedUnmetsObj[element.value] = element
+              });
               return (
               <div
                 key={option.name}
                 className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
                 onClick={() => handleOptionClick(option)}
                 style={{
-                  backgroundColor: option.value === selectedOption ? '#c4c4c4' : 'transparent',
+                  backgroundColor: selectedUnmetsObj.hasOwnProperty(option.value) ? option.value === selectedOption ? "#C0C0B0" : "#FFFFE0" : option.value === selectedOption ? '#c4c4c4' : 'transparent',
                 }}
               >
                 {showColors && (

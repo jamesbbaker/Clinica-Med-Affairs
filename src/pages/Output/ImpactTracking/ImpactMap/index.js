@@ -1,4 +1,10 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+  useContext,
+} from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import countryGeoJSON from "../../../../components/Map/data.json"; // Load your country GeoJSON
@@ -8,7 +14,10 @@ import {
   selectLabels,
 } from "../../../../constants/appConstants";
 import { MultiSelect } from "react-multi-select-component";
-import Table, { customOptionRenderer } from "../../../../components/Table";
+import Table, { CustomOptionRenderer } from "../../../../components/Table";
+import { IoArrowBackCircle } from "react-icons/io5";
+import { filterOutLabels } from "../../../../utils/MapUtils";
+import { AuthContext } from "../../../../context/AuthContext";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
@@ -137,6 +146,7 @@ const ImpactMap = ({
   const [tableUnmetNeed, setTableUnmetNeed] = useState([
     { label: filterOptions[0], value: filterOptions[0] },
   ]);
+  const { selectedUnmet } = useContext(AuthContext);
   const [period1, setPeriod1] = useState("2023-07-01");
   const [period2, setPeriod2] = useState("2023-10-01");
   const [tablePeriod1, setTablePeriod1] = useState("2023-07-01");
@@ -989,10 +999,12 @@ const ImpactMap = ({
               label: "Select Unmet Need",
               name: "Select Unmet Need",
               type: "select",
-              options: filterOptions.map((item) => ({
-                name: selectLabels[item] ? selectLabels[item] : item,
-                value: item,
-              })),
+              options: filterOutLabels(filterOptions, selectedUnmet).map(
+                (item) => ({
+                  name: selectLabels[item] ? selectLabels[item] : item,
+                  value: item,
+                })
+              ),
               id: "xLabel",
             }}
             value={unmetNeed}
@@ -1067,9 +1079,10 @@ const ImpactMap = ({
         )}
         <button
           onClick={handleReset}
-          className="flex px-2 py-2 rounded-sm border"
+          className="flex ml-auto py-4 items-center gap-1"
         >
-          Reset Map
+          <IoArrowBackCircle size={30} />
+          Go Back
         </button>
         <div ref={mapContainerRef} style={{ width: "100%", height: "70vh" }} />
         {tableData && false && (
@@ -1079,7 +1092,7 @@ const ImpactMap = ({
                 Select Unmet Need
               </label>
               <MultiSelect
-                ItemRenderer={customOptionRenderer}
+                ItemRenderer={CustomOptionRenderer}
                 labelledBy=""
                 options={filterOptions.map((item) => ({
                   label: selectLabels[item] ? selectLabels[item] : item,

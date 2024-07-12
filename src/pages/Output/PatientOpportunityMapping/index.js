@@ -19,6 +19,8 @@ import {
 import CustomDropdown from "../../../components/CustomDropdown";
 import BarChartPopup from "./Popup";
 import { MultiSelect } from "react-multi-select-component";
+import { filterOutLabels } from "../../../utils/MapUtils";
+import { IoArrowBackCircle } from "react-icons/io5";
 
 const Initial_State = {
   currentRegion: null,
@@ -89,10 +91,13 @@ let data_1_labels = [
   "Total ICS-LABA Escalation Delay",
 ];
 
-const PatientOpportunityMapping = ({ setHcpProfilePage = () => {},patientPage = false }) => {
+const PatientOpportunityMapping = ({
+  setHcpProfilePage = () => {},
+  patientPage = false,
+}) => {
   const [currentLevel, setCurrentLevel] = useState("region");
   const [state, dispatch] = useReducer(reducer, Initial_State);
-  const { accessToken, refreshToken } = useContext(AuthContext);
+  const { accessToken, selectedUnmet, refreshToken } = useContext(AuthContext);
   const [regionData, setRegionData] = useState(null);
   const [data1, setData1] = useState();
   const [popupData, setPopupData] = useState(null);
@@ -109,7 +114,6 @@ const PatientOpportunityMapping = ({ setHcpProfilePage = () => {},patientPage = 
     getDataStats("region_level_data", accessToken, refreshToken)
       .then((res) => {
         if (res) {
-     
           setRegionData(res.data);
         }
       })
@@ -120,8 +124,8 @@ const PatientOpportunityMapping = ({ setHcpProfilePage = () => {},patientPage = 
       .then(async (res) => {
         if (res) {
           let _data = JSON.parse(res.replaceAll("NaN", 0));
-       
-          setStateList(_data.data)
+
+          setStateList(_data.data);
           let StateByRegion = {};
           _data.data.forEach((entry) => {
             if (entry.Region !== 0) {
@@ -282,7 +286,7 @@ const PatientOpportunityMapping = ({ setHcpProfilePage = () => {},patientPage = 
   };
 
   const closeModal = () => {
-    setHcpProfilePage(null)
+    setHcpProfilePage(null);
     setPopupData(null);
   };
 
@@ -370,13 +374,7 @@ const PatientOpportunityMapping = ({ setHcpProfilePage = () => {},patientPage = 
           {!patientPage && (
             <>
               <div className="flex items-center justify-between">
-                <div
-                  onClick={handleReset}
-                  className="font-500 cursor-pointer hover:bg-[#c3c3c3] p-1 border border-[#000]"
-                >
-                  RESET MAP
-                </div>
-                <div className="flex mb-6 items-center gap-8">
+              <div className="flex mb-6 items-center gap-8">
                   <CustomDropdown
                     labelClassName="mb-0"
                     className={"flex items-center"}
@@ -384,7 +382,10 @@ const PatientOpportunityMapping = ({ setHcpProfilePage = () => {},patientPage = 
                     input={{
                       label: "Select Unmet Needs",
                       id: "unmet",
-                      options: [...Object.keys(selectLabels)].map((item) => ({
+                      options: filterOutLabels(
+                        Object.keys(selectLabels),
+                        selectedUnmet
+                      ).map((item) => ({
                         name: selectLabels[item],
                         value: item,
                       })),
@@ -393,6 +394,14 @@ const PatientOpportunityMapping = ({ setHcpProfilePage = () => {},patientPage = 
                     value={currentToggle}
                   />
                 </div>
+                <button
+                  onClick={handleReset}
+                  className="flex items-center gap-1"
+                >
+                  <IoArrowBackCircle size={30} />
+                  Go Back
+                </button>
+               
               </div>
               {resetMap ? (
                 <div

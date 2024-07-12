@@ -26,3 +26,32 @@ export function removeOrAddColumn(data, columnName) {
     }
   }
 }
+
+export function filterOutLabels(array, selectedUnmet) {
+  let unmetObj = {}
+  if (!selectedUnmet) {
+    return array
+  }
+  selectedUnmet.forEach(element => {
+    unmetObj[element.value] = element
+  });
+  let filteredArray =  array.filter(item => !unmetObj.hasOwnProperty(item));
+  return [...selectedUnmet.map(item => item.value), ...filteredArray];
+  
+}
+
+
+export function filterOutLabelsTable(array, selectedUnmet) {
+  let unmetObj = {}
+  if (!selectedUnmet) {
+    return array
+  }
+  selectedUnmet.forEach(element => {
+    unmetObj[element.value] = element
+  });
+  console.log(array)
+  let filteredArray =  array.filter(item => !unmetObj.hasOwnProperty(item.id));
+  let filteredArray1 =  array.filter(item => unmetObj.hasOwnProperty(item.id));
+  return [...filteredArray1, ...filteredArray];
+  
+}

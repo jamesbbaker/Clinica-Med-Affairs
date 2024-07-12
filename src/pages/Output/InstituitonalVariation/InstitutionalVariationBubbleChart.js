@@ -5,6 +5,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import { highestValue } from "../../../utils/MathUtils";
 import CustomDropdown from "../../../components/CustomDropdown";
 import { selectLabels } from "../../../constants/appConstants";
+import { filterOutLabels } from "../../../utils/MapUtils";
 
 const filterOptions = [...Object.keys(selectLabels)];
 
@@ -39,7 +40,7 @@ const reducer = (state, action) => {
 
 const InstitutionalVariationBubbleChart = ({isScatterMapOpen=false, setIsScatterMapOpen,applyFilter, region,selectedSpeciality}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { accessToken, refreshToken } = useContext(AuthContext);
+  const { accessToken, refreshToken, selectedUnmet } = useContext(AuthContext);
   const [rawData, setRawData] = useState(null);
   const [lineX, setLineX] = useState(10);
   const [lineY, setLineY] = useState(10);
@@ -230,7 +231,7 @@ useEffect(() => {
                   label: "X-axis unmet need select",
                   name: "X-axis unmet need select",
                   type: "select",
-                  options: filterOptions.map((item) => ({
+                  options: filterOutLabels(filterOptions, selectedUnmet).map((item) => ({
                     name: selectLabels[item] ? selectLabels[item] : item,
                     value: item,
                   })),
@@ -249,7 +250,7 @@ useEffect(() => {
                   label: "Y-axis unmet need select",
                   name: "Y-axis unmet need select",
                   type: "select",
-                  options: filterOptions.map((item) => ({
+                  options: filterOutLabels(filterOptions, selectedUnmet).map((item) => ({
                     name: selectLabels[item] ? selectLabels[item] : item,
                     value: item,
                   })),

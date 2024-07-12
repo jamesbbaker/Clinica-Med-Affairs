@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import TreeMap from "../../../components/TreeMap";
 import {
+  excludedLabels,
   mapBarCharts,
   mapLabels,
   mapSelectLabels,
@@ -13,6 +14,7 @@ import CustomDropdown from "../../../components/CustomDropdown";
 import BarChartPopup from "../PatientOpportunityMapping/Popup";
 import { getLowestValue, highestValue } from "../../../utils/MathUtils";
 import PayerVariationBubbleChart from "./PayerVariationBubbleChart";
+import { filterOutLabels } from "../../../utils/MapUtils";
 
 const filters = [...Object.keys(selectLabels)];
 
@@ -41,10 +43,11 @@ const PayerVariation = () => {
   const options1 = {
     enableHighlight: true,
     minColor: "#fff",
+    midColor: "#FFB3B3",
+    maxColor: "#FF6666",
     maxDepth: 0,
     maxPostDepth: 0,
-    midColor: "#FF6666",
-    maxColor: "#8B0000",
+
     headerHeight: 15,
     fontColor: "black",
     title: "Asthma Patients by States",
@@ -68,8 +71,8 @@ const PayerVariation = () => {
   };
   const options2 = {
     minColor: "#fff",
-    midColor: "#FF6666",
-    maxColor: "#8B0000",
+    midColor: "#FFB3B3",
+    maxColor: "#FF6666",
     headerHeight: 15,
     fontColor: "black",
     title: "Asthma Patients by States",
@@ -91,7 +94,7 @@ const PayerVariation = () => {
     },
   };
 
-  const { accessToken, refreshToken } = useContext(AuthContext);
+  const { accessToken, refreshToken,selectedUnmet } = useContext(AuthContext);
   const [isScatterMapOpen, setIsScatterMapOpen] = useState(false);
 
   const handleTreeData = (data, toggleFilter, page) => {
@@ -135,7 +138,7 @@ const PayerVariation = () => {
     if (row === modalDetails.name) {
       return;
     }
- 
+
     let _data = treeDataById[`${row}_Plan`];
     setChartDataValue(setData1, null, [_data]);
     setModalDetails(_data);
@@ -162,7 +165,6 @@ const PayerVariation = () => {
       setLoading(false);
       setData1(null);
     }, 500);
- 
   };
 
   const fetchData = () => {
@@ -276,7 +278,7 @@ const PayerVariation = () => {
                     input={{
                       label: "Select Unmet Needs",
                       id: "unmet",
-                      options: filters.map((item) => ({
+                      options: filterOutLabels(filters, selectedUnmet).filter(item => !excludedLabels.includes(item)).map((item) => ({
                         name: selectLabels[item],
                         value: item,
                       })),
@@ -287,7 +289,7 @@ const PayerVariation = () => {
                 </div>
 
                 <TreeMap
-                closeModal={closeModal}
+                  closeModal={closeModal}
                   values={values}
                   preventDrill={true}
                   data={TreeData}

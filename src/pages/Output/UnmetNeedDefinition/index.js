@@ -7,7 +7,7 @@ import { generateStatsOptions } from "../../../utils/ChartUtils";
 import { LineChart } from "../../../components/LineChart";
 import BarChart from "../../../components/BarChart";
 import Table from "../../../components/Table";
-import {  unmetLabels } from "../../../constants/appConstants";
+import { unmetLabels } from "../../../constants/appConstants";
 
 const UnmetNeedDefinitionData = {
   id1: {
@@ -167,7 +167,8 @@ const UnmetNeedDefinitionData = {
   },
   id40: {
     id: "id40",
-    title: "Do patients receive a biologic prior to receiving a triple therapy for their asthma treatment?",
+    title:
+      "Do patients receive a biologic prior to receiving a triple therapy for their asthma treatment?",
     buttonText: "Biologic before Triple Therapy",
     column: "ICS-LABA with LAMA",
     description:
@@ -267,6 +268,7 @@ const UnmetNeedDefinition = () => {
   const [statsData26, setStatsData26] = useState(null);
   const [statsData27, setStatsData27] = useState(null);
   const [statsData28, setStatsData28] = useState(null);
+  const [statsData29, setStatsData29] = useState(null);
   const [dataValue, setDataValue] = useState(null);
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [showTooltip, setTooltip] = useState({
@@ -937,6 +939,7 @@ const UnmetNeedDefinition = () => {
     setStatsData26(null);
     setStatsData27(null);
     setStatsData28(null);
+    setStatsData29(null);
     setModalId(null);
   };
 
@@ -1019,7 +1022,7 @@ const UnmetNeedDefinition = () => {
     };
     setStatsData1(data);
   }
- 
+
   function getBarChart(res, type1, type2, sortFn) {
     let responseData = res.data;
     if (sortFn) {
@@ -1047,7 +1050,7 @@ const UnmetNeedDefinition = () => {
                 //   : "rgb(0,212,100, 0.7)"
               ),
           backgroundColor: responseData.map(
-            (item) =>"rgb(542, 62, 35, 0.8)"
+            (item) => "rgb(542, 62, 35, 0.8)"
             // sortFn
             //   ? "rgb(542, 62, 35, 0.8)"
             //   : getIntValue(item[type1]) <= 450
@@ -1064,9 +1067,6 @@ const UnmetNeedDefinition = () => {
   const handleClick = (key) => {
     if (nationalData) {
       setModalId(key);
-      console.log(
-        nationalData,
-      );
       setDataValue({
         id: nationalData[
           unmetLabels[UnmetNeedDefinitionData[key].buttonText].id
@@ -1086,7 +1086,6 @@ const UnmetNeedDefinition = () => {
       ).then((res) => {
         if (res) {
           let _data = getBarChart(res, res.headers[0], res.headers[1]);
-
           setStatsData20(_data);
         }
       });
@@ -1094,7 +1093,6 @@ const UnmetNeedDefinition = () => {
         .then((res) => {
           if (res) {
             let _data = getBarChart(res, res.headers[0], res.headers[1]);
-
             setStatsData21(_data);
           }
         })
@@ -1104,7 +1102,6 @@ const UnmetNeedDefinition = () => {
       getDataStats("ics_patient_ocs_num_encounters", accessToken, refreshToken)
         .then((res) => {
           let _data = getBarChart(res, res.headers[0], res.headers[1]);
-
           setStatsData24(_data);
         })
         .catch((err) => {
@@ -1117,7 +1114,6 @@ const UnmetNeedDefinition = () => {
       )
         .then((res) => {
           let _data = getBarChart(res, res.headers[0], res.headers[1]);
-
           setStatsData26(_data);
         })
         .catch((err) => {
@@ -1132,7 +1128,6 @@ const UnmetNeedDefinition = () => {
       ).then((res) => {
         if (res) {
           let _data = getBarChart(res, res.headers[0], res.headers[1]);
-
           setStatsData22(_data);
         }
       });
@@ -1143,7 +1138,6 @@ const UnmetNeedDefinition = () => {
       ).then((res) => {
         if (res) {
           let _data = getBarChart(res, res.headers[0], res.headers[1]);
-
           setStatsData23(_data);
         }
       });
@@ -1154,7 +1148,6 @@ const UnmetNeedDefinition = () => {
       )
         .then((res) => {
           let _data = getBarChart(res, res.headers[0], res.headers[1]);
-
           setStatsData25(_data);
         })
         .catch((err) => {
@@ -1167,7 +1160,6 @@ const UnmetNeedDefinition = () => {
       )
         .then((res) => {
           let _data = getBarChart(res, res.headers[0], res.headers[1]);
-
           setStatsData27(_data);
         })
         .catch((err) => {
@@ -1175,15 +1167,30 @@ const UnmetNeedDefinition = () => {
         });
     }
     if (UnmetNeedDefinitionData[key].id === "id40") {
-      getDataStats("icslabalama_monoclonal_hist", accessToken, refreshToken).then(res => {
-        if (res) {
-        
-          let _data = getBarChart(res, res.headers[0], res.headers[1]);
-          setStatsData28(_data);
-        }
-      }).catch(err => {
-
-      })
+      getDataStats("icslabalama_monoclonal_hist", accessToken, refreshToken)
+        .then((res) => {
+          if (res) {
+            let _data = getBarChart(res, res.headers[0], res.headers[1]);
+            setStatsData28(_data);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      getDataStats(
+        "icslabalama_monoclonal_hist_2021",
+        accessToken,
+        refreshToken
+      )
+        .then((res) => {
+          if (res) {
+            let _data = getBarChart(res, res.headers[0], res.headers[1]);
+            setStatsData29(_data);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
     if (UnmetNeedDefinitionData[key].id === "id15") {
       getDataStats("data_stats_33", accessToken, refreshToken).then((res) => {
@@ -1204,9 +1211,7 @@ const UnmetNeedDefinition = () => {
             });
             return data;
           };
-
           let _data = getBarChart(res, res.headers[0], res.headers[1], sortFn);
-
           setStatsData16(_data);
         }
       });
@@ -1516,7 +1521,6 @@ const UnmetNeedDefinition = () => {
   };
 
   const mouseOver = (key, index) => {
-
     if (
       nationalData &&
       UnmetNeedDefinitionData[key].buttonText &&
@@ -1942,14 +1946,27 @@ const UnmetNeedDefinition = () => {
                   />
                 </>
               )}
-                 {statsData28 && (
+              {statsData28 && (
                 <>
                   <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Delay between Triple therapy and Biologic
+                    Delay between Triple therapy and Biologic
                   </div>
                   <BarChart
                     height={window.innerWidth > 1400 ? 120 : 80}
                     data={statsData28}
+                    options={icslabalama_monoclonal_hist}
+                  />
+                </>
+              )}
+              {statsData29 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Delay between Triple therapy and Biologic Patients first
+                    treated after 2021
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData29}
                     options={icslabalama_monoclonal_hist}
                   />
                 </>

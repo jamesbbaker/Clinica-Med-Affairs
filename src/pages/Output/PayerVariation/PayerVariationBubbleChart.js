@@ -7,6 +7,7 @@ import CustomDropdown from "../../../components/CustomDropdown";
 import { selectLabels } from "../../../constants/appConstants";
 import { IoTriangle } from "react-icons/io5";
 import { FaCircle, FaSquare } from "react-icons/fa";
+import { filterOutLabels } from "../../../utils/MapUtils";
 
 const filterOptions = [...Object.keys(selectLabels)];
 
@@ -41,7 +42,7 @@ const reducer = (state, action) => {
 
 const PayerVariationBubbleChart = ({setIsScatterMapOpen, isScatterMapOpen=false}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { accessToken, refreshToken } = useContext(AuthContext);
+  const { accessToken, refreshToken,selectedUnmet } = useContext(AuthContext);
   const [rawData, setRawData] = useState(null);
   const [lineX, setLineX] = useState(10);
   const [lineY, setLineY] = useState(10);
@@ -223,7 +224,7 @@ const PayerVariationBubbleChart = ({setIsScatterMapOpen, isScatterMapOpen=false}
                   label: "X-axis unmet need select",
                   name: "X-axis unmet need select",
                   type: "select",
-                  options: filterOptions.map((item) => ({
+                  options: filterOutLabels(filterOptions, selectedUnmet).map((item) => ({
                     name: selectLabels[item] ? selectLabels[item] : item,
                     value: item,
                   })),
@@ -242,7 +243,7 @@ const PayerVariationBubbleChart = ({setIsScatterMapOpen, isScatterMapOpen=false}
                   label: "Y-axis unmet need select",
                   name: "Y-axis unmet need select",
                   type: "select",
-                  options: filterOptions.map((item) => ({
+                  options: filterOutLabels(filterOptions, selectedUnmet).map((item) => ({
                     name: selectLabels[item] ? selectLabels[item] : item,
                     value: item,
                   })),

@@ -373,6 +373,31 @@ export const selectLabels = {
     "Non-adherence to triple therapy (compliance) percent",
 };
 
+export const excludedLabels = [
+  "Number of No Spirometry",
+  "Number of Exacerbation Without Spirometry",
+  "Number of No EOS Testing",
+  "Number of No Treatment",
+  "Number of ICS High Steroid Usage",
+  "Number of ICS Exacerbation Failed Escalation",
+  "Number of ICS Escalation Delay",
+  "Number of ICS-LABA High Steroid Usage",
+  "Number of Failure To Escalate With 3 Exacerbations",
+  "Number of ICS-LABA Exacerbation Failed Escalation",
+  "Number of ICS-LABA >900mg/year steroids",
+  "Number of ICS-LABA High Steroid Usage with ER visit",
+  "Number of ICS-LABA High Steroid Usage without ER visit",
+  "Number of ICS-LABA Escalation Delay",
+  "Number of ICS-LABA Patients with LAMA",
+  "Number of Biologic Before Triple",
+  "Number of ICS Persistence < 360",
+  "Number of ICS Compliance < 240",
+  "Number of ICS-LABA Persistence < 360",
+  "Number of ICS-LABA Compliance < 240",
+  "Number of ICS-LABA LAMA Persistence < 360",
+  "Number of ICS-LABA LAMA Compliance < 240"
+];
+
 export const mapLabels = {
   "Total Asthma Patients": "Number of Asthma Patients",
   "Total No Spirometry": "Number of No Spirometry",

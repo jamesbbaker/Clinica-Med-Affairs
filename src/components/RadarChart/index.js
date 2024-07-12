@@ -13,7 +13,8 @@ import { getDataStats } from "../../API/Outputs";
 import { AuthContext } from "../../context/AuthContext";
 import { selectLabels } from "../../constants/appConstants";
 import { MultiSelect } from "react-multi-select-component";
-import Table, { customOptionRenderer } from "../Table";
+import Table,{ CustomOptionRenderer } from "../Table";
+import { filterOutLabels } from "../../utils/MapUtils";
 
 ChartJS.register(
   RadialLinearScale,
@@ -87,13 +88,12 @@ const filterOptions = [...Object.keys(selectLabels)];
 
 export function RadarChart() {
   const chartRef = useRef(null);
-  const { accessToken, refreshToken } = useContext(AuthContext);
+  const { accessToken,selectedUnmet, refreshToken } = useContext(AuthContext);
   const [clusteringResult, setClusteringResult] = useState(null);
-  const [clusterTable, setClusterTable] = useState(null);
+
   const [statsData2, setStatsData2] = useState(null);
   const [tableColumns, setTableColumns] = useState([{}]);
-  const [rawHeaders, setRawHeaders] = useState([]);
-  const [selectedUnmet, setSelectedUnmet] = useState([]);
+  const [selectedUnmetValue, setSelectedUnmet] = useState([]);
   const [loading, setLoading] = useState(false);
   const [chartData, setChartData] = useState({
     labels: [
@@ -320,16 +320,16 @@ export function RadarChart() {
           <div className="flex flex-col gap-2 w-full items-start">
             <div>Select Unmet Needs</div>
             <MultiSelect
-              ItemRenderer={customOptionRenderer}
+              ItemRenderer={CustomOptionRenderer}
               labelledBy=""
-              options={filterOptions
+              options={filterOutLabels(filterOptions, selectedUnmet)
                 .filter((item) => Object.keys(statsData2[0]).includes(item))
                 .map((item) => ({
                   label: selectLabels[item] ? selectLabels[item] : item,
                   value: item,
                 }))}
               className="w-[22rem] mb-10 z-[5]"
-              value={selectedUnmet}
+              value={selectedUnmetValue}
               onChange={(val) => handleSelectMultipleUnmet(val)}
             />
           </div>
