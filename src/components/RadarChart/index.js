@@ -86,7 +86,7 @@ export const data = {
 
 const filterOptions = [...Object.keys(selectLabels)];
 
-export function RadarChart() {
+export default function RadarChart() {
   const chartRef = useRef(null);
   const { accessToken,selectedUnmet, refreshToken } = useContext(AuthContext);
   const [clusteringResult, setClusteringResult] = useState(null);

@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import TreeMap from "../../../components/TreeMap";
 import {
   excludedLabels,
@@ -33,77 +39,117 @@ const InstitutionalVariation = () => {
   const [modalDetails, setModalDetails] = useState(null);
   const [loading, setLoading] = useState(false);
   const [treeDataById, setTreeDataById] = useState({});
+  const [summaryMatrix, setSummaryMatrix] = useState({});
   const [values, setValues] = useState({
     min: 0,
     max: 0,
   });
   const [data1, setData1] = useState(null);
-  function formatPercentage(value) {
-    if (selectLabels[toggleFilter].includes("percent")) {
-      return `${value.toFixed(1)}%`;
-    } else {
-      return value;
-    }
-  }
-  const options1 = {
-    enableHighlight: true,
-    maxDepth: 0,
-    maxPostDepth: 0,  
-    // minColor: "#fff",
-    // midColor: '#FFB3B3',
-    // maxColor: "#FF6666",
-    headerHeight: 15,
-    fontColor: "black",
-    title: "Asthma Patients by States",
-    titleTextStyle: {
-      color: "#888",
-      textAlign: "center",
+  const formatPercentage = useCallback(
+    (value) => {
+      if (selectLabels[toggleFilter].includes("percent")) {
+        return `${value.toFixed(1)}%`;
+      } else {
+        return value;
+      }
     },
-    colorAxis: {
-      values: [0, 50, 100], // Define custom values for the color axis
-      colors: ["#fff", "#FF6666","#FF6666"], // Define colors for the color axis
-    },
-    useWeightedAverageForAggregation: true,
-    showScale: true,
-    generateTooltip: (_row, _size, value) => {
-      let hcpValue = TreeData[_row + 1];
+    [toggleFilter]
+  );
 
-      return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
+  const options1 = useMemo(
+    () => ({
+      enableHighlight: true,
+      minColor: "#fff",
+      midColor: "#FFB3B3",
+      maxColor: "#FF6666",
+      maxDepth: 0,
+      maxPostDepth: 0,
+      headerHeight: 15,
+      fontColor: "black",
+      title: "Asthma Patients by States",
+      titleTextStyle: {
+        color: "#888",
+        textAlign: "center",
+      },
+      minColorValue:
+        summaryMatrix && summaryMatrix[toggleFilter]
+          ? summaryMatrix && summaryMatrix[toggleFilter]["median_minus_1SD"]
+          : 0,
+      maxColorValue:
+        summaryMatrix && summaryMatrix[toggleFilter]
+          ? summaryMatrix && summaryMatrix[toggleFilter]["median_plus_1SD"]
+          : 0.5,
+      // colorAxis: {
+      //   minValue: summaryMatrix && summaryMatrix[toggleFilter]
+      //     ? summaryMatrix[toggleFilter]["median_minus_1SD"]
+      //     : 0,
+      //   maxValue: summaryMatrix && summaryMatrix[toggleFilter] ?
+      //      summaryMatrix[toggleFilter]["median_plus_1SD"]
+      //     : 0.5,
+      // },
+      useWeightedAverageForAggregation: true,
+      showScale: true,
+      generateTooltip: (_row, _size, value) => {
+        let hcpValue = TreeData[_row + 1];
+
+        return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
     <div><strong>NAME</strong>:  ${hcpValue[0]}</div>
     <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue[2]}</div>
     <div><strong>${selectLabels[toggleFilter]}</strong>:  ${formatPercentage(
-        hcpValue[3]
-      )}</div>
+          hcpValue[3]
+        )}</div>
      </div>`;
-    },
-  };
+      },
+    }),
+    [TreeData, formatPercentage, summaryMatrix, toggleFilter]
+  );
 
-  const options2 = {
-    minColor: "#fff",
-    midColor: '#FFB3B3',
-    maxColor: "#FF6666",
-    headerHeight: 15,
-    fontColor: "black",
-    title: "Asthma Patients by States",
-    titleTextStyle: {
-      color: "#888",
-      textAlign: "center",
-    },
-    showScale: true,
-    generateTooltip: (_row, _size, value) => {
-      let hcpValue = TreeData[_row + 1];
+  const options2 = useMemo(
+    () => ({
+      minColor: "#fff",
+      midColor: "#FFB3B3",
+      maxColor: "#FF6666",
+      headerHeight: 15,
+      fontColor: "black",
+      title: "Asthma Patients by States",
+      minColorValue:
+        summaryMatrix && summaryMatrix[toggleFilter]
+          ? summaryMatrix && summaryMatrix[toggleFilter]["median_minus_1SD"]
+          : 0,
+      maxColorValue:
+        summaryMatrix && summaryMatrix[toggleFilter]
+          ? summaryMatrix && summaryMatrix[toggleFilter]["median_plus_1SD"]
+          : 0.5,
+      // colorAxis: {
+      //   minValue: summaryMatrix && summaryMatrix[toggleFilter]
+      //     ? summaryMatrix[toggleFilter]["median_minus_1SD"]
+      //     : 0,
+      //   maxValue: summaryMatrix && summaryMatrix[toggleFilter]
+      //     ? summaryMatrix[toggleFilter]["median_plus_1SD"]
+      //     : 0.5,
 
-      return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
+      // },
+      titleTextStyle: {
+        color: "#888",
+        textAlign: "center",
+      },
+      showScale: true,
+      generateTooltip: (_row, _size, value) => {
+        let hcpValue = TreeData[_row + 1];
+
+        return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
     <div><strong>NAME</strong>:  ${hcpValue[0]}</div>
     <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue[2]}</div>
     <div><strong>${selectLabels[toggleFilter]}</strong>:  ${formatPercentage(
-        hcpValue[3]
-      )}</div>
+          hcpValue[3]
+        )}</div>
      </div>`;
-    },
-  };
+      },
+    }),
+    [TreeData, formatPercentage, summaryMatrix, toggleFilter]
+  );
 
-  const { accessToken, refreshToken,selectedUnmet } = useContext(AuthContext);
+  const { accessToken, refreshToken, selectedUnmet } = useContext(AuthContext);
   function setChartDataValue(setValue, API_labels, data) {
     function generateChartData(array) {
       let _value = [];
@@ -121,7 +167,7 @@ const InstitutionalVariation = () => {
             backgroundColor: array.map((item) =>
               !patientTotals.includes(item) ? "#800000" : "#00008B"
             ),
-            barThickness: 20, 
+            barThickness: 20,
             maxBarThickness: 20,
           },
         ],
@@ -137,6 +183,15 @@ const InstitutionalVariation = () => {
       ...data,
     });
   }
+
+  useEffect(() => {
+    if (selectedUnmet.length > 0 && rawData) {
+      let filteredlabels = filterOutLabels(filters, selectedUnmet).filter(
+        (item) => !excludedLabels.includes(item)
+      );
+      handleToggleFilter(filteredlabels[0]);
+    }
+  }, [selectedUnmet, rawData]);
 
   const handleTreeData = (data, toggleFilter, page) => {
     let treemapData = [
@@ -223,7 +278,7 @@ const InstitutionalVariation = () => {
     const specialties = filterValues.specialty;
     const _region = filterValues.region;
     const _stateName = filterValues.stateName;
-    let queryString = `institutional_treemap_data?&`; 
+    let queryString = `institutional_treemap_data?&`;
 
     if (specialties && specialties.length > 0) {
       queryString += specialties
@@ -254,6 +309,11 @@ const InstitutionalVariation = () => {
           let _data = JSON.parse(res.replaceAll("NaN", 0));
           if (_data) {
             setRawData(_data.data);
+            let _summarymetrics = {};
+            _data.summary_metrics.forEach(
+              (item) => (_summarymetrics[item.name] = item)
+            );
+            setSummaryMatrix(_summarymetrics);
             let secondlevelData = _data.data.filter(
               (item) => item.Parent && item.Parent !== "GLOBAL"
             );
@@ -324,10 +384,12 @@ const InstitutionalVariation = () => {
                       input={{
                         label: "Select Unmet Needs",
                         id: "unmet",
-                        options: filterOutLabels(filters, selectedUnmet).filter(item => !excludedLabels.includes(item)).map((item) => ({
-                          name: selectLabels[item],
-                          value: item,
-                        })),
+                        options: filterOutLabels(filters, selectedUnmet)
+                          .filter((item) => !excludedLabels.includes(item))
+                          .map((item) => ({
+                            name: selectLabels[item],
+                            value: item,
+                          })),
                       }}
                       handleSelect={(e) => handleToggleFilter(e)}
                       value={toggleFilter}
@@ -338,7 +400,7 @@ const InstitutionalVariation = () => {
                       <div className="font-[600] text-[18px]">Filters:</div>
                       {regionOptions && (
                         <div className="flex items-center gap-2">
-                          <label className="block text-sm font-medium text-gray-900 dark:text-white">
+                          <label className="block text-sm font-medium text-gray-900">
                             Region Select
                           </label>
                           <MultiSelect
@@ -357,7 +419,7 @@ const InstitutionalVariation = () => {
                       )}
                       {specialityOptions && (
                         <div className="flex items-center gap-2">
-                          <label className="block text-sm font-medium text-gray-900 dark:text-white">
+                          <label className="block text-sm font-medium text-gray-900">
                             Specialty
                           </label>
                           <MultiSelect
@@ -400,14 +462,16 @@ const InstitutionalVariation = () => {
                     </button>
                   </div>
                 </div>
-                <TreeMap
-                closeModal={closeModal}
-                  values={values}
-                  preventDrill={true}
-                  data={TreeData}
-                  options={toggleFilter === filters[0] ? options1 : options2}
-                  handleOpen={handleOpen}
-                />
+                {summaryMatrix && (
+                  <TreeMap
+                    closeModal={closeModal}
+                    values={values}
+                    preventDrill={true}
+                    data={TreeData}
+                    options={toggleFilter === filters[0] ? options1 : options2}
+                    handleOpen={handleOpen}
+                  />
+                )}
               </>
             )
           ) : (

@@ -217,8 +217,6 @@ const Table = ({
     }
   };
 
-  console.log(value);
-
   const handleClose = () => {
     setOpenPopup((o) => !o);
     setBarChartConfig(null);

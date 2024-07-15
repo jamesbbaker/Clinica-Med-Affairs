@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import TreeMap from "../../../components/TreeMap";
 import {
   excludedLabels,
@@ -32,69 +38,102 @@ const PayerVariation = () => {
   const [loading, setLoading] = useState(false);
   const [modalDetails, setModalDetails] = useState({});
 
-  function formatPercentage(value) {
-    if (selectLabels[toggleFilter].includes("percent")) {
-      return `${value.toFixed(1)}%`;
-    } else {
-      return value;
-    }
-  }
-
-  const options1 = {
-    enableHighlight: true,
-    minColor: "#fff",
-    midColor: "#FFB3B3",
-    maxColor: "#FF6666",
-    maxDepth: 0,
-    maxPostDepth: 0,
-
-    headerHeight: 15,
-    fontColor: "black",
-    title: "Asthma Patients by States",
-    titleTextStyle: {
-      color: "#888",
-      textAlign: "center",
+  const [summaryMatrix, setSummaryMatrix] = useState({});
+  const formatPercentage = useCallback(
+    (value) => {
+      if (selectLabels[toggleFilter].includes("percent")) {
+        return `${value.toFixed(1)}%`;
+      } else {
+        return value;
+      }
     },
-    useWeightedAverageForAggregation: true,
-    showScale: true,
-    generateTooltip: (_row, _size, value) => {
-      let hcpValue = TreeData[_row + 1];
+    [toggleFilter]
+  );
 
-      return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
+  const options1 = useMemo(
+    () => ({
+      enableHighlight: true,
+      minColor: "#fff",
+      midColor: "#FFB3B3",
+      maxColor: "#FF6666",
+      maxDepth: 0,
+      maxPostDepth: 0,
+      headerHeight: 15,
+      fontColor: "black",
+      title: "Asthma Patients by States",
+      titleTextStyle: {
+        color: "#888",
+        textAlign: "center",
+      },
+      minColorValue:
+        summaryMatrix && summaryMatrix[toggleFilter]
+          ? summaryMatrix && summaryMatrix[toggleFilter]["median_minus_1SD"]
+          : 0,
+      maxColorValue:
+        summaryMatrix && summaryMatrix[toggleFilter]
+          ? summaryMatrix && summaryMatrix[toggleFilter]["median_plus_1SD"]
+          : 0.5,
+      // colorAxis: {
+      //   minValue: summaryMatrix && summaryMatrix[toggleFilter]
+      //     ? summaryMatrix[toggleFilter]["median_minus_1SD"]
+      //     : 0,
+      //   maxValue: summaryMatrix && summaryMatrix[toggleFilter] ?
+      //      summaryMatrix[toggleFilter]["median_plus_1SD"]
+      //     : 0.5,
+      // },
+      useWeightedAverageForAggregation: true,
+      showScale: true,
+      generateTooltip: (_row, _size, value) => {
+        let hcpValue = TreeData[_row + 1];
+
+        return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
     <div><strong>NAME</strong>:  ${hcpValue[0]}</div>
     <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue[2]}</div>
     <div><strong>${selectLabels[toggleFilter]}</strong>:  ${formatPercentage(
-        hcpValue[3]
-      )}</div>
+          hcpValue[3]
+        )}</div>
      </div>`;
-    },
-  };
-  const options2 = {
-    minColor: "#fff",
-    midColor: "#FFB3B3",
-    maxColor: "#FF6666",
-    headerHeight: 15,
-    fontColor: "black",
-    title: "Asthma Patients by States",
-    titleTextStyle: {
-      color: "#888",
-      textAlign: "center",
-    },
-    showScale: true,
-    generateTooltip: (_row, _size, value) => {
-      let hcpValue = TreeData[_row + 1];
+      },
+    }),
+    [TreeData, formatPercentage, summaryMatrix, toggleFilter]
+  );
+  const options2 = useMemo(
+    () => ({
+      minColor: "#fff",
+      midColor: "#FFB3B3",
+      maxColor: "#FF6666",
+      headerHeight: 15,
+      fontColor: "black",
+      title: "Asthma Patients by States",
+      titleTextStyle: {
+        color: "#888",
+        textAlign: "center",
+      },
+      showScale: true,
+      minColorValue:
+        summaryMatrix && summaryMatrix[toggleFilter]
+          ? summaryMatrix && summaryMatrix[toggleFilter]["median_minus_1SD"]
+          : 0,
+      maxColorValue:
+        summaryMatrix && summaryMatrix[toggleFilter]
+          ? summaryMatrix && summaryMatrix[toggleFilter]["median_plus_1SD"]
+          : 0.5,
+      generateTooltip: (_row, _size, value) => {
+        let hcpValue = TreeData[_row + 1];
 
-      return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
+        return `<div style="background:rgb(0 141 218);display: flex; align-items:center; flex-direction:column; color:#fff; padding:10px; border-style:solid, zIndex: 10"> 
     <div><strong>NAME</strong>:  ${hcpValue[0]}</div>
     <div><strong>Number of ICS-LABA Patients</strong>:  ${hcpValue[2]}</div>
     <div><strong>${selectLabels[toggleFilter]}</strong>:  ${formatPercentage(
-        hcpValue[3]
-      )}</div>
+          hcpValue[3]
+        )}</div>
      </div>`;
-    },
-  };
+      },
+    }),
+    [TreeData, formatPercentage, summaryMatrix, toggleFilter]
+  );
 
-  const { accessToken, refreshToken,selectedUnmet } = useContext(AuthContext);
+  const { accessToken, refreshToken, selectedUnmet } = useContext(AuthContext);
   const [isScatterMapOpen, setIsScatterMapOpen] = useState(false);
 
   const handleTreeData = (data, toggleFilter, page) => {
@@ -144,6 +183,15 @@ const PayerVariation = () => {
     setModalDetails(_data);
   };
 
+  useEffect(() => {
+    if (selectedUnmet.length > 0 && rawData) {
+      let filteredlabels = filterOutLabels(filters, selectedUnmet).filter(
+        (item) => !excludedLabels.includes(item)
+      );
+      handleToggleFilter(filteredlabels[0]);
+    }
+  }, [selectedUnmet, rawData]);
+
   const handleToggleFilter = (e) => {
     setToggleFilter(e);
     let data = [...rawData];
@@ -175,6 +223,11 @@ const PayerVariation = () => {
         if (res) {
           let _data = JSON.parse(res.replaceAll("NaN", 0));
           setRawData(_data.data);
+          let _summarymetrics = {};
+          _data.summary_metrics.forEach(
+            (item) => (_summarymetrics[item.name] = item)
+          );
+          setSummaryMatrix(_summarymetrics);
           if (_data) {
             let treemapData = [
               [
@@ -278,10 +331,12 @@ const PayerVariation = () => {
                     input={{
                       label: "Select Unmet Needs",
                       id: "unmet",
-                      options: filterOutLabels(filters, selectedUnmet).filter(item => !excludedLabels.includes(item)).map((item) => ({
-                        name: selectLabels[item],
-                        value: item,
-                      })),
+                      options: filterOutLabels(filters, selectedUnmet)
+                        .filter((item) => !excludedLabels.includes(item))
+                        .map((item) => ({
+                          name: selectLabels[item],
+                          value: item,
+                        })),
                     }}
                     handleSelect={(e) => handleToggleFilter(e)}
                     value={toggleFilter}
