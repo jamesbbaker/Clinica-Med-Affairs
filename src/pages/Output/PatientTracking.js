@@ -7,6 +7,7 @@ import { generateStatsOptions, setLineData } from "../../utils/ChartUtils";
 import { LineChart } from "../../components/LineChart";
 import DataQuality from "./DataQuality";
 
+
 const PatientTracking = () => {
   const [statsData7, setStatsData7] = useState(null);
   const { accessToken, refreshToken } = useContext(AuthContext);
@@ -17,7 +18,6 @@ const PatientTracking = () => {
   }, []);
 
   useEffect(() => {
-   
     getDataStats("data_stats_13", accessToken, refreshToken)
       .then((res) => {
         if (res) {
@@ -33,6 +33,7 @@ const PatientTracking = () => {
       .catch((err) => {
         console.log(err, "err");
       });
+   
   }, []);
 
   return (
@@ -51,7 +52,8 @@ const PatientTracking = () => {
       <div className="mt-4">
         <HcpInsight />
       </div>
-    
+     
+
       <div className="mb-10 mt-10">
         <Sankey
           API={"sankey_data_9"}
@@ -76,7 +78,7 @@ const PatientTracking = () => {
         </>
       )}
       <div className="w-full mt-6">
-      <DataQuality />
+        <DataQuality />
       </div>
     </div>
   );

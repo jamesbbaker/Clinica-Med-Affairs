@@ -460,6 +460,9 @@ const Map = ({
   }, [currentToggle]);
 
   const handleToggleData = (toggleId) => {
+    if (!popups || !spiderifier.current) {
+      return
+    }
     popups.forEach((popup) => popup.remove());
     setPopups([]);
     if (markedStates) {

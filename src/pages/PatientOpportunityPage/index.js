@@ -5,8 +5,6 @@ import ImpactTracking from "../Output/ImpactTracking";
 import { selectLabels } from "../../constants/appConstants";
 import { AuthContext } from "../../context/AuthContext";
 import { getDataStats } from "../../API/Outputs";
-import { HeatMapGrid } from "react-grid-heatmap";
-import { RadarChart } from "../../components/RadarChart";
 import { LineChart } from "../../components/LineChart";
 import CustomDropdown from "../../components/CustomDropdown";
 import Prioitize from "../../components/Prioritize";
@@ -54,16 +52,18 @@ const defaultOptions = {
   },
 };
 
+const colors = [
+  { name: "Pulmonary Specialist", rgba: "rgba(135, 206, 235, 1)" },
+  { name: "Allergy Specialist", rgba: "rgba(34, 139, 34, 1)" },
+  { name: "Primary Care Provider", rgba: "rgba(220, 20, 60, 1)" },
+  { name: "Others", rgba: "rgba(255, 215, 0, 1)" },
+];
+
 const PatientOpportunityPage = () => {
-  const [statsData1, setStatsData1] = useState(null);
-  const [labels, setLabels] = useState({
-    xLabels: [],
-    yLabels: [],
-  });
-  const [crfData, setCrfData] = useState({});
+  const [crfData, setCrfData] = useState(null);
   const [crfLineData, setCrfLineData] = useState({});
   const [crfUnmetNeed, setCrfUnmetNeed] = useState(null);
-  const { accessToken, refreshToken ,selectedUnmet} = useContext(AuthContext);
+  const { accessToken, refreshToken, selectedUnmet } = useContext(AuthContext);
 
   const handleSelectFilter = (val) => {
     setCrfUnmetNeed(val);
@@ -73,70 +73,108 @@ const PatientOpportunityPage = () => {
         {
           label: "Dataset 1",
           data: crfData[val]["Cumulative Unmet Need"],
-          borderColor: "rgb(0, 0, 139)",
-          backgroundColor: "rgb(0, 0, 139, 0.2)",
+          // borderColor: "rgb(0, 0, 139)",
+          backgroundColor: crfData[val]["Primary Specialty"].map(item => generateColor(item)),
         },
       ],
     };
+
     setCrfLineData(_data);
   };
 
   useEffect(() => {
-    getDataStats("hcp_correlation_matrix", accessToken, refreshToken)
-      .then((res) => {
-        if (res) {
-          let _newObj = {};
-          res.forEach((item) => {
-            let _item = { ...item };
-            delete _item.index;
-            _newObj[item.index] = _item;
-          });
+    if (crfData && selectedUnmet.length > 0) {
+    
+      let filterLabels = filterOutLabels(
+        Object.keys(selectLabels),
+        selectedUnmet
+      ).filter((item) => crfData.hasOwnProperty(item));
+   
 
-          let newRes = [];
-          Object.keys(selectLabels).forEach((item) => {
-            if (_newObj.hasOwnProperty(item)) {
-              let newObj = [];
-              Object.keys(selectLabels).forEach((_item) => {
-                if (_newObj[item].hasOwnProperty(_item)) {
-                  newObj.push(_newObj[item][_item]);
-                }
-              });
-              newRes.push(newObj);
-            }
-          });
+      handleSelectFilter(filterLabels[0]);
+    } else if (crfData) {
+      handleSelectFilter("Number of No Spirometry");
+    }
+  }, [crfData, selectedUnmet]);
+  const generateColorBorder = (val) => {
+    let shape1 = [
+      "PULMONARY DISEASE",
+      "PEDIATRIC PULMONOLOGY",
+      "PULMONARY CRITICAL CARE MEDICINE",
+    ];
+    if (shape1.includes(val)) {
+      return "rgba(135, 206, 235, 0.3)";
+    }
+    let shape2 = ["ALLERGY & IMMUNOLOGY"];
+    if (shape2.includes(val)) {
+      return "rgba(34, 139, 34, 0.3)";
+    }
+    let shape3 = [
+      "FAMILY MEDICINE",
+      "PEDIATRICS",
+      "INTERNAL MEDICINE",
+      "GENERAL PRACTICE",
+      "INTERNAL MEDICINE/PEDIATRICS",
+      "GERIATRIC MEDICINE (INTERNAL MEDICINE)",
+      "GERIATRIC MEDICINE (FAMILY MEDICINE)",
+    ];
+    if (shape3.includes(val)) {
+      return "rgba(220, 20, 60, 0.4)";
+    }
 
-          setStatsData1(newRes);
-          setLabels({
-            xLabels: Object.keys(selectLabels)
-              .filter((item) => _newObj.hasOwnProperty(item))
-              .map((item) => selectLabels[item]),
-            yLabels: Object.keys(selectLabels)
-              .filter((item) => _newObj.hasOwnProperty(item))
-              .map((item) => selectLabels[item]),
-          });
-        }
-      })
-      .catch((err) => {
-        console.log(err, "err");
-      });
+    return "rgba(255, 215, 0, 0.4)";
+  };
+
+  const generateColor = (val) => {
+ 
+    let shape1 = [
+      "PULMONARY DISEASE",
+      "PEDIATRIC PULMONOLOGY",
+      "PULMONARY CRITICAL CARE MEDICINE",
+    ];
+    if (shape1.includes(val)) {
+      return "rgba(135, 206, 235, 1)";
+    }
+    let shape2 = ["ALLERGY & IMMUNOLOGY"];
+    if (shape2.includes(val)) {
+      return "rgba(34, 139, 34, 1)";
+    }
+    let shape3 = [
+      "FAMILY MEDICINE",
+      "PEDIATRICS",
+      "INTERNAL MEDICINE",
+      "GENERAL PRACTICE",
+      "INTERNAL MEDICINE/PEDIATRICS",
+      "GERIATRIC MEDICINE (INTERNAL MEDICINE)",
+      "GERIATRIC MEDICINE (FAMILY MEDICINE)",
+    ];
+    if (shape3.includes(val)) {
+      return "rgba(220, 20, 60, 1)";
+    }
+
+    return "rgba(255, 215, 0, 1)";
+  };
+
+  useEffect(() => {
     getDataStats("hcp_crf", accessToken, refreshToken)
       .then((res) => {
         setCrfData(res.crf_data);
-        setCrfUnmetNeed("Number of No Spirometry");
-        let _data = {
-          labels: res.crf_data["Number of No Spirometry"]["HCP Index"],
-          datasets: [
-            {
-              label: "Dataset 1",
-              data: res.crf_data["Number of No Spirometry"][
-                "Cumulative Unmet Need"
-              ],
-              borderColor: "rgb(0, 0, 139)",
-              backgroundColor: "rgb(0, 0, 139, 0.2)",
-            },
-          ],
-        };
-        setCrfLineData(_data);
+
+        // setCrfUnmetNeed("Number of No Spirometry");
+        // let _data = {
+        //   labels: res.crf_data["Number of No Spirometry"]["HCP Index"],
+        //   datasets: [
+        //     {
+        //       label: "Dataset 1",
+        //       data: res.crf_data["Number of No Spirometry"][
+        //         "Cumulative Unmet Need"
+        //       ],
+        //       // borderColor: generateColorBorder(res.crf_data["Number of No Spirometry"]["Primary Specialty"]),
+        //       backgroundColor: generateColor(res.crf_data["Number of No Spirometry"]["Primary Specialty"]),
+        //     },
+        //   ],
+        // };
+        // setCrfLineData(_data);
       })
       .catch((err) => {
         console.log(err);
@@ -148,72 +186,16 @@ const PatientOpportunityPage = () => {
       <UnmetNeedDefinition />
       <PatientOpportunityMapping patientPage />
       <ImpactTracking patientPage />
-      {statsData1 && (
-        <div className="p-6 w-full overflow-auto">
-          <h4 className="mb-8 ml-2 font-[500]">
-            Unmet Need Correlation Heatmap
-          </h4>
-          <HeatMapGrid
-            cellRender={(x, y, value) => {
-              if (x >= y) {
-                // Only render cells where x >= y (bottom-left triangle)
-                return (
-                  <div
-                    style={{ fontSize: "0.5rem" }}
-                    title={`Pos(${x}, ${y}) = ${value}`}
-                  >
-                    {value.toFixed(2)}
-                  </div>
-                );
-              }
-              return null; // Hide cells where x < y
-            }}
-            xLabelsPos="bottom"
-            yLabelsStyle={() => ({
-              fontSize: ".65rem",
-              width: "15rem",
-              textAlign: "center",
-              display: "grid",
-              placeContent: "center",
-              lineHeight: 1,
-              height: "2.5rem",
-            })}
-            xLabelsStyle={() => ({
-              fontSize: ".5rem",
-            })}
-            cellStyle={(_x, _y, ratio) => {
-              if (_x >= _y) {
-                let value = statsData1[_x][_y];
-                return {
-                  background:
-                    value > 0
-                      ? `rgb(12, 160, 44, ${ratio})`
-                      : `rgba(255,74,48, ${Math.abs(value)})`,
-                  fontSize: ".8rem",
-                  color: `rgb(0, 0, 0, ${ratio / 2 + 0.4})`,
-                };
-              } else {
-                return {
-                  background: "rgba(0,0,0,0)",
-                  fontSize: ".8rem",
-                  color: "rgba(255,255,255,0.8)",
-                };
-              }
-            }}
-            cellHeight="2.5rem"
-            data={statsData1}
-            xLabelWidth={10}
-            xLabels={labels.xLabels}
-            yLabels={labels.yLabels}
-          />
-        </div>
-      )}
+
       <div className="w-full mt-4">
         <Prioitize />
 
         <div className="flex flex-col items-center ">
           {crfData && crfLineData && crfUnmetNeed ? (
             <>
+              <div className="text-left w-full py-4 font-[500]">
+                Patient Unmet Need Concentration by HCPs
+              </div>
               <div className=" self-start">
                 <CustomDropdown
                   showColors
@@ -223,7 +205,10 @@ const PatientOpportunityPage = () => {
                     label: "Unmet Need select",
                     name: "Unmet Need select",
                     type: "select",
-                    options: filterOutLabels(Object.keys(selectLabels), selectedUnmet)
+                    options: filterOutLabels(
+                      Object.keys(selectLabels),
+                      selectedUnmet
+                    )
                       .filter((item) => crfData.hasOwnProperty(item))
                       .map((item) => ({
                         name: selectLabels[item] ? selectLabels[item] : item,
@@ -234,6 +219,17 @@ const PatientOpportunityPage = () => {
                   value={crfUnmetNeed}
                   handleSelect={(val) => handleSelectFilter(val)}
                 />
+              </div>
+              <div className="w-full flex mt-4 justify-center gap-10 items-center">
+                {colors.map((item) => (
+                  <div key={item.name} className="flex gap-1 items-center">
+                    <div
+                      style={{ background: item.rgba }}
+                      className={`flex w-4 h-4`}
+                    ></div>
+                    <div className="flex text-xs">{item.name}</div>
+                  </div>
+                ))}
               </div>
               <LineChart
                 options={defaultOptions}
@@ -268,7 +264,6 @@ const PatientOpportunityPage = () => {
               </div>
             </>
           )}
-          <RadarChart />
         </div>
       </div>
     </div>

@@ -49,7 +49,6 @@ export function filterOutLabelsTable(array, selectedUnmet) {
   selectedUnmet.forEach(element => {
     unmetObj[element.value] = element
   });
-  console.log(array)
   let filteredArray =  array.filter(item => !unmetObj.hasOwnProperty(item.id));
   let filteredArray1 =  array.filter(item => unmetObj.hasOwnProperty(item.id));
   return [...filteredArray1, ...filteredArray];

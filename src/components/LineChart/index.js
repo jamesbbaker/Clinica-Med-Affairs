@@ -99,21 +99,34 @@ export function LineChart({
     min: 0,
     max: 0,
   });
-
+  const timerRef = useRef(null);
 
   const handleChange = useCallback((e) => {
-    arbitraryLine.beforeDatasetsDraw(lineRef.current);
     let _val = parseInt(e.target.value);
-    lineRef.current.setActiveElements([
-      { datasetIndex: _val, hovered: false, index: _val + 1 },
-    ]);
-    lineRef.current.update();
-    setSelectedValue(_val);
-  }, [])
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+    timerRef.current = setTimeout(() => {
+    
+      if (  lineRef.current) {
+        arbitraryLine.beforeDatasetsDraw(lineRef.current);
+        lineRef.current.setActiveElements([
+          { datasetIndex: _val, hovered: false, index: _val + 1 },
+        ]);
+        lineRef.current.update();
+      }
 
+    }, 10);
+    setSelectedValue(_val);
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current)
+      }
+    }
+  }, []);
 
   useEffect(() => {
-    handleChange({target:{value: 0}})
+    handleChange({ target: { value: 0 } });
     setChartData(data);
     setArbitraryLine((prev) => ({
       ...prev,
@@ -145,7 +158,6 @@ export function LineChart({
   };
 
   const lineRef = useRef(null);
-
 
   return (
     <div className="w-full h-full px-2 pt-4">

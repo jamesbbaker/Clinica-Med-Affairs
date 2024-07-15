@@ -6,6 +6,9 @@ import TreeMap from "../../../components/TreeMap";
 import Table from "../../../components/Table";
 import Map from "../../../components/Map";
 import { generateStatsOptions, setLineData } from "../../../utils/ChartUtils";
+import { selectLabels } from "../../../constants/appConstants";
+import { HeatMapGrid } from "react-grid-heatmap";
+import RadarChart from "../../../components/RadarChart";
 
 const DataQuality = () => {
   const { accessToken, refreshToken } = useContext(AuthContext);
@@ -15,6 +18,11 @@ const DataQuality = () => {
   const [statsData4, setStatsData4] = useState(null);
   const [statsData5, setStatsData5] = useState(null);
   const [statsData6, setStatsData6] = useState(null);
+  const [statsData1_1, setStatsData1_1] = useState(null);
+  const [labels, setLabels] = useState({
+    xLabels: [],
+    yLabels: [],
+  });
 
   const [statsData8, setStatsData8] = useState(null);
   const [mapData, setMapData] = useState(null);
@@ -147,7 +155,6 @@ const DataQuality = () => {
     return generateStatsOptions("Treatment Types over Time");
   }, []);
 
-
   useEffect(() => {
     getDataStats("data_stats_1", accessToken, refreshToken)
       .then((res) => {
@@ -162,9 +169,9 @@ const DataQuality = () => {
             } else {
               return a.Month - b.Month;
             }
-          })
-          const filteredData = responseData.filter(item => {
-            return (item.Year > 2016 || (item.Year === 2016 && item.Month >= 1));
+          });
+          const filteredData = responseData.filter((item) => {
+            return item.Year > 2016 || (item.Year === 2016 && item.Month >= 1);
           });
           filteredData.forEach((entry) => {
             const month = entry["Month"];
@@ -202,6 +209,43 @@ const DataQuality = () => {
         console.log(err, "err");
       });
 
+    getDataStats("hcp_correlation_matrix", accessToken, refreshToken)
+      .then((res) => {
+        if (res) {
+          let _newObj = {};
+          res.forEach((item) => {
+            let _item = { ...item };
+            delete _item.index;
+            _newObj[item.index] = _item;
+          });
+
+          let newRes = [];
+          Object.keys(selectLabels).forEach((item) => {
+            if (_newObj.hasOwnProperty(item)) {
+              let newObj = [];
+              Object.keys(selectLabels).forEach((_item) => {
+                if (_newObj[item].hasOwnProperty(_item)) {
+                  newObj.push(_newObj[item][_item]);
+                }
+              });
+              newRes.push(newObj);
+            }
+          });
+
+          setStatsData1_1(newRes);
+          setLabels({
+            xLabels: Object.keys(selectLabels)
+              .filter((item) => _newObj.hasOwnProperty(item))
+              .map((item) => selectLabels[item]),
+            yLabels: Object.keys(selectLabels)
+              .filter((item) => _newObj.hasOwnProperty(item))
+              .map((item) => selectLabels[item]),
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err, "err");
+      });
     getDataStats("data_stats_11", accessToken, refreshToken)
       .then((res) => {
         if (res) {
@@ -215,8 +259,8 @@ const DataQuality = () => {
               return a.Month - b.Month;
             }
           });
-          const filteredData = responseData.filter(item => {
-            return (item.Year > 2016 || (item.Year === 2016 && item.Month >= 1));
+          const filteredData = responseData.filter((item) => {
+            return item.Year > 2016 || (item.Year === 2016 && item.Month >= 1);
           });
           filteredData.forEach((entry) => {
             const month = entry["Month"];
@@ -244,8 +288,6 @@ const DataQuality = () => {
       .catch((err) => {
         console.log(err, "err");
       });
-
-   
 
     getDataStats("data_stats_10", accessToken, refreshToken)
       .then((res) => {
@@ -302,7 +344,7 @@ const DataQuality = () => {
       .catch((err) => {
         console.log(err, "err");
       });
-      getDataStats("data_stats_15", accessToken, refreshToken)
+    getDataStats("data_stats_15", accessToken, refreshToken)
       .then((res) => {
         if (res) {
           const responseData = res.data;
@@ -326,26 +368,87 @@ const DataQuality = () => {
 
   return (
     <div>
-      {statsData8 && 
-       <Table
-       initialState={{
-        pageSize: 10,
-        pageIndex: 0,
-        sortBy: [
-          {
-              id: 'Value',
-              desc: true
-          }
-      ]
-      }}
-       marginTop="0"
-       Title="Summary Table"
-       activeCells={false}
-       showSelectionBtns={false}
-       TableData={statsData8}
-       TableColummns={Table_Columns_3}
-     />
-      }
+      {statsData8 && (
+        <Table
+          initialState={{
+            pageSize: 10,
+            pageIndex: 0,
+            sortBy: [
+              {
+                id: "Value",
+                desc: true,
+              },
+            ],
+          }}
+          marginTop="0"
+          Title="Summary Table"
+          activeCells={false}
+          showSelectionBtns={false}
+          TableData={statsData8}
+          TableColummns={Table_Columns_3}
+        />
+      )}
+      {statsData1_1 && (
+        <div className="p-6 w-full overflow-auto">
+          <h4 className="mb-8 ml-2 font-[500]">
+            Unmet Need Correlation Heatmap
+          </h4>
+          <HeatMapGrid
+            cellRender={(x, y, value) => {
+              if (x >= y) {
+                // Only render cells where x >= y (bottom-left triangle)
+                return (
+                  <div
+                    style={{ fontSize: "0.5rem" }}
+                    title={`Pos(${x}, ${y}) = ${value}`}
+                  >
+                    {value.toFixed(2)}
+                  </div>
+                );
+              }
+              return null; // Hide cells where x < y
+            }}
+            xLabelsPos="bottom"
+            yLabelsStyle={() => ({
+              fontSize: ".65rem",
+              width: "15rem",
+              textAlign: "center",
+              display: "grid",
+              placeContent: "center",
+              lineHeight: 1,
+              height: "2.5rem",
+            })}
+            xLabelsStyle={() => ({
+              fontSize: ".5rem",
+            })}
+            cellStyle={(_x, _y, ratio) => {
+              if (_x >= _y) {
+                let value = statsData1_1[_x][_y];
+                return {
+                  background:
+                    value > 0
+                      ? `rgb(12, 160, 44, ${ratio})`
+                      : `rgba(255,74,48, ${Math.abs(value)})`,
+                  fontSize: ".8rem",
+                  color: `rgb(0, 0, 0, ${ratio / 2 + 0.4})`,
+                };
+              } else {
+                return {
+                  background: "rgba(0,0,0,0)",
+                  fontSize: ".8rem",
+                  color: "rgba(255,255,255,0.8)",
+                };
+              }
+            }}
+            cellHeight="2.5rem"
+            data={statsData1_1}
+            xLabelWidth={10}
+            xLabels={labels.xLabels}
+            yLabels={labels.yLabels}
+          />
+        </div>
+      )}
+      <RadarChart />
       {statsData1 && (
         <LineChart arbitrary={false} data={statsData1} options={options} />
       )}
@@ -359,8 +462,10 @@ const DataQuality = () => {
       {statsData2 && (
         <div className="flex w-full flex-col gap-12">
           <div className="flex w-full flex-col gap-2">
-          <p className="text-[#888888] font-bold text-xs">Asthma Patients by States</p>
-          <Map dataQuality={true} markersEnabled={false} mapData={mapData} />
+            <p className="text-[#888888] font-bold text-xs">
+              Asthma Patients by States
+            </p>
+            <Map dataQuality={true} markersEnabled={false} mapData={mapData} />
           </div>
           <TreeMap needCallbacks={false} data={statsData2} />
         </div>
@@ -393,7 +498,6 @@ const DataQuality = () => {
           />
         </>
       )}
-     
     </div>
   );
 };

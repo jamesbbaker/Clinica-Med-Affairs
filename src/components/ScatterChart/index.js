@@ -400,6 +400,8 @@ const ScatterChart = ({
     setLineY(Number(e.target.value));
   };
 
+  
+
   return (
     <div className="min-h-[400px] relative w-full">
       {data1 ? (

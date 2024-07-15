@@ -18,7 +18,6 @@ import {
 } from "../../../constants/appConstants";
 import CustomDropdown from "../../../components/CustomDropdown";
 import BarChartPopup from "./Popup";
-import { MultiSelect } from "react-multi-select-component";
 import { filterOutLabels } from "../../../utils/MapUtils";
 import { IoArrowBackCircle } from "react-icons/io5";
 
@@ -30,6 +29,61 @@ const action_types = {
   HandleAddStates: "handleAddStates",
   HandleUpdateCurrentRegion: "handleUpdateCurrentRegion",
   HandleUpdateStates: "handleUpdateStates",
+};
+
+const defaultOptions = {
+  indexAxis: "y",
+  elements: {
+    bar: {
+      borderWidth: 1,
+    },
+  },
+  responsive: true,
+  scales: {
+    y: {
+      ticks: {
+        stepSize: 1,
+        min: 0,
+        autoSkip: false,
+        font: {
+          size: 13.5,
+          weight: 500,
+        },
+        color: "#000",
+      },
+    },
+    x: {
+      title: {
+        display: true,
+        text: "Patients",
+      },
+      ticks: {
+        callback: function (value, index, values) {
+          if (value === 0) return "0";
+          else if (value >= 1e6 || value <= -1e6) {
+            // Convert to million with one decimal place
+            return `${(value / 1e6).toFixed(value % 1e6 !== 0 ? 1 : 0)}m`;
+          } else if (value >= 1e3 || value <= -1e3) {
+            // Convert to thousand with one decimal place
+            return `${(value / 1e3).toFixed(value % 1e3 !== 0 ? 1 : 0)}k`;
+          } else {
+            return `${value}`;
+          }
+        },
+        font: {
+          size: 12,
+        },
+      },
+    },
+  },
+  plugins: {
+    legend: {
+      display: false,
+    },
+    datalabels: {
+      display: false,
+    },
+  },
 };
 
 const reducer = (state, action) => {
@@ -102,13 +156,81 @@ const PatientOpportunityMapping = ({
   const [data1, setData1] = useState();
   const [popupData, setPopupData] = useState(null);
   const [stateData, setStateData] = useState(null);
-  const [stateList, setStateList] = useState(null);
   const [markedStates, setMarkedStates] = useState(null);
   const currentStateClicked = useRef(null);
   const [currentToggle, setCurrentToggle] = useState(toggleBtns[0].id);
   const [loading, setLoading] = useState(true);
   const [resetMap, setResetMap] = useState(false);
   const [summaryData, setSummaryData] = useState(null);
+  const [options, setOptions] = useState(defaultOptions);
+
+  useEffect(() => {
+    if (selectedUnmet.length > 0) {
+      let _selectedUnmetsObj = {};
+      selectedUnmet.forEach((element) => {
+        _selectedUnmetsObj[element.label] = element;
+      });
+      let _options = {
+        indexAxis: "y",
+        elements: {
+          bar: {
+            borderWidth: 1,
+          },
+        },
+        responsive: true,
+        scales: {
+          y: {
+            ticks: {
+              stepSize: 1,
+              min: 0,
+              autoSkip: false,
+              font: function (context) {
+                const label = context.tick.label;
+                // Example condition: Make 'Career' label bold
+                return _selectedUnmetsObj.hasOwnProperty(label)
+                  ? { size: 13.5, weight: "bold" }
+                  : { size: 13.5 };
+              },
+              color: "#000",
+            },
+          },
+          x: {
+            title: {
+              display: true,
+              text: "Patients",
+            },
+            ticks: {
+              callback: function (value, index, values) {
+                if (value === 0) return "0";
+                else if (value >= 1e6 || value <= -1e6) {
+                  // Convert to million with one decimal place
+                  return `${(value / 1e6).toFixed(value % 1e6 !== 0 ? 1 : 0)}m`;
+                } else if (value >= 1e3 || value <= -1e3) {
+                  // Convert to thousand with one decimal place
+                  return `${(value / 1e3).toFixed(value % 1e3 !== 0 ? 1 : 0)}k`;
+                } else {
+                  return `${value}`;
+                }
+              },
+              font: {
+                size: 12,
+              },
+            },
+          },
+        },
+        plugins: {
+          legend: {
+            display: false,
+          },
+          datalabels: {
+            display: false,
+          },
+        },
+      };
+      setOptions(_options);
+      setCurrentToggle(selectedUnmet[0].value);
+    }
+  }, [selectedUnmet]);
 
   useEffect(() => {
     getDataStats("region_level_data", accessToken, refreshToken)
@@ -125,7 +247,6 @@ const PatientOpportunityMapping = ({
         if (res) {
           let _data = JSON.parse(res.replaceAll("NaN", 0));
 
-          setStateList(_data.data);
           let StateByRegion = {};
           _data.data.forEach((entry) => {
             if (entry.Region !== 0) {
@@ -290,14 +411,6 @@ const PatientOpportunityMapping = ({
     setPopupData(null);
   };
 
-  const handleToggleSelect = (val) => {
-    console.log("val", val);
-  };
-
-  const handleApplyFilter = () => {
-    console.log("apply filter");
-  };
-
   return (
     <>
       {popupData && <BarChartPopup data1={popupData} closeModal={closeModal} />}
@@ -374,7 +487,7 @@ const PatientOpportunityMapping = ({
           {!patientPage && (
             <>
               <div className="flex items-center justify-between">
-              <div className="flex mb-6 items-center gap-8">
+                <div className="flex mb-6 items-center gap-8">
                   <CustomDropdown
                     labelClassName="mb-0"
                     className={"flex items-center"}
@@ -401,7 +514,6 @@ const PatientOpportunityMapping = ({
                   <IoArrowBackCircle size={30} />
                   Go Back
                 </button>
-               
               </div>
               {resetMap ? (
                 <div
@@ -526,6 +638,7 @@ const PatientOpportunityMapping = ({
                 </div>
                 <div className="w-[50%]">
                   <BarChart
+                    options={options}
                     label={`Diagnosis and Investigation (N = ${formatNumber(
                       data1.mapValue1.datasets[0].data[0]
                     )})`}
@@ -535,6 +648,7 @@ const PatientOpportunityMapping = ({
                 </div>
                 <div className="w-[50%]">
                   <BarChart
+                    options={options}
                     label={`Treatment (ICS or beta-agonist) (N = ${formatNumber(
                       data1.mapValue3.datasets[0].data[0]
                     )})`}
@@ -544,6 +658,7 @@ const PatientOpportunityMapping = ({
                 </div>
                 <div className="w-[50%]">
                   <BarChart
+                    options={options}
                     label={`Treatment (ICS-LABA) (N = ${formatNumber(
                       data1.mapValue4.datasets[0].data[0]
                     )})`}
@@ -553,6 +668,7 @@ const PatientOpportunityMapping = ({
                 </div>
                 <div className="w-[50%]">
                   <BarChart
+                    options={options}
                     label={`Treatment (ICS-LABA-LAMA) (N = ${formatNumber(
                       data1.mapValue5.datasets[0].data[0]
                     )})`}
