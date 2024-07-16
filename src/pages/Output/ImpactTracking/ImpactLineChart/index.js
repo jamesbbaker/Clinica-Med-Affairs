@@ -302,7 +302,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
         <div className="flex items-center gap-8">
           {RegionsList && type === "Region" && (
             <div className="flex items-center gap-4">
-              <label className="block text-sm font-medium text-gray-900 dark:text-white">
+              <label className="block text-sm font-medium text-gray-900 ">
                 Region Select
               </label>
               <MultiSelect
@@ -320,7 +320,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
           )}
           {stateList && type === "State" && (
             <div className="flex items-center gap-4">
-              <label className="block text-sm font-medium text-gray-900 dark:text-white">
+              <label className="block text-sm font-medium text-gray-900 ">
                 State Select
               </label>
               <MultiSelect
@@ -371,7 +371,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
           )}
         </div>
       { selectedUnmet&& <div className="flex mt-4 items-center gap-4">
-          <label className="block text-sm font-medium text-gray-900 dark:text-white">
+          <label className="block text-sm font-medium text-gray-900 ">
             Select Unmet Need
           </label>
           <MultiSelect
@@ -383,7 +383,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
                 value: item,
               })
             )}
-            className="w-[20rem] z-[5]"
+            className="w-[40rem] z-[5]"
             value={unmetNeed || []}
             onChange={(val) => handleSelectMultipleUnmet(val)}
             styles={customStyles}

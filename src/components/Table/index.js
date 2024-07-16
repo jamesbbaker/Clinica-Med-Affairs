@@ -409,7 +409,7 @@ const Table = ({
                   //     selectionBtnsArray.indexOf(b.col.id)
                   // )
                 }
-                className="w-[20rem] z-[5]"
+                className="w-[30rem] z-[5]"
                 value={value || []}
                 onChange={(val) => handleToggleSelect(val)}
               />
@@ -423,7 +423,7 @@ const Table = ({
                   label: selectLabels[item.id],
                   value: item.id,
                 }))}
-                className="w-[20rem] z-[5]"
+                className="w-[30rem] z-[5]"
                 value={filterList || []}
                 onChange={(val) => handleShowFilters(val)}
               />

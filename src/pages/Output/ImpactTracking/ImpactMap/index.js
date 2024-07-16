@@ -993,8 +993,10 @@ const ImpactMap = ({
         <div className="flex my-4 items-center gap-4">
           <CustomDropdown
             showColors
+            
+          buttonWidth="40rem"
             labelClassName="mb-0"
-            className={"flex mb-4 items-center gap-2"}
+            className={"flex w-[40rem] mb-4 items-center gap-2"}
             input={{
               label: "Select Unmet Need",
               name: "Select Unmet Need",
@@ -1088,7 +1090,7 @@ const ImpactMap = ({
         {tableData && false && (
           <div className="flex mt-8 flex-col items-start">
             <div className="flex mt-4 items-center gap-4">
-              <label className="block text-sm font-medium text-gray-900 dark:text-white">
+              <label className="block text-sm font-medium text-gray-900 ">
                 Select Unmet Need
               </label>
               <MultiSelect

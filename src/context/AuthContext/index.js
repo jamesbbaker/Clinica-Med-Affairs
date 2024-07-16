@@ -47,7 +47,7 @@ const AuthProvider = () => {
     if (storedAccessToken) {
       setAccessToken(storedAccessToken);
     }
-  }, []);
+  }, [accessToken, refreshToken]);
 
   const navigate = useNavigate();
   const loginAction = async (data) => {

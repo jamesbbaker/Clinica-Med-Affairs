@@ -441,7 +441,7 @@ const PatientOpportunityMapping = ({
               <div className="font-[600] text-[18px]">Filters:</div>
               {regionData && (
                 <div className="flex items-center gap-2">
-                  <label className="block text-sm font-medium text-gray-900 dark:text-white">
+                  <label className="block text-sm font-medium text-gray-900 ">
                     Region Select
                   </label>
                   <MultiSelect
@@ -458,7 +458,7 @@ const PatientOpportunityMapping = ({
               )}
               {stateData && (
                 <div className="flex items-center gap-2">
-                  <label className="block text-sm font-medium text-gray-900 dark:text-white">
+                  <label className="block text-sm font-medium text-gray-900 ">
                    Select States
                   </label>
                   <MultiSelect
@@ -489,6 +489,8 @@ const PatientOpportunityMapping = ({
               <div className="flex items-center justify-between">
                 <div className="flex mb-6 items-center gap-8">
                   <CustomDropdown
+                  
+          buttonWidth="40rem"
                     labelClassName="mb-0"
                     className={"flex items-center"}
                     showColors={true}
@@ -543,7 +545,7 @@ const PatientOpportunityMapping = ({
             </>
           )}
           <div className="flex items-center w-full justify-center">
-            {data1 && (
+            {data1 && patientPage &&  (
               <div className="w-full flex items-center flex-wrap">
                 <div className="w-[100%]">
                   <BarChart

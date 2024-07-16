@@ -5,8 +5,6 @@ import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import InputForm from "../../components/InputForm";
 import { useSelector } from "react-redux";
-import RealTimeBox from "../../components/RealTimeBox";
-import HCPTable from "../../components/HCPTable";
 import { APP_ROUTES, APP_ROUTES_LABEL, sidebarRoutes } from "../../constants/appConstants.js";
 import { AiOutlineFundProjectionScreen, AiOutlineGlobal, AiOutlineProject, AiOutlineQuestionCircle, AiOutlineRise, AiOutlineTable } from "react-icons/ai";
 
@@ -17,6 +15,13 @@ const NavigationMenu = [
     route: `${APP_ROUTES.outputs}/${APP_ROUTES.patient_opportunity_mapping_and_strategy}`,
     icon: () => <AiOutlineGlobal />,
     description: "Prioritize key areas of unmet need for Medical intervention",
+  },
+  {
+    name: APP_ROUTES_LABEL.priority_engagement_opportunity_page,
+    id: APP_ROUTES.priority_engagement_opportunity_page,
+    route: `${APP_ROUTES.outputs}/${APP_ROUTES.priority_engagement_opportunity_page}`,
+    icon: () => <AiOutlineGlobal />,
+    description: "Explore unmet need by HCP, hospital / clinic / system, and payer / plan to identify priority target",
   },
   {
     name: APP_ROUTES_LABEL.eligible_patient_locator,
@@ -70,6 +75,7 @@ const Home = () => {
 
   return (
     <div>
+      <h2 className="font-[600] mb-6 text-2xl">Medical AI Suite Home</h2>
       {currentMenu === sidebarRoutes.USERS ? (
         <>
           <Popup
@@ -90,22 +96,20 @@ const Home = () => {
         </>
       ) : (
         <>
-        <div className="grid mb-8 gap-[0.5rem] grid-cols-4">
+        <div className="grid mb-8 gap-[2rem] grid-cols-4">
           {NavigationMenu.map(item => {
             return (
               <div
                 key={item.id}
                 onClick={() => window.location.href = item.route}
-                className={`px-2 hover:shadow-lg gap-1 font-[600] transition-all ease-in-out duration-200 shadow-md cursor-pointer rounded bg-slate-200 py-4 grid place-content-center text-center`}
+                className={`px-2 hover:scale-105 gap-1 font-[600] text-lg transition-all ease-in-out duration-200 shadow-md cursor-pointer rounded bg-slate-200 py-14 grid place-content-center text-center`}
               >
                 {item.name}
-                <div className="text-xs font-[400]">{item.description}</div>
+                <div className="text-sm font-[400]">{item.description}</div>
               </div>
             )
           })}
         </div>
-          <RealTimeBox />
-          <HCPTable />
         </>
       )}
     </div>

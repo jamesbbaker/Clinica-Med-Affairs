@@ -29,17 +29,7 @@ const PhysicianCareProfile = () => {
       >
         <EligiblePatientLocator setHcpProfilePage={setHcpProfilePage} />
       </div>
-      <div
-        style={{
-          display:
-            hcpProfilePage === "map" || hcpProfilePage === "table"
-              ? "none"
-              : "block",
-        }}
-        className="w-full"
-      >
-        <MedicalAffairToolbox setHcpProfilePage={setHcpProfilePage} />
-      </div>
+      
     </div>
   );
 };

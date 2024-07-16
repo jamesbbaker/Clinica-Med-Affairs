@@ -5,6 +5,8 @@ import ImpactLineChart from "./ImpactLineChart";
 import ImpactMap from "./ImpactMap";
 import { capitalize } from "lodash";
 import CustomDropdown from "../../../components/CustomDropdown";
+import RealTimeBox from "../../../components/RealTimeBox";
+import HCPTable from "../../../components/HCPTable";
 
 export const options = {
   responsive: true,
@@ -161,6 +163,7 @@ const ImpactTracking = ({ patientPage }) => {
       {stateData && regionData ? (
         <div className="flex flex-col items-start gap-2 w-full">
           <CustomDropdown
+          buttonWidth="40rem"
             labelClassName="mb-0"
             className={"flex z-[15]  mb-4 items-center gap-2"}
             input={{
@@ -271,6 +274,12 @@ const ImpactTracking = ({ patientPage }) => {
           value={unmetNeed}
         />
       </div> */}
+      {!patientPage && (
+        <>
+          <RealTimeBox />
+          <HCPTable />
+        </>
+      )}
     </div>
   );
 };

@@ -217,6 +217,8 @@ const PayerVariationBubbleChart = ({setIsScatterMapOpen, isScatterMapOpen=false}
           {!isScatterMapOpen &&<div className="flex flex-col mb-4 items-start">
             <div>
               <CustomDropdown
+              
+          buttonWidth="40rem"
                 showColors
                 labelClassName="mb-0"
                 className={"flex items-center gap-2"}
@@ -236,6 +238,8 @@ const PayerVariationBubbleChart = ({setIsScatterMapOpen, isScatterMapOpen=false}
             </div>
             <div>
               <CustomDropdown
+              
+          buttonWidth="40rem"
                 showColors
                 labelClassName="mb-0"
                 className={"flex items-center gap-2"}
