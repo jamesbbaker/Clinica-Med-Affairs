@@ -19,7 +19,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import CustomDropdown from "../../../components/CustomDropdown";
 import BarChartPopup from "../PatientOpportunityMapping/Popup";
 import { getLowestValue, highestValue } from "../../../utils/MathUtils";
-import PayerVariationBubbleChart from "./PayerVariationBubbleChart";
+
 import { filterOutLabels } from "../../../utils/MapUtils";
 
 const filters = [...Object.keys(selectLabels)];
@@ -73,14 +73,6 @@ const PayerVariation = () => {
         summaryMatrix && summaryMatrix[toggleFilter]
           ? summaryMatrix && summaryMatrix[toggleFilter]["median_plus_1SD"]
           : 0.5,
-      // colorAxis: {
-      //   minValue: summaryMatrix && summaryMatrix[toggleFilter]
-      //     ? summaryMatrix[toggleFilter]["median_minus_1SD"]
-      //     : 0,
-      //   maxValue: summaryMatrix && summaryMatrix[toggleFilter] ?
-      //      summaryMatrix[toggleFilter]["median_plus_1SD"]
-      //     : 0.5,
-      // },
       useWeightedAverageForAggregation: true,
       showScale: true,
       generateTooltip: (_row, _size, value) => {
@@ -201,8 +193,8 @@ const PayerVariation = () => {
     let lowestValue = getLowestValue(secondlevelData, e);
     let _highestValue = highestValue(secondlevelData, e);
     setValues({
-      min: lowestValue,
-      max: _highestValue,
+      min:summaryMatrix[e]["median_minus_1SD"],// lowestValue,
+      max: summaryMatrix[e]["median_plus_1SD"]//_highestValue,
     });
     handleTreeData(rawData, e);
   };
@@ -325,6 +317,8 @@ const PayerVariation = () => {
               <>
                 <div className="flex mb-6 items-center gap-8">
                   <CustomDropdown
+                  
+          buttonWidth="40rem"
                     showColors
                     labelClassName="mb-0"
                     className={"flex items-center"}
@@ -342,7 +336,6 @@ const PayerVariation = () => {
                     value={toggleFilter}
                   />
                 </div>
-
                 <TreeMap
                   closeModal={closeModal}
                   values={values}
@@ -380,12 +373,7 @@ const PayerVariation = () => {
           )}
         </>
       )}
-      {!data1 && (
-        <PayerVariationBubbleChart
-          setIsScatterMapOpen={setIsScatterMapOpen}
-          isScatterMapOpen={isScatterMapOpen}
-        />
-      )}
+     
     </div>
   );
 };

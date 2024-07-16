@@ -1,8 +1,16 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Line } from "react-chartjs-2";
 
 import { Chart as ChartJS, registerables } from "chart.js";
 import "chartjs-adapter-date-fns"; // Import the date-fns adapter
+import BarChart from "../BarChart";
+
 
 ChartJS.register(...registerables);
 export const defaultOptions = {
@@ -86,7 +94,109 @@ let arbitraryLine = {
   beforeDatasetsDraw(chart, args, pluginOptions) {},
 };
 
+const colors = [
+  { name: "Pulmonary Specialist", rgba: "rgba(135, 206, 235, 1)" },
+  { name: "Allergy Specialist", rgba: "rgba(34, 139, 34, 1)" },
+  { name: "Primary Care Provider", rgba: "rgba(220, 20, 60, 1)" },
+  { name: "Others", rgba: "rgba(255, 215, 0, 1)" },
+]
+
+const calculateShapes = (val) => {
+  let shape1Count = 0
+  let shape2Count = 0
+  let shape3Count = 0
+  let shape4Count = 0
+  let shape1 = [
+    "PULMONARY DISEASE",
+    "PEDIATRIC PULMONOLOGY",
+    "PULMONARY CRITICAL CARE MEDICINE",
+  ];
+  let shape2 = ["ALLERGY & IMMUNOLOGY"];
+  let shape3 = [
+    "FAMILY MEDICINE",
+    "PEDIATRICS",
+    "INTERNAL MEDICINE",
+    "GENERAL PRACTICE",
+    "INTERNAL MEDICINE/PEDIATRICS",
+    "GERIATRIC MEDICINE (INTERNAL MEDICINE)",
+    "GERIATRIC MEDICINE (FAMILY MEDICINE)",
+  ];
+  val.forEach(item => {
+    if (shape1.includes(item)) {
+      shape1Count+=1
+    } else if (shape2.includes(item)) {
+      shape2Count+=1
+    } else if (shape3.includes(item)) {
+      shape3Count+=1
+    } else {
+      shape4Count+=1
+    }
+  })
+ 
+  return [
+    shape1Count,shape2Count, shape3Count, shape4Count
+  ]
+};
+
+
+export const _options = {
+  indexAxis: "x",
+  elements: {
+    bar: {
+      borderWidth: 1,
+    },
+  },
+  responsive: true,
+  scales: {
+    x: {
+      ticks: {
+        min: 0,
+        autoSkip: false,
+        font: {
+          size: 13.5,
+          weight: 500,
+        },
+        color: "#000",
+      },
+    },
+    y: {
+      title: {
+        display: true,
+        text: "Patients",
+      },
+      ticks: {
+        callback: function (value, index, values) {
+          if (value === 0) return "0";
+          else if (value >= 1e6 || value <= -1e6) {
+            // Convert to million with one decimal place
+            return `${(value / 1e6).toFixed(value % 1e6 !== 0 ? 1 : 0)}m`;
+          } else if (value >= 1e3 || value <= -1e3) {
+            // Convert to thousand with one decimal place
+            return `${(value / 1e3).toFixed(value % 1e3 !== 0 ? 1 : 0)}k`;
+          } else {
+            return `${value}`;
+          }
+        },
+        font: {
+          size: 12,
+        },
+      },
+    },
+  },
+  plugins: {
+    legend: {
+      display: false,
+    },
+    datalabels: {
+      display: false,
+    },
+  },
+};
+
+
 export function LineChart({
+  setPrioitySelectedValue = () => {},
+  primarySpecialtyData,
   key = null,
   arbitrary = true,
   options = defaultOptions,
@@ -99,7 +209,18 @@ export function LineChart({
     min: 0,
     max: 0,
   });
+  const [barchartData, setBarChartData] = useState(null);
   const timerRef = useRef(null);
+
+  // useEffect(() => {
+  //   getDataStats("get_hcp_priorities", accessToken, refreshToken)
+  //   .then((res) => {
+  //    console.log(res,"res")
+  //   })
+  //   .catch((Err) => {
+  //     console.log(Err);
+  //   });
+  // },[])
 
   const handleChange = useCallback((e) => {
     let _val = parseInt(e.target.value);
@@ -107,23 +228,45 @@ export function LineChart({
       clearTimeout(timerRef.current);
     }
     timerRef.current = setTimeout(() => {
-    
-      if (  lineRef.current) {
+      if (lineRef.current) {
         arbitraryLine.beforeDatasetsDraw(lineRef.current);
         lineRef.current.setActiveElements([
-          { datasetIndex: _val, hovered: false, index: _val + 1 },
+          { datasetIndex: _val-1, hovered: false, index: _val  },
         ]);
         lineRef.current.update();
+        if (primarySpecialtyData && _val) {
+          let _newPrimaryData = [...primarySpecialtyData]
+      
+          let filteredData = chartData.labels.filter(item => item <= _val)
+          let primaryData = _newPrimaryData.splice(0,_val)
+        
+          let data = calculateShapes(primaryData)
+          let _barChartData = {
+            labels: colors.map(item => item.name),
+            datasets: [
+              {
+                data,
+                borderColor: colors.map(item => item.rgba),
+                backgroundColor: colors.map(item => item.rgba),
+              },
+            ],
+          }
+          setBarChartData(_barChartData)
+        }
+        if (_val === 0) {
+          setBarChartData(null)
+        }
+       
       }
-
     }, 10);
     setSelectedValue(_val);
+    setPrioitySelectedValue(_val)
     return () => {
       if (timerRef.current) {
-        clearTimeout(timerRef.current)
+        clearTimeout(timerRef.current);
       }
-    }
-  }, []);
+    };
+  }, [chartData.labels, primarySpecialtyData, setPrioitySelectedValue]);
 
   useEffect(() => {
     handleChange({ target: { value: 0 } });
@@ -134,28 +277,33 @@ export function LineChart({
     }));
   }, [data, handleChange]);
 
-  const intersectDataVerticalLine = {
-    id: "intersectDataVerticalLine",
-    afterDraw: (chart) => {
-      if (chart.getActiveElements().length) {
-        const activePoint = chart.getActiveElements()[0];
-        const {
-          ctx,
-          chartArea: { top, bottom },
-          scales: { x },
-        } = chart;
-        ctx.save();
-        ctx.beginPath();
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = "black";
-        ctx.setLineDash([10, 15]);
-        ctx.moveTo(x.getPixelForValue(activePoint.datasetIndex), top);
-        ctx.lineTo(x.getPixelForValue(activePoint.datasetIndex), bottom);
-        ctx.stroke();
-        ctx.restore();
-      }
-    },
-  };
+  const intersectDataVerticalLine = useMemo(
+    () => ({
+      id: "intersectDataVerticalLine",
+      afterDraw: (chart) => {
+        if (chart.getActiveElements().length) {
+          const activePoint = chart.getActiveElements()[0];
+          const {
+            ctx,
+            chartArea: { top, bottom },
+            scales: { x },
+          } = chart;
+          ctx.save();
+          ctx.beginPath();
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = "black";
+          ctx.setLineDash([10, 15]);
+          ctx.moveTo(x.getPixelForValue(activePoint.datasetIndex), top);
+          ctx.lineTo(x.getPixelForValue(activePoint.datasetIndex), bottom);
+          ctx.stroke();
+          ctx.restore();
+        }
+      },
+    }),
+    []
+  );
+
+
 
   const lineRef = useRef(null);
 
@@ -171,10 +319,20 @@ export function LineChart({
           data={chartData}
         />
       </div>
+      {barchartData && (
+        <div className="my-8 w-full">
+        <BarChart
+          height={80}
+          data={barchartData}
+          options={_options}
+          // options={BarChartOptions}
+        />
+        </div>
+      )}
 
       {arbitrary && (
         <div className="px-2 py-4">
-          <div className="text-xs px-2">
+          <div className="text-xs flex items-center justify-between w-full">
             <input
               id="labels-range-input"
               type="number"
@@ -182,8 +340,9 @@ export function LineChart({
               value={selectedValue}
               // max={maxX}
               onChange={handleChange}
-              className="w-full p-4 h-1 cursor-pointer"
+              className="w-[30%] p-4 h-1 cursor-pointer"
             />
+           
           </div>
           <div>
             <label className="text-xs" htmlFor="labels-range-input">

@@ -49,12 +49,7 @@ const PatientTracking = () => {
           }}
         />
       </div>
-      <div className="mt-4">
-        <HcpInsight />
-      </div>
-     
-
-      <div className="mb-10 mt-10">
+      <div className="my-10">
         <Sankey
           API={"sankey_data_9"}
           title={"Patient Transitions through Therapies"}

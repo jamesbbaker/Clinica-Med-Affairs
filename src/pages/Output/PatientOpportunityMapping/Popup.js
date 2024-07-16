@@ -306,7 +306,7 @@ const BarChartPopup = ({
       {!payerData && !insititutional && (
         <>
           <div className="flex mt-4 items-center gap-4">
-            <label className="block text-sm font-medium text-gray-900 dark:text-white">
+            <label className="block text-sm font-medium text-gray-900 ">
               Select Unmet Need
             </label>
             <MultiSelect
@@ -315,7 +315,7 @@ const BarChartPopup = ({
                 label: selectLabels[item] ? selectLabels[item] : item,
                 value: item,
               }))}
-              className="w-[20rem] z-[5]"
+              className="w-[40rem] z-[5]"
               value={unmetNeed || []}
               onChange={(val) => handleSelectMultipleUnmet(val)}
             />

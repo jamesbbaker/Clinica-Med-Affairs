@@ -14,12 +14,10 @@ import {
   patientTotals,
   selectLabels,
 } from "../../../constants/appConstants";
-
 import { getDataStats } from "../../../API/Outputs";
 import { AuthContext } from "../../../context/AuthContext";
 import { MultiSelect } from "react-multi-select-component";
 import CustomDropdown from "../../../components/CustomDropdown";
-import InstitutionalVariationBubbleChart from "./InstitutionalVariationBubbleChart";
 import BarChartPopup from "../PatientOpportunityMapping/Popup";
 import { getLowestValue, highestValue } from "../../../utils/MathUtils";
 import { filterOutLabels } from "../../../utils/MapUtils";
@@ -243,6 +241,7 @@ const InstitutionalVariation = () => {
   };
 
   const handleToggleFilter = (e) => {
+   
     setToggleFilter(e);
     let secondlevelData = rawData.filter(
       (item) => item.Parent && item.Parent !== "GLOBAL"
@@ -250,8 +249,8 @@ const InstitutionalVariation = () => {
     let lowestValue = getLowestValue(secondlevelData, e);
     let _highestValue = highestValue(secondlevelData, e);
     setValues({
-      min: lowestValue,
-      max: _highestValue,
+      min:summaryMatrix[e]["median_minus_1SD"],// lowestValue,
+      max: summaryMatrix[e]["median_plus_1SD"]//_highestValue,
     });
     handleTreeData(rawData, e);
   };
@@ -265,6 +264,8 @@ const InstitutionalVariation = () => {
 
     setModalDetails(null);
   };
+
+
 
   const fetchData = (
     filterValues = {
@@ -378,6 +379,8 @@ const InstitutionalVariation = () => {
                 <div className="flex flex-col mb-8  w-full justify-between items-start">
                   <div className="flex mb-6 items-center gap-8">
                     <CustomDropdown
+                    
+          buttonWidth="40rem"
                       showColors
                       labelClassName="mb-0"
                       className={"flex items-center"}
@@ -438,7 +441,7 @@ const InstitutionalVariation = () => {
                       )}
                       {/* {StateOptions && (
                   <div className="flex items-center gap-2">
-                    <label className="block text-sm font-medium text-gray-900 dark:text-white">
+                    <label className="block text-sm font-medium text-gray-900 ">
                       State Select
                     </label>
                     <MultiSelect
@@ -497,14 +500,7 @@ const InstitutionalVariation = () => {
           )}
         </>
       )}
-      {!data1 && regionOptions && update && specialityOptions && (
-        <InstitutionalVariationBubbleChart
-          isScatterMapOpen={isScatterMapOpen}
-          setIsScatterMapOpen={setIsScatterMapOpen}
-          region={region}
-          primary={selectedSpeciality}
-        />
-      )}
+    
     </div>
   );
 };

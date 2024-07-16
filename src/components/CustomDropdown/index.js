@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from 'react';
 import { filterColors, mapLabels, mapSelectLabels, patientTotals } from '../../constants/appConstants';
 import { AuthContext } from '../../context/AuthContext';
 
-const CustomDropdown = ({showImpactColors = false, showColors = false, labelClassName, className, error, value, input, handleSelect, dotColors = {} }) => {
+const CustomDropdown = ({buttonWidth = "20rem",showImpactColors = false, showColors = false, labelClassName, className, error, value, input, handleSelect, dotColors = {} }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(value);
   const dropdownRef = useRef(null);
@@ -42,7 +42,7 @@ const CustomDropdown = ({showImpactColors = false, showColors = false, labelClas
       >
         {input.label}
       </label>
-      <div className="relative w-[20rem]">
+      <div style={{width: buttonWidth}} className="relative w-[20rem]">
         <button
           type="button"
           className="bg-gray-50  focus:outline-none px-4 py-2 border border-primary border-opacity-25 text-gray-900 text-sm rounded-lg block w-full text-left"

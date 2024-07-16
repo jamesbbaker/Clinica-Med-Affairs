@@ -82,7 +82,7 @@ const HcpInsight = () => {
               label: selectLabels[item] ? selectLabels[item] : item,
               value: item,
             }))}
-          className="w-[22rem] mb-10 z-[5]"
+          className="w-[40rem] mb-10 z-[5]"
           value={selectedUnmetValue}
           onChange={(val) => handleSelectMultipleUnmet(val)}
         />

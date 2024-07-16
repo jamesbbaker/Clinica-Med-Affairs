@@ -40,7 +40,7 @@ const reducer = (state, action) => {
   }
 };
 
-const MedicalAffairToolbox = ({setHcpProfilePage = () => {}}) => {
+const MedicalAffairToolbox = ({isScatterMapOpen, setIsScatterMapOpen,setHcpProfilePage = () => {}}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { accessToken,selectedUnmet, refreshToken } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
@@ -264,7 +264,7 @@ const MedicalAffairToolbox = ({setHcpProfilePage = () => {}}) => {
   };
 
 
-  const [isScatterMapOpen, setIsScatterMapOpen] = useState(false)
+
   
 
   return (
@@ -278,7 +278,7 @@ const MedicalAffairToolbox = ({setHcpProfilePage = () => {}}) => {
               <div className="font-[600] text-[18px]">Filters:</div>
               {state.regionList && (
                 <div className="flex items-center gap-4">
-                  <label className="block text-sm font-medium text-gray-900 dark:text-white">
+                  <label className="block text-sm font-medium text-gray-900 ">
                     Region Select
                   </label>
                   <MultiSelect
@@ -295,7 +295,7 @@ const MedicalAffairToolbox = ({setHcpProfilePage = () => {}}) => {
               )}
               {state.primaryList && (
                 <div className="flex items-center gap-4">
-                  <label className="block text-sm font-medium text-gray-900 dark:text-white">
+                  <label className="block text-sm font-medium text-gray-900 ">
                   Specialty
                   </label>
                   <MultiSelect
@@ -346,6 +346,8 @@ const MedicalAffairToolbox = ({setHcpProfilePage = () => {}}) => {
           <div className="flex flex-col mb-4 items-start">
             <div>
               <CustomDropdown
+              
+          buttonWidth="40rem"
                 showColors
                 labelClassName="mb-0"
                 className={"flex items-center gap-2"}
@@ -365,6 +367,8 @@ const MedicalAffairToolbox = ({setHcpProfilePage = () => {}}) => {
             </div>
             <div>
               <CustomDropdown
+              
+          buttonWidth="40rem"
                 showColors
                 labelClassName="mb-0"
                 className={"flex items-center gap-2"}

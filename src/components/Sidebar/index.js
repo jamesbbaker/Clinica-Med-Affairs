@@ -48,6 +48,12 @@ export const menuList = [
         icon: () => <AiOutlineGlobal />,
       },
       {
+        name: APP_ROUTES_LABEL.priority_engagement_opportunity_page,
+        id: APP_ROUTES.priority_engagement_opportunity_page,
+        route: `${APP_ROUTES.outputs}/${APP_ROUTES.priority_engagement_opportunity_page}`,
+        icon: () => <AiOutlineDotChart />,
+      },
+      {
         name: APP_ROUTES_LABEL.eligible_patient_locator,
         id: APP_ROUTES.eligible_patient_locator,
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.eligible_patient_locator}`,
@@ -175,6 +181,7 @@ const Sidebar = () => {
                         subItem.id !== APP_ROUTES.medical_affair_toolbox &&
                         subItem.id !== APP_ROUTES.payer_variation &&
                         subItem.id !== APP_ROUTES.help &&
+                        subItem.id !== APP_ROUTES.priority_engagement_opportunity_page &&
                       !user.page_view.includes(subItem.id)
                     ) {
                       return false;
