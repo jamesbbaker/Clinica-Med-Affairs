@@ -216,9 +216,22 @@ const PriorityEngagement = () => {
 
   return (
     <div className="flex flex-col items-start ">
+      <h1 className="text-lg font-[500] mb-4">Identify Priorities based on Multiple Unmet Needs</h1>
+      <div className="w-full sticky top-14 z-50 bg-[#d4d4d4] mb-8 grid grid-cols-3">
+        {charts.map((item, index) => <div key={index} className="text-[#000]">
+          <button
+            className={`text-[#000] hover:shadow-xl transition-all ease-in-out duration-300 shadow-md text-lg px-4 w-full text-center py-4 font-[500] ${
+              currentChart === item.id? "bg-blue-500 text-white" : "text-gray-700"
+            } ${index === 1 && " border-r-2 border-l-2"}`}
+            onClick={() => handleSelectChart(item.id)}
+          >
+            {item.name}
+          </button>
+        </div>)}
+      </div>
       <div
         style={{
-          display: isScatterMapOpen ? "none" : "block",
+          display: currentChart !== "hcp" || isScatterMapOpen ? "none" : "block",
         }}
         className="w-full flex flex-col items-start"
       >
@@ -302,33 +315,7 @@ const PriorityEngagement = () => {
           </>
         )}
       </div>
-      <div
-        style={{
-          display: isScatterMapOpen ? "none" : "block",
-        }}
-        className="w-full bg-[#c4c4c4] h-1 mt-4 rounded-full"
-      ></div>
       <div className="flex flex-col items-start gap-2 w-full">
-        <h2 className="w-full text-md mt-10 font-[500]">
-          Identify Priorities based on Multiple Unmet Needs
-        </h2>
-        <CustomDropdown
-          buttonWidth={"90%"}
-          labelClassName="mb-0"
-          className={"flex w-full z-[15]  mb-4 items-center gap-2"}
-          input={{
-            label: "Select Chart",
-            name: "Select Chart",
-            type: "select",
-            options: charts.map((item) => ({
-              name: item.name,
-              value: item.id,
-            })),
-            id: "xLabel",
-          }}
-          handleSelect={(val) => handleSelectChart(val)}
-          value={currentChart}
-        />
         <div
           style={{
             display: currentChart === "hcp" ? "block" : "none",
@@ -343,7 +330,7 @@ const PriorityEngagement = () => {
         <div
           style={{
             display:
-              currentChart === "hospital_clinic_system" ? "block" : "none",
+              currentChart === "hospital_clinic_system" || currentChart === "hcp"  ? "block" : "none",
           }}
           className="w-full"
         >
@@ -353,7 +340,7 @@ const PriorityEngagement = () => {
         </div>
         <div
           style={{
-            display: currentChart === "payer_plan" ? "block" : "none",
+            display: currentChart === "payer_plan" || currentChart === "hcp"  ? "block" : "none",
           }}
           className="w-full"
         >

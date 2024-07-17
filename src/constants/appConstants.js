@@ -110,6 +110,7 @@ export const patientTotals = [
   "Total ICS-LABA LAMA Patients",
   "Number of ICS-LABA LAMA Patients",
   "Number of ICS-LABA-LAMA Patients",
+  "Number of Biologic Patients"
 ];
 
 export const unmetLabels = {
@@ -203,6 +204,7 @@ export const mapSelectLabels = {
   "Number of ICS-LABA Patients": "Number of ICS-LABA Patients",
   // "Number of ICS-LABA Exacerbation": "Number of ICS-LABA Exacerbation",
   "Number of ICS-LABA LAMA Patients": "Number of ICS-LABA-LAMA Patients",
+  "Number of Biologic Patients":"Number of Biologic Patients",
   "Number of No Spirometry": "Incomplete initial asthma testing",
   "Percent of No Spirometry": "Incomplete initial asthma testing percent",
   "Number of Exacerbation Without Spirometry":
@@ -231,9 +233,9 @@ export const mapSelectLabels = {
   "Percent of ICS-LABA High Steroid Usage":
     "Failure to Escalate from Double to Triple Therapy percent",
   "Number of Failure To Escalate With 3 Exacerbations":
-    "Failure to Escalate 3+ Exacerbation on Double Therapy",
+    "Failure to Escalate 3+ Exacerbations on Double Therapy",
   "Percent of Failure To Escalate With 3 Exacerbations":
-    "Failure to Escalate 3+ Exacerbation on Double Therapy percent",
+    "Failure to Escalate 3+ Exacerbations on Double Therapy percent",
   "Number of ICS-LABA Exacerbation Failed Escalation":
     "Excessive Steroid Usage on Double Therapy",
   "Percent of ICS-LABA Exacerbation Failed Escalation":
@@ -293,6 +295,7 @@ export const selectLabels = {
   "Number of ICS-LABA Patients": "Number of ICS-LABA Patients",
   // "Number of ICS-LABA Exacerbation": "Number of ICS-LABA Exacerbation",
   "Number of ICS-LABA LAMA Patients": "Number of ICS-LABA-LAMA Patients",
+  "Number of Biologic Patients":"Number of Biologic Patients",
   "Number of No Spirometry": "Incomplete initial asthma testing",
   "Percent of No Spirometry": "Incomplete initial asthma testing percent",
   "Number of Exacerbation Without Spirometry":
@@ -321,9 +324,9 @@ export const selectLabels = {
   "Percent of ICS-LABA High Steroid Usage":
     "Failure to Escalate Uncontrolled / Severe Patients from Double Therapy percent",
   "Number of Failure To Escalate With 3 Exacerbations":
-    "Failure to Escalate 3+ Exacerbation on Double Therapy",
+    "Failure to Escalate 3+ Exacerbations on Double Therapy",
   "Percent of Failure To Escalate With 3 Exacerbations":
-    "Failure to Escalate 3+ Exacerbation on Double Therapy percent" ,
+    "Failure to Escalate 3+ Exacerbations on Double Therapy percent" ,
   "Number of ICS-LABA Exacerbation Failed Escalation":
     "Excessive Steroid Usage on Double Therapy",
   "Percent of ICS-LABA Exacerbation Failed Escalation":
@@ -378,6 +381,7 @@ export const selectLabels = {
 export const excludedLabels = [
   "Number of No Spirometry",
   "Number of Exacerbation Without Spirometry",
+  "Number of Biologic Patients",
   "Number of No EOS Testing",
   "Number of No Treatment",
   "Number of ICS High Steroid Usage",
@@ -409,6 +413,7 @@ export const mapLabels = {
   "Total No Treatment": "Number of No Treatment",
   "Percent No Treatment": "Percent of No Treatment",
   "Total ICS Patients": "Number of ICS Patients",
+  "Number of Biologic Patients": "Number of Biologic Patients",
   "Total ICS Compliance < 240": "Number of ICS Compliance < 240",
   "Percent ICS Compliance < 240": "Percent of ICS Compliance < 240",
   "Total ICS Persistence < 360": "Number of ICS Persistence < 360",
@@ -477,6 +482,7 @@ export const invertedMapLabels = {
   "Number of No EOS Testing": "Total No EOS Testing",
   "Percent of No EOS Testing": "Percent No EOS Testing",
   "Number of No Treatment": "Total No Treatment",
+  "Number of Biologic Patients": "Number of Biologic Patients",
   "Percent of No Treatment": "Percent No Treatment",
   "Number of ICS Patients": "Total ICS Patients",
   "Number of ICS Compliance < 240": "Total ICS Compliance < 240",
@@ -612,6 +618,7 @@ export const mapBarCharts = {
   ],
   chart5: [
     "Total ICS-LABA LAMA Patients",
+    "Number of Biologic Patients",
     "Total ICS-LABA LAMA Persistence < 360",
     "Total ICS-LABA LAMA Compliance < 240",
     "Total ICS-LABA With LAMA",

@@ -192,6 +192,16 @@ useEffect(() => {
     fetchData();
   }, []);
 
+  useEffect(()=> {
+    if (selectedUnmet.length > 0 && rawData)   {
+      handleSelect("xLabel", selectedUnmet[0].value)
+    }
+    if (selectedUnmet.length > 1 && rawData)   {
+      handleSelect("yLabel", selectedUnmet[1].value)
+    }
+
+  }, [selectedUnmet, rawData])
+
   const handleDispatchData = (labelValue, chartData) => {
     let data = handleChartData(rawData, labelValue);
     dispatch({
@@ -201,6 +211,7 @@ useEffect(() => {
   };
 
   const handleSelect = (id, val) => {
+    console.log(id, val)
     dispatch({
       type: actions.handleUpdate,
       payload: {
