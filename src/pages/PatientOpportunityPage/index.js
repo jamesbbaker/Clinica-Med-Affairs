@@ -9,8 +9,8 @@ import PrimaryBtn from "../../components/PrimaryBtn";
 
 const PatientOpportunityPage = () => {
   const [loading, setLoading] = useState(false);
-  const { accessToken,selectedUnmet } = useContext(AuthContext);
-
+  const { accessToken, selectedUnmet } = useContext(AuthContext);
+  const [showPopup, setShowPopup] = useState(false);
 
   const handlePrioritize = async (val) => {
     setLoading(true);
@@ -46,24 +46,28 @@ const PatientOpportunityPage = () => {
 
   const handleSave = () => {
     handlePrioritize(selectedUnmet);
-  }
+  };
 
   return (
     <div className="flex flex-col gap-8 items-start w-full">
-      <UnmetNeedDefinition />
-      <PatientOpportunityMapping patientPage />
-      <ImpactTracking patientPage />
-      <div className="w-full mt-4">
-        <Prioitize  />
-        <div className="w-full flex items-center justify-center">
-          <PrimaryBtn
-            disabled={loading}
-            className={"w-[10rem] text-[#fff]"}
-            text={"Save"}
-            onClick={handleSave}
-          />
-        </div>
-      </div>
+      <UnmetNeedDefinition setShowPopup={setShowPopup} />
+      {!showPopup && (
+        <>
+          <PatientOpportunityMapping patientPage />
+          <ImpactTracking patientPage />
+          <div className="w-full mt-4">
+            <Prioitize />
+            <div className="w-full flex mb-48 items-center justify-center">
+              <PrimaryBtn
+                disabled={loading}
+                className={"w-[10rem] text-[#fff]"}
+                text={"Save"}
+                onClick={handleSave}
+              />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

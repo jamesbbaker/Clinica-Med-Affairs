@@ -1,9 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
-import Table,{ CustomOptionRenderer } from "../../../components/Table";
+import Table, { CustomOptionRenderer } from "../../../components/Table";
 import { getDataStats } from "../../../API/Outputs";
 import { AuthContext } from "../../../context/AuthContext";
 import { MultiSelect } from "react-multi-select-component";
-import {  mapLabels, selectLabels } from "../../../constants/appConstants";
+import {
+  invertedMapLabels,
+  mapLabels,
+  selectLabels,
+} from "../../../constants/appConstants";
 import { filterOutLabels } from "../../../utils/MapUtils";
 
 const filterOptions = [...Object.keys(selectLabels)];
@@ -16,10 +20,11 @@ const HcpInsight = () => {
   const [selectedUnmetValue, setSelectedUnmet] = useState([]);
 
   const handleSelectMultipleUnmet = (val) => {
+ 
     setSelectedUnmet(val);
     setTableColumns([
+      { Header: "Specialty Category", accessor: "Specialty_Bucket" },
       { Header: "Number of Providers", accessor: "Number of Providers" },
-      { Header: "Speciality Bucket", accessor: "Specialty_Bucket" },
       ...val.map((item) => ({
         Header: selectLabels[mapLabels[item.value]],
         accessor: item.value,
@@ -27,11 +32,11 @@ const HcpInsight = () => {
     ]);
   };
 
-
   useEffect(() => {
     getDataStats("data_stats_23", accessToken, refreshToken)
       .then((responseData) => {
         if (responseData) {
+          console.log(responseData)
           setRawHeaders(responseData.headers);
           let _data = responseData.data.map((item) => {
             let newItem = { ...item };
@@ -42,27 +47,33 @@ const HcpInsight = () => {
             });
             return newItem;
           });
-         
+
           setStatsData2(_data);
           setTableColumns([
+            { Header: "Specialty Category", accessor: "Specialty_Bucket" },
             { Header: "Number of Providers", accessor: "Number of Providers" },
-            { Header: "Speciality Bucket", accessor: "Specialty_Bucket" },
             ...Object.keys(selectLabels)
-              .filter((item) => responseData.headers.includes(item))
+              .filter((item) =>
+                responseData.headers.includes(invertedMapLabels[item])
+              )
               .map((item) => {
                 return {
                   Header: selectLabels[item],
-                  accessor: item,
+                  accessor: invertedMapLabels[item],
                 };
               }),
           ]);
           setSelectedUnmet(
-            filterOptions
-              .filter((item) => responseData.headers.includes(item))
-              .map((item) => ({
-                label: selectLabels[item] ? selectLabels[item] : item,
-                value: item,
-              }))
+            [...Object.keys(selectLabels)]
+              .filter((item) =>
+                responseData.headers.includes(invertedMapLabels[item])
+              )
+              .map((item) => {
+                return {
+                  label: selectLabels[item],
+                  value: invertedMapLabels[item],
+                };
+              })
           );
         }
       })
@@ -77,10 +88,10 @@ const HcpInsight = () => {
           ItemRenderer={CustomOptionRenderer}
           labelledBy=""
           options={filterOutLabels(filterOptions, selectedUnmet)
-            .filter((item) => rawHeaders.includes(item))
+            .filter((item) => rawHeaders.includes(invertedMapLabels[item]))
             .map((item) => ({
-              label: selectLabels[item] ? selectLabels[item] : item,
-              value: item,
+              label: selectLabels[item],
+              value: invertedMapLabels[item],
             }))}
           className="w-[40rem] mb-10 z-[5]"
           value={selectedUnmetValue}
@@ -91,6 +102,12 @@ const HcpInsight = () => {
         initialState={{
           pageSize: 10,
           pageIndex: 0,
+          sortBy: [
+            {
+              id: "Total ICS-LABA Patients",
+              desc: true,
+            },
+          ],
         }}
         activeCells={false}
         Title="Summary of Unmet Need by Specialty"
