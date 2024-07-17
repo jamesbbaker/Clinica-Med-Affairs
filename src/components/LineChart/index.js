@@ -11,7 +11,6 @@ import { Chart as ChartJS, registerables } from "chart.js";
 import "chartjs-adapter-date-fns"; // Import the date-fns adapter
 import BarChart from "../BarChart";
 
-
 ChartJS.register(...registerables);
 export const defaultOptions = {
   responsive: true,
@@ -99,13 +98,13 @@ const colors = [
   { name: "Allergy Specialist", rgba: "rgba(34, 139, 34, 1)" },
   { name: "Primary Care Provider", rgba: "rgba(220, 20, 60, 1)" },
   { name: "Others", rgba: "rgba(255, 215, 0, 1)" },
-]
+];
 
 const calculateShapes = (val) => {
-  let shape1Count = 0
-  let shape2Count = 0
-  let shape3Count = 0
-  let shape4Count = 0
+  let shape1Count = 0;
+  let shape2Count = 0;
+  let shape3Count = 0;
+  let shape4Count = 0;
   let shape1 = [
     "PULMONARY DISEASE",
     "PEDIATRIC PULMONOLOGY",
@@ -121,23 +120,20 @@ const calculateShapes = (val) => {
     "GERIATRIC MEDICINE (INTERNAL MEDICINE)",
     "GERIATRIC MEDICINE (FAMILY MEDICINE)",
   ];
-  val.forEach(item => {
+  val.forEach((item) => {
     if (shape1.includes(item)) {
-      shape1Count+=1
+      shape1Count += 1;
     } else if (shape2.includes(item)) {
-      shape2Count+=1
+      shape2Count += 1;
     } else if (shape3.includes(item)) {
-      shape3Count+=1
+      shape3Count += 1;
     } else {
-      shape4Count+=1
+      shape4Count += 1;
     }
-  })
- 
-  return [
-    shape1Count,shape2Count, shape3Count, shape4Count
-  ]
-};
+  });
 
+  return [shape1Count, shape2Count, shape3Count, shape4Count];
+};
 
 export const _options = {
   indexAxis: "x",
@@ -193,7 +189,6 @@ export const _options = {
   },
 };
 
-
 export function LineChart({
   setPrioitySelectedValue = () => {},
   primarySpecialtyData,
@@ -222,60 +217,62 @@ export function LineChart({
   //   });
   // },[])
 
-  const handleChange = useCallback((e) => {
-    let _val = parseInt(e.target.value);
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-    timerRef.current = setTimeout(() => {
-      if (lineRef.current) {
-        arbitraryLine.beforeDatasetsDraw(lineRef.current);
-        lineRef.current.setActiveElements([
-          { datasetIndex: _val-1, hovered: false, index: _val  },
-        ]);
-        lineRef.current.update();
-        if (primarySpecialtyData && _val) {
-          let _newPrimaryData = [...primarySpecialtyData]
-      
-          let filteredData = chartData.labels.filter(item => item <= _val)
-          let primaryData = _newPrimaryData.splice(0,_val)
-        
-          let data = calculateShapes(primaryData)
-          let _barChartData = {
-            labels: colors.map(item => item.name),
-            datasets: [
-              {
-                data,
-                borderColor: colors.map(item => item.rgba),
-                backgroundColor: colors.map(item => item.rgba),
-              },
-            ],
-          }
-          setBarChartData(_barChartData)
-        }
-        if (_val === 0) {
-          setBarChartData(null)
-        }
-       
+  const handleChange = useCallback(
+    (e) => {
+      let _val = parseInt(e.target.value);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
       }
-    }, 10);
-    setSelectedValue(_val);
-    setPrioitySelectedValue(_val)
+      timerRef.current = setTimeout(() => {
+        if (lineRef.current) {
+          arbitraryLine.beforeDatasetsDraw(lineRef.current);
+          lineRef.current.setActiveElements([
+            { datasetIndex: _val - 1, hovered: false, index: _val },
+          ]);
+          lineRef.current.update();
+          if (primarySpecialtyData && _val) {
+            let _newPrimaryData = [...primarySpecialtyData];
+            let primaryData = _newPrimaryData.splice(0, _val);
+
+            let data = calculateShapes(primaryData);
+            let _barChartData = {
+              labels: colors.map((item) => item.name),
+              datasets: [
+                {
+                  data,
+                  borderColor: colors.map((item) => item.rgba),
+                  backgroundColor: colors.map((item) => item.rgba),
+                },
+              ],
+            };
+            setBarChartData(_barChartData);
+          }
+          if (_val === 0) {
+            setBarChartData(null);
+          }
+        }
+      }, 50);
+      setSelectedValue(_val);
+      setPrioitySelectedValue(_val);
+    },
+    [primarySpecialtyData, setPrioitySelectedValue]
+  );
+
+  useEffect(() => {
+    if (data) {
+      setSelectedValue(0);
+      setChartData(data);
+      setArbitraryLine((prev) => ({
+        ...prev,
+        max: data.labels.length,
+      }));
+    }
     return () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
     };
-  }, [chartData.labels, primarySpecialtyData, setPrioitySelectedValue]);
-
-  useEffect(() => {
-    handleChange({ target: { value: 0 } });
-    setChartData(data);
-    setArbitraryLine((prev) => ({
-      ...prev,
-      max: data.labels.length,
-    }));
-  }, [data, handleChange]);
+  }, [data]);
 
   const intersectDataVerticalLine = useMemo(
     () => ({
@@ -303,8 +300,6 @@ export function LineChart({
     []
   );
 
-
-
   const lineRef = useRef(null);
 
   return (
@@ -321,12 +316,12 @@ export function LineChart({
       </div>
       {barchartData && (
         <div className="my-8 w-full">
-        <BarChart
-          height={80}
-          data={barchartData}
-          options={_options}
-          // options={BarChartOptions}
-        />
+          <BarChart
+            height={80}
+            data={barchartData}
+            options={_options}
+            // options={BarChartOptions}
+          />
         </div>
       )}
 
@@ -342,7 +337,6 @@ export function LineChart({
               onChange={handleChange}
               className="w-[30%] p-4 h-1 cursor-pointer"
             />
-           
           </div>
           <div>
             <label className="text-xs" htmlFor="labels-range-input">
