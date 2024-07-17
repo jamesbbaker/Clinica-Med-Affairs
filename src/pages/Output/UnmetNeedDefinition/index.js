@@ -1636,9 +1636,92 @@ const UnmetNeedDefinition = ({ setShowPopup }) => {
               </div>
             </div>
           )}
+          
           <p className=" w-full text-[#808080] pb-4 text-left text-sm">
             {UnmetNeedDefinitionData[modalId].description}
           </p>
+          {dataValue && modalId === "id18" && (
+            <div className="flex py-4 flex-col mb-2 items-start w-full">
+              <div>
+                {">900mg / year steroids on Double Therapy"}:{" "}
+                <strong>
+                  {nationalData["Number of ICS-LABA >900mg/year steroids"]}
+                </strong>
+              </div>
+              <div>
+                {">900mg / year steroids on Double Therapy percent"}:{" "}
+                <strong>
+                  {nationalData[
+                    "Percent of ICS-LABA >900mg/year steroids"
+                  ].toFixed(2)}
+                  %
+                </strong>
+              </div>
+              <div>
+                {"Excessive Steroids with <5mg / OCS day on Double Therapy"}:{" "}
+                <strong>
+                  {
+                    nationalData[
+                      "Number of ICS-LABA High Steroid Usage with ER visit"
+                    ]
+                  }
+                </strong>
+              </div>
+              <div>
+                {
+                  "Excessive Steroids with <5mg / OCS day on Double Therapy percent"
+                }
+                :{" "}
+                <strong>
+                  {nationalData[
+                    "Percent of ICS-LABA High Steroid Usage with ER visit"
+                  ].toFixed(2)}
+                  %
+                </strong>
+              </div>
+              <div>
+                {"Excessive steroids with >5mg / OCS day on Double Therapy"}:{" "}
+                <strong>
+                  {
+                    nationalData[
+                      "Number of ICS-LABA High Steroid Usage without ER visit"
+                    ]
+                  }
+                </strong>
+              </div>
+              <div>
+                {
+                  "Excessive steroids with >5mg / OCS day on Double Therapy percent"
+                }
+                :{" "}
+                <strong>
+                  {nationalData[
+                    "Percent of ICS-LABA High Steroid Usage without ER visit"
+                  ].toFixed(2)}
+                  %
+                </strong>
+              </div>
+            </div>
+          )}
+           {dataValue && modalId === "id8" && (
+            <div className="flex py-4 flex-col mb-2 items-start w-full">
+              <div>
+                {"Failure to Escalate 3+ Exacerbations on Double Therapy"}:{" "}
+                <strong>
+                  {nationalData["Number of Failure To Escalate With 3 Exacerbations"]}
+                </strong>
+              </div>
+              <div>
+                {"Failure to Escalate 3+ Exacerbations on Double Therapy percent"}:{" "}
+                <strong>
+                  {nationalData[
+                    "Percent of Failure To Escalate With 3 Exacerbations"
+                  ].toFixed(2)}
+                  %
+                </strong>
+              </div>
+            </div>
+          )}
           <div className="w-full pb-10 flex flex-col gap-2 items-center bg-white">
             {statsData6 && (
               <div className="h-[30rem] flex items-center justify-center w-full">
@@ -1980,69 +2063,7 @@ const UnmetNeedDefinition = ({ setShowPopup }) => {
               </>
             )}
           </div>
-          {dataValue && modalId === "id18" && (
-            <div className="flex py-4 flex-col mb-2 items-start w-full">
-              <div>
-                {">900mg / year steroids on Double Therapy"}:{" "}
-                <strong>
-                  {nationalData["Number of ICS-LABA >900mg/year steroids"]}
-                </strong>
-              </div>
-              <div>
-                {">900mg / year steroids on Double Therapy percent"}:{" "}
-                <strong>
-                  {nationalData[
-                    "Percent of ICS-LABA >900mg/year steroids"
-                  ].toFixed(2)}
-                  %
-                </strong>
-              </div>
-              <div>
-                {"Excessive Steroids with <5mg / OCS day on Double Therapy"}:{" "}
-                <strong>
-                  {
-                    nationalData[
-                      "Number of ICS-LABA High Steroid Usage with ER visit"
-                    ]
-                  }
-                </strong>
-              </div>
-              <div>
-                {
-                  "Excessive Steroids with <5mg / OCS day on Double Therapy percent"
-                }
-                :{" "}
-                <strong>
-                  {nationalData[
-                    "Percent of ICS-LABA High Steroid Usage with ER visit"
-                  ].toFixed(2)}
-                  %
-                </strong>
-              </div>
-              <div>
-                {"Excessive steroids with >5mg / OCS day on Double Therapy"}:{" "}
-                <strong>
-                  {
-                    nationalData[
-                      "Number of ICS-LABA High Steroid Usage without ER visit"
-                    ]
-                  }
-                </strong>
-              </div>
-              <div>
-                {
-                  "Excessive steroids with >5mg / OCS day on Double Therapy percent"
-                }
-                :{" "}
-                <strong>
-                  {nationalData[
-                    "Percent of ICS-LABA High Steroid Usage without ER visit"
-                  ].toFixed(2)}
-                  %
-                </strong>
-              </div>
-            </div>
-          )}
+         
         </div>
       )}
     </div>

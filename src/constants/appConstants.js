@@ -72,7 +72,7 @@ export const APP_ROUTES = {
   data_quality: "data_quality",
   unmet_need_definition: "unmet_need_definition",
   priority_engagement_opportunity_page: "priority_engagement_opportunity_page",
-  help: "help"
+  help: "help",
 };
 
 export const APP_ROUTES_LABEL = {
@@ -94,7 +94,7 @@ export const APP_ROUTES_LABEL = {
   data_quality: "Data Quality",
   unmet_need_definition: "Unmet Need Definitions",
   priority_engagement_opportunity_page: "Priority Engagement Opportunities",
-  help: "Need Help?"
+  help: "Need Help?",
 };
 
 export const patientTotals = [
@@ -110,7 +110,7 @@ export const patientTotals = [
   "Total ICS-LABA LAMA Patients",
   "Number of ICS-LABA LAMA Patients",
   "Number of ICS-LABA-LAMA Patients",
-  "Number of Biologic Patients"
+  "Number of Biologic Patients",
 ];
 
 export const unmetLabels = {
@@ -167,9 +167,9 @@ export const unmetLabels = {
     id: "Total ICS-LABA With LAMA",
     percent: "Percent ICS-LABA With LAMA",
   },
-  "Biologic before Triple Therapy" :{
+  "Biologic before Triple Therapy": {
     id: "Number of Biologic Before Triple",
-    percent: 'Percent of Biologic Before Triple'
+    percent: "Percent of Biologic Before Triple",
   },
   "Non-adherence to single therapy (persistence)": {
     id: "Total ICS Persistence < 360",
@@ -204,7 +204,7 @@ export const mapSelectLabels = {
   "Number of ICS-LABA Patients": "Number of ICS-LABA Patients",
   // "Number of ICS-LABA Exacerbation": "Number of ICS-LABA Exacerbation",
   "Number of ICS-LABA LAMA Patients": "Number of ICS-LABA-LAMA Patients",
-  "Number of Biologic Patients":"Number of Biologic Patients",
+  "Number of Biologic Patients": "Number of Biologic Patients",
   "Number of No Spirometry": "Incomplete initial asthma testing",
   "Percent of No Spirometry": "Incomplete initial asthma testing percent",
   "Number of Exacerbation Without Spirometry":
@@ -295,7 +295,7 @@ export const selectLabels = {
   "Number of ICS-LABA Patients": "Number of ICS-LABA Patients",
   // "Number of ICS-LABA Exacerbation": "Number of ICS-LABA Exacerbation",
   "Number of ICS-LABA LAMA Patients": "Number of ICS-LABA-LAMA Patients",
-  "Number of Biologic Patients":"Number of Biologic Patients",
+  "Number of Biologic Patients": "Number of Biologic Patients",
   "Number of No Spirometry": "Incomplete initial asthma testing",
   "Percent of No Spirometry": "Incomplete initial asthma testing percent",
   "Number of Exacerbation Without Spirometry":
@@ -326,7 +326,7 @@ export const selectLabels = {
   "Number of Failure To Escalate With 3 Exacerbations":
     "Failure to Escalate 3+ Exacerbations on Double Therapy",
   "Percent of Failure To Escalate With 3 Exacerbations":
-    "Failure to Escalate 3+ Exacerbations on Double Therapy percent" ,
+    "Failure to Escalate 3+ Exacerbations on Double Therapy percent",
   "Number of ICS-LABA Exacerbation Failed Escalation":
     "Excessive Steroid Usage on Double Therapy",
   "Percent of ICS-LABA Exacerbation Failed Escalation":
@@ -401,7 +401,7 @@ export const excludedLabels = [
   "Number of ICS-LABA Persistence < 360",
   "Number of ICS-LABA Compliance < 240",
   "Number of ICS-LABA LAMA Persistence < 360",
-  "Number of ICS-LABA LAMA Compliance < 240"
+  "Number of ICS-LABA LAMA Compliance < 240",
 ];
 
 export const mapLabels = {
@@ -466,13 +466,15 @@ export const mapLabels = {
   "Total ICS-LABA With LAMA": "Number of ICS-LABA Patients with LAMA",
   "Percent ICS-LABA With LAMA": "Percent of ICS-LABA Patients with LAMA",
   "Number of Failure To Escalate With 3 Exacerbations":
-  "Number of Failure To Escalate With 3 Exacerbations",
-"Percent of Failure To Escalate With 3 Exacerbations":
-  "Percent of Failure To Escalate With 3 Exacerbations",
-  "Number of Biologic Before Triple":'Number of Biologic Before Triple',
-  "Percent of Biologic Before Triple":"Percent of Biologic Before Triple",
-  "Number of Exacerbation Without Spirometry":"Number of Exacerbation Without Spirometry",
-  "Percent of Exacerbation Without Spirometry":"Percent of Exacerbation Without Spirometry"
+    "Number of Failure To Escalate With 3 Exacerbations",
+  "Percent of Failure To Escalate With 3 Exacerbations":
+    "Percent of Failure To Escalate With 3 Exacerbations",
+  "Number of Biologic Before Triple": "Number of Biologic Before Triple",
+  "Percent of Biologic Before Triple": "Percent of Biologic Before Triple",
+  "Number of Exacerbation Without Spirometry":
+    "Number of Exacerbation Without Spirometry",
+  "Percent of Exacerbation Without Spirometry":
+    "Percent of Exacerbation Without Spirometry",
 };
 
 export const invertedMapLabels = {
@@ -537,13 +539,15 @@ export const invertedMapLabels = {
   "Number of ICS-LABA Patients with LAMA": "Total ICS-LABA With LAMA",
   "Percent of ICS-LABA Patients with LAMA": "Percent ICS-LABA With LAMA",
   "Number of Failure To Escalate With 3 Exacerbations":
-  "Number of Failure To Escalate With 3 Exacerbations",
-"Percent of Failure To Escalate With 3 Exacerbations":
-  "Percent of Failure To Escalate With 3 Exacerbations",
-  "Number of Biologic Before Triple":'Number of Biologic Before Triple',
-  "Percent of Biologic Before Triple":"Percent of Biologic Before Triple",
-  "Number of Exacerbation Without Spirometry":"Number of Exacerbation Without Spirometry",
-  "Percent of Exacerbation Without Spirometry":"Percent of Exacerbation Without Spirometry"
+    "Number of Failure To Escalate With 3 Exacerbations",
+  "Percent of Failure To Escalate With 3 Exacerbations":
+    "Percent of Failure To Escalate With 3 Exacerbations",
+  "Number of Biologic Before Triple": "Number of Biologic Before Triple",
+  "Percent of Biologic Before Triple": "Percent of Biologic Before Triple",
+  "Number of Exacerbation Without Spirometry":
+    "Number of Exacerbation Without Spirometry",
+  "Percent of Exacerbation Without Spirometry":
+    "Percent of Exacerbation Without Spirometry",
 };
 
 export const filterColors = {

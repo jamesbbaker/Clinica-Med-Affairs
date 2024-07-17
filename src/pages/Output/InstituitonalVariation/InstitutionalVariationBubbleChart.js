@@ -38,7 +38,7 @@ const reducer = (state, action) => {
   }
 };
 
-const InstitutionalVariationBubbleChart = ({isScatterMapOpen=false, setIsScatterMapOpen,applyFilter, region,selectedSpeciality}) => {
+const InstitutionalVariationBubbleChart = ({scatterValue,isScatterMapOpen=false, setIsScatterMapOpen,applyFilter, region,selectedSpeciality}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { accessToken, refreshToken, selectedUnmet } = useContext(AuthContext);
   const [rawData, setRawData] = useState(null);
@@ -211,7 +211,7 @@ useEffect(() => {
   };
 
   const handleSelect = (id, val) => {
-    console.log(id, val)
+   
     dispatch({
       type: actions.handleUpdate,
       payload: {
@@ -278,7 +278,7 @@ useEffect(() => {
           </div>}
 
           <ScatterChart
-       
+       scatterValue={scatterValue}
           setIsScatterMapOpen={setIsScatterMapOpen}
           shapes={[]}
             insititutional={true}
