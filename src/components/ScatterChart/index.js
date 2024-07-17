@@ -183,6 +183,7 @@ const defaultOptions = {
 };
 
 const ScatterChart = ({
+  scatterValue=true,
   setHcpProfilePage = () => {},
 
   setIsScatterMapOpen = () => {},
@@ -293,7 +294,7 @@ const ScatterChart = ({
           const { datasetIndex, index } = elements[0];
           const dataset = data.datasets[datasetIndex];
           const dataPoint = dataset.data[index];
-          setIsScatterMapOpen(true);
+          setIsScatterMapOpen(scatterValue);
           setChartDataValue(setData1, null, [dataPoint]);
           setHcpProfilePage("scatter");
         }

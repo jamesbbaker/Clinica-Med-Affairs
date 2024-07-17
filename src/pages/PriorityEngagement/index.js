@@ -87,7 +87,7 @@ const PriorityEngagement = () => {
   const handleSelectFilter = (val) => {
     setCrfUnmetNeed(val);
     setPrimarySpecialtyData(crfData[val]["Primary Specialty"]);
-   
+
     let _data = {
       labels: crfData[val]["HCP Index"],
       datasets: [
@@ -115,12 +115,10 @@ const PriorityEngagement = () => {
       "PULMONARY CRITICAL CARE MEDICINE",
     ];
     if (shape1.includes(val)) {
-   
       return "rgba(135, 206, 235, 1)";
     }
     let shape2 = ["ALLERGY & IMMUNOLOGY"];
     if (shape2.includes(val)) {
-     
       return "rgba(34, 139, 34, 1)";
     }
     let shape3 = [
@@ -216,22 +214,33 @@ const PriorityEngagement = () => {
 
   return (
     <div className="flex flex-col items-start ">
-      <h1 className="text-lg font-[500] mb-4">Identify Priorities based on Multiple Unmet Needs</h1>
-      <div className="w-full sticky top-14 z-50 bg-[#d4d4d4] mb-8 grid grid-cols-3">
-        {charts.map((item, index) => <div key={index} className="text-[#000]">
-          <button
-            className={`text-[#000] hover:shadow-xl transition-all ease-in-out duration-300 shadow-md text-lg px-4 w-full text-center py-4 font-[500] ${
-              currentChart === item.id? "bg-blue-500 text-white" : "text-gray-700"
-            } ${index === 1 && " border-r-2 border-l-2"}`}
-            onClick={() => handleSelectChart(item.id)}
-          >
-            {item.name}
-          </button>
-        </div>)}
-      </div>
+      {!isScatterMapOpen && (
+        <>
+          <h1 className="text-lg font-[500] mb-4">
+            Identify Priorities based on Multiple Unmet Needs
+          </h1>
+          <div className="w-full sticky top-14 z-50 bg-[#d4d4d4] mb-8 grid grid-cols-3">
+            {charts.map((item, index) => (
+              <div key={index} className="text-[#000]">
+                <button
+                  className={`text-[#000] hover:shadow-xl transition-all ease-in-out duration-300 shadow-md text-lg px-4 w-full text-center py-4 font-[500] ${
+                    currentChart === item.id
+                      ? "bg-blue-500 text-white"
+                      : "text-gray-700"
+                  } ${index === 1 && " border-r-2 border-l-2"}`}
+                  onClick={() => handleSelectChart(item.id)}
+                >
+                  {item.name}
+                </button>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
       <div
         style={{
-          display: currentChart !== "hcp" || isScatterMapOpen ? "none" : "block",
+          display:
+            currentChart !== "hcp" || isScatterMapOpen ? "none" : "block",
         }}
         className="w-full flex flex-col items-start"
       >
@@ -323,6 +332,7 @@ const PriorityEngagement = () => {
           className="w-full"
         >
           <MedicalAffairToolbox
+            scatterValue="hcp"
             isScatterMapOpen={isScatterMapOpen}
             setIsScatterMapOpen={setIsScatterMapOpen}
           />
@@ -330,21 +340,25 @@ const PriorityEngagement = () => {
         <div
           style={{
             display:
-              currentChart === "hospital_clinic_system" || currentChart === "hcp"  ? "block" : "none",
+              currentChart === "hospital_clinic_system" ? "block" : "none",
           }}
           className="w-full"
         >
           <InstitutionalVariationBubbleChart
+             isScatterMapOpen={isScatterMapOpen}
+            scatterValue="hospital_clinic_system"
             setIsScatterMapOpen={setIsScatterMapOpen}
           />
         </div>
         <div
           style={{
-            display: currentChart === "payer_plan" || currentChart === "hcp"  ? "block" : "none",
+            display: currentChart === "payer_plan" ? "block" : "none",
           }}
           className="w-full"
         >
           <PayerVariationBubbleChart
+          isScatterMapOpen={isScatterMapOpen}
+            scatterValue={"payer_plan"}
             setIsScatterMapOpen={setIsScatterMapOpen}
           />
         </div>

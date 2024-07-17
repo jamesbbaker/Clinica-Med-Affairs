@@ -20,7 +20,6 @@ const HcpInsight = () => {
   const [selectedUnmetValue, setSelectedUnmet] = useState([]);
 
   const handleSelectMultipleUnmet = (val) => {
- 
     setSelectedUnmet(val);
     setTableColumns([
       { Header: "Specialty Category", accessor: "Specialty_Bucket" },
@@ -33,10 +32,25 @@ const HcpInsight = () => {
   };
 
   useEffect(() => {
+    if (setStatsData2 && rawHeaders && selectedUnmet.length > 0) {
+      let selectedValues = selectedUnmet.filter((item) =>
+        rawHeaders.includes(mapLabels[item.value])
+      );
+      handleSelectMultipleUnmet([
+        {
+          label: "Number of ICS-LABA Patients",
+          value: "Total ICS-LABA Patients",
+        },
+        ...selectedValues,
+      ]);
+    }
+  }, [selectedUnmet, statsData2]);
+
+  useEffect(() => {
     getDataStats("data_stats_23", accessToken, refreshToken)
       .then((responseData) => {
         if (responseData) {
-          console.log(responseData)
+          console.log(responseData);
           setRawHeaders(responseData.headers);
           let _data = responseData.data.map((item) => {
             let newItem = { ...item };
@@ -52,29 +66,17 @@ const HcpInsight = () => {
           setTableColumns([
             { Header: "Specialty Category", accessor: "Specialty_Bucket" },
             { Header: "Number of Providers", accessor: "Number of Providers" },
-            ...Object.keys(selectLabels)
-              .filter((item) =>
-                responseData.headers.includes(invertedMapLabels[item])
-              )
-              .map((item) => {
-                return {
-                  Header: selectLabels[item],
-                  accessor: invertedMapLabels[item],
-                };
-              }),
+            {
+              Header: "Number of ICS-LABA Patients",
+              accessor: "Total ICS-LABA Patients",
+            },
           ]);
-          setSelectedUnmet(
-            [...Object.keys(selectLabels)]
-              .filter((item) =>
-                responseData.headers.includes(invertedMapLabels[item])
-              )
-              .map((item) => {
-                return {
-                  label: selectLabels[item],
-                  value: invertedMapLabels[item],
-                };
-              })
-          );
+          setSelectedUnmet([
+            {
+              label: "Number of ICS-LABA Patients",
+              value: "Total ICS-LABA Patients",
+            },
+          ]);
         }
       })
       .catch((err) => console.log(err));

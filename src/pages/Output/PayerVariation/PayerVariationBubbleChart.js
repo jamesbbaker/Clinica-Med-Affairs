@@ -40,7 +40,7 @@ const reducer = (state, action) => {
   }
 };
 
-const PayerVariationBubbleChart = ({setIsScatterMapOpen, isScatterMapOpen=false}) => {
+const PayerVariationBubbleChart = ({scatterValue,setIsScatterMapOpen, isScatterMapOpen=false}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { accessToken, refreshToken,selectedUnmet } = useContext(AuthContext);
   const [rawData, setRawData] = useState(null);
@@ -270,6 +270,7 @@ const PayerVariationBubbleChart = ({setIsScatterMapOpen, isScatterMapOpen=false}
           </div>}
 
           <ScatterChart
+          scatterValue={scatterValue}
           setIsScatterMapOpen={setIsScatterMapOpen}
           shapes={ [
             {

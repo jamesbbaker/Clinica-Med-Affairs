@@ -40,7 +40,7 @@ const reducer = (state, action) => {
   }
 };
 
-const MedicalAffairToolbox = ({isScatterMapOpen, setIsScatterMapOpen,setHcpProfilePage = () => {}}) => {
+const MedicalAffairToolbox = ({scatterValue,isScatterMapOpen, setIsScatterMapOpen,setHcpProfilePage = () => {}}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { accessToken,selectedUnmet, refreshToken } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
@@ -399,6 +399,7 @@ const MedicalAffairToolbox = ({isScatterMapOpen, setIsScatterMapOpen,setHcpProfi
           </div></>}
 
           <ScatterChart
+          scatterValue={scatterValue}
           setHcpProfilePage={setHcpProfilePage}
           setIsScatterMapOpen={setIsScatterMapOpen}
             quadrantValues={quadrantValues}
