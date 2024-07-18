@@ -43,6 +43,7 @@ const AuthProvider = () => {
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+    console.log(storedUser, "storedUser")
 
     if (storedAccessToken) {
       setAccessToken(storedAccessToken);
@@ -70,6 +71,7 @@ const AuthProvider = () => {
           page_view: res.page_view,
           name: res.name
         };
+        console.log(res, "res")
         setUser(userData);
         setAccessToken(res.access_token);
         setRefreshToken(res.refresh_token);

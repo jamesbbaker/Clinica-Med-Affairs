@@ -24,22 +24,7 @@ const DataQuality = () => {
     yLabels: [],
   });
 
-  const [statsData8, setStatsData8] = useState(null);
   const [mapData, setMapData] = useState(null);
-
-  const Table_Columns_3 = useMemo(() => {
-    const USERS_TABLE_COLUMNS = [
-      {
-        Header: "Metric",
-        accessor: "Metric",
-      },
-      {
-        Header: "Value",
-        accessor: "Value",
-      },
-    ];
-    return USERS_TABLE_COLUMNS;
-  }, []);
 
   const TableColummns = useMemo(() => {
     const USERS_TABLE_COLUMNS = [
@@ -344,16 +329,7 @@ const DataQuality = () => {
       .catch((err) => {
         console.log(err, "err");
       });
-    getDataStats("data_stats_15", accessToken, refreshToken)
-      .then((res) => {
-        if (res) {
-          const responseData = res.data;
-          setStatsData8(responseData);
-        }
-      })
-      .catch((err) => {
-        console.log(err, "err");
-      });
+
     getDataStats("data_stats_8", accessToken, refreshToken)
       .then((res) => {
         if (res) {
@@ -368,26 +344,6 @@ const DataQuality = () => {
 
   return (
     <div>
-      {statsData8 && (
-        <Table
-          initialState={{
-            pageSize: 10,
-            pageIndex: 0,
-            sortBy: [
-              {
-                id: "Value",
-                desc: true,
-              },
-            ],
-          }}
-          marginTop="0"
-          Title="Summary Table"
-          activeCells={false}
-          showSelectionBtns={false}
-          TableData={statsData8}
-          TableColummns={Table_Columns_3}
-        />
-      )}
       {statsData1_1 && (
         <div className="p-6 w-full overflow-auto">
           <h4 className="mb-8 ml-2 font-[500]">
@@ -448,10 +404,10 @@ const DataQuality = () => {
           />
         </div>
       )}
-      <RadarChart />
+      {/* <RadarChart />
       {statsData1 && (
         <LineChart arbitrary={false} data={statsData1} options={options} />
-      )}
+      )} */}
       {statsData6 && (
         <LineChart
           arbitrary={false}

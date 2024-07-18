@@ -62,7 +62,7 @@ const reducer = (state, action) => {
   }
 };
 
-const EligiblePatientLocator = ({setHcpProfilePage=() => {}}) => {
+const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
   const [filterList, setFilterList] = useState([]);
   const [statsData1, setStatsData1] = useState(null);
   const [filterState, dispatch] = useReducer(reducer, initialState);
@@ -86,6 +86,8 @@ const EligiblePatientLocator = ({setHcpProfilePage=() => {}}) => {
   const [icsNumber, setIcsNumber] = useState({ min: 0, max: 0 });
   const [steroidPercent, setsteroidPercent] = useState({ min: 0, max: 0 });
   const [data1, setData1] = useState(null);
+  const [hcpScatter, setHcpScatter] = useState();
+  const [concentrationCurve, setConcentrationCurve] = useState(null);
 
   useEffect(() => {
     if (statsData1 === null) {
@@ -351,26 +353,62 @@ const EligiblePatientLocator = ({setHcpProfilePage=() => {}}) => {
       urlParams.length > 0 ? "&" : ""
     }${urlParams}`;
 
+    getDataStats("get_hcp_scatter", accessToken, refreshToken)
+      .then((res) => {
+        setHcpScatter(res);
+      })
+      .catch((err) => {
+        console.log(err, "err");
+      });
+
     getDataStats(finalUrl, accessToken, refreshToken)
       .then((res) => {
-        let _data = JSON.parse(res.replaceAll("NaN", 0));
+        getDataStats("get_hcp_concentration_curve", accessToken, refreshToken)
+          .then((_res) => {
+            setConcentrationCurve(_res.data);
+            let _data = JSON.parse(res.replaceAll("NaN", 0));
 
-        if (_data) {
-          settotalPage(Math.floor(_data.total / currentSize));
-          const responseData = _data.data;
-          setSpecialityList(_data.specialty_list);
-          setRegionList(_data.region_list);
-          setorganisationList(_data.organization_list);
-          setstateNameList(_data.state_name_list);
-          const newData = responseData.map((item) => {
-            return {
-              ...item,
-              Name: item["First Name"] + " " + item["Last Name"],
-            };
+            if (_data) {
+              settotalPage(Math.floor(_data.total / currentSize));
+              const responseData = _data.data;
+              setSpecialityList(_data.specialty_list);
+              setRegionList(_data.region_list);
+              setorganisationList(_data.organization_list);
+              setstateNameList(_data.state_name_list);
+              const newData = responseData.map((item) => {
+                console.log(item[_res.data.unmet_need],_res.data.value)
+                return {
+                  ...item,
+                  "Top Priority": item[_res.data.unmet_need] >= parseInt(_res.data.value)? true :false,
+                  Name: item["First Name"] + " " + item["Last Name"],
+                };
+              });
+              console.log(newData)
+              setStatsData1(newData);
+            }
+          })
+          .catch((err) => {
+            console.log(err, "err");
+            let _data = JSON.parse(res.replaceAll("NaN", 0));
+
+            if (_data) {
+              settotalPage(Math.floor(_data.total / currentSize));
+              const responseData = _data.data;
+              setSpecialityList(_data.specialty_list);
+              setRegionList(_data.region_list);
+              setorganisationList(_data.organization_list);
+              setstateNameList(_data.state_name_list);
+              const newData = responseData.map((item) => {
+                return {
+                  ...item,
+                  "Top Priority": false,
+                  Name: item["First Name"] + " " + item["Last Name"],
+                };
+              });
+              console.log(responseData);
+              setStatsData1(newData);
+            }
           });
-
-          setStatsData1(newData);
-        }
       })
       .catch((err) => {
         console.log(err, "err");
@@ -413,7 +451,7 @@ const EligiblePatientLocator = ({setHcpProfilePage=() => {}}) => {
   }
 
   const handleRowClicked = (col) => {
-    setHcpProfilePage("table")
+    setHcpProfilePage("table");
     setChartDataValue(setData1, null, [col.original]);
   };
 
@@ -435,6 +473,10 @@ const EligiblePatientLocator = ({setHcpProfilePage=() => {}}) => {
       {
         header: "Assigned Physician Name",
         accessor: "Assigned Physician Name",
+      },
+      {
+        header: "Top Priority",
+        accessor: "Top Priority",
       },
       // { header: "Last Name", accessor: "Last Name" },
       {
@@ -501,9 +543,8 @@ const EligiblePatientLocator = ({setHcpProfilePage=() => {}}) => {
   };
 
   const closeModal = () => {
-    setHcpProfilePage(null)
-    setData1(null)
-
+    setHcpProfilePage(null);
+    setData1(null);
   };
 
   const handleSort = (column) => {
@@ -533,14 +574,13 @@ const EligiblePatientLocator = ({setHcpProfilePage=() => {}}) => {
     );
   };
 
- 
-
   return statsData1 !== null && !loading ? (
     <>
       {data1 ? (
         <BarChartPopup closeModal={closeModal} data1={data1} />
       ) : (
         <Table
+          hcpScatter={hcpScatter}
           isEligible={true}
           dispatch={dispatch}
           setFilterList={setFilterList}

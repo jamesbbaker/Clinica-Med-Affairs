@@ -6,11 +6,13 @@ import { AuthContext } from "../../context/AuthContext";
 import { generateStatsOptions, setLineData } from "../../utils/ChartUtils";
 import { LineChart } from "../../components/LineChart";
 import DataQuality from "./DataQuality";
+import Table from "../../components/Table";
 
 
 const PatientTracking = () => {
   const [statsData7, setStatsData7] = useState(null);
   const { accessToken, refreshToken } = useContext(AuthContext);
+  const [statsData8, setStatsData8] = useState(null);
  
 
   const Line_options_2 = useMemo(() => {
@@ -33,11 +35,55 @@ const PatientTracking = () => {
       .catch((err) => {
         console.log(err, "err");
       });
+      getDataStats("data_stats_15", accessToken, refreshToken)
+      .then((res) => {
+        if (res) {
+          const responseData = res.data;
+          setStatsData8(responseData);
+        }
+      })
+      .catch((err) => {
+        console.log(err, "err");
+      });
    
+  }, []);
+
+  const Table_Columns_3 = useMemo(() => {
+    const USERS_TABLE_COLUMNS = [
+      {
+        Header: "Metric",
+        accessor: "Metric",
+      },
+      {
+        Header: "Value",
+        accessor: "Value",
+      },
+    ];
+    return USERS_TABLE_COLUMNS;
   }, []);
 
   return (
     <div>
+       {statsData8 && (
+        <Table
+          initialState={{
+            pageSize: 10,
+            pageIndex: 0,
+            sortBy: [
+              {
+                id: "Value",
+                desc: true,
+              },
+            ],
+          }}
+          marginTop="0"
+          Title="Summary Table"
+          activeCells={false}
+          showSelectionBtns={false}
+          TableData={statsData8}
+          TableColummns={Table_Columns_3}
+        />
+      )}
       <div className="mb-10">
         <Sankey
           API={"sankey_data_6"}

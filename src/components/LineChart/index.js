@@ -190,7 +190,8 @@ export const _options = {
 };
 
 export function LineChart({
-  setPrioitySelectedValue = () => {},
+  arb_value = 0,
+  setPageData = () => {},
   primarySpecialtyData,
   key = null,
   arbitrary = true,
@@ -217,51 +218,59 @@ export function LineChart({
   //   });
   // },[])
 
-  const handleChange = useCallback(
-    (e) => {
-      let _val = parseInt(e.target.value);
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
-      timerRef.current = setTimeout(() => {
-        if (lineRef.current) {
-          arbitraryLine.beforeDatasetsDraw(lineRef.current);
-          lineRef.current.setActiveElements([
-            { datasetIndex: _val - 1, hovered: false, index: _val },
-          ]);
-          lineRef.current.update();
-          if (primarySpecialtyData && _val) {
-            let _newPrimaryData = [...primarySpecialtyData];
-            let primaryData = _newPrimaryData.splice(0, _val);
+  useEffect(() => {
+    if (arb_value) {
+      handleChange({target: {value: arb_value}});
+    }
+  }, [arb_value]);
 
-            let data = calculateShapes(primaryData);
-            let _barChartData = {
-              labels: colors.map((item) => item.name),
-              datasets: [
-                {
-                  data,
-                  borderColor: colors.map((item) => item.rgba),
-                  backgroundColor: colors.map((item) => item.rgba),
-                },
-              ],
-            };
-            setBarChartData(_barChartData);
-          }
-          if (_val === 0) {
-            setBarChartData(null);
-          }
+  const handleChange = (e) => {
+    let _val = parseInt(e.target.value);
+
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+    timerRef.current = setTimeout(() => {
+      if (lineRef.current) {
+        arbitraryLine.beforeDatasetsDraw(lineRef.current);
+        lineRef.current.setActiveElements([
+          { datasetIndex: _val - 1, hovered: false, index: _val },
+        ]);
+        lineRef.current.update();
+        if (primarySpecialtyData && _val) {
+          let _newPrimaryData = [...primarySpecialtyData];
+          let primaryData = _newPrimaryData.splice(0, _val);
+
+          let data = calculateShapes(primaryData);
+          let _barChartData = {
+            labels: colors.map((item) => item.name),
+            datasets: [
+              {
+                data,
+                borderColor: colors.map((item) => item.rgba),
+                backgroundColor: colors.map((item) => item.rgba),
+              },
+            ],
+          };
+          setBarChartData(_barChartData);
         }
-      }, 50);
-      setSelectedValue(_val);
-      setPrioitySelectedValue(_val);
-    },
-    [primarySpecialtyData, setPrioitySelectedValue]
-  );
+        if (_val === 0) {
+          setBarChartData(null);
+        }
+        setPageData((prev) => ({
+          ...prev,
+          value: _val,
+        }));
+      }
+    }, 50);
+    setSelectedValue(_val);
+  };
 
   useEffect(() => {
     if (data) {
-      setSelectedValue(0);
+      // setSelectedValue(0);
       setChartData(data);
+      // handleChange({target: {value: 0}})
       setArbitraryLine((prev) => ({
         ...prev,
         max: data.labels.length,

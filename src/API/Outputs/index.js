@@ -36,7 +36,7 @@ export async function getDataStats(endPoint, token, refreshToken) {
     })
     .catch(function (error) {
       // handle error
-      console.log(error);
+      reject(error)
     })
     .finally(function () {
       // always executed

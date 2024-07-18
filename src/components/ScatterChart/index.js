@@ -183,7 +183,7 @@ const defaultOptions = {
 };
 
 const ScatterChart = ({
-  scatterValue=true,
+  scatterValue = true,
   setHcpProfilePage = () => {},
 
   setIsScatterMapOpen = () => {},
@@ -401,8 +401,6 @@ const ScatterChart = ({
     setLineY(Number(e.target.value));
   };
 
-  
-
   return (
     <div className="min-h-[400px] relative w-full">
       {data1 ? (
@@ -496,11 +494,10 @@ const ScatterChart = ({
                 min={0}
                 max={maxY}
                 onChange={handleChangeY}
-                defaultValue={0}
+                value={lineY}
                 className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-500"
               />
               <div className="w-40 ml-10">
-                {" "}
                 <input
                   id="labels-range-input"
                   type="number"

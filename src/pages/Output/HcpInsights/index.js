@@ -36,6 +36,7 @@ const HcpInsight = () => {
       let selectedValues = selectedUnmet.filter((item) =>
         rawHeaders.includes(mapLabels[item.value])
       );
+      
       handleSelectMultipleUnmet([
         {
           label: "Number of ICS-LABA Patients",
@@ -50,7 +51,7 @@ const HcpInsight = () => {
     getDataStats("data_stats_23", accessToken, refreshToken)
       .then((responseData) => {
         if (responseData) {
-          console.log(responseData);
+          
           setRawHeaders(responseData.headers);
           let _data = responseData.data.map((item) => {
             let newItem = { ...item };

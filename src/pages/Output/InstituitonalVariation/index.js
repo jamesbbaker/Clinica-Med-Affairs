@@ -249,8 +249,8 @@ const InstitutionalVariation = () => {
     let lowestValue = getLowestValue(secondlevelData, e);
     let _highestValue = highestValue(secondlevelData, e);
     setValues({
-      min:summaryMatrix[e]["median_minus_1SD"],// lowestValue,
-      max: summaryMatrix[e]["median_plus_1SD"]//_highestValue,
+      min:summaryMatrix ? summaryMatrix[e]["median_minus_1SD"] : lowestValue,// lowestValue,
+      max:summaryMatrix ?  summaryMatrix[e]["median_plus_1SD"] :_highestValue//_highestValue,
     });
     handleTreeData(rawData, e);
   };
