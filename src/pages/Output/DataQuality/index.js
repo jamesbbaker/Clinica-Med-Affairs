@@ -344,7 +344,59 @@ const DataQuality = () => {
 
   return (
     <div>
-      {statsData1_1 && (
+     
+      {/* <RadarChart />
+      {statsData1 && (
+        <LineChart arbitrary={false} data={statsData1} options={options} />
+      )} */}
+      {statsData6 && (
+        <LineChart
+          arbitrary={false}
+          data={statsData6}
+          options={options_line_2}
+        />
+      )}
+      {statsData2 && (
+        <div className="flex w-full flex-col gap-12">
+          <div className="flex w-full flex-col gap-2">
+            <p className="text-[#888888] font-bold text-xs">
+              Asthma Patients by States
+            </p>
+            <Map dataQuality={true} markersEnabled={false} mapData={mapData} />
+          </div>
+          <TreeMap needCallbacks={false} data={statsData2} />
+        </div>
+      )}
+      {statsData3 && (
+        <Table
+          Title="Asthma HCP Specialties by Patient Interactions"
+          activeCells={false}
+          showSelectionBtns={false}
+          TableData={statsData3}
+          TableColummns={TableColummns}
+        />
+      )}
+      {statsData4 && (
+        <Table
+          Title="Patients by Type of Medicine"
+          activeCells={false}
+          showSelectionBtns={false}
+          TableData={statsData4}
+          TableColummns={secondTableColummns}
+        />
+      )}
+      {statsData5 && (
+        <>
+          <LineChart
+            height={150}
+            arbitrary={false}
+            data={statsData5}
+            options={Line_options}
+          />
+        </>
+        
+      )}
+       {statsData1_1 && (
         <div className="p-6 w-full overflow-auto">
           <h4 className="mb-8 ml-2 font-[500]">
             Unmet Need Correlation Heatmap
@@ -403,56 +455,6 @@ const DataQuality = () => {
             yLabels={labels.yLabels}
           />
         </div>
-      )}
-      {/* <RadarChart />
-      {statsData1 && (
-        <LineChart arbitrary={false} data={statsData1} options={options} />
-      )} */}
-      {statsData6 && (
-        <LineChart
-          arbitrary={false}
-          data={statsData6}
-          options={options_line_2}
-        />
-      )}
-      {statsData2 && (
-        <div className="flex w-full flex-col gap-12">
-          <div className="flex w-full flex-col gap-2">
-            <p className="text-[#888888] font-bold text-xs">
-              Asthma Patients by States
-            </p>
-            <Map dataQuality={true} markersEnabled={false} mapData={mapData} />
-          </div>
-          <TreeMap needCallbacks={false} data={statsData2} />
-        </div>
-      )}
-      {statsData3 && (
-        <Table
-          Title="Asthma HCP Specialties by Patient Interactions"
-          activeCells={false}
-          showSelectionBtns={false}
-          TableData={statsData3}
-          TableColummns={TableColummns}
-        />
-      )}
-      {statsData4 && (
-        <Table
-          Title="Patients by Type of Medicine"
-          activeCells={false}
-          showSelectionBtns={false}
-          TableData={statsData4}
-          TableColummns={secondTableColummns}
-        />
-      )}
-      {statsData5 && (
-        <>
-          <LineChart
-            height={150}
-            arbitrary={false}
-            data={statsData5}
-            options={Line_options}
-          />
-        </>
       )}
     </div>
   );
