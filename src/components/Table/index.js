@@ -610,7 +610,6 @@ const Table = ({
                         )
                       : "transparent"
                     : "transparent";
-                  console.log(cell.render("Cell").props.column.Header, cellValue);
                   return (
                     <td
                       style={{ background }}
