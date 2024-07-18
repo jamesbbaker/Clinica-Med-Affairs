@@ -36,6 +36,7 @@ export function filterOutLabels(array, selectedUnmet) {
     unmetObj[element.value] = element
   });
   let filteredArray =  array.filter(item => !unmetObj.hasOwnProperty(item));
+  // console.log([...selectedUnmet.map(item => item.value), ...filteredArray])
   return [...selectedUnmet.map(item => item.value), ...filteredArray];
   
 }

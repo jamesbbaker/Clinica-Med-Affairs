@@ -113,6 +113,7 @@ const BarChartOptions = {
 };
 
 const Table = ({
+  hcpScatter,
   colorCells,
   updateTable = false,
   isEligible = false,
@@ -296,43 +297,65 @@ const Table = ({
     setValue(val);
   };
 
+  const getBackgroundColor = (data, row) => {
+    if (!data || !data.unmet_need_1) {
+      return "transparent";
+    }
+    let orginalValue1 = row.original[data.unmet_need_1];
+    let orginalValue2 = row.original[data.unmet_need_2];
+
+    if (
+      orginalValue1 >= parseInt(data.value_1) &&
+      orginalValue2 >= parseInt(data.value_2)
+    ) {
+      return "rgba(255, 0, 0, 0.5)";
+    }
+    if (orginalValue1 >= parseInt(data.value_1)) {
+      return "rgba(224, 176, 255, 0.5)";
+    }
+    if (orginalValue2 >= parseInt(data.value_2)) {
+      return "rgba(75, 0, 130, 0.5)";
+    }
+    return "transparent";
+  };
+
   useEffect(() => {
     if (showTopBtnsToggle) {
       let valHeaders = [];
       if (value) {
         valHeaders = value.map((item) => item.col.Header);
       }
-      let _obj = {}
-      selectedUnmet.forEach(item => {
-        _obj[item.value] = item
-      })
-      let firstUnmet = Object.keys(selectLabels).filter(element => {
-          return _obj.hasOwnProperty(element)
-        })[0]
+      let _obj = {};
+      selectedUnmet.forEach((item) => {
+        _obj[item.value] = item;
+      });
+      // let firstUnmet = Object.keys(selectLabels).filter(element => {
+      //     return _obj.hasOwnProperty(element)
+      //   })[0]
       let _val = [];
       allColumns
         .filter((item) => selectionBtnsArray.includes(item.id))
         .forEach((item, index) => {
-          if (!valHeaders.includes(item.Header) && item.id !== firstUnmet &&  index !== 2) {
+          if (
+            !valHeaders.includes(item.Header) &&
+            !_obj.hasOwnProperty(item.id) &&
+            index !== 2
+          ) {
             item.toggleHidden();
           }
-          if (item.id === firstUnmet) {
-            _val.push(
-              {
-                col: item,
-                label: selectLabels[item.Header],
-                value: item.Header,
-              },
-            );
+          if (_obj.hasOwnProperty(item.id)) {
+            _val.push({
+              col: item,
+              label: selectLabels[item.Header],
+              value: item.Header,
+            });
           }
           if (index === 2 && !value) {
-            _val.push(
-              {
-                col: item,
-                label: selectLabels[item.Header],
-                value: item.Header,
-              },
-            );
+            _val.push({
+              col: item,
+              label: selectLabels[item.Header],
+              value: item.Header,
+            });
           }
         });
       setValue(_val);
@@ -549,10 +572,15 @@ const Table = ({
         <tbody {...getTableBodyProps()}>
           {page.map((row, index) => {
             prepareRow(row);
+            let bg = "transparent";
+            if (hcpScatter) {
+              bg = getBackgroundColor(hcpScatter.data, row);
+            }
             return (
               <tr
                 key={index}
-                className="hover:bg-slate-300 relative cursor-pointer pr-20"
+                style={{ backgroundColor: bg }}
+                className={`hover:bg-slate-300 relative cursor-pointer pr-20`}
                 onClick={() =>
                   activeCells ? handleClick(row) : cellClicked(row)
                 }
@@ -582,25 +610,32 @@ const Table = ({
                         )
                       : "transparent"
                     : "transparent";
-
+                  console.log(cell.render("Cell").props.column.Header, cellValue);
                   return (
                     <td
                       style={{ background }}
                       key={index}
                       {...cell.getCellProps()}
                     >
-                      {colorCells &&
-                      Object.values(selectLabels).includes(_header)
-                        ? `${(cellValue * 100).toFixed(1)}%`
-                        : typeof cellValue === "number"
-                        ? cell.render("Cell").props &&
-                          cell.render("Cell").props.column.Header &&
-                          cell
-                            .render("Cell")
-                            .props.column.Header.includes("Percent")
-                          ? `${cellValue}%`
-                          : cellValue.toLocaleString()
-                        : cell.render("Cell")}
+                      {cell.render("Cell").props.column.Header ===
+                      "Top Priority" ? (
+                        <span style={{background: cellValue ? "blue" : "transparent"}} className="w-3 h-3 flex rounded-full"></span>
+                      ) : colorCells &&
+                        Object.values(selectLabels).includes(_header) ? (
+                        `${(cellValue * 100).toFixed(1)}%`
+                      ) : typeof cellValue === "number" ? (
+                        cell.render("Cell").props &&
+                        cell.render("Cell").props.column.Header &&
+                        cell
+                          .render("Cell")
+                          .props.column.Header.includes("Percent") ? (
+                          `${cellValue.toFixed(2)}%`
+                        ) : (
+                          cellValue.toLocaleString()
+                        )
+                      ) : (
+                        cell.render("Cell")
+                      )}
                     </td>
                   );
                 })}

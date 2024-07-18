@@ -111,7 +111,7 @@ export const patientTotals = [
   "Number of ICS-LABA LAMA Patients",
   "Number of ICS-LABA-LAMA Patients",
   "Number of Biologic Patients",
-];
+];  
 
 export const unmetLabels = {
   "Incomplete initial asthma testing": {

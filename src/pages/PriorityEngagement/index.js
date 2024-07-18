@@ -9,6 +9,7 @@ import HcpInsight from "../Output/HcpInsights";
 import MedicalAffairToolbox from "../Output/MedicalAffairsToolbox";
 import InstitutionalVariationBubbleChart from "../Output/InstituitonalVariation/InstitutionalVariationBubbleChart";
 import PayerVariationBubbleChart from "../Output/PayerVariation/PayerVariationBubbleChart";
+import { Bounce, ToastContainer, toast } from "react-toastify";
 import PrimaryBtn from "../../components/PrimaryBtn";
 
 const defaultOptions = {
@@ -74,6 +75,35 @@ const charts = [
   },
 ];
 
+const generateColor = (val) => {
+  let shape1 = [
+    "PULMONARY DISEASE",
+    "PEDIATRIC PULMONOLOGY",
+    "PULMONARY CRITICAL CARE MEDICINE",
+  ];
+  if (shape1.includes(val)) {
+    return "rgba(135, 206, 235, 1)";
+  }
+  let shape2 = ["ALLERGY & IMMUNOLOGY"];
+  if (shape2.includes(val)) {
+    return "rgba(34, 139, 34, 1)";
+  }
+  let shape3 = [
+    "FAMILY MEDICINE",
+    "PEDIATRICS",
+    "INTERNAL MEDICINE",
+    "GENERAL PRACTICE",
+    "INTERNAL MEDICINE/PEDIATRICS",
+    "GERIATRIC MEDICINE (INTERNAL MEDICINE)",
+    "GERIATRIC MEDICINE (FAMILY MEDICINE)",
+  ];
+  if (shape3.includes(val)) {
+    return "rgba(220, 20, 60, 1)";
+  }
+
+  return "rgba(255, 215, 0, 1)";
+};
+
 const PriorityEngagement = () => {
   const [crfLineData, setCrfLineData] = useState({});
   const [primarySpecialtyData, setPrimarySpecialtyData] = useState(null);
@@ -81,7 +111,13 @@ const PriorityEngagement = () => {
   const [crfData, setCrfData] = useState(null);
   const [currentChart, setCurrentChart] = useState(charts[0].id);
   const [isScatterMapOpen, setIsScatterMapOpen] = useState(false);
-
+  const [pageData, setPageData] = useState(null);
+  const [lineChartData, setLineChartData] = useState({});
+  const [allScatterData, setAllScatterData] = useState({
+    hcp: {},
+    hospital: {},
+    payer: {},
+  });
   const [PriorityselectedValue, setPrioitySelectedValue] = useState(0);
 
   const handleSelectFilter = (val) => {
@@ -106,89 +142,97 @@ const PriorityEngagement = () => {
     };
 
     setCrfLineData(_data);
-  };
-
-  const generateColor = (val) => {
-    let shape1 = [
-      "PULMONARY DISEASE",
-      "PEDIATRIC PULMONOLOGY",
-      "PULMONARY CRITICAL CARE MEDICINE",
-    ];
-    if (shape1.includes(val)) {
-      return "rgba(135, 206, 235, 1)";
-    }
-    let shape2 = ["ALLERGY & IMMUNOLOGY"];
-    if (shape2.includes(val)) {
-      return "rgba(34, 139, 34, 1)";
-    }
-    let shape3 = [
-      "FAMILY MEDICINE",
-      "PEDIATRICS",
-      "INTERNAL MEDICINE",
-      "GENERAL PRACTICE",
-      "INTERNAL MEDICINE/PEDIATRICS",
-      "GERIATRIC MEDICINE (INTERNAL MEDICINE)",
-      "GERIATRIC MEDICINE (FAMILY MEDICINE)",
-    ];
-    if (shape3.includes(val)) {
-      return "rgba(220, 20, 60, 1)";
-    }
-
-    return "rgba(255, 215, 0, 1)";
+    setPageData((prev) => ({
+      ...prev,
+      unmet_need: val,
+    }));
   };
 
   useEffect(() => {
     getDataStats("hcp_crf", accessToken, refreshToken)
       .then((res) => {
         setCrfData(res.crf_data);
-
-        // setCrfUnmetNeed("Number of No Spirometry");
-        // let _data = {
-        //   labels: res.crf_data["Number of No Spirometry"]["HCP Index"],
-        //   datasets: [
-        //     {
-        //       label: "Dataset 1",
-        //       data: res.crf_data["Number of No Spirometry"][
-        //         "Cumulative Unmet Need"
-        //       ],
-        //       // borderColor: generateColorBorder(res.crf_data["Number of No Spirometry"]["Primary Specialty"]),
-        //       backgroundColor: generateColor(res.crf_data["Number of No Spirometry"]["Primary Specialty"]),
-        //     },
-        //   ],
-        // };
-        // setCrfLineData(_data);
       })
       .catch((err) => {
         console.log(err);
+      });
+    getDataStats("get_hcp_concentration_curve", accessToken, refreshToken)
+      .then((res) => {
+        setLineChartData(res.data);
+      })
+      .catch((err) => {
+        if (err.response.status === 404) {
+          setLineChartData(null);
+        }
+      });
+    getDataStats("get_hcp_scatter", accessToken, refreshToken)
+      .then((res) => {
+        setAllScatterData((prev) => ({
+          ...prev,
+          hcp: { ...res.data },
+        }));
+      })
+      .catch((err) => {
+        if (err.response.status === 404) {
+          setAllScatterData((prev) => ({
+            ...prev,
+            hcp: null,
+          }));
+        }
+      });
+    getDataStats("get_hospital_scatter", accessToken, refreshToken)
+      .then((res) => {
+        setAllScatterData((prev) => ({
+          ...prev,
+          hospital: { ...res.data },
+        }));
+      })
+      .catch((err) => {
+        if (err.response.status === 404) {
+          setAllScatterData((prev) => ({
+            ...prev,
+            hospital: null,
+          }));
+        }
+      });
+    getDataStats("get_payer_scatter", accessToken, refreshToken)
+      .then((res) => {
+        setAllScatterData((prev) => ({
+          ...prev,
+          payer: { ...res.data },
+        }));
+      })
+      .catch((err) => {
+        if (err.response.status === 404) {
+          setAllScatterData((prev) => ({
+            ...prev,
+            payer: null,
+          }));
+        }
       });
   }, []);
 
   const { accessToken, refreshToken, selectedUnmet } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
 
-  const handleSave = async () => {
-    if (!PriorityselectedValue) {
-      return;
-    }
-    setLoading(true);
-    let data = {
-      priorities: PriorityselectedValue.toString(),
+  const saveScatterData = async (url, data) => {
+    let scatter_data = {
+      unmet_need_1: data.unmet_need_1,
+      value_1: data.value_1,
+      unmet_need_2: data.unmet_need_2,
+      value_2: data.value_2,
     };
     try {
-      const response = await fetch(
-        "https://clinica-server.replit.app/set_hcp_priorities",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            // "Access-Control-Allow-Origin": "*",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`https://clinica-server.replit.app/${url}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(scatter_data),
+      });
       const res = await response.json();
-      setLoading(false);
       return res;
     } catch (err) {
       console.log(err);
@@ -196,20 +240,113 @@ const PriorityEngagement = () => {
     }
   };
 
+  const handleSave = async () => {
+    // if (!PriorityselectedValue) {
+    //   return;
+    // }
+    setLoading(true);
+
+    if (currentChart === charts[0].id) {
+      let hcp_concentration_data = {
+        unmet_need: pageData.unmet_need,
+        value: pageData.value,
+      };
+
+      try {
+        const response = await fetch(
+          "https://clinica-server.replit.app/set_hcp_concentration_curve",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify(hcp_concentration_data),
+          }
+        );
+        await response.json();
+        let _response = await saveScatterData("set_hcp_scatter", pageData);
+        if (_response) {
+          setLoading(false);
+          toast.success("Saved successfully!", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          });
+        }
+      } catch (err) {
+        console.log(err);
+        throw new Error();
+      }
+    } else if (currentChart === charts[1].id) {
+      try {
+        let _response = await saveScatterData("set_hospital_scatter", pageData);
+        if (_response) {
+          setLoading(false);
+          toast.success("Saved successfully!", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          });
+        }
+      } catch (err) {
+        console.log(err);
+        throw new Error();
+      }
+    } else if (currentChart === charts[2].id) {
+      try {
+        let _response = await saveScatterData("set_payer_scatter", pageData);
+        if (_response) {
+          setLoading(false);
+          toast.success("Saved successfully!", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          });
+        }
+      } catch (err) {
+        console.log(err);
+        throw new Error();
+      }
+    }
+  };
+
   useEffect(() => {
-    if (crfData && selectedUnmet.length > 0) {
+    if (crfData && selectedUnmet.length > 0 && lineChartData === null) {
       let filterLabels = filterOutLabels(
         Object.keys(selectLabels),
         selectedUnmet
       ).filter((item) => crfData.hasOwnProperty(item));
       handleSelectFilter(filterLabels[0]);
-    } else if (crfData) {
+    } else if (crfData && lineChartData === null) {
       handleSelectFilter("Number of No Spirometry");
+    } else if (crfData && lineChartData && Object.values(lineChartData).length > 0) {
+      handleSelectFilter(lineChartData.unmet_need)
     }
-  }, [crfData, selectedUnmet]);
+  }, [crfData, lineChartData, selectedUnmet]);
 
   const handleSelectChart = (val) => {
     setCurrentChart(val);
+    setPageData(null);
   };
 
   return (
@@ -247,6 +384,7 @@ const PriorityEngagement = () => {
         <div className="mb-4">
           <HcpInsight />
         </div>
+        {/* <ToastContainer /> */}
         {crfData && crfLineData && crfUnmetNeed ? (
           <>
             <div className="text-left w-full py-4 font-[500]">
@@ -289,6 +427,8 @@ const PriorityEngagement = () => {
               ))}
             </div>
             <LineChart
+            arb_value={lineChartData && lineChartData.value }
+              setPageData={setPageData}
               setPrioitySelectedValue={setPrioitySelectedValue}
               primarySpecialtyData={primarySpecialtyData}
               options={defaultOptions}
@@ -332,6 +472,9 @@ const PriorityEngagement = () => {
           className="w-full"
         >
           <MedicalAffairToolbox
+            ScatterData={allScatterData.hcp}
+            setPageData={setPageData}
+            isPageUpdatable={currentChart === "hcp"}
             scatterValue="hcp"
             isScatterMapOpen={isScatterMapOpen}
             setIsScatterMapOpen={setIsScatterMapOpen}
@@ -345,7 +488,10 @@ const PriorityEngagement = () => {
           className="w-full"
         >
           <InstitutionalVariationBubbleChart
-             isScatterMapOpen={isScatterMapOpen}
+            ScatterData={allScatterData.hospital}
+            isPageUpdatable={currentChart === "hospital_clinic_system"}
+            setPageData={setPageData}
+            isScatterMapOpen={isScatterMapOpen}
             scatterValue="hospital_clinic_system"
             setIsScatterMapOpen={setIsScatterMapOpen}
           />
@@ -357,7 +503,10 @@ const PriorityEngagement = () => {
           className="w-full"
         >
           <PayerVariationBubbleChart
-          isScatterMapOpen={isScatterMapOpen}
+            ScatterData={allScatterData.payer}
+            isScatterMapOpen={isScatterMapOpen}
+            isPageUpdatable={currentChart === "payer_plan"}
+            setPageData={setPageData}
             scatterValue={"payer_plan"}
             setIsScatterMapOpen={setIsScatterMapOpen}
           />
