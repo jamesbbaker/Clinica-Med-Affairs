@@ -9,7 +9,7 @@ import HcpInsight from "../Output/HcpInsights";
 import MedicalAffairToolbox from "../Output/MedicalAffairsToolbox";
 import InstitutionalVariationBubbleChart from "../Output/InstituitonalVariation/InstitutionalVariationBubbleChart";
 import PayerVariationBubbleChart from "../Output/PayerVariation/PayerVariationBubbleChart";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 import PrimaryBtn from "../../components/PrimaryBtn";
 
 const defaultOptions = {
@@ -118,7 +118,6 @@ const PriorityEngagement = () => {
     hospital: {},
     payer: {},
   });
-  const [PriorityselectedValue, setPrioitySelectedValue] = useState(0);
 
   const handleSelectFilter = (val) => {
     setCrfUnmetNeed(val);
@@ -339,8 +338,12 @@ const PriorityEngagement = () => {
       handleSelectFilter(filterLabels[0]);
     } else if (crfData && lineChartData === null) {
       handleSelectFilter("Number of No Spirometry");
-    } else if (crfData && lineChartData && Object.values(lineChartData).length > 0) {
-      handleSelectFilter(lineChartData.unmet_need)
+    } else if (
+      crfData &&
+      lineChartData &&
+      Object.values(lineChartData).length > 0
+    ) {
+      handleSelectFilter(lineChartData.unmet_need);
     }
   }, [crfData, lineChartData, selectedUnmet]);
 
@@ -427,13 +430,12 @@ const PriorityEngagement = () => {
               ))}
             </div>
             <LineChart
-            arb_value={lineChartData && lineChartData.value }
+              arb_value={lineChartData && lineChartData.value}
               setPageData={setPageData}
-              setPrioitySelectedValue={setPrioitySelectedValue}
               primarySpecialtyData={primarySpecialtyData}
               options={defaultOptions}
               data={crfLineData}
-              height={100}
+              height={80}
             />
           </>
         ) : (

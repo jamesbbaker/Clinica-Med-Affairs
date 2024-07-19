@@ -130,7 +130,6 @@ const Login = ({ passwordChange }) => {
     if (showBack) {
       updatePassword(state.formData)
         .then((res) => {
-          console.log(res);
           if (res) {
             setPasswordUpdate(true)
           }

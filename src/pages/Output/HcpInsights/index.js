@@ -6,6 +6,7 @@ import { MultiSelect } from "react-multi-select-component";
 import {
   invertedMapLabels,
   mapLabels,
+  patientTotals,
   selectLabels,
 } from "../../../constants/appConstants";
 import { filterOutLabels } from "../../../utils/MapUtils";
@@ -24,19 +25,26 @@ const HcpInsight = () => {
     setTableColumns([
       { Header: "Specialty Category", accessor: "Specialty_Bucket" },
       { Header: "Number of Providers", accessor: "Number of Providers" },
-      ...val.map((item) => ({
-        Header: selectLabels[mapLabels[item.value]],
-        accessor: item.value,
-      })),
+      ...val.map((item) => {
+        console.log(item)
+        return {
+          Header:selectLabels[item.value] ?selectLabels[item.value]:  selectLabels[mapLabels[item.value]],
+          accessor:invertedMapLabels[item.value] ? invertedMapLabels[item.value]:  item.value,
+        };
+      }),
     ]);
   };
 
   useEffect(() => {
     if (setStatsData2 && rawHeaders && selectedUnmet.length > 0) {
-      let selectedValues = selectedUnmet.filter((item) =>
-        rawHeaders.includes(mapLabels[item.value])
+    
+      let selectedValues = selectedUnmet.filter(
+        (item) =>
+          rawHeaders.includes(mapLabels[item.value]) &&
+          (item.value.toLowerCase().includes("percent") ||
+            patientTotals.includes(item.value))
       );
-      
+
       handleSelectMultipleUnmet([
         {
           label: "Number of ICS-LABA Patients",
@@ -51,7 +59,6 @@ const HcpInsight = () => {
     getDataStats("data_stats_23", accessToken, refreshToken)
       .then((responseData) => {
         if (responseData) {
-          
           setRawHeaders(responseData.headers);
           let _data = responseData.data.map((item) => {
             let newItem = { ...item };
@@ -91,10 +98,10 @@ const HcpInsight = () => {
           ItemRenderer={CustomOptionRenderer}
           labelledBy=""
           options={filterOutLabels(filterOptions, selectedUnmet)
-            .filter((item) => rawHeaders.includes(invertedMapLabels[item]))
+            .filter((item) => patientTotals.includes(item) || rawHeaders.includes(mapLabels[item]))
             .map((item) => ({
               label: selectLabels[item],
-              value: invertedMapLabels[item],
+              value: item,
             }))}
           className="w-[40rem] mb-10 z-[5]"
           value={selectedUnmetValue}

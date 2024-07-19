@@ -1,5 +1,4 @@
 import React, {
-  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -326,7 +325,7 @@ export function LineChart({
       {barchartData && (
         <div className="my-8 w-full">
           <BarChart
-            height={80}
+            height={60}
             data={barchartData}
             options={_options}
             // options={BarChartOptions}

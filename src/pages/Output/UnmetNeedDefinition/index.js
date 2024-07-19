@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import unmetChart from "../../../assets/images/unmetChart.png";
-import Popup from "reactjs-popup";
+import unmetChart from "../../../assets/images/unmetChart.webp";
 import { getDataStats } from "../../../API/Outputs";
 import { AuthContext } from "../../../context/AuthContext";
 import { generateStatsOptions } from "../../../utils/ChartUtils";

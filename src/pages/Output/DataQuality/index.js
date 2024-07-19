@@ -36,7 +36,7 @@ const DataQuality = () => {
         Header: "Specialty Classification",
         accessor: "Specialty_Bucket",
       },
-      { Header: "Patient Interactions", accessor: "Total_Claims" },
+      { Header: "Claims", accessor: "Total_Claims" },
       { Header: "Patients", accessor: "Total_Patients" },
     ];
     return USERS_TABLE_COLUMNS;
@@ -45,7 +45,7 @@ const DataQuality = () => {
   const secondTableColummns = useMemo(() => {
     const USERS_TABLE_COLUMNS = [
       { Header: "Type", accessor: "Type" },
-      { Header: "Patient Interactions", accessor: "Total_Claims" },
+      { Header: "Claims", accessor: "Total_Claims" },
       { Header: "Patients", accessor: "Total_Patients" },
     ];
     return USERS_TABLE_COLUMNS;
@@ -137,7 +137,7 @@ const DataQuality = () => {
   }, []);
 
   const Line_options = useMemo(() => {
-    return generateStatsOptions("Treatment Types over Time");
+    return generateStatsOptions("Patients treated by Therapy Type");
   }, []);
 
   useEffect(() => {
@@ -349,6 +349,17 @@ const DataQuality = () => {
       {statsData1 && (
         <LineChart arbitrary={false} data={statsData1} options={options} />
       )} */}
+       {statsData5 && (
+        <>
+          <LineChart
+            height={150}
+            arbitrary={false}
+            data={statsData5}
+            options={Line_options}
+          />
+        </>
+        
+      )}
       {statsData6 && (
         <LineChart
           arbitrary={false}
@@ -385,17 +396,7 @@ const DataQuality = () => {
           TableColummns={secondTableColummns}
         />
       )}
-      {statsData5 && (
-        <>
-          <LineChart
-            height={150}
-            arbitrary={false}
-            data={statsData5}
-            options={Line_options}
-          />
-        </>
-        
-      )}
+     
        {statsData1_1 && (
         <div className="p-6 w-full overflow-auto">
           <h4 className="mb-8 ml-2 font-[500]">

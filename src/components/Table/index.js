@@ -124,6 +124,7 @@ const Table = ({
   showTopBtnsToggle = false,
   stateName,
   setStateName,
+  isPayer=false,
   dispatch,
   value,
   setValue,
@@ -131,6 +132,12 @@ const Table = ({
   organisationList,
   organisation,
   setorganisation,
+  cleanedAffilitionList,
+  cleanedAffilition,
+  setCleanedAffilition,
+  cleanedIDNList,
+  cleanedIDN,
+  setCleanedIDN,
   regionList,
   region,
   setRegion,
@@ -326,7 +333,7 @@ const Table = ({
         valHeaders = value.map((item) => item.col.Header);
       }
       let _obj = {};
-      selectedUnmet.forEach((item) => {
+      selectedUnmet.filter(item => item.value.toLowerCase().includes("percent")).forEach((item) => {
         _obj[item.value] = item;
       });
       // let firstUnmet = Object.keys(selectLabels).filter(element => {
@@ -474,7 +481,33 @@ const Table = ({
                 })}
             </div>
             <div className="flex mt-2 items-center gap-4">
-              <div className="flex items-center gap-8">
+             {cleanedAffilitionList && <div className="flex items-center gap-8">
+                <label className="font-[600]">{isPayer ? "Payer Name" : "Cleaned Affiliation"}</label>
+                <MultiSelect
+                  labelledBy=""
+                  options={cleanedAffilitionList
+                    .map((item) => isNaN(item) && { label: item, value: item })
+                    .filter((item) => typeof item !== "boolean")}
+                  className="w-[20rem]"
+                  value={cleanedAffilition || []}
+                  onChange={(val) => setCleanedAffilition(val)}
+                />
+              </div>}
+              {cleanedIDNList && <div className="flex items-center gap-8">
+                <label className="font-[600]">{isPayer ? "Plan Name" : "Cleaned IDN/Parent Hospital"}</label>
+                <MultiSelect
+                  labelledBy=""
+                  options={cleanedIDNList
+                    .map((item) => isNaN(item) && { label: item, value: item })
+                    .filter((item) => typeof item !== "boolean")}
+                  className="w-[20rem]"
+                  value={cleanedIDN || []}
+                  onChange={(val) => setCleanedIDN(val)}
+                />
+              </div>}
+            </div>
+            <div className="flex mt-2 items-center gap-4">
+              {specialityList && <div className="flex items-center gap-8">
                 <label className="font-[600]">Specialty</label>
                 <MultiSelect
                   labelledBy=""
@@ -485,8 +518,8 @@ const Table = ({
                   value={speciality || []}
                   onChange={(val) => handleMultipleSelect(val)}
                 />
-              </div>
-              <div className="flex items-center gap-8">
+              </div>}
+             {regionList && <div className="flex items-center gap-8">
                 <label className="font-[600]">Region</label>
                 <MultiSelect
                   labelledBy=""
@@ -497,20 +530,24 @@ const Table = ({
                   value={region || []}
                   onChange={(val) => handleRegionSelect(val)}
                 />
-              </div>
-              <div className="flex items-center gap-8">
-                <label className="font-[600]">Organization</label>
-                <MultiSelect
-                  labelledBy=""
-                  options={organisationList
-                    .map((item) => isNaN(item) && { label: item, value: item })
-                    .filter((item) => typeof item !== "boolean")}
-                  className="w-[10rem]"
-                  value={organisation || []}
-                  onChange={(val) => handleOrganisationSelect(val)}
-                />
-              </div>
-              <div className="flex items-center gap-8">
+              </div>}
+              {organisationList && (
+                <div className="flex items-center gap-8">
+                  <label className="font-[600]">Organization</label>
+                  <MultiSelect
+                    labelledBy=""
+                    options={organisationList
+                      .map(
+                        (item) => isNaN(item) && { label: item, value: item }
+                      )
+                      .filter((item) => typeof item !== "boolean")}
+                    className="w-[10rem]"
+                    value={organisation || []}
+                    onChange={(val) => handleOrganisationSelect(val)}
+                  />
+                </div>
+              )}
+            {stateNameList &&  <div className="flex items-center gap-8">
                 <label className="font-[600]">State Name</label>
                 <MultiSelect
                   labelledBy=""
@@ -521,7 +558,7 @@ const Table = ({
                   value={stateName || []}
                   onChange={(val) => handleStateName(val)}
                 />
-              </div>
+              </div>}
             </div>
           </div>
         </div>
@@ -618,7 +655,12 @@ const Table = ({
                     >
                       {cell.render("Cell").props.column.Header ===
                       "Top Priority" ? (
-                        <span style={{background: cellValue ? "blue" : "transparent"}} className="w-3 h-3 flex rounded-full"></span>
+                        <span
+                          style={{
+                            background: cellValue ? "blue" : "transparent",
+                          }}
+                          className="w-3 h-3 flex rounded-full"
+                        ></span>
                       ) : colorCells &&
                         Object.values(selectLabels).includes(_header) ? (
                         `${(cellValue * 100).toFixed(1)}%`

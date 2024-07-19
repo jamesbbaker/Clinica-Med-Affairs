@@ -21,6 +21,7 @@ import CustomDropdown from "../../../components/CustomDropdown";
 import BarChartPopup from "../PatientOpportunityMapping/Popup";
 import { getLowestValue, highestValue } from "../../../utils/MathUtils";
 import { filterOutLabels } from "../../../utils/MapUtils";
+import InstitutionalVariationTable from "../InstitutionalVariationTable";
 
 const filters = [...Object.keys(selectLabels)];
 
@@ -378,9 +379,8 @@ const InstitutionalVariation = () => {
               <>
                 <div className="flex flex-col mb-8  w-full justify-between items-start">
                   <div className="flex mb-6 items-center gap-8">
-                    <CustomDropdown
-                    
-          buttonWidth="40rem"
+                    <CustomDropdown      
+                      buttonWidth="40rem"
                       showColors
                       labelClassName="mb-0"
                       className={"flex items-center"}
@@ -475,6 +475,7 @@ const InstitutionalVariation = () => {
                     handleOpen={handleOpen}
                   />
                 )}
+                <InstitutionalVariationTable />
               </>
             )
           ) : (
