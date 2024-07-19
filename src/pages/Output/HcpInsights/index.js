@@ -19,14 +19,12 @@ const HcpInsight = () => {
   const { accessToken, selectedUnmet, refreshToken } = useContext(AuthContext);
   const [rawHeaders, setRawHeaders] = useState([]);
   const [selectedUnmetValue, setSelectedUnmet] = useState([]);
-
   const handleSelectMultipleUnmet = (val) => {
     setSelectedUnmet(val);
     setTableColumns([
       { Header: "Specialty Category", accessor: "Specialty_Bucket" },
       { Header: "Number of Providers", accessor: "Number of Providers" },
       ...val.map((item) => {
-        console.log(item)
         return {
           Header:selectLabels[item.value] ?selectLabels[item.value]:  selectLabels[mapLabels[item.value]],
           accessor:invertedMapLabels[item.value] ? invertedMapLabels[item.value]:  item.value,
@@ -40,15 +38,14 @@ const HcpInsight = () => {
     
       let selectedValues = selectedUnmet.filter(
         (item) =>
-          rawHeaders.includes(mapLabels[item.value]) &&
-          (item.value.toLowerCase().includes("percent") ||
-            patientTotals.includes(item.value))
+         ( rawHeaders.includes(mapLabels[item.value]) || rawHeaders.includes(invertedMapLabels[item.value])) &&
+          (item.value.toLowerCase().includes("percent"))
       );
 
       handleSelectMultipleUnmet([
         {
           label: "Number of ICS-LABA Patients",
-          value: "Total ICS-LABA Patients",
+          value: "Number of ICS-LABA Patients",
         },
         ...selectedValues,
       ]);
@@ -76,19 +73,21 @@ const HcpInsight = () => {
             { Header: "Number of Providers", accessor: "Number of Providers" },
             {
               Header: "Number of ICS-LABA Patients",
-              accessor: "Total ICS-LABA Patients",
+              accessor: "Number of ICS-LABA Patients",
             },
           ]);
           setSelectedUnmet([
             {
               label: "Number of ICS-LABA Patients",
-              value: "Total ICS-LABA Patients",
+              value: "Number of ICS-LABA Patients",
             },
           ]);
         }
       })
       .catch((err) => console.log(err));
   }, []);
+
+
 
   return statsData2 ? (
     <>
@@ -98,7 +97,7 @@ const HcpInsight = () => {
           ItemRenderer={CustomOptionRenderer}
           labelledBy=""
           options={filterOutLabels(filterOptions, selectedUnmet)
-            .filter((item) => patientTotals.includes(item) || rawHeaders.includes(mapLabels[item]))
+            .filter((item) => item === "Number of ICS-LABA Patients" || rawHeaders.includes(mapLabels[item]) || rawHeaders.includes(invertedMapLabels[item]))
             .map((item) => ({
               label: selectLabels[item],
               value: item,
