@@ -7,16 +7,15 @@ import {
   AiOutlineHome,
   AiOutlineTable,
   AiOutlineGlobal,
-  AiOutlineBarChart,
   AiOutlineFundProjectionScreen,
   AiOutlineRise,
   AiOutlineProject,
-  AiOutlineInfo,
   AiOutlineQuestionCircle,
   AiOutlineDotChart,
 } from "react-icons/ai";
 import { APP_ROUTES, APP_ROUTES_LABEL } from "../../constants/appConstants";
 import { AuthContext } from "../../context/AuthContext";
+import { MdOutlineLocalHospital } from "react-icons/md";
 
 export const menuList = [
   {
@@ -63,7 +62,7 @@ export const menuList = [
         name: APP_ROUTES_LABEL.institutional_variation,
         id: APP_ROUTES.institutional_variation,
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.institutional_variation}`,
-        icon: () => <AiOutlineProject />,
+        icon: () => <MdOutlineLocalHospital />,
       },
       {
         name: APP_ROUTES_LABEL.payer_variation,

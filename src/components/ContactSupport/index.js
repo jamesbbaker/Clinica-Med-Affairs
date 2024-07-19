@@ -10,7 +10,6 @@ const ContactSupport = ({ contactPage = false }) => {
     email: "",
     message: "",
   });
-  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const { sendEmail } = useContext(AuthContext);

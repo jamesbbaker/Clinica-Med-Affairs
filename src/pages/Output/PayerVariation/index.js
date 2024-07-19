@@ -21,6 +21,7 @@ import BarChartPopup from "../PatientOpportunityMapping/Popup";
 import { getLowestValue, highestValue } from "../../../utils/MathUtils";
 
 import { filterOutLabels } from "../../../utils/MapUtils";
+import PayerVariationTable from "../PayerVariationTable";
 
 const filters = [...Object.keys(selectLabels)];
 
@@ -348,6 +349,7 @@ const PayerVariation = () => {
                   }
                   handleOpen={handleOpen}
                 />
+                <PayerVariationTable />
               </>
             )
           ) : (

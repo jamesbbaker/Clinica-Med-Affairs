@@ -150,7 +150,6 @@ export const unmetLabels = {
     id: "Number of ICS-LABA >900mg/year steroids",
     percent: "Percent of ICS-LABA >900mg/year steroids",
   },
-
   "Number of ICS-LABA High Steroid Usage with ER visit": {
     id: "Number of ICS-LABA High Steroid Usage with ER visit",
     percent: "Percent of ICS-LABA High Steroid Usage with ER visit",
@@ -256,7 +255,6 @@ export const mapSelectLabels = {
     "Delay in Escalating Patients from Double to Triple Therapy",
   "Percent of ICS-LABA Escalation Delay":
     "Delay in Escalating Patients from Double to Triple Therapy percent",
-
   "Number of ICS-LABA Patients with LAMA": "Use of open triple therapy",
   "Percent of ICS-LABA Patients with LAMA":
     "Use of open triple therapy percent",
@@ -287,6 +285,98 @@ export const mapSelectLabels = {
   "Percent of ICS-LABA LAMA Compliance < 240":
     "Non-adherence to triple therapy (compliance) percent",
 };
+
+export const labelsMatrix ={
+  "Number of No Spirometry": {
+    "Number": "Number of No Spirometry",
+    "Percent": "Percent of No Spirometry"
+  },
+  "Number of Exacerbation Without Spirometry": {
+    "Number": "Number of Exacerbation Without Spirometry",
+    "Percent": "Percent of Exacerbation Without Spirometry"
+  },
+  "Number of No EOS Testing": {
+    "Number": "Number of No EOS Testing",
+    "Percent": "Percent of No EOS Testing"
+  },
+  "Number of No Treatment": {
+    "Number": "Number of No Treatment",
+    "Percent": "Percent of No Treatment"
+  },
+  "Number of ICS High Steroid Usage": {
+    "Number": "Number of ICS High Steroid Usage",
+    "Percent": "Percent of ICS High Steroid Usage"
+  },
+  "Number of ICS Exacerbation Failed Escalation": {
+    "Number": "Number of ICS Exacerbation Failed Escalation",
+    "Percent": "Percent of ICS Exacerbation Failed Escalation"
+  },
+  "Number of ICS Escalation Delay": {
+    "Number": "Number of ICS Escalation Delay",
+    "Percent": "Percent of ICS Escalation Delay"
+  },
+  "Number of ICS-LABA High Steroid Usage": {
+    "Number": "Number of ICS-LABA High Steroid Usage",
+    "Percent": "Percent of ICS-LABA High Steroid Usage"
+  },
+  "Number of Failure To Escalate With 3 Exacerbations": {
+    "Number": "Number of Failure To Escalate With 3 Exacerbations",
+    "Percent": "Percent of Failure To Escalate With 3 Exacerbations"
+  },
+  "Number of ICS-LABA Exacerbation Failed Escalation": {
+    "Number": "Number of ICS-LABA Exacerbation Failed Escalation",
+    "Percent": "Percent of ICS-LABA Exacerbation Failed Escalation"
+  },
+  "Number of ICS-LABA >900mg/year steroids": {
+    "Number": "Number of ICS-LABA >900mg/year steroids",
+    "Percent": "Percent of ICS-LABA >900mg/year steroids"
+  },
+  "Number of ICS-LABA High Steroid Usage with ER visit": {
+    "Number": "Number of ICS-LABA High Steroid Usage with ER visit",
+    "Percent": "Percent of ICS-LABA High Steroid Usage with ER visit"
+  },
+  "Number of ICS-LABA High Steroid Usage without ER visit": {
+    "Number": "Number of ICS-LABA High Steroid Usage without ER visit",
+    "Percent": "Percent of ICS-LABA High Steroid Usage without ER visit"
+  },
+  "Number of ICS-LABA Escalation Delay": {
+    "Number": "Number of ICS-LABA Escalation Delay",
+    "Percent": "Percent of ICS-LABA Escalation Delay"
+  },
+  "Number of ICS-LABA Patients with LAMA": {
+    "Number": "Number of ICS-LABA Patients with LAMA",
+    "Percent": "Percent of ICS-LABA Patients with LAMA"
+  },
+  "Number of Biologic Before Triple": {
+    "Number": "Number of Biologic Before Triple",
+    "Percent": "Percent of Biologic Before Triple"
+  },
+  "Number of ICS Persistence < 360": {
+    "Number": "Number of ICS Persistence < 360",
+    "Percent": "Percent of ICS Persistence < 360"
+  },
+  "Number of ICS Compliance < 240": {
+    "Number": "Number of ICS Compliance < 240",
+    "Percent": "Percent of ICS Compliance < 240"
+  },
+  "Number of ICS-LABA Persistence < 360": {
+    "Number": "Number of ICS-LABA Persistence < 360",
+    "Percent": "Percent of ICS-LABA Persistence < 360"
+  },
+  "Number of ICS-LABA Compliance < 240": {
+    "Number": "Number of ICS-LABA Compliance < 240",
+    "Percent": "Percent of ICS-LABA Compliance < 240"
+  },
+  "Number of ICS-LABA LAMA Persistence < 360": {
+    "Number": "Number of ICS-LABA LAMA Persistence < 360",
+    "Percent": "Percent of ICS-LABA LAMA Persistence < 360"
+  },
+  "Number of ICS-LABA LAMA Compliance < 240": {
+    "Number": "Number of ICS-LABA LAMA Compliance < 240",
+    "Percent": "Percent of ICS-LABA LAMA Compliance < 240"
+  }
+};
+
 
 export const selectLabels = {
   "Number of Asthma Patients": "Number of Asthma Patients",

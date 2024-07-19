@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { LineChart } from "../../../../components/LineChart";
 import {
   invertedMapLabels,
+  labelsMatrix,
   mapLabels,
   selectLabels,
 } from "../../../../constants/appConstants";
@@ -63,9 +64,22 @@ const options = {
     },
     y: {
       ticks: {
-        // Include a dollar sign in the ticks
-        callback: function (value, index, ticks) {
+        callback: function (value) {
           return `${value}`;
+        },
+        font: {
+          size: 10,
+        },
+      },
+    },
+    y1: {
+      position: "right",
+      grid: {
+        drawOnChartArea: false,
+      },
+      ticks: {
+        callback: function (value) {
+          return `${value}%`;
         },
         font: {
           size: 10,
@@ -100,6 +114,24 @@ const randomColors = [
   "#473e27",
 ];
 
+
+const randomColorsPercentWithOpacity = [
+  "#d43c1b80",
+  "#3b5fb080",
+  "#9ec34280",
+  "#e8a62d80",
+  "#7167f480",
+  "#4de38a80",
+  "#e048bb80",
+  "#bcff2b80",
+  "#fa576680",
+  "#5cd8e380",
+  "#a3fa3480",
+  "#f1c76b80",
+  "#57b4a880",
+  "#d20e8c80",
+  "#473e2780",
+];
 const filterOptions = [...Object.keys(selectLabels)];
 
 const ImpactLineChart = ({ lineData, type = "National" }) => {
@@ -107,12 +139,22 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
   const [unmetNeed, setUnmetNeed] = useState([
     { label: filterOptions[0], value: filterOptions[0] },
   ]);
+  const [setPercentUnmet, setSetPercentUnmet] = useState([]);
   const [RegionsList, setRegionsList] = useState();
   const [stateList, setStatesList] = useState();
   const [selectedStates, setSelectedStates] = useState();
   const [selectedRegion, setSelectedRegion] = useState([]);
   const [loading, setLoading] = useState(false);
   const { selectedUnmet } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (selectedUnmet && selectedUnmet.length > 0) {
+      let defaultUnmet = selectedUnmet.find(
+        (item) => !item.value.toLowerCase().includes("percent")
+      );
+      setUnmetNeed([defaultUnmet]);
+    }
+  }, []);
 
   function addLineData(initial) {
     let filtersName = {};
@@ -172,7 +214,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
           .filter((item) => _selectedRegions.includes(item.id))
           .forEach((item) => {
             datasets.push({
-              label: `${item.id} (${unmet.value})`,
+              label: `${item.id} (${selectLabels[unmet.value]})`,
               data: item.data.map((_item) => _item[filtersName[unmet.value]]),
               borderColor: randomColors[_index]
                 ? randomColors[_index]
@@ -180,6 +222,25 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
               backgroundColor: randomColors[_index]
                 ? randomColors[_index]
                 : "#c4c4c4c4",
+                yAxisID: "y",
+            });
+            _index++;
+          })
+      );
+      unmetNeed.map((unmet, index) =>
+        Object.values(lineDataByRegion)
+          .filter((item) => _selectedRegions.includes(item.id) && labelsMatrix[unmet.value] && labelsMatrix[unmet.value].Percent && filtersName[labelsMatrix[unmet.value].Percent])
+          .forEach((item) => {
+            datasets.push({
+              label: `${item.id} (${selectLabels[labelsMatrix[unmet.value].Percent]})`,
+              data: item.data.map((_item) => _item[filtersName[labelsMatrix[unmet.value].Percent]]),
+              borderColor: randomColors[_index]
+                ? randomColors[_index]
+                : "#c4c4c4c4",
+              backgroundColor: randomColors[_index]
+                ? randomColors[_index]
+                : "#c4c4c4c4",
+                yAxisID: "y1",
             });
             _index++;
           })
@@ -249,18 +310,45 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
     } else {
       data = {
         labels: _labels,
-        datasets: unmetNeed.map((item, index) => {
-          return {
-            label: item.label,
-            data: lineDataFilter.map(
-              (_item) => _item[invertedMapLabels[item.value]]
-            ),
-            borderColor: randomColors[index] ? randomColors[index] : "#c4c4c4",
-            backgroundColor: randomColors[index]
-              ? randomColors[index]
-              : "#c4c4c4",
-          };
-        }),
+        datasets: [
+          ...unmetNeed.map((item, index) => {
+            return {
+              label: item.label,
+              data: lineDataFilter.map(
+                (_item) => _item[invertedMapLabels[item.value]]
+              ),
+              borderColor: randomColors[index]
+                ? randomColors[index]
+                : "#c4c4c4",
+              backgroundColor: randomColors[index]
+                ? randomColors[index]
+                : "#c4c4c4",
+              yAxisID: "y",
+            };
+          }),
+          ...unmetNeed
+            .filter(
+              (item) =>
+                labelsMatrix[item.value] &&
+                invertedMapLabels[labelsMatrix[item.value].Percent]
+            )
+            .map((item, index) => {
+              return {
+                label: selectLabels[labelsMatrix[item.value].Percent],
+                data: lineDataFilter.map(
+                  (_item) =>
+                    _item[invertedMapLabels[labelsMatrix[item.value].Percent]]
+                ),
+                borderColor: randomColorsPercentWithOpacity[index]
+                  ? randomColorsPercentWithOpacity[index]
+                  : "#c4c4c4",
+                backgroundColor: randomColorsPercentWithOpacity[index]
+                  ? randomColorsPercentWithOpacity[index]
+                  : "#c4c4c4",
+                yAxisID: "y1",
+              };
+            }),
+        ],
       };
     }
     setLineChartData(data);
@@ -370,25 +458,25 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
             </button>
           )}
         </div>
-      { selectedUnmet&& <div className="flex mt-4 items-center gap-4">
+        <div className="flex mt-4 items-center gap-4">
           <label className="block text-sm font-medium text-gray-900 ">
             Select Unmet Need
           </label>
           <MultiSelect
             ItemRenderer={CustomOptionRenderer}
             labelledBy=""
-            options={filterOutLabels(filterOptions, selectedUnmet).map(
-              (item) => ({
+            options={filterOutLabels(filterOptions, selectedUnmet)
+              .filter((item) => !item.toLowerCase().includes("percent"))
+              .map((item) => ({
                 label: selectLabels[item] ? selectLabels[item] : item,
                 value: item,
-              })
-            )}
+              }))}
             className="w-[40rem] z-[5]"
             value={unmetNeed || []}
             onChange={(val) => handleSelectMultipleUnmet(val)}
             styles={customStyles}
           />
-        </div>}
+        </div>
       </div>
 
       <LineChart options={options} data={lineChartData} arbitrary={false} />

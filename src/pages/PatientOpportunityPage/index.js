@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import UnmetNeedDefinition from "../Output/UnmetNeedDefinition";
 import PatientOpportunityMapping from "../Output/PatientOpportunityMapping";
 import ImpactTracking from "../Output/ImpactTracking";
-
 import Prioitize from "../../components/Prioritize";
 import { AuthContext } from "../../context/AuthContext";
 import PrimaryBtn from "../../components/PrimaryBtn";
@@ -18,7 +17,6 @@ const PatientOpportunityPage = () => {
     val.forEach((element) => {
       prioritiesList += `${element.value},`;
     });
-
     let data = {
       priorities: prioritiesList,
     };

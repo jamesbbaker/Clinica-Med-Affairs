@@ -62,7 +62,7 @@ const reducer = (state, action) => {
   }
 };
 
-const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
+const InstitutionalVariationTable = ({ setHcpProfilePage = () => {} }) => {
   const [filterList, setFilterList] = useState([]);
   const [statsData1, setStatsData1] = useState(null);
   const [filterState, dispatch] = useReducer(reducer, initialState);
@@ -83,6 +83,10 @@ const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
   const [regionList, setRegionList] = useState(null);
   const [stateNameList, setstateNameList] = useState(null);
   const [organisationList, setorganisationList] = useState(null);
+  const [cleanedAffilitionList, setCleanedAffilitionList] = useState(null);
+  const [cleanedAffilition, setCleanedAffilition] = useState(null);
+  const [cleanedIDNList, setCleanedIDList] = useState(null);
+  const [cleanedIDN, setCleanedIDN] = useState(null);
   const [icsNumber, setIcsNumber] = useState({ min: 0, max: 0 });
   const [steroidPercent, setsteroidPercent] = useState({ min: 0, max: 0 });
   const [data1, setData1] = useState(null);
@@ -105,11 +109,13 @@ const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
     _speciality,
     _region,
     _stateName,
-    _organisation
+    _organisation,
+    _cleaned_affilition,
+    _cleaned_idn
   ) => {
     setStatsData1(null);
     const specialties = _speciality;
-    let queryString = `hcp_data?&`; // Start with 'hcp_data?&'
+    let queryString = `institutional_table_data?&`; // Start with 'hcp_data?&'
 
     if (specialties && specialties.length > 0) {
       queryString += specialties
@@ -129,6 +135,16 @@ const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
     if (_stateName && _stateName.length > 0) {
       queryString += `&${_stateName
         .map((statename) => `State Name=${statename.value}`)
+        .join("&")}`;
+    }
+    if (_cleaned_affilition && _cleaned_affilition.length > 0) {
+      queryString += `&${_cleaned_affilition
+        .map((statename) => `Cleaned Affiliation=${statename.value}`)
+        .join("&")}`;
+    }
+    if (_cleaned_idn && _cleaned_idn.length > 0) {
+      queryString += `&${_cleaned_idn
+        .map((statename) => `Cleaned IDN/Parent Hospital=${statename.value}`)
         .join("&")}`;
     }
 
@@ -353,7 +369,7 @@ const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
       urlParams.length > 0 ? "&" : ""
     }${urlParams}`;
 
-    getDataStats("get_hcp_scatter", accessToken, refreshToken)
+    getDataStats("get_hospital_scatter", accessToken, refreshToken)
       .then((res) => {
         setHcpScatter(res);
       })
@@ -363,50 +379,24 @@ const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
 
     getDataStats(finalUrl, accessToken, refreshToken)
       .then((res) => {
-        getDataStats("get_hcp_concentration_curve", accessToken, refreshToken)
-          .then((_res) => {
-            setConcentrationCurve(_res.data);
-            let _data = JSON.parse(res.replaceAll("NaN", 0));
-
-            if (_data) {
-              settotalPage(Math.floor(_data.total / currentSize));
-              const responseData = _data.data;
-              setSpecialityList(_data.specialty_list);
-              setRegionList(_data.region_list);
-              setorganisationList(_data.organization_list);
-              setstateNameList(_data.state_name_list);
-              const newData = responseData.map((item) => {
-                return {
-                  ...item,
-                  "Top Priority": item[_res.data.unmet_need] >= parseInt(_res.data.value)? true :false,
-                  Name: item["First Name"] + " " + item["Last Name"],
-                };
-              });
-              console.log(newData)
-              setStatsData1(newData);
-            }
-          })
-          .catch((err) => {
-            console.log(err, "err");
-            let _data = JSON.parse(res.replaceAll("NaN", 0));
-
-            if (_data) {
-              settotalPage(Math.floor(_data.total / currentSize));
-              const responseData = _data.data;
-              setSpecialityList(_data.specialty_list);
-              setRegionList(_data.region_list);
-              setorganisationList(_data.organization_list);
-              setstateNameList(_data.state_name_list);
-              const newData = responseData.map((item) => {
-                return {
-                  ...item,
-                  "Top Priority": false,
-                  Name: item["First Name"] + " " + item["Last Name"],
-                };
-              });
-              setStatsData1(newData);
-            }
+        let _data = JSON.parse(res.replaceAll("NaN", 0))
+        if (_data) {
+          settotalPage(Math.floor(_data.total / currentSize));
+          const responseData = _data.data;
+          setSpecialityList(_data.specialty_list);
+          setRegionList(_data.region_list);
+        //   setorganisationList(_data.organization_list);
+          setCleanedAffilitionList(_data.cleaned_affiliation_list);
+          setCleanedIDList(_data.cleaned_idn_list);
+          setstateNameList(_data.state_name_list);
+          const newData = responseData.map((item) => {
+            return {
+              ...item,
+              Name: item["First Name"] + " " + item["Last Name"],
+            };
           });
+          setStatsData1(newData);
+        }
       })
       .catch((err) => {
         console.log(err, "err");
@@ -462,7 +452,9 @@ const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
       speciality,
       region,
       stateName,
-      organisation
+      organisation,
+      cleanedAffilition,
+      cleanedIDN
     );
   }, [currentPage, currentSize]);
 
@@ -473,44 +465,21 @@ const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
         accessor: "Assigned Physician Name",
       },
       {
-        header: "Top Priority",
-        accessor: "Top Priority",
-      },
-      // { header: "Last Name", accessor: "Last Name" },
-      {
         header: "Assigned Specialty",
         accessor: "Assigned Specialty",
+      },
+      {
+        header: "Cleaned Affiliation",
+        accessor: "Cleaned Affiliation",
+      },
+      {
+        header: "Cleaned IDN/Parent Hospital",
+        accessor: "Cleaned IDN/Parent Hospital",
       },
       { header: "Region", accessor: "Region" },
       { header: "State Name", accessor: "State Name" },
       { header: "City", accessor: "City" },
-      { header: "Organization Name", accessor: "Organization Name" },
-      // { header: "Provider ID", accessor: "Provider ID" },
-      // { header: "ZIP", accessor: "ZIP" },
-      // { header: "LAT", accessor: "LAT" },
-      // { header: "LONG", accessor: "LONG" },
-      // { header: "State ID", accessor: "State ID" },
-
-      // {
-      //   header: "Number of ICS-LABA Patients",
-      //   accessor: "Number of ICS-LABA Patients",
-      // },
-      // {
-      //   header: "Number of High Steroid Usage Patients",
-      //   accessor: "Number of High Steroid Usage Patients",
-      // },
-      // {
-      //   header: "Number of Severe Exacerbations",
-      //   accessor: "Number of Severe Exacerbations",
-      // },
-      // {
-      //   header: "Percent of High Steroid Usage Patients",
-      //   accessor: "Percent of High Steroid Usage Patients",
-      // },
-      // {
-      //   header: "Percent of Severe Exacerbations",
-      //   accessor: "Percent of Severe Exacerbations",
-      // },
+    //   { header: "Organization Name", accessor: "Organization Name" },
     ];
     [...Object.keys(selectLabels)].map((item) =>
       column_names.push({
@@ -536,7 +505,9 @@ const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
       speciality,
       region,
       stateName,
-      organisation
+      organisation,
+      cleanedAffilition,
+      cleanedIDN
     );
   };
 
@@ -568,7 +539,9 @@ const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
       speciality,
       region,
       stateName,
-      organisation
+      organisation,
+      cleanedAffilition,
+      cleanedIDN
     );
   };
 
@@ -600,6 +573,12 @@ const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
           organisationList={organisationList}
           organisation={organisation}
           setorganisation={setorganisation}
+          cleanedAffilitionList={cleanedAffilitionList}
+          cleanedAffilition={cleanedAffilition}
+          setCleanedAffilition={setCleanedAffilition}
+          cleanedIDNList={cleanedIDNList}
+          cleanedIDN={cleanedIDN}
+          setCleanedIDN={setCleanedIDN}
           regionList={regionList}
           region={region}
           setRegion={setRegion}
@@ -652,4 +631,4 @@ const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
   );
 };
 
-export default EligiblePatientLocator;
+export default InstitutionalVariationTable;
