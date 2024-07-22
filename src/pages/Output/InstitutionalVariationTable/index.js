@@ -89,7 +89,7 @@ const InstitutionalVariationTable = ({
   const [organisationList, setorganisationList] = useState(null);
   const [cleanedAffilitionList, setCleanedAffilitionList] = useState(null);
   const [cleanedAffilition, setCleanedAffilition] = useState(
-    cleanedAffilitionInput
+    cleanedAffilitionInput,
   );
   const [cleanedIDNList, setCleanedIDList] = useState(null);
   const [cleanedIDN, setCleanedIDN] = useState(null);
@@ -117,7 +117,7 @@ const InstitutionalVariationTable = ({
     _stateName,
     _organisation,
     _cleaned_affilition,
-    _cleaned_idn
+    _cleaned_idn,
   ) => {
     setStatsData1(null);
     const specialties = _speciality;
@@ -366,7 +366,7 @@ const InstitutionalVariationTable = ({
     // Concatenate additional parameters (filter out undefined values)
     const urlParams = Object.entries(additionalParams)
       .filter(
-        ([key, value]) => value !== undefined && value !== "" && value !== null
+        ([key, value]) => value !== undefined && value !== "" && value !== null,
       )
       .map(([key, value]) => `${key}=${value}`)
       .join("&");
@@ -423,10 +423,10 @@ const InstitutionalVariationTable = ({
           {
             data: _value,
             borderColor: array.map((item) =>
-              !patientTotals.includes(item) ? "#800000" : "#00008B"
+              !patientTotals.includes(item) ? "#800000" : "#00008B",
             ),
             backgroundColor: array.map((item) =>
-              !patientTotals.includes(item) ? "#800000" : "#00008B"
+              !patientTotals.includes(item) ? "#800000" : "#00008B",
             ),
             barThickness: 20, // Set a specific thickness for the bar
             maxBarThickness: 20,
@@ -461,38 +461,28 @@ const InstitutionalVariationTable = ({
       stateName,
       organisation,
       cleanedAffilition,
-      cleanedIDN
+      cleanedIDN,
     );
   }, [currentPage, currentSize]);
 
   const Table_Columns_1 = useMemo(() => {
     const column_names = [
       {
-        header: "Assigned Physician Name",
-        accessor: "Assigned Physician Name",
+        header: "Hospital / Clinic",
+        accessor: "Hospital",
       },
       {
-        header: "Assigned Specialty",
-        accessor: "Assigned Specialty",
-      },
-      {
-        header: "Cleaned Affiliation",
-        accessor: "Cleaned Affiliation",
-      },
-      {
-        header: "Cleaned IDN/Parent Hospital",
-        accessor: "Cleaned IDN/Parent Hospital",
+        header: "Health System / IDN",
+        accessor: "System",
       },
       { header: "Region", accessor: "Region" },
-      { header: "State Name", accessor: "State Name" },
-      { header: "City", accessor: "City" },
       //   { header: "Organization Name", accessor: "Organization Name" },
     ];
     [...Object.keys(selectLabels)].map((item) =>
       column_names.push({
         header: item,
         accessor: item,
-      })
+      }),
     );
 
     const USERS_TABLE_COLUMNS = column_names.map((column) => ({
@@ -514,7 +504,7 @@ const InstitutionalVariationTable = ({
       stateName,
       organisation,
       cleanedAffilition,
-      cleanedIDN
+      cleanedIDN,
     );
   };
 
@@ -548,7 +538,7 @@ const InstitutionalVariationTable = ({
       stateName,
       organisation,
       cleanedAffilition,
-      cleanedIDN
+      cleanedIDN,
     );
   };
 
