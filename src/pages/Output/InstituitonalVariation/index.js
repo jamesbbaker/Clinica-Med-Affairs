@@ -368,6 +368,7 @@ const InstitutionalVariation = () => {
           {TreeData && !loading ? (
             data1 && modalDetails ? (
               <BarChartPopup
+              type="Hospital"
                 insititutional={true}
                 InstitutionalTreeMap={true}
                 payer={false}

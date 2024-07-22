@@ -313,7 +313,7 @@ const PayerVariation = () => {
         <>
           {TreeData && !loading ? (
             modalDetails && data1 ? (
-              <BarChartPopup closeModal={closeModal} payerData data1={data1} />
+              <BarChartPopup type="Plan" closeModal={closeModal} payerData data1={data1} />
             ) : (
               <>
                 <div className="flex mb-6 items-center gap-8">

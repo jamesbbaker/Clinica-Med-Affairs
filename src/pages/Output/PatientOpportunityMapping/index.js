@@ -413,7 +413,7 @@ const PatientOpportunityMapping = ({
 
   return (
     <>
-      {popupData && <BarChartPopup data1={popupData} closeModal={closeModal} />}
+      {popupData && <BarChartPopup type="HCP" data1={popupData} closeModal={closeModal} />}
       <div
         className="w-full"
         style={{
