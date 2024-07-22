@@ -13,6 +13,7 @@ import {
   AiOutlineQuestionCircle,
   AiOutlineDotChart,
 } from "react-icons/ai";
+import { GiTriangleTarget } from "react-icons/gi";
 import { APP_ROUTES, APP_ROUTES_LABEL } from "../../constants/appConstants";
 import { AuthContext } from "../../context/AuthContext";
 import { MdOutlineLocalHospital } from "react-icons/md";
@@ -70,12 +71,13 @@ export const menuList = [
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.payer_variation}`,
         icon: () => <AiOutlineProject />,
       },
-      // {
-      //   name: APP_ROUTES_LABEL.medical_affair_toolbox,
-      //   id: APP_ROUTES.medical_affair_toolbox,
-      //   route: `${APP_ROUTES.outputs}/${APP_ROUTES.medical_affair_toolbox}`,
-      //   icon: () => <AiOutlineDotChart />,
-      // },
+      
+      {
+        name: APP_ROUTES_LABEL.target_lists,
+        id: APP_ROUTES.target_lists,
+        route: `${APP_ROUTES.outputs}/${APP_ROUTES.target_lists}`,
+        icon: () => <GiTriangleTarget />,
+      },
       {
         name: APP_ROUTES_LABEL.impact_tracking,
         id: APP_ROUTES.impact_tracking,
@@ -181,17 +183,18 @@ const Sidebar = () => {
                         subItem.id !== APP_ROUTES.payer_variation &&
                         subItem.id !== APP_ROUTES.help &&
                         subItem.id !== APP_ROUTES.priority_engagement_opportunity_page &&
+                        subItem.id !== APP_ROUTES.target_lists &&
                       !user.page_view.includes(subItem.id)
                     ) {
                       return false;
                     }
-                    if (
-                      item.name === "dashboard" &&
-                      subItem.id === APP_ROUTES.users &&
-                      !user.admin
-                    ) {
-                      return false;
-                    }
+                    // if (
+                    //   item.name === "dashboard" &&
+                    //   subItem.id === APP_ROUTES.users &&
+                    //   !user.admin
+                    // ) {
+                    //   return false;
+                    // }
                     return (
                       <div
                         key={`menu-subitem-${index}`}

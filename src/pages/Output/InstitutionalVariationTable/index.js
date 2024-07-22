@@ -62,7 +62,7 @@ const reducer = (state, action) => {
   }
 };
 
-const InstitutionalVariationTable = ({ setHcpProfilePage = () => {} }) => {
+const InstitutionalVariationTable = ({title,cleanedAffilitionInput = null, setHcpProfilePage = () => {} }) => {
   const [filterList, setFilterList] = useState([]);
   const [statsData1, setStatsData1] = useState(null);
   const [filterState, dispatch] = useReducer(reducer, initialState);
@@ -84,7 +84,7 @@ const InstitutionalVariationTable = ({ setHcpProfilePage = () => {} }) => {
   const [stateNameList, setstateNameList] = useState(null);
   const [organisationList, setorganisationList] = useState(null);
   const [cleanedAffilitionList, setCleanedAffilitionList] = useState(null);
-  const [cleanedAffilition, setCleanedAffilition] = useState(null);
+  const [cleanedAffilition, setCleanedAffilition] = useState(cleanedAffilitionInput);
   const [cleanedIDNList, setCleanedIDList] = useState(null);
   const [cleanedIDN, setCleanedIDN] = useState(null);
   const [icsNumber, setIcsNumber] = useState({ min: 0, max: 0 });
@@ -147,6 +147,7 @@ const InstitutionalVariationTable = ({ setHcpProfilePage = () => {} }) => {
         .map((statename) => `Cleaned IDN/Parent Hospital=${statename.value}`)
         .join("&")}`;
     }
+    console.log(queryString)
 
     // Add other query parameters as needed
     const additionalParams = {
@@ -595,7 +596,7 @@ const InstitutionalVariationTable = ({ setHcpProfilePage = () => {} }) => {
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           marginTop="2rem"
-          Title="Summary of Unmet Need by HCP"
+          Title={title}
           activeCells={true}
           initialState={{
             pageSize: 10,

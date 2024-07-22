@@ -6,6 +6,8 @@ import { LineChart } from "../../../components/LineChart";
 import { selectLabels } from "../../../constants/appConstants";
 import { MultiSelect } from "react-multi-select-component";
 import { IoArrowBackCircle } from "react-icons/io5";
+import PrimaryBtn from "../../../components/PrimaryBtn";
+import InputField from "../../../components/InputField";
 
 const randomColors = [
   "#d43c1b",
@@ -98,10 +100,10 @@ const options = {
   },
 };
 
-
 const filterOptions = [...Object.keys(selectLabels)];
 
 const BarChartPopup = ({
+  type="",
   insititutional = false,
   InstitutionalTreeMap = false,
   closeModal,
@@ -111,9 +113,12 @@ const BarChartPopup = ({
 }) => {
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [fetchedData, setFetchedData] = useState(null);
+  const [saveInfo, setSaveInfo] = useState(null)
+  const [loading, setLoading] = useState(false) 
   const [unmetNeed, setUnmetNeed] = useState([
     { label: filterOptions[0], value: filterOptions[0] },
   ]);
+  console.log(saveInfo)
   const [lineChartData, setLineChartData] = useState(null);
 
   function addLineData(_data) {
@@ -148,7 +153,25 @@ const BarChartPopup = ({
   }
 
   useEffect(() => {
+    if (data1) {
+      let key = "" 
+      if (type === "HCP") {
+        key = `${data1[0]["Provider ID"].toString()}`
+      } else if (type === "Hospital") {
+        key = `${data1[0]["Cleaned Affiliation"].toString()}`
+      } else if (type === "Plan") {
+        key = `${data1[0]["Plan Name"].toString()}`
+      }
+      console.log(data1, key)
+   
+      setSaveInfo({
+        type,
+        key
+      })
+    }
     if (data1 && !payerData) {
+     
+     
       getDataStats(
         `hcp_quarterly?Provider_ID=${data1[0]["Provider ID"]}`,
         accessToken,
@@ -173,6 +196,32 @@ const BarChartPopup = ({
 
   const handleSelectMultipleUnmet = (val) => {
     setUnmetNeed(val);
+  };
+
+  const handleSave =async () => {
+    setLoading(true)
+    let data = {...saveInfo}
+    try {
+      const response = await fetch(
+        "https://clinica-server.replit.app/set_list",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      const res = await response.json();
+      setLoading(false);
+      console.log(res,"response")
+    } catch (err) {
+      console.log(err);
+      throw new Error();
+    }
+    console.log("save");
   };
 
   return (
@@ -213,12 +262,15 @@ const BarChartPopup = ({
               </div>
             </div>
             {insititutional && (
-              <button
-                onClick={closeModal}
-                className="flex-end  text-md rounded-sm"
-              >
-                <IoArrowBackCircle size={50} />
-              </button>
+              <div className="flex items-center gap-1">
+                <PrimaryBtn disabled={loading} className={"px-4 text-[#fff]"}  text={"Save to List"} onClick={handleSave} />
+                <button
+                  onClick={closeModal}
+                  className="flex-end  text-md rounded-sm"
+                >
+                  <IoArrowBackCircle size={50} />
+                </button>
+              </div>
             )}
           </div>
         ) : (
@@ -234,13 +286,18 @@ const BarChartPopup = ({
                     : data1["0"]["Assigned Physician Name"]}
                 </strong>
               </div>
+              {/* {type === "HCP" && <div className="flex items-center gap-3">
+                HCP Name: <InputField  input={type: "text"} /></div>} */}
               {!insititutional && (
-                <button
-                  onClick={closeModal}
-                  className="flex-end text-md rounded-sm"
-                >
-                  <IoArrowBackCircle  size={50}/>
-                </button>
+                <div className="flex items-center gap-1">
+                  <PrimaryBtn disabled={loading}  className={"px-4 text-[#fff]"} text={"Save to List"} onClick={handleSave} />
+                  <button
+                    onClick={closeModal}
+                    className="flex-end text-md rounded-sm"
+                  >
+                    <IoArrowBackCircle size={50} />
+                  </button>
+                </div>
               )}
             </div>
             {payer && (

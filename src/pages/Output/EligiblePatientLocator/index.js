@@ -62,7 +62,11 @@ const reducer = (state, action) => {
   }
 };
 
-const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
+const EligiblePatientLocator = ({
+  title,
+  providerId = false,
+  setHcpProfilePage = () => {},
+}) => {
   const [filterList, setFilterList] = useState([]);
   const [statsData1, setStatsData1] = useState(null);
   const [filterState, dispatch] = useReducer(reducer, initialState);
@@ -85,6 +89,7 @@ const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
   const [organisationList, setorganisationList] = useState(null);
   const [icsNumber, setIcsNumber] = useState({ min: 0, max: 0 });
   const [steroidPercent, setsteroidPercent] = useState({ min: 0, max: 0 });
+  const [physicianName, setPhysicianName] = useState("");
   const [data1, setData1] = useState(null);
   const [hcpScatter, setHcpScatter] = useState();
   const [concentrationCurve, setConcentrationCurve] = useState(null);
@@ -105,7 +110,9 @@ const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
     _speciality,
     _region,
     _stateName,
-    _organisation
+    _organisation,
+    provider_id,
+    _physicianName
   ) => {
     setStatsData1(null);
     const specialties = _speciality;
@@ -115,6 +122,14 @@ const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
       queryString += specialties
         .map((specialty) => `Primary Specialty Description=${specialty.value}`)
         .join("&");
+    }
+    if (_physicianName && _physicianName.length > 0) {
+      queryString += `Primary Physician Name=${_physicianName}&`
+    }
+    if (provider_id && provider_id.length > 0) {
+      queryString += `&${provider_id
+        .map((item) => `Provider_ID=${item}`)
+        .join("&")}`;
     }
     if (_region && _region.length > 0) {
       queryString += `&${_region
@@ -378,11 +393,14 @@ const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
               const newData = responseData.map((item) => {
                 return {
                   ...item,
-                  "Top Priority": item[_res.data.unmet_need] >= parseInt(_res.data.value)? true :false,
+                  "Top Priority":
+                    item[_res.data.unmet_need] >= parseInt(_res.data.value)
+                      ? true
+                      : false,
                   Name: item["First Name"] + " " + item["Last Name"],
                 };
               });
-              console.log(newData)
+              console.log(newData);
               setStatsData1(newData);
             }
           })
@@ -462,9 +480,11 @@ const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
       speciality,
       region,
       stateName,
-      organisation
+      organisation,
+      providerId,
+      physicianName
     );
-  }, [currentPage, currentSize]);
+  }, [currentPage, providerId, currentSize]);
 
   const Table_Columns_1 = useMemo(() => {
     const column_names = [
@@ -536,7 +556,9 @@ const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
       speciality,
       region,
       stateName,
-      organisation
+      organisation,
+      providerId,
+      physicianName
     );
   };
 
@@ -568,16 +590,20 @@ const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
       speciality,
       region,
       stateName,
-      organisation
+      organisation,
+      providerId,
+      physicianName
     );
   };
 
   return statsData1 !== null && !loading ? (
     <>
       {data1 ? (
-        <BarChartPopup closeModal={closeModal} data1={data1} />
+        <BarChartPopup type="HCP" closeModal={closeModal} data1={data1} />
       ) : (
         <Table
+          physicianName={physicianName}
+          setPhysicianName={setPhysicianName}
           hcpScatter={hcpScatter}
           isEligible={true}
           dispatch={dispatch}
@@ -616,7 +642,7 @@ const EligiblePatientLocator = ({ setHcpProfilePage = () => {} }) => {
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           marginTop="2rem"
-          Title="Summary of Unmet Need by HCP"
+          Title={title ? title : "Summary of Unmet Need by HCP"}
           activeCells={true}
           initialState={{
             pageSize: 10,

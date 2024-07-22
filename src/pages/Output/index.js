@@ -12,6 +12,7 @@ import MedicalAffairToolbox from "./MedicalAffairsToolbox";
 import PayerVariation from "./PayerVariation";
 import PatientOpportunityPage from "../PatientOpportunityPage";
 import PhysicianCareProfile from "../PhysicianCareProfile";
+import TargetList from "./TargetLists";
 
 const Output = () => {
   const { currentMenu } = useSelector((state) => state.menu);
@@ -33,6 +34,7 @@ const Output = () => {
       {currentMenu === APP_ROUTES.eligible_patient_locator && (
         <PhysicianCareProfile />
       )}
+      {currentMenu === APP_ROUTES.target_lists && <TargetList />}
       {currentMenu === APP_ROUTES.payer_variation && <PayerVariation />}
       {currentMenu === APP_ROUTES.institutional_variation && (
         <InstitutionalVariation />
