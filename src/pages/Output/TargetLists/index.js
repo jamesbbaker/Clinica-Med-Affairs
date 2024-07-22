@@ -7,9 +7,9 @@ import { AuthContext } from "../../../context/AuthContext";
 
 const TargetList = () => {
   const [filters, setFilters] = useState({
-    hcp: null,
-    hospital: null,
-    payer: null,
+    hcp:[],
+    hospital:[],
+    payer:[],
   });
   const { accessToken, refreshToken } = useContext(AuthContext);
 
