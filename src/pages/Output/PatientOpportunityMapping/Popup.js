@@ -118,7 +118,7 @@ const BarChartPopup = ({
   const [unmetNeed, setUnmetNeed] = useState([
     { label: filterOptions[0], value: filterOptions[0] },
   ]);
-  console.log(saveInfo)
+
   const [lineChartData, setLineChartData] = useState(null);
 
   function addLineData(_data) {
@@ -162,7 +162,6 @@ const BarChartPopup = ({
       } else if (type === "Plan") {
         key = `${data1[0]["Plan Name"].toString()}`
       }
-      console.log(data1, key)
    
       setSaveInfo({
         type,

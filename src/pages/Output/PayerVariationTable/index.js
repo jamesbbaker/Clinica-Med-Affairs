@@ -536,7 +536,7 @@ const PayerVariationTable = ({
   return statsData1 !== null && !loading ? (
     <>
       {data1 ? (
-        <BarChartPopup closeModal={closeModal} data1={data1} />
+        <BarChartPopup type="Plan" closeModal={closeModal} data1={data1} />
       ) : (
         <Table
           hcpScatter={hcpScatter}

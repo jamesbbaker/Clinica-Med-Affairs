@@ -62,7 +62,11 @@ const reducer = (state, action) => {
   }
 };
 
-const InstitutionalVariationTable = ({title,cleanedAffilitionInput = null, setHcpProfilePage = () => {} }) => {
+const InstitutionalVariationTable = ({
+  title,
+  cleanedAffilitionInput = null,
+  setHcpProfilePage = () => {},
+}) => {
   const [filterList, setFilterList] = useState([]);
   const [statsData1, setStatsData1] = useState(null);
   const [filterState, dispatch] = useReducer(reducer, initialState);
@@ -84,7 +88,9 @@ const InstitutionalVariationTable = ({title,cleanedAffilitionInput = null, setHc
   const [stateNameList, setstateNameList] = useState(null);
   const [organisationList, setorganisationList] = useState(null);
   const [cleanedAffilitionList, setCleanedAffilitionList] = useState(null);
-  const [cleanedAffilition, setCleanedAffilition] = useState(cleanedAffilitionInput);
+  const [cleanedAffilition, setCleanedAffilition] = useState(
+    cleanedAffilitionInput
+  );
   const [cleanedIDNList, setCleanedIDList] = useState(null);
   const [cleanedIDN, setCleanedIDN] = useState(null);
   const [icsNumber, setIcsNumber] = useState({ min: 0, max: 0 });
@@ -147,7 +153,7 @@ const InstitutionalVariationTable = ({title,cleanedAffilitionInput = null, setHc
         .map((statename) => `Cleaned IDN/Parent Hospital=${statename.value}`)
         .join("&")}`;
     }
-    console.log(queryString)
+    console.log(queryString);
 
     // Add other query parameters as needed
     const additionalParams = {
@@ -380,13 +386,13 @@ const InstitutionalVariationTable = ({title,cleanedAffilitionInput = null, setHc
 
     getDataStats(finalUrl, accessToken, refreshToken)
       .then((res) => {
-        let _data = JSON.parse(res.replaceAll("NaN", 0))
+        let _data = JSON.parse(res.replaceAll("NaN", 0));
         if (_data) {
           settotalPage(Math.floor(_data.total / currentSize));
           const responseData = _data.data;
           setSpecialityList(_data.specialty_list);
           setRegionList(_data.region_list);
-        //   setorganisationList(_data.organization_list);
+          //   setorganisationList(_data.organization_list);
           setCleanedAffilitionList(_data.cleaned_affiliation_list);
           setCleanedIDList(_data.cleaned_idn_list);
           setstateNameList(_data.state_name_list);
@@ -480,7 +486,7 @@ const InstitutionalVariationTable = ({title,cleanedAffilitionInput = null, setHc
       { header: "Region", accessor: "Region" },
       { header: "State Name", accessor: "State Name" },
       { header: "City", accessor: "City" },
-    //   { header: "Organization Name", accessor: "Organization Name" },
+      //   { header: "Organization Name", accessor: "Organization Name" },
     ];
     [...Object.keys(selectLabels)].map((item) =>
       column_names.push({
@@ -549,7 +555,7 @@ const InstitutionalVariationTable = ({title,cleanedAffilitionInput = null, setHc
   return statsData1 !== null && !loading ? (
     <>
       {data1 ? (
-        <BarChartPopup closeModal={closeModal} data1={data1} />
+        <BarChartPopup type="Hospital" closeModal={closeModal} data1={data1} />
       ) : (
         <Table
           hcpScatter={hcpScatter}
