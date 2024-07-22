@@ -191,9 +191,9 @@ export default function Index() {
                       Solution
                     </h3>
                     <p className="text-lg py-6 text-gray-600  px-10">
-                      Best-in-class mapping of clinical patient need,
-                      understanding of care patterns, and care profiles of
-                      stakeholders to guide initiatives
+                      Best-in-class mapping of clinical patient care, variation
+                      in care, and profiles across stakeholders to guide
+                      initiatives
                     </p>
                   </div>
                 </div>
