@@ -3,65 +3,69 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import AOS from 'aos';
-import 'aos/dist/aos.css'
-
-
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 gsap.registerPlugin(ScrollTrigger);
-
 
 const SolutionsList = [
   {
     id: 1,
-    title: "Real-time map of patient need across clinical journey",
+    title: "Map of patient need across clinical journey",
     description:
-      "Track impact of initiatives on patient need (across all stakeholders",
-    cardText: "HQ",
+      "Our clinical and data experts have years of experience in mapping the patient journey from diagnosis to post-treatment across more than 20 diseases.",
+    cardText: "Medical Strategy",
   },
   {
     id: 2,
-    title:"HCPs by actionability and patient need (MSL ready)",
-    description:"HCP segmentation, prioritization, and profiles based on >1k features",
-    cardText: "HCP",
+    title: "HCPs, hospitals / clinics, plans patient need (MSL ready)",
+    description:
+      "Measure disparities in care in a disease down to the individual physician",
+    cardText: "Segmentation and Targeted Engagement",
   },
   {
     id: 3,
-    title:"Institutions by actionability and patient need",
-    description:"Profiles on institutions including comparison to others and variability in care",
-    cardText: "Institution",
+    title: "Tailored messaging based on deep profiles",
+    description:
+      "Tailor messaging based on profiles to bring the most impactful messages to the right audiences to influence care",
+    cardText: "Tailored Messaging and Evidence Generation",
   },
   {
     id: 4,
-    title:"Payers by actionability and patient need",
-    description:"Profiles on payers including comparison to others and variability in care",
-    cardText: "Payers",
+    title: "Track impact of initiatives",
+    description:
+      "Track the real patient impact of initiatives in real-time across initiatives",
+    cardText: "Impact Tracking",
   },
-]
+];
 
 export default function Index() {
-  const [currentTab, setCurrentTab] = useState(0)
+  const [currentTab, setCurrentTab] = useState(0);
 
   useEffect(() => {
     AOS.init();
-    SolutionsList.forEach(item => {
-      gsap.fromTo(`#solution-${item.id}`, {
-        clipPath: "inset(0% 0% 100% 0)"
-      }, {
-        clipPath: "inset(0% 0% 0% 0)",
-        ease: "power2.inOut",
-        scrollTrigger: {
-          trigger: `#solution-${item.id}`,
-          start: "top 70%",
-          end: "top 100%",
-          scrub: 1,
-          pin: false,
-          pinSpacing: false,
-          repeat: 0
-        }
-      })
-    })
-  }, [])
+    SolutionsList.forEach((item) => {
+      gsap.fromTo(
+        `#solution-${item.id}`,
+        {
+          clipPath: "inset(0% 0% 100% 0)",
+        },
+        {
+          clipPath: "inset(0% 0% 0% 0)",
+          ease: "power2.inOut",
+          scrollTrigger: {
+            trigger: `#solution-${item.id}`,
+            start: "top 70%",
+            end: "top 100%",
+            scrub: 1,
+            pin: false,
+            pinSpacing: false,
+            repeat: 0,
+          },
+        },
+      );
+    });
+  }, []);
 
   return (
     <>
@@ -108,8 +112,11 @@ export default function Index() {
               >
                 The first real-time Medical Affairs intelligence suite driven by
               </h1>
-              <h1      data-aos="zoom-y-out"
-                  data-aos-delay="150" className="mt-8 text-3xl md:text-6xl font-extrabold leading-tighter tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
+              <h1
+                data-aos="zoom-y-out"
+                data-aos-delay="150"
+                className="mt-8 text-3xl md:text-6xl font-extrabold leading-tighter tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400"
+              >
                 AI + RWD
               </h1>
               <div className="max-w-3xl mt-12 mx-auto">
@@ -118,17 +125,26 @@ export default function Index() {
                   data-aos="zoom-y-out"
                   data-aos-delay="250"
                 >
-                Digital, AI, and RWD have enabled a new frontier of Medical Affairs patient impact (A Vision for Medical Affairs in 2025, McKinsey)
+                  Digital, AI, and RWD have enabled a new frontier of Medical
+                  Affairs patient impact.
                 </p>
-                <p  className="text-md md:text-xl text-gray-600 mb-4"
+                <p
+                  className="text-md md:text-xl text-gray-600 mb-4"
                   data-aos="zoom-y-out"
-                  data-aos-delay="300">
-                Our apps empower Medical Affairs to measure and optimize the impact of initiatives across functions focusing on patient need.
+                  data-aos-delay="300"
+                >
+                  We are able to measure granular patient care patterns
+                  physician, hospital / clinic, and plan levels
                 </p>
-                <p  className="text-md md:text-xl text-gray-600 mb-4"
+                <p
+                  className="text-md md:text-xl text-gray-600 mb-4"
                   data-aos="zoom-y-out"
-                  data-aos-delay="350">
-                The app suite includes a real-time mapping of patient care across the clinical treatment journey and deep profiles on stakeholders including HCPs, institutions, and payers
+                  data-aos-delay="350"
+                >
+                  The app suite includes a real-time mapping of patient care
+                  across the clinical treatment journey and deep profiles on
+                  stakeholders including HCPs, hospitals / clinics, health
+                  systems, and payers.
                 </p>
                 {/* <div
                   className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center"
@@ -153,62 +169,107 @@ export default function Index() {
                   </div>
                 </div> */}
                 <div className="grid md:grid-cols-2 mt-12 gap-8">
-                  <div  data-aos="zoom-y-out"
-                  data-aos-delay="400" className="text-whit shadow-box mt-6 rounded-xl">
-                    <h3 className="text-2xl text-white h-100  py-4 bg-[#7bdcb5] rounded-tr-xl rounded-tl-xl bg-circle font-bold ">Problem</h3>
-                    <p className="text-lg py-6 text-gray-600  px-10">Significant disparities in patient care across physicians, institutions, payers, and regions</p>
+                  <div
+                    data-aos="zoom-y-out"
+                    data-aos-delay="400"
+                    className="text-whit shadow-box mt-6 rounded-xl"
+                  >
+                    <h3 className="text-2xl text-white h-100  py-4 bg-[#7bdcb5] rounded-tr-xl rounded-tl-xl bg-circle font-bold ">
+                      Problem
+                    </h3>
+                    <p className="text-lg py-6 text-gray-600  px-10">
+                      Significant disparities in patient care across physicians,
+                      institutions, payers, and regions
+                    </p>
                   </div>
-                  <div  data-aos="zoom-y-out"
-                  data-aos-delay="400" className="text-white h-100 shadow-box mt-6 rounded-xl">
-                    <h3 className="text-2xl py-4 bg-[#87CEEB] rounded-tr-xl rounded-tl-xl bg-circle font-bold ">Solution</h3>
-                    <p className="text-lg py-6 text-gray-600  px-10">Best-in-class mapping of clinical patient need, understanding of HCP care patterns, and care “fingerprints” of stakeholders to guide initiatives</p>
+                  <div
+                    data-aos="zoom-y-out"
+                    data-aos-delay="400"
+                    className="text-white h-100 shadow-box mt-6 rounded-xl"
+                  >
+                    <h3 className="text-2xl py-4 bg-[#87CEEB] rounded-tr-xl rounded-tl-xl bg-circle font-bold ">
+                      Solution
+                    </h3>
+                    <p className="text-lg py-6 text-gray-600  px-10">
+                      Best-in-class mapping of clinical patient need,
+                      understanding of care patterns, and care profiles of
+                      stakeholders to guide initiatives
+                    </p>
                   </div>
                 </div>
-                
               </div>
             </div>
           </div>
         </div>
       </section>
       <section className="relative overflow-hidden  bg-gray-100">
-      <div className=" max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="pt-12 md:pt-20">
-          {/* Section header */}
-          <div  data-aos="zoom-y-out"
-                  data-aos-delay="150" className="max-w-3xl mx-auto text-center pb-12 md:pb-16">
-            <h1  className="text-md md:text-2xl h2 mb-4">Explore the solutions</h1>
-            <p className="text-sm md:text-xl text-gray-600">The Clinica AI Suite enables healthcare organizations to measure and maximize the patient impact</p>
-          </div>
-          {/* Section content */}
+        <div className=" max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="pt-12 md:pt-20">
+            {/* Section header */}
+            <div
+              data-aos="zoom-y-out"
+              data-aos-delay="150"
+              className="max-w-3xl mx-auto text-center pb-12 md:pb-16"
+            >
+              <h1 className="text-md md:text-2xl h2 mb-4">Explore the app</h1>
+              <p className="text-sm md:text-xl text-gray-600">
+                The Clinica AI Suite enables healthcare organizations to measure
+                and maximize the patient impact
+              </p>
+            </div>
+            {/* Section content */}
             {/* Content */}
             <div className="max-w-xl h-[200vh] md:max-w-none md:w-full mx-auto">
-              <div  id={`solution-wrapper`} className="mb-8 overflow-hidden md:mb-0">
+              <div
+                id={`solution-wrapper`}
+                className="mb-8 overflow-hidden md:mb-0"
+              >
                 {SolutionsList.map((item, index) => {
-                  return <div  key={index} id={`solution-${item.id}`} className="grid min-w-[50%] grid-cols-2 gap-10 mb-10"><a
-                  className={`flex flex-col-reverse justify-between md:flex-row items-center  md:h-[10rem] text-lg p-5 rounded border transition duration-300 ease-in-out `}
-                  href="#0"
-                >
-                  <div className="flex items-center flex-col"> 
-                    <h4 className="font-bold text-sm md:text-xl leading-snug tracking-tight mb-1">{item.title}</h4>
-                    <p className="text-xs md:text-md text-gray-600">{item.description}</p>
-                  </div>
-                  <div className="flex justify-center items-center w-4 h-4 md:w-8 md:h-8 bg-white rounded-full shadow flex-shrink-0 mb-4 md:ml-3">
-                    <svg className="w-2 h-2 md:w-3 md:h-3 fill-current" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M11.953 4.29a.5.5 0 00-.454-.292H6.14L6.984.62A.5.5 0 006.12.173l-6 7a.5.5 0 00.379.825h5.359l-.844 3.38a.5.5 0 00.864.445l6-7a.5.5 0 00.075-.534z" />
-                    </svg>
-                  </div>
-                </a>
-                <div className={`h-[100%] w-[100%] grid place-content-center hero-card-${item.id}`}>
-                  <h1 className={`text-xl md:text-5xl font-extrabold  text-white`}>{item.cardText}</h1>
-                  </div>
-                </div>
+                  return (
+                    <div
+                      key={index}
+                      id={`solution-${item.id}`}
+                      className="grid min-w-[50%] grid-cols-2 gap-10 mb-10"
+                    >
+                      <a
+                        className={`flex flex-col-reverse justify-between md:flex-row items-center  md:h-[10rem] text-lg p-5 rounded border transition duration-300 ease-in-out `}
+                        href="#0"
+                      >
+                        <div className="flex items-center flex-col">
+                          <h4 className="font-bold text-sm md:text-xl leading-snug tracking-tight mb-1">
+                            {item.title}
+                          </h4>
+                          <p className="text-xs md:text-md text-gray-600">
+                            {item.description}
+                          </p>
+                        </div>
+                        <div className="flex justify-center items-center w-4 h-4 md:w-8 md:h-8 bg-white rounded-full shadow flex-shrink-0 mb-4 md:ml-3">
+                          <svg
+                            className="w-2 h-2 md:w-3 md:h-3 fill-current"
+                            viewBox="0 0 12 12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path d="M11.953 4.29a.5.5 0 00-.454-.292H6.14L6.984.62A.5.5 0 006.12.173l-6 7a.5.5 0 00.379.825h5.359l-.844 3.38a.5.5 0 00.864.445l6-7a.5.5 0 00.075-.534z" />
+                          </svg>
+                        </div>
+                      </a>
+                      <div
+                        className={`h-[100%] w-[100%] grid place-content-center hero-card-${item.id}`}
+                      >
+                        <h1
+                          className={`text-xl md:text-5xl font-extrabold  text-white`}
+                        >
+                          {item.cardText}
+                        </h1>
+                      </div>
+                    </div>
+                  );
                 })}
               </div>
+            </div>
           </div>
-
         </div>
-      </div>
-    </section>
+      </section>
     </>
   );
 }
