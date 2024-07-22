@@ -19,6 +19,7 @@ import { MultiSelect } from "react-multi-select-component";
 import interpolate from "color-interpolate";
 import { AuthContext } from "../../context/AuthContext";
 import { filterOutLabelsTable } from "../../utils/MapUtils";
+import InputField from "../InputField";
 
 let colormap = interpolate(["green", "white", "red"]);
 
@@ -113,6 +114,8 @@ const BarChartOptions = {
 };
 
 const Table = ({
+  physicianName,
+  setPhysicianName,
   hcpScatter,
   colorCells,
   updateTable = false,
@@ -124,7 +127,7 @@ const Table = ({
   showTopBtnsToggle = false,
   stateName,
   setStateName,
-  isPayer=false,
+  isPayer = false,
   dispatch,
   value,
   setValue,
@@ -286,7 +289,6 @@ const Table = ({
   const handleOrganisationSelect = (val) => {
     setorganisation(val);
   };
-  const firstRef = React.useRef(true);
 
   const handleToggleSelect = (val) => {
     allColumns.forEach((item) => {
@@ -333,9 +335,11 @@ const Table = ({
         valHeaders = value.map((item) => item.col.Header);
       }
       let _obj = {};
-      selectedUnmet.filter(item => item.value.toLowerCase().includes("percent")).forEach((item) => {
-        _obj[item.value] = item;
-      });
+      selectedUnmet
+        .filter((item) => item.value.toLowerCase().includes("percent"))
+        .forEach((item) => {
+          _obj[item.value] = item;
+        });
       // let firstUnmet = Object.keys(selectLabels).filter(element => {
       //     return _obj.hasOwnProperty(element)
       //   })[0]
@@ -480,57 +484,90 @@ const Table = ({
                   );
                 })}
             </div>
+            
             <div className="flex mt-2 items-center gap-4">
-             {cleanedAffilitionList && <div className="flex items-center gap-8">
-                <label className="font-[600]">{isPayer ? "Payer Name" : "Cleaned Affiliation"}</label>
-                <MultiSelect
-                  labelledBy=""
-                  options={cleanedAffilitionList
-                    .map((item) => isNaN(item) && { label: item, value: item })
-                    .filter((item) => typeof item !== "boolean")}
-                  className="w-[20rem]"
-                  value={cleanedAffilition || []}
-                  onChange={(val) => setCleanedAffilition(val)}
-                />
-              </div>}
-              {cleanedIDNList && <div className="flex items-center gap-8">
-                <label className="font-[600]">{isPayer ? "Plan Name" : "Cleaned IDN/Parent Hospital"}</label>
-                <MultiSelect
-                  labelledBy=""
-                  options={cleanedIDNList
-                    .map((item) => isNaN(item) && { label: item, value: item })
-                    .filter((item) => typeof item !== "boolean")}
-                  className="w-[20rem]"
-                  value={cleanedIDN || []}
-                  onChange={(val) => setCleanedIDN(val)}
-                />
-              </div>}
+            {setPhysicianName && (
+                <div className="flex items-center gap-8">
+                  <label className="font-[600]">Physician Name</label>
+                  <InputField input={{
+                    type: "text",
+                    id: "Physician Name",
+                    name: "Physician Name",
+                    value: physicianName,
+                  }} onChange={(e) => setPhysicianName(e.target.value)} />
+                </div>
+              )}
+              {cleanedAffilitionList && (
+                <div className="flex items-center gap-8">
+                  <label className="font-[600]">
+                    {isPayer ? "Payer Name" : "Cleaned Affiliation"}
+                  </label>
+                  <MultiSelect
+                    labelledBy=""
+                    options={cleanedAffilitionList
+                      .map(
+                        (item) => isNaN(item) && { label: item, value: item }
+                      )
+                      .filter((item) => typeof item !== "boolean")}
+                    className="w-[20rem]"
+                    value={cleanedAffilition || []}
+                    onChange={(val) => setCleanedAffilition(val)}
+                  />
+                </div>
+              )}
+              {cleanedIDNList && (
+                <div className="flex items-center gap-8">
+                  <label className="font-[600]">
+                    {isPayer ? "Plan Name" : "Cleaned IDN/Parent Hospital"}
+                  </label>
+                  <MultiSelect
+                    labelledBy=""
+                    options={cleanedIDNList
+                      .map(
+                        (item) => isNaN(item) && { label: item, value: item }
+                      )
+                      .filter((item) => typeof item !== "boolean")}
+                    className="w-[20rem]"
+                    value={cleanedIDN || []}
+                    onChange={(val) => setCleanedIDN(val)}
+                  />
+                </div>
+              )}
             </div>
             <div className="flex mt-2 items-center gap-4">
-              {specialityList && <div className="flex items-center gap-8">
-                <label className="font-[600]">Specialty</label>
-                <MultiSelect
-                  labelledBy=""
-                  options={specialityList
-                    .map((item) => isNaN(item) && { label: item, value: item })
-                    .filter((item) => typeof item !== "boolean")}
-                  className="w-[20rem]"
-                  value={speciality || []}
-                  onChange={(val) => handleMultipleSelect(val)}
-                />
-              </div>}
-             {regionList && <div className="flex items-center gap-8">
-                <label className="font-[600]">Region</label>
-                <MultiSelect
-                  labelledBy=""
-                  options={regionList
-                    .map((item) => isNaN(item) && { label: item, value: item })
-                    .filter((item) => typeof item !== "boolean")}
-                  className="w-[10rem]"
-                  value={region || []}
-                  onChange={(val) => handleRegionSelect(val)}
-                />
-              </div>}
+              
+              {specialityList && (
+                <div className="flex items-center gap-8">
+                  <label className="font-[600]">Specialty</label>
+                  <MultiSelect
+                    labelledBy=""
+                    options={specialityList
+                      .map(
+                        (item) => isNaN(item) && { label: item, value: item }
+                      )
+                      .filter((item) => typeof item !== "boolean")}
+                    className="w-[20rem]"
+                    value={speciality || []}
+                    onChange={(val) => handleMultipleSelect(val)}
+                  />
+                </div>
+              )}
+              {regionList && (
+                <div className="flex items-center gap-8">
+                  <label className="font-[600]">Region</label>
+                  <MultiSelect
+                    labelledBy=""
+                    options={regionList
+                      .map(
+                        (item) => isNaN(item) && { label: item, value: item }
+                      )
+                      .filter((item) => typeof item !== "boolean")}
+                    className="w-[10rem]"
+                    value={region || []}
+                    onChange={(val) => handleRegionSelect(val)}
+                  />
+                </div>
+              )}
               {organisationList && (
                 <div className="flex items-center gap-8">
                   <label className="font-[600]">Organization</label>
@@ -547,18 +584,22 @@ const Table = ({
                   />
                 </div>
               )}
-            {stateNameList &&  <div className="flex items-center gap-8">
-                <label className="font-[600]">State Name</label>
-                <MultiSelect
-                  labelledBy=""
-                  options={stateNameList
-                    .map((item) => isNaN(item) && { label: item, value: item })
-                    .filter((item) => typeof item !== "boolean")}
-                  className="w-[10rem]"
-                  value={stateName || []}
-                  onChange={(val) => handleStateName(val)}
-                />
-              </div>}
+              {stateNameList && (
+                <div className="flex items-center gap-8">
+                  <label className="font-[600]">State Name</label>
+                  <MultiSelect
+                    labelledBy=""
+                    options={stateNameList
+                      .map(
+                        (item) => isNaN(item) && { label: item, value: item }
+                      )
+                      .filter((item) => typeof item !== "boolean")}
+                    className="w-[10rem]"
+                    value={stateName || []}
+                    onChange={(val) => handleStateName(val)}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>

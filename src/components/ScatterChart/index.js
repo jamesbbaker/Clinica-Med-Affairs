@@ -185,7 +185,7 @@ const defaultOptions = {
 const ScatterChart = ({
   scatterValue = true,
   setHcpProfilePage = () => {},
-
+  type,
   setIsScatterMapOpen = () => {},
   quadrantValues,
   shapes = [
@@ -405,6 +405,7 @@ const ScatterChart = ({
     <div className="min-h-[400px] relative w-full">
       {data1 ? (
         <BarChartPopup
+        type={type}
           InstitutionalTreeMap={false}
           insititutional={insititutional}
           payer={payer}

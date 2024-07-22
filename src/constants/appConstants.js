@@ -71,6 +71,7 @@ export const APP_ROUTES = {
   medical_affair_toolbox: "medical_affair_toolbox",
   data_quality: "data_quality",
   unmet_need_definition: "unmet_need_definition",
+  target_lists: "target_lists",
   priority_engagement_opportunity_page: "priority_engagement_opportunity_page",
   help: "help",
 };
@@ -91,6 +92,7 @@ export const APP_ROUTES_LABEL = {
   institutional_variation: "Hospital/Clinic Care Profiles",
   payer_variation: "Payer Care Profiles",
   medical_affair_toolbox: "Medical Affairs Toolbox",
+  target_lists: "Target Lists",
   data_quality: "Data Quality",
   unmet_need_definition: "Unmet Need Definitions",
   priority_engagement_opportunity_page: "Priority Engagement Opportunities",

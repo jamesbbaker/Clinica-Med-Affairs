@@ -311,6 +311,7 @@ const InstitutionalVariationBubbleChart = ({
           )}
 
           <ScatterChart
+          type={"Hospital"}
             scatterValue={scatterValue}
             setIsScatterMapOpen={setIsScatterMapOpen}
             shapes={[]}

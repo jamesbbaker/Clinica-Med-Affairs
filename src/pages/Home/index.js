@@ -7,6 +7,7 @@ import InputForm from "../../components/InputForm";
 import { useSelector } from "react-redux";
 import { APP_ROUTES, APP_ROUTES_LABEL, sidebarRoutes } from "../../constants/appConstants.js";
 import { AiOutlineFundProjectionScreen, AiOutlineGlobal, AiOutlineProject, AiOutlineQuestionCircle, AiOutlineRise, AiOutlineTable } from "react-icons/ai";
+import { GiTriangleTarget } from "react-icons/gi";
 
 const NavigationMenu = [
   {
@@ -43,6 +44,13 @@ const NavigationMenu = [
     route: `${APP_ROUTES.outputs}/${APP_ROUTES.payer_variation}`,
     icon: () => <AiOutlineProject />,
     description: "Deep clinical profiles for top plans and payers by priority unmet needs"
+  },
+  {
+    name: APP_ROUTES_LABEL.target_lists,
+    id: APP_ROUTES.target_lists,
+    route: `${APP_ROUTES.outputs}/${APP_ROUTES.target_lists}`,
+    icon: () => <GiTriangleTarget />,
+    description: "Your selected HCPs, hospitals / systems, and plans"
   },
   {
     name: APP_ROUTES_LABEL.impact_tracking,

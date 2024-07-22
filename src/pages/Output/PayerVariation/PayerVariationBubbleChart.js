@@ -302,6 +302,7 @@ const PayerVariationBubbleChart = ({
           )}
 
           <ScatterChart
+          type={"Plan"}
             scatterValue={scatterValue}
             setIsScatterMapOpen={setIsScatterMapOpen}
             shapes={[

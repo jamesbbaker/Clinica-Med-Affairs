@@ -62,7 +62,11 @@ const reducer = (state, action) => {
   }
 };
 
-const PayerVariationTable = ({ setHcpProfilePage = () => {} }) => {
+const PayerVariationTable = ({
+  title,
+  planNameInput = null,
+  setHcpProfilePage = () => {},
+}) => {
   const [filterList, setFilterList] = useState([]);
   const [statsData1, setStatsData1] = useState(null);
   const [filterState, dispatch] = useReducer(reducer, initialState);
@@ -86,7 +90,7 @@ const PayerVariationTable = ({ setHcpProfilePage = () => {} }) => {
   const [cleanedAffilitionList, setCleanedAffilitionList] = useState(null);
   const [cleanedAffilition, setCleanedAffilition] = useState(null);
   const [cleanedIDNList, setCleanedIDList] = useState(null);
-  const [cleanedIDN, setCleanedIDN] = useState(null);
+  const [cleanedIDN, setCleanedIDN] = useState(planNameInput);
   const [icsNumber, setIcsNumber] = useState({ min: 0, max: 0 });
   const [steroidPercent, setsteroidPercent] = useState({ min: 0, max: 0 });
   const [data1, setData1] = useState(null);
@@ -383,12 +387,8 @@ const PayerVariationTable = ({ setHcpProfilePage = () => {} }) => {
         if (_data) {
           settotalPage(Math.floor(_data.total / currentSize));
           const responseData = _data.data;
-          // setSpecialityList(_data.specialty_list);
-          // setRegionList(_data.region_list);
-          // // setorganisationList(_data.organization_list);
           setCleanedAffilitionList(_data.payer_list);
           setCleanedIDList(_data.plan_list);
-          // setstateNameList(_data.state_name_list);
           const newData = responseData.map((item) => {
             return {
               ...item,
@@ -584,7 +584,7 @@ const PayerVariationTable = ({ setHcpProfilePage = () => {} }) => {
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           marginTop="2rem"
-          Title="Summary of Unmet Need by HCP"
+          Title={title ? title : "Summary of Unmet Need by HCP"}
           activeCells={true}
           initialState={{
             pageSize: 10,

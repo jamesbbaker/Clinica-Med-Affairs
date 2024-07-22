@@ -69,7 +69,6 @@ const AuthProvider = () => {
           page_view: res.page_view,
           name: res.name
         };
-        console.log(res, "res")
         setUser(userData);
         setAccessToken(res.access_token);
         setRefreshToken(res.refresh_token);

@@ -432,6 +432,7 @@ const MedicalAffairToolbox = ({
           )}
 
           <ScatterChart
+            type="HCP"
             scatterValue={scatterValue}
             setHcpProfilePage={setHcpProfilePage}
             setIsScatterMapOpen={setIsScatterMapOpen}

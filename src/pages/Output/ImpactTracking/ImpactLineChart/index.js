@@ -36,31 +36,6 @@ const options = {
       grid: {
         display: false,
       },
-      // grid: {
-      //   drawOnChartArea: false,
-      //   drawOnAxisArea: false,
-      // },
-      // ticks: {
-      //   callback: function (value) {
-      //     console.log(value, "value")
-      //     const date = new Date(value);
-      //     const year = date.getFullYear();
-      //     const month = date.getMonth();
-
-      //     let quarter;
-      //     if (month < 3) {
-      //       quarter = "Q1";
-      //     } else if (month < 6) {
-      //       quarter = "Q2";
-      //     } else if (month < 9) {
-      //       quarter = "Q3";
-      //     } else {
-      //       quarter = "Q4";
-      //     }
-
-      //     return `${quarter}-${year}`;
-      //   },
-      // },
     },
     y: {
       ticks: {
@@ -72,11 +47,33 @@ const options = {
         },
       },
     },
-    y1: {
-      position: "right",
-      grid: {
-        drawOnChartArea: false,
+  },
+  plugins: {
+    legend: {
+      position: "top",
+    },
+    datalabels: {
+      display: false,
+    },
+  },
+};
+const options2 = {
+  responsive: true,
+  scales: {
+    x: {
+      title: {
+        display: false,
       },
+      type: "category",
+      scaleLabel: {
+        display: true,
+        labelString: "Date",
+      },
+      grid: {
+        display: false,
+      },
+    },
+    y: {
       ticks: {
         callback: function (value) {
           return `${value}%`;
@@ -96,6 +93,7 @@ const options = {
     },
   },
 };
+
 const randomColors = [
   "#d43c1b",
   "#3b5fb0",
@@ -113,7 +111,6 @@ const randomColors = [
   "#d20e8c",
   "#473e27",
 ];
-
 
 const randomColorsPercentWithOpacity = [
   "#d43c1b80",
@@ -164,8 +161,6 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
     let lineDataFilter = lineData.filter((item) => {
       const year = parseInt(item.Quarter.split("-")[0]);
       const month = parseInt(item.Quarter.split("-")[1]);
-
-      // Filter for years from 2016 to 2023 (inclusive) and exclude January 2024
       return (
         (year > 2016 || (year === 2016 && month >= 1)) &&
         (year < 2024 || (year === 2023 && month <= 12))
@@ -183,8 +178,6 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
             data: [],
           };
         }
-
-        // lineDataByRegion[item.Region].data.push(item[filtersName[unmetNeed]]);
         lineDataByRegion[item.Region].data.push(item);
       });
       setRegionsList(Object.keys(lineDataByRegion));
@@ -209,6 +202,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
       let _index = 0;
 
       let datasets = [];
+      let datasets2 = [];
       unmetNeed.map((unmet, index) =>
         Object.values(lineDataByRegion)
           .filter((item) => _selectedRegions.includes(item.id))
@@ -222,32 +216,49 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
               backgroundColor: randomColors[_index]
                 ? randomColors[_index]
                 : "#c4c4c4c4",
-                yAxisID: "y",
+              yAxisID: "y",
             });
             _index++;
           })
       );
+      _index=0
       unmetNeed.map((unmet, index) =>
         Object.values(lineDataByRegion)
-          .filter((item) => _selectedRegions.includes(item.id) && labelsMatrix[unmet.value] && labelsMatrix[unmet.value].Percent && filtersName[labelsMatrix[unmet.value].Percent])
+          .filter(
+            (item) =>
+              _selectedRegions.includes(item.id) &&
+              labelsMatrix[unmet.value] &&
+              labelsMatrix[unmet.value].Percent &&
+              filtersName[labelsMatrix[unmet.value].Percent]
+          )
           .forEach((item) => {
-            datasets.push({
-              label: `${item.id} (${selectLabels[labelsMatrix[unmet.value].Percent]})`,
-              data: item.data.map((_item) => _item[filtersName[labelsMatrix[unmet.value].Percent]]),
+            datasets2.push({
+              label: `${item.id} (${
+                selectLabels[labelsMatrix[unmet.value].Percent]
+              })`,
+              data: item.data.map(
+                (_item) => _item[filtersName[labelsMatrix[unmet.value].Percent]]
+              ),
               borderColor: randomColors[_index]
                 ? randomColors[_index]
                 : "#c4c4c4c4",
               backgroundColor: randomColors[_index]
                 ? randomColors[_index]
                 : "#c4c4c4c4",
-                yAxisID: "y1",
+              yAxisID: "y1",
             });
             _index++;
           })
       );
       data = {
-        labels: [...new Set(_labels)],
-        datasets: datasets,
+        chart1: {
+          labels: [...new Set(_labels)],
+          datasets: datasets,
+        },
+        chart2: {
+          labels: [...new Set(_labels)],
+          datasets: datasets2,
+        },
       };
     } else if (type === "State") {
       const lineDataByState = {};
@@ -302,53 +313,83 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
             _index++;
           })
       );
+      let datasets2 = [];
+       _index = 0;
+      unmetNeed.map((unmet, index) =>
+        Object.values(lineDataByState)
+          .filter((item) => _selectedStates.includes(item.id))
+          .forEach((item) => {
+            datasets.push({
+              label: `${item.id} (${unmet.value})`,
+              data: item.data.map((_item) => _item[filtersName[unmet.value]]),
+              borderColor: randomColors[_index]
+                ? randomColors[_index]
+                : "#c4c4c4",
+              backgroundColor: randomColors[_index]
+                ? randomColors[_index]
+                : "#c4c4c4",
+            });
+            _index++;
+          })
+      );
 
       data = {
-        labels: [...new Set(_labels)],
-        datasets: datasets,
+        chart1: {
+          labels: [...new Set(_labels)],
+          datasets: datasets,
+        },
+        chart2: {
+
+        }
+     
       };
     } else {
       data = {
-        labels: _labels,
-        datasets: [
-          ...unmetNeed.map((item, index) => {
-            return {
-              label: item.label,
-              data: lineDataFilter.map(
-                (_item) => _item[invertedMapLabels[item.value]]
-              ),
-              borderColor: randomColors[index]
-                ? randomColors[index]
-                : "#c4c4c4",
-              backgroundColor: randomColors[index]
-                ? randomColors[index]
-                : "#c4c4c4",
-              yAxisID: "y",
-            };
-          }),
-          ...unmetNeed
-            .filter(
-              (item) =>
-                labelsMatrix[item.value] &&
-                invertedMapLabels[labelsMatrix[item.value].Percent]
-            )
-            .map((item, index) => {
+        chart1: {
+          labels: _labels,
+          datasets: [
+            ...unmetNeed.map((item, index) => {
               return {
-                label: selectLabels[labelsMatrix[item.value].Percent],
+                label: item.label,
                 data: lineDataFilter.map(
-                  (_item) =>
-                    _item[invertedMapLabels[labelsMatrix[item.value].Percent]]
+                  (_item) => _item[invertedMapLabels[item.value]]
                 ),
-                borderColor: randomColorsPercentWithOpacity[index]
-                  ? randomColorsPercentWithOpacity[index]
+                borderColor: randomColors[index]
+                  ? randomColors[index]
                   : "#c4c4c4",
-                backgroundColor: randomColorsPercentWithOpacity[index]
-                  ? randomColorsPercentWithOpacity[index]
+                backgroundColor: randomColors[index]
+                  ? randomColors[index]
                   : "#c4c4c4",
-                yAxisID: "y1",
               };
             }),
-        ],
+          ],
+        },
+        chart2: {
+          labels: _labels,
+          datasets: [
+            ...unmetNeed
+              .filter(
+                (item) =>
+                  labelsMatrix[item.value] &&
+                  invertedMapLabels[labelsMatrix[item.value].Percent]
+              )
+              .map((item, index) => {
+                return {
+                  label: selectLabels[labelsMatrix[item.value].Percent],
+                  data: lineDataFilter.map(
+                    (_item) =>
+                      _item[invertedMapLabels[labelsMatrix[item.value].Percent]]
+                  ),
+                  borderColor: randomColorsPercentWithOpacity[index]
+                    ? randomColorsPercentWithOpacity[index]
+                    : "#c4c4c4",
+                  backgroundColor: randomColorsPercentWithOpacity[index]
+                    ? randomColorsPercentWithOpacity[index]
+                    : "#c4c4c4",
+                };
+              }),
+          ],
+        },
       };
     }
     setLineChartData(data);
@@ -478,8 +519,22 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
           />
         </div>
       </div>
-
-      <LineChart options={options} data={lineChartData} arbitrary={false} />
+      <div className="grid grid-cols-2 items-center">
+        {lineChartData.chart1 && (
+          <LineChart
+            options={options}
+            data={lineChartData.chart1}
+            arbitrary={false}
+          />
+        )}
+        {lineChartData.chart2 && (
+          <LineChart
+            options={options2}
+            data={lineChartData.chart2}
+            arbitrary={false}
+          />
+        )}
+      </div>
     </div>
   ) : (
     <div className="h-[200px] flex flex-col items-center justify-center">
