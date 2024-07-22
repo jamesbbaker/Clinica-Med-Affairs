@@ -21,17 +21,24 @@ const SolutionsList = [
     title: "HCPs, hospitals / clinics, plans patient need (MSL ready)",
     description:
       "Measure disparities in care in a disease down to the individual physician",
-    cardText: "Segmentation and Targeted Engagement",
+    cardText: "Targeted Engagement",
   },
   {
     id: 3,
     title: "Tailored messaging based on deep profiles",
     description:
       "Tailor messaging based on profiles to bring the most impactful messages to the right audiences to influence care",
-    cardText: "Tailored Messaging and Evidence Generation",
+    cardText: "Tailored Messaging",
   },
   {
     id: 4,
+    title: "Generate evidence and materials to support strategy",
+    description:
+      "Develop evidence and digital tools to support targeted engagement strategy",
+    cardText: "Evidence Generation and Digital",
+  },
+  {
+    id: 5,
     title: "Track impact of initiatives",
     description:
       "Track the real patient impact of initiatives in real-time across initiatives",
