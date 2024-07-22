@@ -214,7 +214,7 @@ export default function Index() {
               <h1 className="text-md md:text-2xl h2 mb-4">Explore the app</h1>
               <p className="text-sm md:text-xl text-gray-600">
                 The Clinica AI Suite enables healthcare organizations to measure
-                and maximize the patient impact
+                and maximize the patient impact of initiatives
               </p>
             </div>
             {/* Section content */}
