@@ -233,7 +233,7 @@ export function LineChart({
         lineRef.current.update();
         if (primarySpecialtyData && _val) {
           let _newPrimaryData = [...primarySpecialtyData];
-          console.log(primarySpecialtyData)
+          
           let primaryData = _newPrimaryData.splice(0, _val);
 
           let data = calculateShapes(primaryData);
