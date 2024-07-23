@@ -5,7 +5,7 @@ export default function ContactUs() {
   return (
     <div className="h-full w-full bg-white">
       <Navbar />
-      <div className="flex h-[100vh] justify-center items-center max-w-[70%] m-auto">
+      <div className="flex h-[100vh] justify-center items-center max-w-[75%] m-auto">
       <ContactSupport contactPage />
       </div>
     </div>

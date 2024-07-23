@@ -7,11 +7,12 @@ import { AuthContext } from "../../../context/AuthContext";
 
 const TargetList = () => {
   const [filters, setFilters] = useState({
-    hcp:[],
-    hospital:[],
-    payer:[],
+    hcp: [],
+    hospital: [],
+    payer: [],
   });
   const { accessToken, refreshToken } = useContext(AuthContext);
+  const [isScatterMapOpen, setIsScatterMapOpen] = useState(false);
 
   useEffect(() => {
     getDataStats("get_list", accessToken, refreshToken)
@@ -31,7 +32,7 @@ const TargetList = () => {
               _data.payer.push({ value: item.key, label: item.key });
             }
           });
-          setFilters(_data)
+          setFilters(_data);
         }
       })
       .catch((err) => {
@@ -43,15 +44,29 @@ const TargetList = () => {
     <>
       {filters ? (
         <div className="flex flex-col items-start gap-4">
-          {filters.hcp && <EligiblePatientLocator title={"HCPs"} providerId={filters.hcp} />}
+          {filters.hcp && (
+            <EligiblePatientLocator
+              showDelete={true}
+              setIsScatterMapOpen={setIsScatterMapOpen}
+              title={"HCPs"}
+              providerId={filters.hcp}
+            />
+          )}
           {filters.hospital && (
             <InstitutionalVariationTable
-            title="Clinic / Hospitals"
+              setIsScatterMapOpen={setIsScatterMapOpen}
+              title="Clinic / Hospitals"
               cleanedAffilitionInput={filters.hospital}
+              showDelete={true}
             />
           )}
           {filters.payer && (
-            <PayerVariationTable title="Plans" planNameInput={filters.payer} />
+            <PayerVariationTable
+              showDelete={true}
+              setIsScatterMapOpen={setIsScatterMapOpen}
+              title="Plans"
+              planNameInput={filters.payer}
+            />
           )}
         </div>
       ) : (

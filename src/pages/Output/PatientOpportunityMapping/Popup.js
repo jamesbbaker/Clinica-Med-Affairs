@@ -103,18 +103,19 @@ const options = {
 const filterOptions = [...Object.keys(selectLabels)];
 
 const BarChartPopup = ({
-  type="",
+  type = "",
   insititutional = false,
   InstitutionalTreeMap = false,
   closeModal,
+  secondaryType,
   data1,
   payer = false,
   payerData = false,
 }) => {
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [fetchedData, setFetchedData] = useState(null);
-  const [saveInfo, setSaveInfo] = useState(null)
-  const [loading, setLoading] = useState(false) 
+  const [saveInfo, setSaveInfo] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [unmetNeed, setUnmetNeed] = useState([
     { label: filterOptions[0], value: filterOptions[0] },
   ]);
@@ -154,23 +155,30 @@ const BarChartPopup = ({
 
   useEffect(() => {
     if (data1) {
-      let key = "" 
+      let key = "";
       if (type === "HCP") {
-        key = `${data1[0]["Provider ID"].toString()}`
+        key = data1[0]["Provider ID"].toString();
       } else if (type === "Hospital") {
-        key = `${data1[0]["Cleaned Affiliation"].toString()}`
+        key = data1[0]["Hospital"].toString();
       } else if (type === "Plan") {
-        key = `${data1[0]["Plan Name"].toString()}`
+        key = data1[0]["Plan Name"].toString();
+      } else if (type === "planTreeMap") {
+        key = data1[0].Item.toString().split("_")[0];
+      } else if (type === "hospitalTreeMap") {
+        key = data1[0].Hospital ? data1[0].Hospital.toString() : data1[0].Item.toString().split("_")[0];
       }
-   
+
       setSaveInfo({
-        type,
-        key
-      })
+        type:
+          type === "planTreeMap"
+            ? "Plan"
+            : type === "hospitalTreeMap"
+            ? "Hospital"
+            : type,
+        key,
+      });
     }
     if (data1 && !payerData) {
-     
-     
       getDataStats(
         `hcp_quarterly?Provider_ID=${data1[0]["Provider ID"]}`,
         accessToken,
@@ -197,9 +205,11 @@ const BarChartPopup = ({
     setUnmetNeed(val);
   };
 
-  const handleSave =async () => {
-    setLoading(true)
-    let data = {...saveInfo}
+  console.log(data1);
+
+  const handleSave = async () => {
+    setLoading(true);
+    let data = { ...saveInfo };
     try {
       const response = await fetch(
         "https://clinica-server.replit.app/set_list",
@@ -215,7 +225,6 @@ const BarChartPopup = ({
       );
       const res = await response.json();
       setLoading(false);
-      console.log(res,"response")
     } catch (err) {
       console.log(err);
       throw new Error();
@@ -245,7 +254,9 @@ const BarChartPopup = ({
                 Hospital / Clinic Affiliation
                 <strong className="ml-2">
                   {InstitutionalTreeMap
-                    ? data1[0]["Item"] && data1[0]["Item"].split("_")[0]
+                    ? type === "hospitalTreeMap" && secondaryType !== "Treemap" 
+                      ? data1[0].Hospital
+                      : data1[0]["Item"] && data1[0]["Item"].split("_")[0]
                     : data1[0]["Cleaned Affiliation"]}
                 </strong>
               </div>
@@ -253,7 +264,9 @@ const BarChartPopup = ({
                 Cleaned IDN/Parent Hospital
                 <strong className="ml-2">
                   {InstitutionalTreeMap
-                    ? data1[0]["Parent"] && data1[0]["Parent"] === "GLOBAL"
+                    ? type === "hospitalTreeMap" && secondaryType !== "Treemap" 
+                      ? data1[0].System
+                      : data1[0]["Parent"] && data1[0]["Parent"] === "GLOBAL"
                       ? data1[0]["Item"] && data1[0]["Item"].split("_")[0]
                       : data1[0]["Parent"].split("_")[0]
                     : data1[0]["Cleaned IDN/Parent Hospital"]}
@@ -262,7 +275,12 @@ const BarChartPopup = ({
             </div>
             {insititutional && (
               <div className="flex items-center gap-1">
-                <PrimaryBtn disabled={loading} className={"px-4 text-[#fff]"}  text={"Save to List"} onClick={handleSave} />
+                <PrimaryBtn
+                  disabled={loading}
+                  className={"px-4 text-[#fff]"}
+                  text={"Save to List"}
+                  onClick={handleSave}
+                />
                 <button
                   onClick={closeModal}
                   className="flex-end  text-md rounded-sm"
@@ -289,7 +307,12 @@ const BarChartPopup = ({
                 HCP Name: <InputField  input={type: "text"} /></div>} */}
               {!insititutional && (
                 <div className="flex items-center gap-1">
-                  <PrimaryBtn disabled={loading}  className={"px-4 text-[#fff]"} text={"Save to List"} onClick={handleSave} />
+                  <PrimaryBtn
+                    disabled={loading}
+                    className={"px-4 text-[#fff]"}
+                    text={"Save to List"}
+                    onClick={handleSave}
+                  />
                   <button
                     onClick={closeModal}
                     className="flex-end text-md rounded-sm"

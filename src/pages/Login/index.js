@@ -208,7 +208,7 @@ const Login = ({ passwordChange }) => {
   ) : (
     <>
       <Navbar />
-      <div className="mx-auto max-w-[80%] font-primary h-screen flex md:flex-row flex-col justify-center items-center">
+      <div className="mx-auto max-w-[75%] font-primary h-screen flex md:flex-row flex-col justify-between items-center">
         <div className=" w-[100%]  mt-20 md:mt-0  md:w-[40%] rounded-xl bg-primary  h-[80%] flex flex-col justify-center items-center gap-2">
           <h1 className="text-md md:text-3xl relative text-slate-50 font-semibold before:absolute before:w-[60vw] before:h-[60vw] md:before:w-[20rem] md:before:h-[20rem] before:rounded-full before:bg-blue-200 before:opacity-15  before:-translate-x-1/2 before:-translate-y-1/2  before:left-1/2 before:top-1/2 after:absolute after:w-[70vw] after:h-[70vw]  md:after:w-[25rem] md:after:h-[25rem] after:rounded-full after:bg-blue-200 after:opacity-25  after:-translate-x-1/2 after:-translate-y-1/2  after:left-1/2 after:top-1/2">
             Welcome to Clinica AI

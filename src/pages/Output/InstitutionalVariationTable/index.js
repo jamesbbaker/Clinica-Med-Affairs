@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useMemo,
   useReducer,
+  useRef,
   useState,
 } from "react";
 import Table from "../../../components/Table";
@@ -66,6 +67,8 @@ const InstitutionalVariationTable = ({
   title,
   cleanedAffilitionInput = null,
   setHcpProfilePage = () => {},
+  setIsScatterMapOpen,
+  showDelete = false,
 }) => {
   const [filterList, setFilterList] = useState([]);
   const [statsData1, setStatsData1] = useState(null);
@@ -89,8 +92,9 @@ const InstitutionalVariationTable = ({
   const [organisationList, setorganisationList] = useState(null);
   const [cleanedAffilitionList, setCleanedAffilitionList] = useState(null);
   const [cleanedAffilition, setCleanedAffilition] = useState(
-    cleanedAffilitionInput,
+    cleanedAffilitionInput
   );
+  const [emptyTable, setEmptyTable] = useState(false);
   const [cleanedIDNList, setCleanedIDList] = useState(null);
   const [cleanedIDN, setCleanedIDN] = useState(null);
   const [icsNumber, setIcsNumber] = useState({ min: 0, max: 0 });
@@ -107,6 +111,50 @@ const InstitutionalVariationTable = ({
     }
   }, [statsData1]);
 
+  const handleDelete = async (e, val) => {
+    e.stopPropagation();
+    setLoading(true);
+    let data = { key: val.Hospital };
+    // console.log(first)
+    let _cleanedAffilition = [...cleanedAffilition].filter(
+      (item) => item.value !== val.Hospital
+    );
+
+    if (_cleanedAffilition.length === 0) {
+      setEmptyTable(true);
+    }
+
+    try {
+      const response = await fetch(
+        "https://clinica-server.replit.app/delete_list",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      const res = await response.json();
+      setData1(null);
+      setLoading(false);
+      setCleanedAffilition(_cleanedAffilition);
+
+      handleFilter(
+        speciality,
+        region,
+        stateName,
+        organisation,
+        _cleanedAffilition
+      );
+    } catch (err) {
+      console.log(err);
+      throw new Error();
+    }
+  };
+
   const fetchData = (
     page = 1,
     size = 5,
@@ -117,8 +165,9 @@ const InstitutionalVariationTable = ({
     _stateName,
     _organisation,
     _cleaned_affilition,
-    _cleaned_idn,
+    _cleaned_idn
   ) => {
+    setEmptyTable(false);
     setStatsData1(null);
     const specialties = _speciality;
     let queryString = `institutional_table_data?&`; // Start with 'hcp_data?&'
@@ -153,7 +202,6 @@ const InstitutionalVariationTable = ({
         .map((statename) => `Cleaned IDN/Parent Hospital=${statename.value}`)
         .join("&")}`;
     }
-    console.log(queryString);
 
     // Add other query parameters as needed
     const additionalParams = {
@@ -366,7 +414,7 @@ const InstitutionalVariationTable = ({
     // Concatenate additional parameters (filter out undefined values)
     const urlParams = Object.entries(additionalParams)
       .filter(
-        ([key, value]) => value !== undefined && value !== "" && value !== null,
+        ([key, value]) => value !== undefined && value !== "" && value !== null
       )
       .map(([key, value]) => `${key}=${value}`)
       .join("&");
@@ -390,7 +438,7 @@ const InstitutionalVariationTable = ({
         if (_data) {
           settotalPage(Math.floor(_data.total / currentSize));
           const responseData = _data.data;
-          setSpecialityList(_data.specialty_list);
+          // setSpecialityList(_data.specialty_list);
           setRegionList(_data.region_list);
           //   setorganisationList(_data.organization_list);
           setCleanedAffilitionList(_data.cleaned_affiliation_list);
@@ -423,10 +471,10 @@ const InstitutionalVariationTable = ({
           {
             data: _value,
             borderColor: array.map((item) =>
-              !patientTotals.includes(item) ? "#800000" : "#00008B",
+              !patientTotals.includes(item) ? "#800000" : "#00008B"
             ),
             backgroundColor: array.map((item) =>
-              !patientTotals.includes(item) ? "#800000" : "#00008B",
+              !patientTotals.includes(item) ? "#800000" : "#00008B"
             ),
             barThickness: 20, // Set a specific thickness for the bar
             maxBarThickness: 20,
@@ -450,6 +498,40 @@ const InstitutionalVariationTable = ({
     setChartDataValue(setData1, null, [col.original]);
   };
 
+  const initialUpload = useRef(false);
+
+  useEffect(() => {
+    if (
+      statsData1 &&
+      !initialUpload.current &&
+      cleanedAffilitionInput !== null
+    ) {
+      setCleanedAffilition(cleanedAffilitionInput);
+      if (cleanedAffilitionInput.length > 0) {
+        setLoading(true);
+        initialUpload.current = true;
+        fetchData(
+          currentPage,
+          currentSize,
+          sortBy,
+          sortOrder,
+          speciality,
+          region,
+          stateName,
+          organisation,
+          cleanedAffilitionInput,
+          cleanedIDN
+        );
+      } else {
+        setLoading(true);
+        initialUpload.current = true;
+        setStatsData1([]);
+        settotalPage(1);
+        setEmptyTable(true);
+      }
+    }
+  }, [statsData1, cleanedAffilitionInput]);
+
   useEffect(() => {
     fetchData(
       currentPage,
@@ -461,7 +543,7 @@ const InstitutionalVariationTable = ({
       stateName,
       organisation,
       cleanedAffilition,
-      cleanedIDN,
+      cleanedIDN
     );
   }, [currentPage, currentSize]);
 
@@ -482,7 +564,7 @@ const InstitutionalVariationTable = ({
       column_names.push({
         header: item,
         accessor: item,
-      }),
+      })
     );
 
     const USERS_TABLE_COLUMNS = column_names.map((column) => ({
@@ -493,7 +575,16 @@ const InstitutionalVariationTable = ({
     return USERS_TABLE_COLUMNS;
   }, []);
 
-  const handleFilter = (speciality, region, stateName, organisation) => {
+  const handleFilter = (
+    speciality,
+    region,
+    stateName,
+    organisation,
+    _cleanedAffilition
+  ) => {
+    let __cleanedAffilition = _cleanedAffilition
+      ? _cleanedAffilition
+      : cleanedAffilition;
     fetchData(
       currentPage,
       currentSize,
@@ -503,8 +594,8 @@ const InstitutionalVariationTable = ({
       region,
       stateName,
       organisation,
-      cleanedAffilition,
-      cleanedIDN,
+      __cleanedAffilition,
+      cleanedIDN
     );
   };
 
@@ -538,16 +629,35 @@ const InstitutionalVariationTable = ({
       stateName,
       organisation,
       cleanedAffilition,
-      cleanedIDN,
+      cleanedIDN
     );
   };
+
+  useEffect(() => {
+    if (data1) {
+      setIsScatterMapOpen(true);
+    } else {
+      setIsScatterMapOpen(false);
+    }
+  }, [data1]);
 
   return statsData1 !== null && !loading ? (
     <>
       {data1 ? (
-        <BarChartPopup type="Hospital" closeModal={closeModal} data1={data1} />
+        <BarChartPopup
+          insititutional={true}
+          InstitutionalTreeMap={true}
+          payer={false}
+          payerData={false}
+          type="hospitalTreeMap"
+          closeModal={closeModal}
+          data1={data1}
+        />
       ) : (
         <Table
+          emptyTable={emptyTable}
+          InstitutionalVariationTable={showDelete ? true : false}
+          handleDelete={handleDelete}
           hcpScatter={hcpScatter}
           isEligible={true}
           dispatch={dispatch}

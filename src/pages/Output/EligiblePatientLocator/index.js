@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useMemo,
   useReducer,
+  useRef,
   useState,
 } from "react";
 import Table from "../../../components/Table";
@@ -66,6 +67,7 @@ const EligiblePatientLocator = ({
   title,
   providerId = false,
   setHcpProfilePage = () => {},
+  showDelete,
 }) => {
   const [filterList, setFilterList] = useState([]);
   const [statsData1, setStatsData1] = useState(null);
@@ -73,6 +75,7 @@ const EligiblePatientLocator = ({
   const { accessToken, refreshToken } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [Provider, setProvider] = useState(providerId);
   const [currentSize, setcurrentSize] = useState(10);
   const [speciality, setSpeciality] = useState(null);
   const [region, setRegion] = useState(null);
@@ -93,6 +96,7 @@ const EligiblePatientLocator = ({
   const [data1, setData1] = useState(null);
   const [hcpScatter, setHcpScatter] = useState();
   const [concentrationCurve, setConcentrationCurve] = useState(null);
+  const [emptyTable, setEmptyTable] = useState(false);
 
   useEffect(() => {
     if (statsData1 === null) {
@@ -124,7 +128,7 @@ const EligiblePatientLocator = ({
         .join("&");
     }
     if (_physicianName && _physicianName.length > 0) {
-      queryString += `Primary Physician Name=${_physicianName}&`
+      queryString += `Primary Physician Name=${_physicianName}&`;
     }
     if (provider_id && provider_id.length > 0) {
       queryString += `&${provider_id
@@ -400,7 +404,6 @@ const EligiblePatientLocator = ({
                   Name: item["First Name"] + " " + item["Last Name"],
                 };
               });
-              console.log(newData);
               setStatsData1(newData);
             }
           })
@@ -467,6 +470,7 @@ const EligiblePatientLocator = ({
   }
 
   const handleRowClicked = (col) => {
+  
     setHcpProfilePage("table");
     setChartDataValue(setData1, null, [col.original]);
   };
@@ -484,7 +488,37 @@ const EligiblePatientLocator = ({
       providerId,
       physicianName
     );
+    setProvider(providerId)
   }, [currentPage, providerId, currentSize]);
+
+  const initialUpload = useRef(false);
+
+  useEffect(() => {
+    if (statsData1 && !initialUpload.current && providerId !== null) {
+      if (providerId.length > 0) {
+        setLoading(true);
+        initialUpload.current = true;
+        fetchData(
+          currentPage,
+          currentSize,
+          sortBy,
+          sortOrder,
+          speciality,
+          region,
+          stateName,
+          organisation,
+          providerId,
+          physicianName
+        );
+      } else {
+        setLoading(true);
+        initialUpload.current = true;
+        setStatsData1([]);
+        settotalPage(1);
+        setEmptyTable(true);
+      }
+    }
+  }, [statsData1, providerId]);
 
   const Table_Columns_1 = useMemo(() => {
     const column_names = [
@@ -547,7 +581,14 @@ const EligiblePatientLocator = ({
     return USERS_TABLE_COLUMNS;
   }, []);
 
-  const handleFilter = (speciality, region, stateName, organisation) => {
+  const handleFilter = (
+    speciality,
+    region,
+    stateName,
+    organisation,
+    _Provider
+  ) => {
+    let __provider =  _Provider ?  _Provider : Provider
     fetchData(
       currentPage,
       currentSize,
@@ -557,7 +598,7 @@ const EligiblePatientLocator = ({
       region,
       stateName,
       organisation,
-      providerId,
+      __provider ,
       physicianName
     );
   };
@@ -596,12 +637,58 @@ const EligiblePatientLocator = ({
     );
   };
 
+  const handleDelete = async (e, row, col) => {
+    e.stopPropagation();
+    setLoading(true);
+    let _provider = [...Provider]
+    let newProvider =_provider.filter(
+      (item) => item !== col.original["Provider ID"]
+    );
+    console.log(newProvider, _provider)
+    if (newProvider.length === 0) {
+      setEmptyTable(true)
+    }
+   
+    setProvider((prev) => {
+      let _prev = [...prev];
+      let new_Array = _prev.filter(
+        (item) => item !== col.original["Provider ID"]
+      );
+      return new_Array;
+    });
+    let data = { key: col.original["Provider ID"] };
+    try {
+      const response = await fetch(
+        "https://clinica-server.replit.app/delete_list",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      const res = await response.json();
+      setData1(null);
+      handleFilter(speciality, region, stateName, organisation, newProvider);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      throw new Error();
+    }
+  };
+
   return statsData1 !== null && !loading ? (
     <>
       {data1 ? (
         <BarChartPopup type="HCP" closeModal={closeModal} data1={data1} />
       ) : (
         <Table
+          emptyTable={emptyTable}
+          InstitutionalVariationTable={showDelete ? true : false}
+          handleDelete={handleDelete}
           physicianName={physicianName}
           setPhysicianName={setPhysicianName}
           hcpScatter={hcpScatter}

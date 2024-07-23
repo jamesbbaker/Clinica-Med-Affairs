@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import CustomDropdown from "../../components/CustomDropdown";
 import { filterOutLabels } from "../../utils/MapUtils";
 import { selectLabels } from "../../constants/appConstants";
@@ -23,13 +23,6 @@ const defaultOptions = {
       grid: {
         display: false,
       },
-      // grid: {
-      //   drawOnChartArea: false,
-      //   drawOnAxisArea: false,
-      // },
-      // ticks: {
-      //   stepSize: 1000,
-      // },
     },
     y: {
       ticks: {
@@ -113,33 +106,57 @@ const PriorityEngagement = () => {
   const [isScatterMapOpen, setIsScatterMapOpen] = useState(false);
   const [pageData, setPageData] = useState(null);
   const [lineChartData, setLineChartData] = useState({});
+  const [dataLoad, setDataLoad] = useState(false);
+  const [barchartData, setBarChartData] = useState(null);
+
   const [allScatterData, setAllScatterData] = useState({
     hcp: {},
     hospital: {},
     payer: {},
   });
+  const updateRef = useRef(false);
 
-  const handleSelectFilter = (val) => {
+  const handleChange = (val) => {
+    setDataLoad(true);
+    getDataStats(
+      `hcp_crf?category=${val ? val : "Number of No Spirometry"}`,
+      accessToken,
+      refreshToken
+    )
+      .then((res) => {
+        setDataLoad(false);
+        setBarChartData(null);
+        updateRef.current = true;
+        setCrfData(res.crf_data);
+        handleSelectFilter(val, res.crf_data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleSelectFilter = (val, _crfData) => {
+    let __crfData = _crfData ? _crfData : crfData;
     setCrfUnmetNeed(val);
-    setPrimarySpecialtyData(crfData[val]["Primary Specialty"]);
+
+    setPrimarySpecialtyData(__crfData["Primary Specialty"]);
 
     let _data = {
-      labels: crfData[val]["HCP Index"],
+      labels: __crfData["HCP Index"],
       datasets: [
         {
           label: "Dataset 1",
-          data: crfData[val]["Cumulative Unmet Need"],
-          borderColor: crfData[val]["Primary Specialty"].map((item) =>
+          data: __crfData["Cumulative Unmet Need"],
+          borderColor: __crfData["Primary Specialty"].map((item) =>
             generateColor(item)
           ),
           pointRadius: 10,
-          backgroundColor: crfData[val]["Primary Specialty"].map((item) =>
+          backgroundColor: __crfData["Primary Specialty"].map((item) =>
             generateColor(item)
           ),
         },
       ],
     };
-
     setCrfLineData(_data);
     setPageData((prev) => ({
       ...prev,
@@ -148,13 +165,22 @@ const PriorityEngagement = () => {
   };
 
   useEffect(() => {
-    getDataStats("hcp_crf", accessToken, refreshToken)
+    getDataStats(
+      `hcp_crf?category=${
+        crfUnmetNeed ? crfUnmetNeed : "Number of No Spirometry"
+      }`,
+      accessToken,
+      refreshToken
+    )
       .then((res) => {
         setCrfData(res.crf_data);
       })
       .catch((err) => {
         console.log(err);
       });
+  }, []);
+
+  useEffect(() => {
     getDataStats("get_hcp_concentration_curve", accessToken, refreshToken)
       .then((res) => {
         setLineChartData(res.data);
@@ -329,21 +355,26 @@ const PriorityEngagement = () => {
     }
   };
 
+  const updateRef_chart = useRef(false);
+
   useEffect(() => {
+    if (updateRef.current) {
+      return;
+    }
     if (crfData && selectedUnmet.length > 0 && lineChartData === null) {
       let filterLabels = filterOutLabels(
         Object.keys(selectLabels),
         selectedUnmet
       ).filter((item) => crfData.hasOwnProperty(item));
-      handleSelectFilter(filterLabels[0]);
+      handleChange(filterLabels[0]);
     } else if (crfData && lineChartData === null) {
-      handleSelectFilter("Number of No Spirometry");
+      handleChange("Number of No Spirometry");
     } else if (
       crfData &&
       lineChartData &&
       Object.values(lineChartData).length > 0
     ) {
-      handleSelectFilter(lineChartData.unmet_need);
+      handleChange(lineChartData.unmet_need);
     }
   }, [crfData, lineChartData, selectedUnmet]);
 
@@ -388,7 +419,7 @@ const PriorityEngagement = () => {
           <HcpInsight />
         </div>
         {/* <ToastContainer /> */}
-        {crfData && crfLineData && crfUnmetNeed ? (
+        {crfData && crfLineData && crfUnmetNeed && !dataLoad ? (
           <>
             <div className="text-left w-full py-4 font-[500]">
               Patient Unmet Need Concentration by HCPs
@@ -406,16 +437,14 @@ const PriorityEngagement = () => {
                   options: filterOutLabels(
                     Object.keys(selectLabels),
                     selectedUnmet
-                  )
-                    .filter((item) => crfData.hasOwnProperty(item))
-                    .map((item) => ({
-                      name: selectLabels[item] ? selectLabels[item] : item,
-                      value: item,
-                    })),
+                  ).map((item) => ({
+                    name: selectLabels[item] ? selectLabels[item] : item,
+                    value: item,
+                  })),
                   id: "yLabel",
                 }}
                 value={crfUnmetNeed}
-                handleSelect={(val) => handleSelectFilter(val)}
+                handleSelect={(val) => handleChange(val)}
               />
             </div>
             <div className="w-full flex mt-4 justify-center gap-10 items-center">
@@ -430,6 +459,9 @@ const PriorityEngagement = () => {
               ))}
             </div>
             <LineChart
+              updateRef={updateRef_chart}
+              barchartData={barchartData}
+              setBarChartData={setBarChartData}
               arb_value={lineChartData && lineChartData.value}
               setPageData={setPageData}
               primarySpecialtyData={primarySpecialtyData}

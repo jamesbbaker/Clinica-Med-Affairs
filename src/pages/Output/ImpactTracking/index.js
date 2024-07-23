@@ -139,7 +139,6 @@ const ImpactTracking = ({ patientPage }) => {
     getDataStats("region_level_quarterly", accessToken, refreshToken).then(
       (res) => {
         let data = JSON.parse(res.replaceAll(NaN, "0"));
-
         setRegionData(data);
       }
     );
@@ -163,7 +162,7 @@ const ImpactTracking = ({ patientPage }) => {
       {stateData && regionData ? (
         <div className="flex flex-col items-start gap-2 w-full">
           <CustomDropdown
-          buttonWidth="40rem"
+            buttonWidth="40rem"
             labelClassName="mb-0"
             className={"flex z-[15]  mb-4 items-center gap-2"}
             input={{

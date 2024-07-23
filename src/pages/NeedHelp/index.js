@@ -3,6 +3,7 @@ import home from "../../assets/images/pages/home.jpg";
 import opportunity from "../../assets/images/pages/opportunity.jpg";
 import eligible from "../../assets/images/pages/eligible.jpg";
 import institutional from "../../assets/images/pages/institutional.jpg";
+import priority from "../../assets/images/pages/priority.jpg"
 import payer from "../../assets/images/pages/payer.jpg";
 import { IoMdAdd } from "react-icons/io";
 import impact from "../../assets/images/pages/impact.jpg";
@@ -23,6 +24,12 @@ const pageData = [
       "The Patient Opportunity and Unmet Need Strategy page is used to better understand patient need across the treatment journey and prioritize unmet needs for engagement based on patient opportunity and trends.",
   },
   {
+    title: APP_ROUTES_LABEL.priority_engagement_opportunity_page,
+    img: priority,
+    description:
+      "After prioritizing unmet needs, the Priority Engagement Opportunities page helps to refine engagement strategy across HCPs, institutions, and payers. It includes the ability to select multiple priority unmet needs and thresholds to segment each of these stakeholders.",
+  },
+  {
     title: APP_ROUTES_LABEL.eligible_patient_locator,
     img: eligible,
     description:
@@ -40,7 +47,12 @@ const pageData = [
     description:
       "The Payer Care Profiles page ranks and enables a deep dive into Payers and Plans by unmet need. It includes deep care profiles including their unmet need profile, trends, and other stats.",
   },
-
+  {
+    title: APP_ROUTES_LABEL.target_lists,
+    img: impact,
+    description:
+      "The Saved Lists page includes HCPs, institutions, and payers saved by the user for Impact Tracking. This page tracks these lists and allows users to remove saved items.",
+  },
   {
     title: APP_ROUTES_LABEL.impact_tracking,
     img: impact,
@@ -68,7 +80,7 @@ const NeedHelp = () => {
           <div
             key={item.title}
             onClick={() => handleClick(index)}
-            className="flex  cursor-pointer shadow-box bg-slate-300 rounded-md flex-col items-start"
+            className="flex  w-full cursor-pointer shadow-box bg-slate-300 rounded-md flex-col items-start"
           >
             <div className="px-4 w-full flex justify-between items-center py-4 font-[600]">
               <div className="flex  text-[1.125rem] items-center gap-5">
