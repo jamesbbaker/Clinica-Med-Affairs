@@ -14,47 +14,45 @@ const pageData = [
   {
     title: "Home",
     img: home,
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu. In hac habitasse platea dictumst. Duis et orci mi. Sed ut porttitor quam. Aliquam ac hendrerit erat. Sed leo orci, faucibus at vulputate ac, consequat id sem. Etiam pharetra vehicula finibus.",
+    description: "The Home page is used for navigating the rest of the app.",
   },
   {
     title: APP_ROUTES_LABEL.patient_opportunity_mapping_and_strategy,
     img: opportunity,
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu. In hac habitasse platea dictumst. Duis et orci mi. Sed ut porttitor quam. Aliquam ac hendrerit erat. Sed leo orci, faucibus at vulputate ac, consequat id sem. Etiam pharetra vehicula finibus.",
+      "The Patient Opportunity and Unmet Need Strategy page is used to better understand patient need across the treatment journey and prioritize unmet needs for engagement based on patient opportunity and trends.",
   },
   {
     title: APP_ROUTES_LABEL.eligible_patient_locator,
     img: eligible,
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu. In hac habitasse platea dictumst. Duis et orci mi. Sed ut porttitor quam. Aliquam ac hendrerit erat. Sed leo orci, faucibus at vulputate ac, consequat id sem. Etiam pharetra vehicula finibus.",
+      "The Physician Care Profiles page maps, ranks, and enables a deep dive into HCPs by unmet need. It includes deep care profiles including their unmet need profile, trends, and other stats.",
   },
   {
     title: APP_ROUTES_LABEL.institutional_variation,
     img: institutional,
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu. In hac habitasse platea dictumst. Duis et orci mi. Sed ut porttitor quam. Aliquam ac hendrerit erat. Sed leo orci, faucibus at vulputate ac, consequat id sem. Etiam pharetra vehicula finibus.",
+      "The Hospital / Clinic Care Profiles page ranks and enables a deep dive into Hospitals / Clinics and IDN / Health Systems by unmet need. It includes deep care profiles including their unmet need profile, trends, and other stats.",
   },
   {
     title: APP_ROUTES_LABEL.payer_variation,
     img: payer,
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu. In hac habitasse platea dictumst. Duis et orci mi. Sed ut porttitor quam. Aliquam ac hendrerit erat. Sed leo orci, faucibus at vulputate ac, consequat id sem. Etiam pharetra vehicula finibus.",
+      "The Payer Care Profiles page ranks and enables a deep dive into Payers and Plans by unmet need. It includes deep care profiles including their unmet need profile, trends, and other stats.",
   },
 
   {
     title: APP_ROUTES_LABEL.impact_tracking,
     img: impact,
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu. In hac habitasse platea dictumst. Duis et orci mi. Sed ut porttitor quam. Aliquam ac hendrerit erat. Sed leo orci, faucibus at vulputate ac, consequat id sem. Etiam pharetra vehicula finibus.",
+      "The Impact Tracking page tracks quarterly trends in unmet need nationally, regionally, and by custom prioritized stakeholders.",
   },
   {
     title: APP_ROUTES_LABEL.patient_journey,
     img: patienttrajectory,
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor odio, lobortis in ornare et, cursus varius arcu. In hac habitasse platea dictumst. Duis et orci mi. Sed ut porttitor quam. Aliquam ac hendrerit erat. Sed leo orci, faucibus at vulputate ac, consequat id sem. Etiam pharetra vehicula finibus.",
+      "The Asthma Patient Trajectory and Data Quality page includes additional analyses about the asthma patient journey that support and guide the unmet need analysis.",
   },
-
 ];
 
 const NeedHelp = () => {
@@ -68,7 +66,6 @@ const NeedHelp = () => {
       {pageData.map((item, index) => {
         return (
           <div
-       
             key={item.title}
             onClick={() => handleClick(index)}
             className="flex  cursor-pointer shadow-box bg-slate-300 rounded-md flex-col items-start"
@@ -94,7 +91,8 @@ const NeedHelp = () => {
               style={{
                 gridTemplateRows: currentIndex === index ? "1fr" : "0fr",
                 paddingBottom: currentIndex === index ? "1rem" : 0,
-               animationTimingFunction: "cubic-bezier(0.68, -0.55, 0.27, 1.55)"
+                animationTimingFunction:
+                  "cubic-bezier(0.68, -0.55, 0.27, 1.55)",
               }}
               className="grid   px-4  grid-rows-[0fr] transition-all cursor-pointer duration-[200]"
             >
