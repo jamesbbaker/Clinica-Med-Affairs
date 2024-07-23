@@ -94,6 +94,8 @@ const options2 = {
   },
 };
 
+let hiddenRegions = ["AK", "HI", "PR"];
+
 const randomColors = [
   "#d43c1b",
   "#3b5fb0",
@@ -113,21 +115,21 @@ const randomColors = [
 ];
 
 const randomColorsPercentWithOpacity = [
-  "#d43c1b80",
-  "#3b5fb080",
-  "#9ec34280",
-  "#e8a62d80",
-  "#7167f480",
-  "#4de38a80",
-  "#e048bb80",
-  "#bcff2b80",
-  "#fa576680",
-  "#5cd8e380",
-  "#a3fa3480",
-  "#f1c76b80",
-  "#57b4a880",
-  "#d20e8c80",
-  "#473e2780",
+  "#d43c1b",
+  "#3b5fb0",
+  "#9ec342",
+  "#e8a62d",
+  "#7167f4",
+  "#4de38a",
+  "#e048bb",
+  "#bcff2b",
+  "#fa5766",
+  "#5cd8e3",
+  "#a3fa34",
+  "#f1c76b",
+  "#57b4a8",
+  "#d20e8c",
+  "#473e27",
 ];
 const filterOptions = [...Object.keys(selectLabels)];
 
@@ -183,10 +185,13 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
       setRegionsList(Object.keys(lineDataByRegion));
       let _selectedRegions = [];
       if (initial) {
-        _selectedRegions = Object.keys(lineDataByRegion).map((item) => ({
-          value: item,
-          label: item,
-        }));
+   
+        _selectedRegions = Object.keys(lineDataByRegion)
+          .filter((item) =>!hiddenRegions.includes(item))
+          .map((item) => ({
+            value: item,
+            label: item,
+          }));
         setSelectedRegion(_selectedRegions);
       } else {
         if (selectedRegion) {
@@ -221,7 +226,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
             _index++;
           })
       );
-      _index=0
+      _index = 0;
       unmetNeed.map((unmet, index) =>
         Object.values(lineDataByRegion)
           .filter(
@@ -314,7 +319,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
           })
       );
       let datasets2 = [];
-       _index = 0;
+      _index = 0;
       unmetNeed.map((unmet, index) =>
         Object.values(lineDataByState)
           .filter((item) => _selectedStates.includes(item.id))
@@ -338,10 +343,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
           labels: [...new Set(_labels)],
           datasets: datasets,
         },
-        chart2: {
-
-        }
-     
+        chart2: {},
       };
     } else {
       data = {
@@ -436,7 +438,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
               </label>
               <MultiSelect
                 labelledBy=""
-                options={RegionsList.map((item) => ({
+                options={RegionsList.filter((item) =>!hiddenRegions.includes(item)).map((item) => ({
                   label: item,
                   value: item,
                 }))}

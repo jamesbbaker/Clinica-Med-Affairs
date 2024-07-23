@@ -4,7 +4,7 @@ export default function About() {
   return (
     <>
       <Navbar />
-      <div className="divide-y  divide-gray-200 px-14 py-4 pt-20 md:pt-44 md:max-w-[70%] mx-auto dark:divide-gray-700">
+      <div className="divide-y  divide-gray-200 py-4 pt-20 md:pt-44 md:max-w-[75%] mx-auto dark:divide-gray-700">
         <h1 className="md:text-6xl text-2xl text-gray-500 border-b-2 pb-6 pt-4 font-bold">
           About
         </h1>

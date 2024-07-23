@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useMemo,
   useReducer,
+  useRef,
   useState,
 } from "react";
 import Table from "../../../components/Table";
@@ -63,6 +64,8 @@ const reducer = (state, action) => {
 };
 
 const PayerVariationTable = ({
+  setIsScatterMapOpen,
+  showDelete,
   title,
   planNameInput = null,
   setHcpProfilePage = () => {},
@@ -95,6 +98,7 @@ const PayerVariationTable = ({
   const [steroidPercent, setsteroidPercent] = useState({ min: 0, max: 0 });
   const [data1, setData1] = useState(null);
   const [hcpScatter, setHcpScatter] = useState();
+  const [emptyTable, setEmptyTable] = useState(false);
   const [concentrationCurve, setConcentrationCurve] = useState(null);
 
   useEffect(() => {
@@ -104,6 +108,36 @@ const PayerVariationTable = ({
       setLoading(false);
     }
   }, [statsData1]);
+
+  const initialUpload = useRef(false);
+
+  useEffect(() => {
+    if (statsData1 && !initialUpload.current && planNameInput !== null) {
+      setCleanedIDN(planNameInput);
+      if (planNameInput.length > 0) {
+        setLoading(true);
+        initialUpload.current = true;
+        fetchData(
+          currentPage,
+          currentSize,
+          sortBy,
+          sortOrder,
+          speciality,
+          region,
+          stateName,
+          organisation,
+          planNameInput,
+          cleanedIDN
+        );
+      } else {
+        setLoading(true);
+        initialUpload.current = true;
+        setStatsData1([]);
+        settotalPage(1);
+        setEmptyTable(true);
+      }
+    }
+  }, [statsData1, planNameInput]);
 
   const fetchData = (
     page = 1,
@@ -117,6 +151,7 @@ const PayerVariationTable = ({
     _cleaned_affilition,
     _cleaned_idn
   ) => {
+    setEmptyTable(false);
     setStatsData1(null);
     const specialties = _speciality;
     let queryString = `plan_table_data?&`; // Start with 'hcp_data?&'
@@ -443,6 +478,41 @@ const PayerVariationTable = ({
     setChartDataValue(setData1, null, [col.original]);
   };
 
+  const handleDelete = async (e,val) => {
+    e.stopPropagation();
+    setLoading(true);
+    let data = { key: val["Plan Name"] };
+    let _cleanedIDN = [...cleanedIDN].filter(
+      (item) => item.value !== val.Hospital
+    );
+    
+    if (_cleanedIDN.length === 0) {
+      setEmptyTable(true);
+    }
+    try {
+      const response = await fetch(
+        "https://clinica-server.replit.app/delete_list",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      const res = await response.json();
+      setData1(null);
+      setLoading(false);
+      setCleanedIDN(_cleanedIDN)
+      handleFilter(speciality, region, stateName, organisation, _cleanedIDN);
+    } catch (err) {
+      console.log(err);
+      throw new Error();
+    }
+  };
+
   useEffect(() => {
     fetchData(
       currentPage,
@@ -484,7 +554,8 @@ const PayerVariationTable = ({
     return USERS_TABLE_COLUMNS;
   }, []);
 
-  const handleFilter = (speciality, region, stateName, organisation) => {
+  const handleFilter = (speciality, region, stateName, organisation, _cleanedIDN) => {
+    let __cleanedIDN = _cleanedIDN ? _cleanedIDN : cleanedIDN
     fetchData(
       currentPage,
       currentSize,
@@ -495,7 +566,7 @@ const PayerVariationTable = ({
       stateName,
       organisation,
       cleanedAffilition,
-      cleanedIDN
+      __cleanedIDN
     );
   };
 
@@ -533,12 +604,31 @@ const PayerVariationTable = ({
     );
   };
 
+  useEffect(() => {
+    if (data1) {
+      setIsScatterMapOpen(true);
+    } else {
+      setIsScatterMapOpen(false);
+    }
+  }, [data1]);
+
   return statsData1 !== null && !loading ? (
     <>
       {data1 ? (
-        <BarChartPopup type="Plan" closeModal={closeModal} data1={data1} />
+        <BarChartPopup
+          InstitutionalTreeMap={false}
+          insititutional={false}
+          payer={true}
+          payerData={true}
+          type="Plan"
+          closeModal={closeModal}
+          data1={data1}
+        />
       ) : (
         <Table
+          emptyTable={emptyTable}
+          InstitutionalVariationTable={showDelete ? true : false}
+          handleDelete={handleDelete}
           hcpScatter={hcpScatter}
           isEligible={true}
           dispatch={dispatch}

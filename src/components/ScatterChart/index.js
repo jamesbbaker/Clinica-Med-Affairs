@@ -400,12 +400,12 @@ const ScatterChart = ({
   const handleChangeY = (e) => {
     setLineY(Number(e.target.value));
   };
-
+ 
   return (
     <div className="min-h-[400px] relative w-full">
       {data1 ? (
         <BarChartPopup
-        type={type}
+          type={type}
           InstitutionalTreeMap={false}
           insititutional={insititutional}
           payer={payer}
@@ -423,37 +423,39 @@ const ScatterChart = ({
               </div>
             ))}
           </div>
-          <Bubble ref={chartRef} data={data} options={dataOptions} />
-          <div className="absolute border text-[#4B0082] font-[700] top-[8%] left-[10%]">
-            {quadrantValues.topLeft}
-          </div>
-          {chartRef.current && (
+          <div className="relative w-auto h-auto">
+            <div className="absolute border text-[#4B0082] font-[700] top-[8%] left-[8%]">
+              {quadrantValues.topLeft}
+            </div>
+
             <div
-              style={{ left: `calc(${chartRef.current.width}px - 10%)` }}
-              className="absolute border text-[#FF0000] font-[700] top-[8%]"
+              className="absolute border text-[#FF0000] font-[700] right-[8%] top-[8%]"
             >
               {quadrantValues.topRight}
             </div>
-          )}
-          {chartRef.current && (
-            <div
-              style={{ top: `calc(${chartRef.current.height}px - 10%)` }}
-              className="absolute border text-[#000] font-[700] left-[10%]"
-            >
-              {quadrantValues.bottomLeft}
-            </div>
-          )}
-          {chartRef.current && (
-            <div
-              style={{
-                top: `calc(${chartRef.current.height}px - 10%)`,
-                left: `calc(${chartRef.current.width}px - 10%)`,
-              }}
-              className="absolute border text-[#D8BFD8] font-[700]"
-            >
-              {quadrantValues.bottomRight}
-            </div>
-          )}
+
+            {chartRef.current && (
+              <div
+                style={{ bottom: `10%` }}
+                className="absolute border text-[#000] font-[700] left-[8%]"
+              >
+                {quadrantValues.bottomLeft}
+              </div>
+            )}
+            {chartRef.current && (
+              <div
+                style={{
+                  bottom: `10%`,
+                  right: `8%`,
+                }}
+                className="absolute border text-[#D8BFD8] font-[700]"
+              >
+                {quadrantValues.bottomRight}
+              </div>
+            )}
+            <Bubble ref={chartRef} data={data} options={dataOptions} />
+          </div>
+
           <div className="flex w-full mt-4 flex-col items-start gap-2">
             <div className="flex w-full mt-2 items-center gap-2">
               <label

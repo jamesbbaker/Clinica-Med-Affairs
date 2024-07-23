@@ -197,6 +197,9 @@ export function LineChart({
   options = defaultOptions,
   data = defaultData,
   height = 100,
+  updateRef,
+  barchartData,
+  setBarChartData = () => {}
 }) {
   const [selectedValue, setSelectedValue] = useState(0);
   const [chartData, setChartData] = useState(data);
@@ -204,23 +207,15 @@ export function LineChart({
     min: 0,
     max: 0,
   });
-  const [barchartData, setBarChartData] = useState(null);
+
   const timerRef = useRef(null);
 
-  // useEffect(() => {
-  //   getDataStats("get_hcp_priorities", accessToken, refreshToken)
-  //   .then((res) => {
-  //    console.log(res,"res")
-  //   })
-  //   .catch((Err) => {
-  //     console.log(Err);
-  //   });
-  // },[])
 
   useEffect(() => {
-    if (arb_value) {
+    if (arb_value && !updateRef.current) {
+      updateRef.current = true
       handleChange({target: {value: arb_value}});
-    }
+    } 
   }, [arb_value]);
 
   const handleChange = (e) => {
@@ -238,6 +233,7 @@ export function LineChart({
         lineRef.current.update();
         if (primarySpecialtyData && _val) {
           let _newPrimaryData = [...primarySpecialtyData];
+          console.log(primarySpecialtyData)
           let primaryData = _newPrimaryData.splice(0, _val);
 
           let data = calculateShapes(primaryData);
@@ -269,7 +265,9 @@ export function LineChart({
     if (data) {
       // setSelectedValue(0);
       setChartData(data);
-      // handleChange({target: {value: 0}})
+      // if (updateRef.current) {
+      //   handleChange({target: {value: 0}})
+      // }
       setArbitraryLine((prev) => ({
         ...prev,
         max: data.labels.length,

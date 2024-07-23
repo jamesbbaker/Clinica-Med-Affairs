@@ -114,6 +114,8 @@ const BarChartOptions = {
 };
 
 const Table = ({
+  emptyTable,
+  InstitutionalVariationTable,
   physicianName,
   setPhysicianName,
   hcpScatter,
@@ -131,6 +133,7 @@ const Table = ({
   dispatch,
   value,
   setValue,
+  handleDelete,
   stateNameList,
   organisationList,
   organisation,
@@ -174,7 +177,7 @@ const Table = ({
   setItemId,
   setCurrentPage = () => {},
   showSelectionBtns = true,
-  TableData = fakeData,
+  TableData = [],
   TableColummns = EPL_TABLE_COLUMNS,
 }) => {
   const data = React.useMemo(() => TableData, [TableData]);
@@ -232,23 +235,6 @@ const Table = ({
     setOpenPopup((o) => !o);
     setBarChartConfig(null);
   };
-
-  // useEffect(() => {
-  //   if (updateTable && selectionBtnsArray) {
-  //     allColumns.forEach((item) => {
-  //       if (selectionBtnsArray.includes(item.id)) {
-  //         if (item.isVisible) {
-  //           item.toggleHidden();
-  //         }
-  //         updateTable.forEach((_item) => {
-  //           if (_item.value === item.Header) {
-  //             item.toggleHidden();
-  //           }
-  //         });
-  //       }
-  //     });
-  //   }
-  // }, [updateTable, selectionBtnsArray])
 
   const handleFilterClick = (col) => {
     return col.toggleHidden();
@@ -417,7 +403,7 @@ const Table = ({
         <div className="flex flex-col items-start">
           <div className="flex items-center gap-8">
             <div className="flex items-center mt-2 gap-8">
-              <label className="font-[600]">Select Unmet </label>
+              <label className="font-[600]">Select Unmet Needs</label>
               <MultiSelect
                 labelledBy=""
                 ItemRenderer={CustomOptionRenderer}
@@ -484,23 +470,25 @@ const Table = ({
                   );
                 })}
             </div>
-            
             <div className="flex mt-2 items-center gap-4">
-            {setPhysicianName && (
+              {setPhysicianName && (
                 <div className="flex items-center gap-8">
                   <label className="font-[600]">Physician Name</label>
-                  <InputField input={{
-                    type: "text",
-                    id: "Physician Name",
-                    name: "Physician Name",
-                    value: physicianName,
-                  }} onChange={(e) => setPhysicianName(e.target.value)} />
+                  <InputField
+                    input={{
+                      type: "text",
+                      id: "Physician Name",
+                      name: "Physician Name",
+                      value: physicianName,
+                    }}
+                    onChange={(e) => setPhysicianName(e.target.value)}
+                  />
                 </div>
               )}
               {cleanedAffilitionList && (
                 <div className="flex items-center gap-8">
                   <label className="font-[600]">
-                    {isPayer ? "Payer Name" : "Cleaned Affiliation"}
+                    {isPayer ? "Payer Name" : "Hospital / Clinic"}
                   </label>
                   <MultiSelect
                     labelledBy=""
@@ -518,7 +506,7 @@ const Table = ({
               {cleanedIDNList && (
                 <div className="flex items-center gap-8">
                   <label className="font-[600]">
-                    {isPayer ? "Plan Name" : "Cleaned IDN/Parent Hospital"}
+                    {isPayer ? "Plan Name" : "Parent (IDN / Health System)"}
                   </label>
                   <MultiSelect
                     labelledBy=""
@@ -535,7 +523,6 @@ const Table = ({
               )}
             </div>
             <div className="flex mt-2 items-center gap-4">
-              
               {specialityList && (
                 <div className="flex items-center gap-8">
                   <label className="font-[600]">Specialty</label>
@@ -606,135 +593,147 @@ const Table = ({
       ) : (
         <div></div>
       )}
-      <table className="text-sm mt-4" {...getTableProps()}>
-        <thead>
-          {headerGroups.map((headerGroup, index) => (
-            <tr key={index} {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, index) =>
-                isEligible ? (
-                  <th
-                    key={index}
-                    style={{ cursor: "pointer" }}
-                    className={"hover:bg-slate-200"}
-                    onClick={() => handleSort(column)}
-                  >
-                    {selectLabels[column.render("Header")]
-                      ? selectLabels[column.render("Header")]
-                      : column.render("Header")}
-                    <span>
-                      {sortBy === column.id ||
-                      (column.id === "Name" && sortBy === "First Name")
-                        ? sortOrder === "desc"
-                          ? " 🔽"
-                          : " 🔼"
-                        : ""}
-                    </span>
-                  </th>
-                ) : (
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render("Header")}
-                    <span>
-                      {column.isSorted
-                        ? column.isSortedDesc
-                          ? " 🔽"
-                          : " 🔼"
-                        : ""}
-                    </span>
-                  </th>
-                )
-              )}
-              {UserTable && <th></th>}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {page.map((row, index) => {
-            prepareRow(row);
-            let bg = "transparent";
-            if (hcpScatter) {
-              bg = getBackgroundColor(hcpScatter.data, row);
-            }
-            return (
-              <tr
-                key={index}
-                style={{ backgroundColor: bg }}
-                className={`hover:bg-slate-300 relative cursor-pointer pr-20`}
-                onClick={() =>
-                  activeCells ? handleClick(row) : cellClicked(row)
-                }
-                {...row.getRowProps()}
-              >
-                {row.cells.map((cell, index) => {
-                  let cellValue = cell.render("Cell").props.value;
-                  let _header = cell.render("Cell").props.column.Header;
-                  let minValue = getMinValue(
-                    cell.render("Cell").props.data,
-                    invertedMapLabels[_header]
-                  );
-                  let maxValue = getMaxValue(
-                    cell.render("Cell").props.data,
-                    invertedMapLabels[_header]
-                  );
-
-                  let currentValue = parseFloat(cellValue);
-                  let midValue = (maxValue - Math.abs(minValue)) / 2;
-                  let background = colorCells
-                    ? Object.values(selectLabels).includes(_header)
-                      ? interpolateColor(
-                          currentValue,
-                          minValue,
-                          midValue,
-                          maxValue
-                        )
-                      : "transparent"
-                    : "transparent";
-                  return (
-                    <td
-                      style={{ background }}
+      {emptyTable || page.length === 0 ? (
+        <div className="h-[20rem] grid place-content-center">
+          No Data available
+        </div>
+      ) : (
+        <table className="text-sm mt-4" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup, index) => (
+              <tr key={index} {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column, index) =>
+                  isEligible ? (
+                    <th
                       key={index}
-                      {...cell.getCellProps()}
+                      style={{ cursor: "pointer" }}
+                      className={"hover:bg-slate-200"}
+                      onClick={() => handleSort(column)}
                     >
-                      {cell.render("Cell").props.column.Header ===
-                      "Top Priority" ? (
-                        <span
-                          style={{
-                            background: cellValue ? "blue" : "transparent",
-                          }}
-                          className="w-3 h-3 flex rounded-full"
-                        ></span>
-                      ) : colorCells &&
-                        Object.values(selectLabels).includes(_header) ? (
-                        `${(cellValue * 100).toFixed(1)}%`
-                      ) : typeof cellValue === "number" ? (
-                        cell.render("Cell").props &&
-                        cell.render("Cell").props.column.Header &&
-                        cell
-                          .render("Cell")
-                          .props.column.Header.includes("Percent") ? (
-                          `${cellValue.toFixed(2)}%`
-                        ) : (
-                          cellValue.toLocaleString()
-                        )
-                      ) : (
-                        cell.render("Cell")
-                      )}
-                    </td>
-                  );
-                })}
-                {UserTable && (
-                  <td
-                    role="cell"
-                    onClick={() => setItemId(row.values.email)}
-                    className="w-[1rem] z-[4]  hover:scale-[1.2] transition-all ease-in-out duration-300 "
-                  >
-                    <AiOutlineDelete />
-                  </td>
+                      {selectLabels[column.render("Header")]
+                        ? selectLabels[column.render("Header")]
+                        : column.render("Header")}
+                      <span>
+                        {sortBy === column.id ||
+                        (column.id === "Name" && sortBy === "First Name")
+                          ? sortOrder === "desc"
+                            ? " 🔽"
+                            : " 🔼"
+                          : ""}
+                      </span>
+                    </th>
+                  ) : (
+                    <th
+                      {...column.getHeaderProps(column.getSortByToggleProps())}
+                    >
+                      {column.render("Header")}
+                      <span>
+                        {column.isSorted
+                          ? column.isSortedDesc
+                            ? " 🔽"
+                            : " 🔼"
+                          : ""}
+                      </span>
+                    </th>
+                  )
                 )}
+                {UserTable && <th></th>}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {page.map((row, index) => {
+              prepareRow(row);
+              let bg = "transparent";
+              if (hcpScatter) {
+                bg = getBackgroundColor(hcpScatter.data, row);
+              }
+              return (
+                <tr
+                  key={index}
+                  style={{ backgroundColor: bg }}
+                  className={`hover:bg-slate-300 relative cursor-pointer pr-20`}
+                  onClick={() =>
+                    activeCells ? handleClick(row) : cellClicked(row)
+                  }
+                  {...row.getRowProps()}
+                >
+                  {row.cells.map((cell, index) => {
+                    let cellValue = cell.render("Cell").props.value;
+                    let _header = cell.render("Cell").props.column.Header;
+                    let minValue = getMinValue(
+                      cell.render("Cell").props.data,
+                      invertedMapLabels[_header]
+                    );
+                    let maxValue = getMaxValue(
+                      cell.render("Cell").props.data,
+                      invertedMapLabels[_header]
+                    );
+
+                    let currentValue = parseFloat(cellValue);
+                    let midValue = (maxValue - Math.abs(minValue)) / 2;
+                    let background = colorCells
+                      ? Object.values(selectLabels).includes(_header)
+                        ? interpolateColor(
+                            currentValue,
+                            minValue,
+                            midValue,
+                            maxValue
+                          )
+                        : "transparent"
+                      : "transparent";
+                    return (
+                      <td
+                        style={{ background }}
+                        key={index}
+                        {...cell.getCellProps()}
+                      >
+                        {cell.render("Cell").props.column.Header ===
+                        "Top Priority" ? (
+                          <span
+                            style={{
+                              background: cellValue ? "blue" : "transparent",
+                            }}
+                            className="w-3 h-3 flex rounded-full"
+                          ></span>
+                        ) : colorCells &&
+                          Object.values(selectLabels).includes(_header) ? (
+                          `${(cellValue * 100).toFixed(1)}%`
+                        ) : typeof cellValue === "number" ? (
+                          cell.render("Cell").props &&
+                          cell.render("Cell").props.column.Header &&
+                          cell
+                            .render("Cell")
+                            .props.column.Header.includes("Percent") ? (
+                            `${cellValue.toFixed(2)}%`
+                          ) : (
+                            cellValue.toLocaleString()
+                          )
+                        ) : (
+                          cell.render("Cell")
+                        )}
+                      </td>
+                    );
+                  })}
+                  {(UserTable || InstitutionalVariationTable) && (
+                    <td
+                      role="cell"
+                      onClick={(e) =>
+                        InstitutionalVariationTable
+                          ? handleDelete(e,row.values, row)
+                          : setItemId(row.values.email)
+                      }
+                      className="w-[1rem] z-[4]  hover:scale-[1.2] transition-all ease-in-out duration-300 "
+                    >
+                      <AiOutlineDelete />
+                    </td>
+                  )}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
       <div className="mt-4 flex items-center justify-between">
         <div>
           {!totalPage && (
