@@ -13,7 +13,8 @@ export const adminSlice = createSlice({
       state.users = action.payload;
     },
     deleteUser: (state, action) => {
-      state.users = state.users.filter((user) => user.id !== action.payload);
+      console.log(action.payload, state)
+      state.users = state.users.filter((user) => user.email !== action.payload);
     },
   },
 });

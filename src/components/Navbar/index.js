@@ -47,7 +47,7 @@ const Navbar = () => {
             {/* Desktop sign in divs */}
             <ul className="flex grow justify-end flex-wrap items-center">
               <li>
-                <div onClick={() => handleNavigate("/about")} className="cursor-pointer font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">About</div>
+                {/* <div onClick={() => handleNavigate("/about")} className="cursor-pointer font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">About</div> */}
               </li>
               <li>
                 <div onClick={() => handleNavigate("/contactus")} className="cursor-pointer font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">Contact</div>

@@ -1,7 +1,7 @@
 import React from "react";
 import PrimaryBtn from "../PrimaryBtn";
 
-const DialogBox = ({ id, text, handleDelete, handleReject }) => {
+const DialogBox = ({ id,loading, text, handleDelete, handleReject }) => {
   return (
     <div className="flex py-10 bg-white flex-col items-center justify-center gap-12">
       <div className="flex flex-col gap-2">
@@ -16,6 +16,7 @@ const DialogBox = ({ id, text, handleDelete, handleReject }) => {
           text={"No"}
         />
         <PrimaryBtn
+        disabled={loading}
           onClick={handleDelete}
           className={"w-40 text-slate-50"}
           text={"Yes"}

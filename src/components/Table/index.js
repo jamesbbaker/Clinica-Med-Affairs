@@ -214,28 +214,9 @@ const Table = ({
     if (isEligible) {
       handleRowClicked(row);
     }
-    // else {
-    //   setOpenPopup((o) => !o);
-    //   const barChartData = {
-    //     labels: row.allCells.map((cell, index) =>
-    //       breakString(cell.column.Header, 40)
-    //     ),
-    //     datasets: [
-    //       {
-    //         data: row.allCells.map((cell, index) => cell.value.split("%")[0]),
-    //         borderColor: "rgb(155, 249, 122)",
-    //         backgroundColor: "rgb(155, 249, 122, 0.4)",
-    //       },
-    //     ],
-    //   };
-    //   setBarChartConfig(barChartData);
-    // }
+    
   };
 
-  // const handleClose = () => {
-  //   setOpenPopup((o) => !o);
-  //   setBarChartConfig(null);
-  // };
 
   const handleFilterClick = (col) => {
     return col.toggleHidden();
@@ -327,9 +308,7 @@ const Table = ({
         .forEach((item) => {
           _obj[item.value] = item;
         });
-      // let firstUnmet = Object.keys(selectLabels).filter(element => {
-      //     return _obj.hasOwnProperty(element)
-      //   })[0]
+    
       let _val = [];
       allColumns
         .filter((item) => selectionBtnsArray.includes(item.id))
