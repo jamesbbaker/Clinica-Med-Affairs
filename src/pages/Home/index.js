@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import ListItems from "../../components/ListItems";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import Popup from "reactjs-popup";
@@ -19,6 +19,7 @@ import {
   AiOutlineTable,
 } from "react-icons/ai";
 import { GiTriangleTarget } from "react-icons/gi";
+import { AuthContext } from "../../context/AuthContext/index.js";
 
 const NavigationMenu = [
   {
@@ -62,7 +63,6 @@ const NavigationMenu = [
     description:
       "Explore unmet need by HCP, hospital / clinic / system, and payer / plan to identify priority target",
   },
- 
 
   {
     name: APP_ROUTES_LABEL.institutional_variation,
@@ -105,14 +105,14 @@ const NavigationMenu = [
   {
     name: null,
   },
-  {
-    name: APP_ROUTES_LABEL.testing,
-    id: APP_ROUTES.testing,
-    route: APP_ROUTES.testing,
-    color: "#c4c4c4",
-    icon: () => <AiOutlineQuestionCircle />,
-    description: "Page for testing new features.",
-  },
+  // {
+  //   name: APP_ROUTES_LABEL.testing,
+  //   id: APP_ROUTES.testing,
+  //   route: APP_ROUTES.testing,
+  //   color: "#c4c4c4",
+  //   icon: () => <AiOutlineQuestionCircle />,
+  //   description: "Page for testing new features.",
+  // },
 ];
 
 const colorDescriptions = [
@@ -138,13 +138,13 @@ const colorDescriptions = [
 const Home = () => {
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
+  const { user } = useContext(AuthContext);
   const { currentMenu } = useSelector((state) => state.menu);
   const items = useSelector((state) => state.admin.users);
 
   return (
     <div>
       <h2 className="font-[500] mb-6 text-2xl">Medical AI Suite Home</h2>
-
       {currentMenu === sidebarRoutes.USERS ? (
         <>
           <Popup
@@ -168,33 +168,49 @@ const Home = () => {
           <div className="grid mb-8 gap-[1rem] grid-cols-4">
             {colorDescriptions.map((item) => {
               return (
-                <div className="flex justify-center w-full my-4 px-4 items-center gap-3">
-                  <div
-                    style={{
-                      background: item.color,
-                    }}
-                    className={`w-8 h-8 rounded-sm`}
-                  ></div>
-                  <p className="text-sm text-center">{item.description}</p>
+                <div className="flex flex-col items-center gap-2">
+                  <div className="flex h-[4rem] justify-center w-full my-4 px-4 items-center gap-3">
+                    <div
+                      style={{
+                        background: item.color,
+                      }}
+                      className={`w-8 h-8 rounded-sm`}
+                    ></div>
+                    <p className="text-sm text-center">{item.description}</p>
+                  </div>
+                  {NavigationMenu.filter(
+                    (_item) =>
+                      _item.color === item.color &&
+                      user.page_view &&
+                      // subItem.id !== APP_ROUTES.hcp_insights &&
+                      // subItem.id !== APP_ROUTES.medical_affair_toolbox &&
+                      // subItem.id !== APP_ROUTES.payer_variation &&
+                      // subItem.id !== APP_ROUTES.help &&
+                      // subItem.id !== APP_ROUTES.testing &&
+                      // subItem.id !==
+                      //   APP_ROUTES.priority_engagement_opportunity_page &&
+                      // subItem.id !== APP_ROUTES.target_lists &&
+                      !user.page_view.includes(_item.id)
+                  ).map((item) => {
+                    return item.name ? (
+                      <div
+                        key={item.id}
+                        style={{
+                          borderColor: item.color,
+                        }}
+                        onClick={() => (window.location.href = item.route)}
+                        className={`px-2 w-full h-[12rem] border-[4px] hover:scale-105 gap-1 font-[600] text-lg transition-all ease-in-out duration-200 shadow-md cursor-pointer rounded bg-slate-200 py-14 grid place-content-center text-center`}
+                      >
+                        {item.name}
+                        <div className="text-sm font-[400]">
+                          {item.description}
+                        </div>
+                      </div>
+                    ) : (
+                      <div></div>
+                    );
+                  })}
                 </div>
-              );
-            })}
-
-            {NavigationMenu.map((item) => {
-              return item.name ? (
-                <div
-                  key={item.id}
-                  style={{
-                    borderColor: item.color,
-                  }}
-                  onClick={() => (window.location.href = item.route)}
-                  className={`px-2 border-[4px] hover:scale-105 gap-1 font-[600] text-lg transition-all ease-in-out duration-200 shadow-md cursor-pointer rounded bg-slate-200 py-14 grid place-content-center text-center`}
-                >
-                  {item.name}
-                  <div className="text-sm font-[400]">{item.description}</div>
-                </div>
-              ) : (
-                <div></div>
               );
             })}
           </div>
