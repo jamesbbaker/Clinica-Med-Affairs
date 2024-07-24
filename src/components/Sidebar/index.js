@@ -204,13 +204,13 @@ const Sidebar = () => {
                     ) {
                       return false;
                     }
-                    // if (
-                    //   item.name === "dashboard" &&
-                    //   subItem.id === APP_ROUTES.users &&
-                    //   !user.admin
-                    // ) {
-                    //   return false;
-                    // }
+                    if (
+                      item.name === "dashboard" &&
+                      subItem.id === APP_ROUTES.users &&
+                      !user.admin
+                    ) {
+                      return false;
+                    }
                     return (
                       <div
                         key={`menu-subitem-${index}`}
