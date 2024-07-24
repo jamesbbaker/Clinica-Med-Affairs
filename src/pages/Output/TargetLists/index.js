@@ -123,6 +123,7 @@ const TargetList = () => {
   const { selectedUnmet } = useContext(AuthContext);
   const [lineChartData, setLineChartData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [fetchedData, setFetchedData] = useState(null);
 
   function addLineData(_data) {
     if (!_data) {
@@ -200,6 +201,7 @@ const TargetList = () => {
         .then((res) => {
           let _data = JSON.parse(res.replaceAll("NaN", 0));
           addLineData(_data.data);
+          setFetchedData(_data.data)
           setLoading(false);
         })
         .catch((err) => console.log(err));
@@ -236,12 +238,22 @@ const TargetList = () => {
       });
   }, []);
 
+  
+
+
   const [unmetNeed, setUnmetNeed] = useState([
     {
       label: "Incomplete initial asthma testing",
       value: "Number of No Spirometry",
     },
   ]);
+
+  useEffect(() => {
+    if (fetchedData) {
+      addLineData(fetchedData);
+    }
+  }, [unmetNeed]);
+
 
   useEffect(() => {
     if (selectedUnmet && selectedUnmet.length > 0) {
