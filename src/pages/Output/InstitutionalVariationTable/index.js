@@ -119,9 +119,9 @@ const InstitutionalVariationTable = ({
     let _cleanedAffilition = [...cleanedAffilition].filter(
       (item) => item.value !== val.Hospital
     );
-
+    let _emptyTable = false
     if (_cleanedAffilition.length === 0) {
-      setEmptyTable(true);
+      _emptyTable = true
     }
 
     try {
@@ -147,7 +147,8 @@ const InstitutionalVariationTable = ({
         region,
         stateName,
         organisation,
-        _cleanedAffilition
+        _cleanedAffilition,
+        _emptyTable
       );
     } catch (err) {
       console.log(err);
@@ -165,9 +166,10 @@ const InstitutionalVariationTable = ({
     _stateName,
     _organisation,
     _cleaned_affilition,
-    _cleaned_idn
+    _cleaned_idn,
+    _isEmpty = false
   ) => {
-    setEmptyTable(false);
+    setEmptyTable(_isEmpty);
     setStatsData1(null);
     const specialties = _speciality;
     let queryString = `institutional_table_data?&`; // Start with 'hcp_data?&'
@@ -580,7 +582,8 @@ const InstitutionalVariationTable = ({
     region,
     stateName,
     organisation,
-    _cleanedAffilition
+    _cleanedAffilition,
+    _isEmpty = false,
   ) => {
     let __cleanedAffilition = _cleanedAffilition
       ? _cleanedAffilition
@@ -595,7 +598,8 @@ const InstitutionalVariationTable = ({
       stateName,
       organisation,
       __cleanedAffilition,
-      cleanedIDN
+      cleanedIDN,
+      _isEmpty
     );
   };
 

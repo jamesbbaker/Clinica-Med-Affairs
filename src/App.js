@@ -7,12 +7,12 @@ import Output from "./pages/Output";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Landing from "./pages/Landing";
 import About from "./pages/About";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import NeedHelp from "./pages/NeedHelp";
 import ContactUs from "./pages/ContactUs";
+import Testing from "./pages/Testing";
 
 const router = createBrowserRouter([
- 
   {
     element: <AuthProvider />,
     children: [
@@ -36,8 +36,12 @@ const router = createBrowserRouter([
             element: <Home />,
           },
           {
-            path: "/:id",
-            element: <NeedHelp />
+            path: "/help",
+            element: <NeedHelp />,
+          },
+          {
+            path: "/testing",
+            element: <Testing />,
           },
           {
             path: "outputs",

@@ -65,7 +65,7 @@ const reducer = (state, action) => {
 
 const EligiblePatientLocator = ({
   title,
-  providerId = false,
+  providerId = null,
   setHcpProfilePage = () => {},
   showDelete,
 }) => {
@@ -116,8 +116,10 @@ const EligiblePatientLocator = ({
     _stateName,
     _organisation,
     provider_id,
-    _physicianName
+    _physicianName,
+    _isEmpty = false
   ) => {
+    setEmptyTable(_isEmpty);
     setStatsData1(null);
     const specialties = _speciality;
     let queryString = `hcp_data?&`; // Start with 'hcp_data?&'
@@ -150,6 +152,7 @@ const EligiblePatientLocator = ({
         .map((statename) => `State Name=${statename.value}`)
         .join("&")}`;
     }
+    console.log(queryString);
 
     // Add other query parameters as needed
     const additionalParams = {
@@ -470,7 +473,6 @@ const EligiblePatientLocator = ({
   }
 
   const handleRowClicked = (col) => {
-  
     setHcpProfilePage("table");
     setChartDataValue(setData1, null, [col.original]);
   };
@@ -488,7 +490,7 @@ const EligiblePatientLocator = ({
       providerId,
       physicianName
     );
-    setProvider(providerId)
+    setProvider(providerId);
   }, [currentPage, providerId, currentSize]);
 
   const initialUpload = useRef(false);
@@ -510,7 +512,7 @@ const EligiblePatientLocator = ({
           providerId,
           physicianName
         );
-      } else {
+      } else if (providerId !== null) {
         setLoading(true);
         initialUpload.current = true;
         setStatsData1([]);
@@ -530,7 +532,6 @@ const EligiblePatientLocator = ({
         header: "Top Priority",
         accessor: "Top Priority",
       },
-      // { header: "Last Name", accessor: "Last Name" },
       {
         header: "Assigned Specialty",
         accessor: "Assigned Specialty",
@@ -539,32 +540,6 @@ const EligiblePatientLocator = ({
       { header: "State Name", accessor: "State Name" },
       { header: "City", accessor: "City" },
       { header: "Organization Name", accessor: "Organization Name" },
-      // { header: "Provider ID", accessor: "Provider ID" },
-      // { header: "ZIP", accessor: "ZIP" },
-      // { header: "LAT", accessor: "LAT" },
-      // { header: "LONG", accessor: "LONG" },
-      // { header: "State ID", accessor: "State ID" },
-
-      // {
-      //   header: "Number of ICS-LABA Patients",
-      //   accessor: "Number of ICS-LABA Patients",
-      // },
-      // {
-      //   header: "Number of High Steroid Usage Patients",
-      //   accessor: "Number of High Steroid Usage Patients",
-      // },
-      // {
-      //   header: "Number of Severe Exacerbations",
-      //   accessor: "Number of Severe Exacerbations",
-      // },
-      // {
-      //   header: "Percent of High Steroid Usage Patients",
-      //   accessor: "Percent of High Steroid Usage Patients",
-      // },
-      // {
-      //   header: "Percent of Severe Exacerbations",
-      //   accessor: "Percent of Severe Exacerbations",
-      // },
     ];
     [...Object.keys(selectLabels)].map((item) =>
       column_names.push({
@@ -586,9 +561,10 @@ const EligiblePatientLocator = ({
     region,
     stateName,
     organisation,
-    _Provider
+    _Provider,
+    _isEmpty = false
   ) => {
-    let __provider =  _Provider ?  _Provider : Provider
+    let __provider = _Provider ? _Provider : Provider;
     fetchData(
       currentPage,
       currentSize,
@@ -598,8 +574,9 @@ const EligiblePatientLocator = ({
       region,
       stateName,
       organisation,
-      __provider ,
-      physicianName
+      __provider,
+      physicianName,
+      _isEmpty
     );
   };
 
@@ -640,15 +617,15 @@ const EligiblePatientLocator = ({
   const handleDelete = async (e, row, col) => {
     e.stopPropagation();
     setLoading(true);
-    let _provider = [...Provider]
-    let newProvider =_provider.filter(
+    let _provider = [...Provider];
+    let newProvider = _provider.filter(
       (item) => item !== col.original["Provider ID"]
     );
-    console.log(newProvider, _provider)
+    let _isEmpty = false;
     if (newProvider.length === 0) {
-      setEmptyTable(true)
+      _isEmpty = true;
     }
-   
+
     setProvider((prev) => {
       let _prev = [...prev];
       let new_Array = _prev.filter(
@@ -672,7 +649,14 @@ const EligiblePatientLocator = ({
       );
       const res = await response.json();
       setData1(null);
-      handleFilter(speciality, region, stateName, organisation, newProvider);
+      handleFilter(
+        speciality,
+        region,
+        stateName,
+        organisation,
+        newProvider,
+        _isEmpty
+      );
       setLoading(false);
     } catch (err) {
       console.log(err);

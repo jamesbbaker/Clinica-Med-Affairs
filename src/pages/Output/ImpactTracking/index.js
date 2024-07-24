@@ -159,6 +159,7 @@ const ImpactTracking = ({ patientPage }) => {
 
   return (
     <div className="flex w-full flex-col gap-8">
+      <h2 className="font-medium text-lg">{patientPage ? "Unmet Need Trends" : ""}</h2>
       {stateData && regionData ? (
         <div className="flex flex-col items-start gap-2 w-full">
           <CustomDropdown
@@ -273,12 +274,6 @@ const ImpactTracking = ({ patientPage }) => {
           value={unmetNeed}
         />
       </div> */}
-      {!patientPage && (
-        <>
-          <RealTimeBox />
-          <HCPTable />
-        </>
-      )}
     </div>
   );
 };

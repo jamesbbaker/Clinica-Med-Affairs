@@ -44,51 +44,59 @@ export const menuList = [
       {
         name: APP_ROUTES_LABEL.patient_opportunity_mapping_and_strategy,
         id: APP_ROUTES.patient_opportunity_mapping_and_strategy,
+        color: "#800080",
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.patient_opportunity_mapping_and_strategy}`,
-        icon: () => <AiOutlineGlobal />,
+        icon: () => <AiOutlineGlobal color={"#800080"} />,
       },
       {
         name: APP_ROUTES_LABEL.priority_engagement_opportunity_page,
         id: APP_ROUTES.priority_engagement_opportunity_page,
+        color: "#800080",
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.priority_engagement_opportunity_page}`,
-        icon: () => <AiOutlineDotChart />,
+        icon: () => <AiOutlineDotChart color={"#800080"} />,
       },
       {
         name: APP_ROUTES_LABEL.eligible_patient_locator,
         id: APP_ROUTES.eligible_patient_locator,
+        color: "#FF6666",
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.eligible_patient_locator}`,
-        icon: () => <AiOutlineTable />,
+        icon: () => <AiOutlineTable color="#FF6666" />,
       },
       {
         name: APP_ROUTES_LABEL.institutional_variation,
         id: APP_ROUTES.institutional_variation,
+        color: "#FF6666",
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.institutional_variation}`,
-        icon: () => <MdOutlineLocalHospital />,
+        icon: () => <MdOutlineLocalHospital color="#FF6666" />,
       },
       {
         name: APP_ROUTES_LABEL.payer_variation,
         id: APP_ROUTES.payer_variation,
+        color: "#FF6666",
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.payer_variation}`,
-        icon: () => <AiOutlineProject />,
+        icon: () => <AiOutlineProject color="#FF6666" />,
       },
-      
+
       {
         name: APP_ROUTES_LABEL.target_lists,
         id: APP_ROUTES.target_lists,
+        color: "#0000FF",
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.target_lists}`,
-        icon: () => <GiTriangleTarget />,
+        icon: () => <GiTriangleTarget color="#0000FF" />,
       },
       {
         name: APP_ROUTES_LABEL.impact_tracking,
         id: APP_ROUTES.impact_tracking,
+        color: "#0000FF",
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.impact_tracking}`,
-        icon: () => <AiOutlineFundProjectionScreen />,
+        icon: () => <AiOutlineFundProjectionScreen color="#0000FF" />,
       },
       {
         name: APP_ROUTES_LABEL.patient_journey,
         id: APP_ROUTES.patient_journey,
+        color: "#c4c4c4",
         route: `${APP_ROUTES.outputs}/${APP_ROUTES.patient_journey}`,
-        icon: () => <AiOutlineRise />,
+        icon: () => <AiOutlineRise color="#c4c4c4" />,
       },
       // {
       //   name: APP_ROUTES_LABEL.data_quality,
@@ -106,7 +114,15 @@ export const menuList = [
         name: APP_ROUTES_LABEL.help,
         id: APP_ROUTES.help,
         route: APP_ROUTES.help,
-        icon: () => <AiOutlineQuestionCircle />,
+        color: "#c4c4c4",
+        icon: () => <AiOutlineQuestionCircle color="#c4c4c4" />,
+      },
+      {
+        name: APP_ROUTES_LABEL.testing,
+        id: APP_ROUTES.testing,
+        route: APP_ROUTES.testing,
+        color: "#c4c4c4",
+        icon: () => <AiOutlineQuestionCircle color="#c4c4c4" />,
       },
     ],
   },
@@ -142,7 +158,6 @@ const Sidebar = () => {
     }
   }, []);
 
-
   useEffect(() => {
     if (user && !id) {
       dispatch(
@@ -154,7 +169,6 @@ const Sidebar = () => {
     }
   }, [user]);
 
- 
   return (
     <aside className="md:w-full w-[5rem] z-50 min-w-[5rem] bg-primary fixed left-0 top-0  md:sticky overflow-y-auto">
       <div className="flex flex-col py-4">
@@ -179,11 +193,13 @@ const Sidebar = () => {
                       item.name === "outputs" &&
                       user.page_view &&
                       subItem.id !== APP_ROUTES.hcp_insights &&
-                        subItem.id !== APP_ROUTES.medical_affair_toolbox &&
-                        subItem.id !== APP_ROUTES.payer_variation &&
-                        subItem.id !== APP_ROUTES.help &&
-                        subItem.id !== APP_ROUTES.priority_engagement_opportunity_page &&
-                        subItem.id !== APP_ROUTES.target_lists &&
+                      subItem.id !== APP_ROUTES.medical_affair_toolbox &&
+                      subItem.id !== APP_ROUTES.payer_variation &&
+                      subItem.id !== APP_ROUTES.help &&
+                      subItem.id !== APP_ROUTES.testing &&
+                      subItem.id !==
+                        APP_ROUTES.priority_engagement_opportunity_page &&
+                      subItem.id !== APP_ROUTES.target_lists &&
                       !user.page_view.includes(subItem.id)
                     ) {
                       return false;
@@ -198,7 +214,17 @@ const Sidebar = () => {
                     return (
                       <div
                         key={`menu-subitem-${index}`}
-                        style={{ fontSize: "0.75rem",marginTop: subItem.id ===  APP_ROUTES.patient_journey ? "0.75rem" : 0 }}
+                        style={{
+                          fontSize: "0.75rem",
+                          marginTop:
+                            subItem.id === APP_ROUTES.patient_journey ||
+                            subItem.id === APP_ROUTES.target_lists ||
+                            subItem.id === APP_ROUTES.eligible_patient_locator ||
+                            subItem.id ===
+                              APP_ROUTES.patient_opportunity_mapping_and_strategy
+                              ? "0.75rem"
+                              : 0,
+                        }}
                         onClick={() => handleClick(subItem)}
                         className={`${
                           currentMenu !== subItem.id && "text-slate-50"
@@ -209,9 +235,15 @@ const Sidebar = () => {
                         } flex cursor-pointer relative rounded-md transition-all ease-in-out duration-200 px-2 py-2 font-semibold items-center gap-2  w-full text-left`}
                       >
                         <div className="w-full md:w-auto grid place-content-center">
-                          <subItem.icon />
+                          <subItem.icon color={item.color} />
                         </div>
-                        {subItem.id ===  APP_ROUTES.patient_journey && <div className="absolute rounded-[20px] left-0 h-[0.25rem] w-[100%] -top-[0.5rem] bg-[#c4c4c4]"></div>}
+                        {(subItem.id === APP_ROUTES.patient_journey ||
+                          subItem.id === APP_ROUTES.target_lists ||
+                          subItem.id === APP_ROUTES.eligible_patient_locator ||
+                          subItem.id ===
+                            APP_ROUTES.patient_opportunity_mapping_and_strategy) && (
+                          <div className="absolute rounded-[20px] left-0 h-[0.25rem] w-[100%] -top-[0.5rem] bg-[#c4c4c4]"></div>
+                        )}
                         <div className="w-full hidden md:block">
                           {subItem.name}
                         </div>

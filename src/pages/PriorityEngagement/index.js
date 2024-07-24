@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import CustomDropdown from "../../components/CustomDropdown";
 import { filterOutLabels } from "../../utils/MapUtils";
-import { selectLabels } from "../../constants/appConstants";
+import { patientTotals, selectLabels } from "../../constants/appConstants";
 import { AuthContext } from "../../context/AuthContext";
 import { getDataStats } from "../../API/Outputs";
 import { LineChart } from "../../components/LineChart";
@@ -9,7 +9,7 @@ import HcpInsight from "../Output/HcpInsights";
 import MedicalAffairToolbox from "../Output/MedicalAffairsToolbox";
 import InstitutionalVariationBubbleChart from "../Output/InstituitonalVariation/InstitutionalVariationBubbleChart";
 import PayerVariationBubbleChart from "../Output/PayerVariation/PayerVariationBubbleChart";
-import { Bounce, toast } from "react-toastify";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 import PrimaryBtn from "../../components/PrimaryBtn";
 
 const defaultOptions = {
@@ -387,6 +387,7 @@ const PriorityEngagement = () => {
     <div className="flex flex-col items-start ">
       {!isScatterMapOpen && (
         <>
+          <ToastContainer />
           <h1 className="text-lg font-[500] mb-4">
             Identify Priorities based on Multiple Unmet Needs
           </h1>
@@ -437,10 +438,16 @@ const PriorityEngagement = () => {
                   options: filterOutLabels(
                     Object.keys(selectLabels),
                     selectedUnmet
-                  ).map((item) => ({
-                    name: selectLabels[item] ? selectLabels[item] : item,
-                    value: item,
-                  })),
+                  )
+                    .filter(
+                      (item) =>
+                        !patientTotals.includes(item) &&
+                        !item.toLowerCase().includes("percent")
+                    )
+                    .map((item) => ({
+                      name: selectLabels[item] ? selectLabels[item] : item,
+                      value: item,
+                    })),
                   id: "yLabel",
                 }}
                 value={crfUnmetNeed}
@@ -467,7 +474,7 @@ const PriorityEngagement = () => {
               primarySpecialtyData={primarySpecialtyData}
               options={defaultOptions}
               data={crfLineData}
-              height={80}
+              height={60}
             />
           </>
         ) : (
