@@ -192,14 +192,14 @@ const Sidebar = () => {
                     if (
                       item.name === "outputs" &&
                       user.page_view &&
-                      subItem.id !== APP_ROUTES.hcp_insights &&
-                      subItem.id !== APP_ROUTES.medical_affair_toolbox &&
-                      subItem.id !== APP_ROUTES.payer_variation &&
-                      subItem.id !== APP_ROUTES.help &&
-                      subItem.id !== APP_ROUTES.testing &&
-                      subItem.id !==
-                        APP_ROUTES.priority_engagement_opportunity_page &&
-                      subItem.id !== APP_ROUTES.target_lists &&
+                      // subItem.id !== APP_ROUTES.hcp_insights &&
+                      // subItem.id !== APP_ROUTES.medical_affair_toolbox &&
+                      // subItem.id !== APP_ROUTES.payer_variation &&
+                      // subItem.id !== APP_ROUTES.help &&
+                      // subItem.id !== APP_ROUTES.testing &&
+                      // subItem.id !==
+                      //   APP_ROUTES.priority_engagement_opportunity_page &&
+                      // subItem.id !== APP_ROUTES.target_lists &&
                       !user.page_view.includes(subItem.id)
                     ) {
                       return false;
