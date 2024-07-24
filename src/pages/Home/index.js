@@ -190,7 +190,7 @@ const Home = () => {
                       // subItem.id !==
                       //   APP_ROUTES.priority_engagement_opportunity_page &&
                       // subItem.id !== APP_ROUTES.target_lists &&
-                      !user.page_view.includes(_item.id)
+                      user.page_view.includes(_item.id)
                   ).map((item) => {
                     return item.name ? (
                       <div
