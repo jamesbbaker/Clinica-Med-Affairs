@@ -66,6 +66,8 @@ const reducer = (state, action) => {
 const PayerVariationTable = ({
   setIsScatterMapOpen,
   showDelete,
+  setFilters = () => {},
+  filterName,
   title,
   planNameInput = null,
   setHcpProfilePage = () => {},
@@ -126,8 +128,8 @@ const PayerVariationTable = ({
           region,
           stateName,
           organisation,
-          planNameInput,
-          cleanedIDN
+          cleanedAffilition,
+          planNameInput
         );
       } else {
         setLoading(true);
@@ -149,9 +151,10 @@ const PayerVariationTable = ({
     _stateName,
     _organisation,
     _cleaned_affilition,
-    _cleaned_idn
+    _cleaned_idn,
+    _isEmpty = false
   ) => {
-    setEmptyTable(false);
+    setEmptyTable(_isEmpty);
     setStatsData1(null);
     const specialties = _speciality;
     let queryString = `plan_table_data?&`; // Start with 'hcp_data?&'
@@ -478,16 +481,23 @@ const PayerVariationTable = ({
     setChartDataValue(setData1, null, [col.original]);
   };
 
-  const handleDelete = async (e,val) => {
+  const handleDelete = async (e, val) => {
     e.stopPropagation();
     setLoading(true);
+    setFilters((prev) => {
+      let _prev = { ...prev };
+      let newArr = _prev[filterName].filter(
+        (item) => item !== val["Plan Name"]
+      );
+      return { ..._prev, [filterName]: newArr };
+    });
     let data = { key: val["Plan Name"] };
     let _cleanedIDN = [...cleanedIDN].filter(
-      (item) => item.value !== val.Hospital
+      (item) => item.value !== val["Plan Name"]
     );
-    
+    let _emptyTable = false;
     if (_cleanedIDN.length === 0) {
-      setEmptyTable(true);
+      _emptyTable = true;
     }
     try {
       const response = await fetch(
@@ -505,8 +515,15 @@ const PayerVariationTable = ({
       const res = await response.json();
       setData1(null);
       setLoading(false);
-      setCleanedIDN(_cleanedIDN)
-      handleFilter(speciality, region, stateName, organisation, _cleanedIDN);
+      setCleanedIDN(_cleanedIDN);
+      handleFilter(
+        speciality,
+        region,
+        stateName,
+        organisation,
+        _cleanedIDN,
+        _emptyTable
+      );
     } catch (err) {
       console.log(err);
       throw new Error();
@@ -554,8 +571,15 @@ const PayerVariationTable = ({
     return USERS_TABLE_COLUMNS;
   }, []);
 
-  const handleFilter = (speciality, region, stateName, organisation, _cleanedIDN) => {
-    let __cleanedIDN = _cleanedIDN ? _cleanedIDN : cleanedIDN
+  const handleFilter = (
+    speciality,
+    region,
+    stateName,
+    organisation,
+    _cleanedIDN,
+    isEmpty = false
+  ) => {
+    let __cleanedIDN = _cleanedIDN ? _cleanedIDN : cleanedIDN;
     fetchData(
       currentPage,
       currentSize,
@@ -566,7 +590,8 @@ const PayerVariationTable = ({
       stateName,
       organisation,
       cleanedAffilition,
-      __cleanedIDN
+      __cleanedIDN,
+      isEmpty
     );
   };
 

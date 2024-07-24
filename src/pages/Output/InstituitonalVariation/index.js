@@ -383,6 +383,7 @@ const InstitutionalVariation = () => {
             <>
               {!isScatterMapOpen && (
                 <>
+                   <div className="text-lg text-black font-[500]">{"Variation in Unmet Need by IDN / Health System and Sites of Care"}</div>
                   <div className="flex flex-col mb-8  w-full justify-between items-start">
                     <div className="flex mb-6 items-center gap-8">
                       <CustomDropdown
@@ -469,6 +470,7 @@ const InstitutionalVariation = () => {
                 </>
               )}
               <InstitutionalVariationTable
+              title={"Hospital / Clinics by Unmet Need"}
                 setIsScatterMapOpen={setIsScatterMapOpen}
               />
             </>

@@ -326,6 +326,9 @@ const PayerVariation = () => {
             />
           ) : (
             <>
+              <div className="text-lg text-black font-[500]">
+                {"Variation in Unmet Need by Payers and Plans"}
+              </div>
               {!isScatterMapOpen && (
                 <>
                   <div className="flex mb-6 items-center gap-8">
@@ -362,7 +365,10 @@ const PayerVariation = () => {
                   />
                 </>
               )}
-              <PayerVariationTable setIsScatterMapOpen={setIsScatterMapOpen} />
+              <PayerVariationTable
+                title={"Plans by Unmet Need"}
+                setIsScatterMapOpen={setIsScatterMapOpen}
+              />
             </>
           )
         ) : (

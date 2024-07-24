@@ -67,6 +67,12 @@ const pageData = [
   },
 ];
 
+export const labelsPageData = {}
+
+pageData.forEach(item => {
+  labelsPageData[item.title] = item
+})
+
 const NeedHelp = () => {
   const [currentIndex, setCurrentIndex] = useState(null);
   const handleClick = (index) => {

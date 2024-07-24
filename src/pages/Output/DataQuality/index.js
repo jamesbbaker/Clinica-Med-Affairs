@@ -8,7 +8,7 @@ import Map from "../../../components/Map";
 import { generateStatsOptions, setLineData } from "../../../utils/ChartUtils";
 import { selectLabels } from "../../../constants/appConstants";
 import { HeatMapGrid } from "react-grid-heatmap";
-import RadarChart from "../../../components/RadarChart";
+
 
 const DataQuality = () => {
   const { accessToken, refreshToken } = useContext(AuthContext);
@@ -345,8 +345,7 @@ const DataQuality = () => {
   return (
     <div>
      
-      {/* <RadarChart />
-      {statsData1 && (
+      {/* {statsData1 && (
         <LineChart arbitrary={false} data={statsData1} options={options} />
       )} */}
        {statsData5 && (

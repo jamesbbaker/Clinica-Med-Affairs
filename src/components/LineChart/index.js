@@ -233,9 +233,7 @@ export function LineChart({
         lineRef.current.update();
         if (primarySpecialtyData && _val) {
           let _newPrimaryData = [...primarySpecialtyData];
-          
           let primaryData = _newPrimaryData.splice(0, _val);
-
           let data = calculateShapes(primaryData);
           let _barChartData = {
             labels: colors.map((item) => item.name),
@@ -257,7 +255,7 @@ export function LineChart({
           value: _val,
         }));
       }
-    }, 50);
+    }, 500);
     setSelectedValue(_val);
   };
 
@@ -321,9 +319,9 @@ export function LineChart({
         />
       </div>
       {barchartData && (
-        <div className="my-8 w-full">
+        <div className="my-8">
           <BarChart
-            height={60}
+            height={30}
             data={barchartData}
             options={_options}
             // options={BarChartOptions}

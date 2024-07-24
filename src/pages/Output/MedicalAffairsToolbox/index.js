@@ -308,6 +308,7 @@ const MedicalAffairToolbox = ({
       {/* {!isScatterMapOpen && <div className="text-[1.25rem] font-[600]">HCP Prioritization</div>} */}
       {state.data ? (
         <>
+        <h2 className="font-[500] mb-6 text-md">Segment HCPs by Multiple Unmet Needs</h2>
           {!isScatterMapOpen && (
             <>
               <div className="flex items-center w-full justify-between">

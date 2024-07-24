@@ -199,9 +199,9 @@ const Table = ({
     setPageSize,
     state: { pageIndex, pageSize },
   } = useTable({ columns, data, initialState }, useSortBy, usePagination);
-  const [openPopup, setOpenPopup] = useState(false);
-  const [barChartConfig, setBarChartConfig] = useState(null);
-  const [filters, setFilters] = useState(false);
+  // const [openPopup, setOpenPopup] = useState(false);
+  // const [barChartConfig, setBarChartConfig] = useState(null);
+
   const { selectedUnmet } = useContext(AuthContext);
 
   useEffect(() => {
@@ -213,28 +213,29 @@ const Table = ({
   const handleClick = (row) => {
     if (isEligible) {
       handleRowClicked(row);
-    } else {
-      setOpenPopup((o) => !o);
-      const barChartData = {
-        labels: row.allCells.map((cell, index) =>
-          breakString(cell.column.Header, 40)
-        ),
-        datasets: [
-          {
-            data: row.allCells.map((cell, index) => cell.value.split("%")[0]),
-            borderColor: "rgb(155, 249, 122)",
-            backgroundColor: "rgb(155, 249, 122, 0.4)",
-          },
-        ],
-      };
-      setBarChartConfig(barChartData);
     }
+    // else {
+    //   setOpenPopup((o) => !o);
+    //   const barChartData = {
+    //     labels: row.allCells.map((cell, index) =>
+    //       breakString(cell.column.Header, 40)
+    //     ),
+    //     datasets: [
+    //       {
+    //         data: row.allCells.map((cell, index) => cell.value.split("%")[0]),
+    //         borderColor: "rgb(155, 249, 122)",
+    //         backgroundColor: "rgb(155, 249, 122, 0.4)",
+    //       },
+    //     ],
+    //   };
+    //   setBarChartConfig(barChartData);
+    // }
   };
 
-  const handleClose = () => {
-    setOpenPopup((o) => !o);
-    setBarChartConfig(null);
-  };
+  // const handleClose = () => {
+  //   setOpenPopup((o) => !o);
+  //   setBarChartConfig(null);
+  // };
 
   const handleFilterClick = (col) => {
     return col.toggleHidden();
@@ -382,9 +383,17 @@ const Table = ({
 
   return (
     <div style={{ marginTop }} className="w-full max-w-full overflow-auto">
-      {Title && (
-        <div className="text-md text-gray-500 font-semibold">{Title}</div>
-      )}
+      <div className="flex items-center justify-between w-full">
+        {Title && <div className="text-lg text-black font-[500]">{Title}</div>}
+        {isEligible && (
+          <h2
+            onClick={handleApplyFilters}
+            className="text-[0.95rem] self-center px-3 py-1 border w-[8rem] grid place-content-center border-[#000] cursor-pointer hover:scale-[1.025] transition-all ease-linear duration-200 mr-3"
+          >
+            Apply Filters
+          </h2>
+        )}
+      </div>
 
       {!showTopBtnsToggle && !UserTable && showSelectionBtns && (
         <SelectionButtons
@@ -720,7 +729,7 @@ const Table = ({
                       role="cell"
                       onClick={(e) =>
                         InstitutionalVariationTable
-                          ? handleDelete(e,row.values, row)
+                          ? handleDelete(e, row.values, row)
                           : setItemId(row.values.email)
                       }
                       className="w-[1rem] z-[4]  hover:scale-[1.2] transition-all ease-in-out duration-300 "
@@ -808,47 +817,8 @@ const Table = ({
             ))}
           </select>
         </div>
-        {isEligible && (
-          <h2
-            onClick={handleApplyFilters}
-            className="text-[0.95rem] self-center px-3 py-1 border w-[8rem] grid place-content-center border-[#000] cursor-pointer hover:scale-[1.025] transition-all ease-linear duration-200 mr-3"
-          >
-            Apply Filters
-          </h2>
-        )}
       </div>
-      <Popup
-        onClose={() => setFilters(false)}
-        modal
-        open={filters}
-        position="center center"
-      >
-        <div className="px-2 py-3 flex flex-col items-center gap-2 h-[50hvh] bg-#fff">
-          <h2 className="text-[1.25rem]">Filters</h2>
-          <div className="grid mt-10 grid-cols-2">
-            <div className="flex gap-2 items-center">
-              <label className="font-[600]">Sort By</label>
-              <select className="w-[200px]">
-                {columns.map((item, index) => (
-                  <option key={index}>{item.Header}</option>
-                ))}
-              </select>
-            </div>
-            <div className="flex gap-2 items-center">
-              <label className="font-[600]">Sort Order</label>
-              <select className="w-[200px]">
-                {["Ascending", "Descending"].map((item, index) => (
-                  <option key={index}>{item}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <button className="border border-black px-6 rounded-3xl mt-8 text-[0.875rem] font-[600] py-2 grid place-content-center">
-            Submit
-          </button>
-        </div>
-      </Popup>
-      <Popup
+      {/* <Popup
         onClose={handleClose}
         modal
         open={openPopup && !UserTable}
@@ -863,7 +833,7 @@ const Table = ({
             />
           )}
         </div>
-      </Popup>
+      </Popup> */}
     </div>
   );
 };

@@ -258,6 +258,10 @@ const ScatterChart = ({
   const [maxX, setMaxX] = useState();
   const [maxY, setMaxY] = useState();
   const [data1, setData1] = useState();
+  const [lineValues, setLineValues] = useState({
+    x: 0,
+    y: 0,
+  });
 
   useEffect(() => {
     const _defaultOptions = {
@@ -341,6 +345,15 @@ const ScatterChart = ({
     };
 
     setOptions(_defaultOptions);
+
+    return () => {
+      if (timerX.current) {
+        clearTimeout(timerX.current);
+      }
+      if (timerY.current) {
+        clearTimeout(timerY.current);
+      }
+    };
   }, [state.xLabel, state.yLabel]);
 
   useEffect(() => {
@@ -387,8 +400,20 @@ const ScatterChart = ({
     }
   }, [chartRef.current, data]);
 
+  const timerX = useRef(null);
+  const timerY = useRef(null);
+
   const handleChangeX = (e) => {
-    setLineX(Number(e.target.value));
+    setLineValues((prev) => ({
+      ...prev,
+      x: Number(e.target.value),
+    }));
+    if (timerX.current) {
+      clearTimeout(timerX.current);
+    }
+    timerX.current = setTimeout(() => {
+      setLineX(Number(e.target.value));
+    }, 1000);
   };
 
   const closeModal = () => {
@@ -398,9 +423,18 @@ const ScatterChart = ({
   };
 
   const handleChangeY = (e) => {
-    setLineY(Number(e.target.value));
+    setLineValues((prev) => ({
+      ...prev,
+      y: Number(e.target.value),
+    }));
+    if (timerY.current) {
+      clearTimeout(timerY.current);
+    }
+    timerY.current = setTimeout(() => {
+      setLineY(Number(e.target.value));
+    }, 1000);
   };
- 
+
   return (
     <div className="min-h-[400px] relative w-full">
       {data1 ? (
@@ -428,9 +462,7 @@ const ScatterChart = ({
               {quadrantValues.topLeft}
             </div>
 
-            <div
-              className="absolute border text-[#FF0000] font-[700] right-[8%] top-[8%]"
-            >
+            <div className="absolute border text-[#FF0000] font-[700] right-[8%] top-[8%]">
               {quadrantValues.topRight}
             </div>
 
@@ -470,16 +502,16 @@ const ScatterChart = ({
                 min={0}
                 max={maxX}
                 onChange={handleChangeX}
-                value={lineX}
+                value={lineValues.x}
                 className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-500"
               />
               <div className="w-40 ml-10">
                 <input
                   id="labels-range-input"
                   type="number"
-                  value={lineX}
+                  value={lineValues.x}
                   max={maxX}
-                  onChange={(e) => setLineX(Number(e.target.value))}
+                  onChange={handleChangeX}
                   className="w-full p-4 h-1 cursor-pointer"
                 />
               </div>
@@ -497,16 +529,16 @@ const ScatterChart = ({
                 min={0}
                 max={maxY}
                 onChange={handleChangeY}
-                value={lineY}
+                value={lineValues.y}
                 className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-500"
               />
               <div className="w-40 ml-10">
                 <input
                   id="labels-range-input"
                   type="number"
-                  value={lineY}
+                  value={lineValues.y}
                   max={maxY}
-                  onChange={(e) => setLineY(Number(e.target.value))}
+                  onChange={handleChangeY}
                   className="w-full p-4 h-1 cursor-pointer"
                 />
               </div>

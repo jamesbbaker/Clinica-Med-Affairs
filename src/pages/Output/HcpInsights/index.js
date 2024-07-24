@@ -92,6 +92,7 @@ const HcpInsight = () => {
   return statsData2 ? (
     <>
       <div className="flex flex-col gap-2 w-full items-start">
+        <h2 className="font-[500] text-md mb-6">Summary of Unmet Need by Specialty</h2>
         <div>Select Unmet Needs</div>
         <MultiSelect
           ItemRenderer={CustomOptionRenderer}
@@ -119,7 +120,7 @@ const HcpInsight = () => {
           ],
         }}
         activeCells={false}
-        Title="Summary of Unmet Need by Specialty"
+      
         showSelectionBtns={false}
         TableData={statsData2}
         marginTop={0}

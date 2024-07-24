@@ -252,6 +252,7 @@ const PayerVariationBubbleChart = ({
     <div className="flex flex-col mt-10 gap-2 items-start">
       {state.data ? (
         <>
+            <h2 className="font-[500] mb-6 text-md">Segment Plans by Multiple Unmet Needs</h2>
           {!isScatterMapOpen && (
             <div className="flex flex-col mb-4 items-start">
               <div>
