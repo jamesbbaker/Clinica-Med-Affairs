@@ -218,12 +218,14 @@ const InstitutionalVariationBubbleChart = ({
       handleSelect("yLabel", ScatterData.unmet_need_2, false);
       setLineX(ScatterData.value_1);
       setLineY(ScatterData.value_2);
-      setPageData((prev) => ({
-        ...prev,
-        ...ScatterData,
-      }));
+      if (isPageUpdatable) {
+        setPageData((prev) => ({
+          ...prev,
+          ...ScatterData,
+        }));
+      }
     }
-  }, [selectedUnmet,isPageUpdatable, rawData, ScatterData]);
+  }, [selectedUnmet, isPageUpdatable, rawData, ScatterData]);
 
   const handleDispatchData = (labelValue, chartData) => {
     let data = handleChartData(rawData, labelValue);
@@ -233,7 +235,7 @@ const InstitutionalVariationBubbleChart = ({
     });
   };
 
-  const handleSelect = (id, val, firstUpdate=true) => {
+  const handleSelect = (id, val, firstUpdate = true) => {
     dispatch({
       type: actions.handleUpdate,
       payload: {
@@ -248,12 +250,12 @@ const InstitutionalVariationBubbleChart = ({
       xLabel: id === "xLabel" ? val : state.xLabel,
       yLabel: id === "yLabel" ? val : state.yLabel,
     };
-    // if (isPageUpdatable && firstUpdate) {
+    if (isPageUpdatable && firstUpdate) {
       setPageData((prev) => ({
         ...prev,
         ...pageDataValue,
       }));
-    // }
+    }
     handleDispatchData(labelValue);
   };
 
@@ -261,7 +263,9 @@ const InstitutionalVariationBubbleChart = ({
     <div className="flex flex-col mt-10 gap-2 items-start">
       {state.data ? (
         <>
-          <h2 className="font-[500] mb-6 text-md">Segment Hospitals / Clinics by Multiple Unmet Needs</h2>
+          <h2 className="font-[500] mb-6 text-md">
+            Segment Hospitals / Clinics by Multiple Unmet Needs
+          </h2>
           {!isScatterMapOpen && (
             <div className="flex flex-col mb-4 items-start">
               <div>
@@ -312,7 +316,7 @@ const InstitutionalVariationBubbleChart = ({
           )}
 
           <ScatterChart
-          type={"Hospital"}
+            type={"Hospital"}
             scatterValue={scatterValue}
             setIsScatterMapOpen={setIsScatterMapOpen}
             shapes={[]}

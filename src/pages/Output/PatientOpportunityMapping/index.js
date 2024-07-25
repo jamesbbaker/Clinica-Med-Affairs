@@ -245,6 +245,7 @@ const PatientOpportunityMapping = ({
     getDataStats("state_level_data", accessToken, refreshToken)
       .then(async (res) => {
         if (res) {
+          console.log(res, "res")
           let _data = JSON.parse(res.replaceAll("NaN", 0));
 
           let StateByRegion = {};
@@ -292,6 +293,7 @@ const PatientOpportunityMapping = ({
         refreshToken
       );
       if (res) {
+      
         let _data = JSON.parse(res.replaceAll("NaN", 0));
         dispatch({
           type: action_types.HandleUpdateStates,
