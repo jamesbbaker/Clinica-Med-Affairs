@@ -118,13 +118,10 @@ const MedicalAffairToolbox = ({
     }
     // Combine the base URL, dynamic specialties, and additional parameters
     const finalUrl = `${queryString}`;
-    console.log(finalUrl, "finalurl")
 
     getDataStats(finalUrl, accessToken, refreshToken)
       .then((res) => {
-        console.log(res, 'res')
         let _data = JSON.parse(res.replaceAll("NaN", 0));
-        console.log(_data)
 
         setRawData(_data.data);
         if (_data) {
@@ -276,16 +273,20 @@ const MedicalAffairToolbox = ({
       xLabel: id === "xLabel" ? val : state.xLabel,
       yLabel: id === "yLabel" ? val : state.yLabel,
     };
-    let pageDataValue = {
-      unmet_need_1: id === "xLabel" ? val : state.xLabel,
-      unmet_need_2: id === "yLabel" ? val : state.yLabel,
-    };
-    // if (isPageUpdatable && firstUpdate) {
+    let pageDataValue = {};
+    if (id === "xLabel") {
+      pageDataValue.unmet_need_1 = val;
+    }
+    if (id === "yLabel") {
+      pageDataValue.unmet_need_2 = val;
+    }
+
+    if (isPageUpdatable) {
       setPageData((prev) => ({
         ...prev,
         ...pageDataValue,
       }));
-    // }
+    }
     handleDispatchData(labelValue);
   };
 
@@ -311,7 +312,9 @@ const MedicalAffairToolbox = ({
       {/* {!isScatterMapOpen && <div className="text-[1.25rem] font-[600]">HCP Prioritization</div>} */}
       {state.data ? (
         <>
-        <h2 className="font-[500] mb-6 text-md">Segment HCPs by Multiple Unmet Needs</h2>
+          <h2 className="font-[500] mb-6 text-md">
+            Segment HCPs by Multiple Unmet Needs
+          </h2>
           {!isScatterMapOpen && (
             <>
               <div className="flex items-center w-full justify-between">
@@ -355,7 +358,7 @@ const MedicalAffairToolbox = ({
                 <button
                   disabled={loading}
                   onClick={handleApplyFilter}
-                 className="w-40 font-[600] h-10 border border-black rounded-md hover:bg-[#c4c4c4]"
+                  className="w-40 font-[600] h-10 border border-black rounded-md hover:bg-[#c4c4c4]"
                 >
                   {loading ? (
                     <div className="text-center">

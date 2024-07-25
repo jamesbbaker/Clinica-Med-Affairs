@@ -173,7 +173,7 @@ const BarChartOptions = {
 const TreeMap = ({
   closeModal,
   showBack,
-  setShowBack,
+  setShowBack= () => {},
   values,
   chartEvents,
   payerTable = false,
@@ -208,7 +208,7 @@ const TreeMap = ({
 
   return (
     <div className="relative mt-10">
-      {showBack && (
+      {/* {showBack && ( */}
         <button
           onClick={handleBack}
           className="flex absolute right-[1%] -top-[3.5rem] items-center gap-1"
@@ -216,7 +216,7 @@ const TreeMap = ({
           <IoArrowBackCircle size={30} />
           Go Back
         </button>
-      )}
+      {/* )} */}
       {values && (
         <div className="flex absolute justify-between -top-5 w-[34%] right-[1%]">
           <div>{values.min.toFixed()}</div>

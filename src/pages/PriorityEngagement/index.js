@@ -119,7 +119,7 @@ const PriorityEngagement = () => {
   const handleChange = (val) => {
     setDataLoad(true);
     getDataStats(
-      `hcp_crf?category=${val ? val : "Number of No Spirometry"}`,
+      `hcp_crf?category=${val ? val : "Number of ICS-LABA Exacerbation Failed Escalation"}`,
       accessToken,
       refreshToken
     )
@@ -167,7 +167,7 @@ const PriorityEngagement = () => {
   useEffect(() => {
     getDataStats(
       `hcp_crf?category=${
-        crfUnmetNeed ? crfUnmetNeed : "Number of No Spirometry"
+        crfUnmetNeed ? crfUnmetNeed : "Number of ICS-LABA Exacerbation Failed Escalation"
       }`,
       accessToken,
       refreshToken
@@ -368,7 +368,7 @@ const PriorityEngagement = () => {
       ).filter((item) => crfData.hasOwnProperty(item));
       handleChange(filterLabels[0]);
     } else if (crfData && lineChartData === null) {
-      handleChange("Number of No Spirometry");
+      handleChange("Number of ICS-LABA Exacerbation Failed Escalation");
     } else if (
       crfData &&
       lineChartData &&
@@ -382,6 +382,8 @@ const PriorityEngagement = () => {
     setCurrentChart(val);
     setPageData(null);
   };
+
+  console.log(pageData)
 
   return (
     <div className="flex flex-col items-start ">
