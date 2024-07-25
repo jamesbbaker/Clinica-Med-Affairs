@@ -248,12 +248,12 @@ const InstitutionalVariationBubbleChart = ({
       xLabel: id === "xLabel" ? val : state.xLabel,
       yLabel: id === "yLabel" ? val : state.yLabel,
     };
-    if (isPageUpdatable && firstUpdate) {
+    // if (isPageUpdatable && firstUpdate) {
       setPageData((prev) => ({
         ...prev,
         ...pageDataValue,
       }));
-    }
+    // }
     handleDispatchData(labelValue);
   };
 

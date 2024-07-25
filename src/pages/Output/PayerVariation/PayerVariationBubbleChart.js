@@ -215,6 +215,7 @@ const PayerVariationBubbleChart = ({
     }
   }, [selectedUnmet,isPageUpdatable, rawData, ScatterData]);
 
+
   const handleDispatchData = (labelValue, chartData) => {
     let data = handleChartData(rawData, labelValue);
     dispatch({
@@ -239,12 +240,12 @@ const PayerVariationBubbleChart = ({
       xLabel: id === "xLabel" ? val : state.xLabel,
       yLabel: id === "yLabel" ? val : state.yLabel,
     };
-    if (isPageUpdatable && firstUpdate) {
+    // if (isPageUpdatable && firstUpdate) {
       setPageData((prev) => ({
         ...prev,
         ...pageDataValue,
       }));
-    }
+    // }
     handleDispatchData(labelValue);
   };
 

@@ -4,6 +4,7 @@ import {
   invertedMapLabels,
   labelsMatrix,
   mapLabels,
+  patientTotals,
   selectLabels,
 } from "../../../../constants/appConstants";
 import { MultiSelect } from "react-multi-select-component";
@@ -51,6 +52,7 @@ const options = {
   plugins: {
     legend: {
       position: "top",
+    
     },
     datalabels: {
       display: false,
@@ -136,9 +138,11 @@ const filterOptions = [...Object.keys(selectLabels)];
 const ImpactLineChart = ({ lineData, type = "National" }) => {
   const [lineChartData, setLineChartData] = useState();
   const [unmetNeed, setUnmetNeed] = useState([
-    { label: filterOptions[0], value: filterOptions[0] },
+    {
+      label: "Incomplete initial asthma testing",
+      value: "Number of No Spirometry",
+    },
   ]);
-  const [setPercentUnmet, setSetPercentUnmet] = useState([]);
   const [RegionsList, setRegionsList] = useState();
   const [stateList, setStatesList] = useState();
   const [selectedStates, setSelectedStates] = useState();
@@ -185,9 +189,8 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
       setRegionsList(Object.keys(lineDataByRegion));
       let _selectedRegions = [];
       if (initial) {
-   
         _selectedRegions = Object.keys(lineDataByRegion)
-          .filter((item) =>!hiddenRegions.includes(item))
+          .filter((item) => !hiddenRegions.includes(item))
           .map((item) => ({
             value: item,
             label: item,
@@ -221,7 +224,6 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
               backgroundColor: randomColors[_index]
                 ? randomColors[_index]
                 : "#c4c4c4c4",
-              yAxisID: "y",
             });
             _index++;
           })
@@ -250,7 +252,6 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
               backgroundColor: randomColors[_index]
                 ? randomColors[_index]
                 : "#c4c4c4c4",
-              yAxisID: "y1",
             });
             _index++;
           })
@@ -306,7 +307,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
           .filter((item) => _selectedStates.includes(item.id))
           .forEach((item) => {
             datasets.push({
-              label: `${item.id} (${unmet.value})`,
+              label: `${item.id} (${selectLabels[unmet.value]})`,
               data: item.data.map((_item) => _item[filtersName[unmet.value]]),
               borderColor: randomColors[_index]
                 ? randomColors[_index]
@@ -322,17 +323,27 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
       _index = 0;
       unmetNeed.map((unmet, index) =>
         Object.values(lineDataByState)
-          .filter((item) => _selectedStates.includes(item.id))
+          .filter(
+            (item) =>
+              _selectedStates.includes(item.id) &&
+              labelsMatrix[unmet.value] &&
+              labelsMatrix[unmet.value].Percent &&
+              filtersName[labelsMatrix[unmet.value].Percent]
+          )
           .forEach((item) => {
-            datasets.push({
-              label: `${item.id} (${unmet.value})`,
-              data: item.data.map((_item) => _item[filtersName[unmet.value]]),
+            datasets2.push({
+              label: `${item.id} (${
+                selectLabels[labelsMatrix[unmet.value].Percent]
+              })`,
+              data: item.data.map(
+                (_item) => _item[filtersName[labelsMatrix[unmet.value].Percent]]
+              ),
               borderColor: randomColors[_index]
                 ? randomColors[_index]
-                : "#c4c4c4",
+                : "#c4c4c4c4",
               backgroundColor: randomColors[_index]
                 ? randomColors[_index]
-                : "#c4c4c4",
+                : "#c4c4c4c4",
             });
             _index++;
           })
@@ -343,7 +354,10 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
           labels: [...new Set(_labels)],
           datasets: datasets,
         },
-        chart2: {},
+        chart2: {
+          labels: [...new Set(_labels)],
+          datasets: datasets2,
+        },
       };
     } else {
       data = {
@@ -438,7 +452,9 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
               </label>
               <MultiSelect
                 labelledBy=""
-                options={RegionsList.filter((item) =>!hiddenRegions.includes(item)).map((item) => ({
+                options={RegionsList.filter(
+                  (item) => !hiddenRegions.includes(item)
+                ).map((item) => ({
                   label: item,
                   value: item,
                 }))}
@@ -471,7 +487,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
             <button
               disabled={loading}
               onClick={handleApplyFilter}
-              className="w-40 font-[600] h-10 border border-black rounded-md hover:bg-[#c4c4c4]"
+               className="w-40 font-[600] h-10 border border-black rounded-md hover:bg-[#c4c4c4]"
             >
               {loading ? (
                 <div className="text-center">
@@ -509,7 +525,11 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
             ItemRenderer={CustomOptionRenderer}
             labelledBy=""
             options={filterOutLabels(filterOptions, selectedUnmet)
-              .filter((item) => !item.toLowerCase().includes("percent"))
+              .filter(
+                (item) =>
+                  !item.toLowerCase().includes("percent") &&
+                  !patientTotals.includes(item)
+              )
               .map((item) => ({
                 label: selectLabels[item] ? selectLabels[item] : item,
                 value: item,
@@ -524,6 +544,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
       <div className="grid grid-cols-2 items-center">
         {lineChartData.chart1 && (
           <LineChart
+            height={150}
             options={options}
             data={lineChartData.chart1}
             arbitrary={false}
@@ -531,6 +552,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
         )}
         {lineChartData.chart2 && (
           <LineChart
+            height={150}
             options={options2}
             data={lineChartData.chart2}
             arbitrary={false}

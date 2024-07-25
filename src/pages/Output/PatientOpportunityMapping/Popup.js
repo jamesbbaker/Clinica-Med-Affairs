@@ -14,6 +14,8 @@ import { IoArrowBackCircle } from "react-icons/io5";
 import PrimaryBtn from "../../../components/PrimaryBtn";
 import InputField from "../../../components/InputField";
 import { filterOutLabels } from "../../../utils/MapUtils";
+import { CustomOptionRenderer } from "../../../components/Table";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 const randomColors = [
   "#d43c1b",
@@ -234,6 +236,7 @@ const BarChartPopup = ({
     lineDataFilter.sort((a, b) => new Date(a.Quarter) - new Date(b.Quarter));
     let _labels = lineDataFilter.map((item) => convertToQuarter(item.Quarter));
 
+    console.log(unmetNeed)
     let data = {
       chart1: {
         labels: _labels,
@@ -343,7 +346,6 @@ const BarChartPopup = ({
           refreshToken
         )
           .then((res) => {
-            console.log(res);
             let response = { ...res };
             addLineData(response.data);
             setFetchedData(response.data);
@@ -359,7 +361,7 @@ const BarChartPopup = ({
     if (fetchedData) {
       addLineData(fetchedData);
     }
-  }, [unmetNeed]);
+  }, [unmetNeed, fetchedData]);
 
   const handleSelectMultipleUnmet = (val) => {
     setUnmetNeed(val);
@@ -383,6 +385,17 @@ const BarChartPopup = ({
       );
       const res = await response.json();
       setLoading(false);
+      toast.success("Saved successfully!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
       console.log(res, "res");
     } catch (err) {
       console.log(err);
@@ -465,6 +478,7 @@ const BarChartPopup = ({
         !InstitutionalTreeMap && `items-start`
       } gap-4`}
     >
+       <ToastContainer />
       <div
         style={{
           justifyContent: payerData && !payer ? "space-between" : "flex-start",
@@ -621,6 +635,7 @@ const BarChartPopup = ({
           </label>
           <MultiSelect
             labelledBy=""
+            ItemRenderer={CustomOptionRenderer}
             options={filterOutLabels(filterOptions, selectedUnmet)
               .filter(
                 (item) =>
@@ -640,6 +655,7 @@ const BarChartPopup = ({
           <div className="grid  w-full grid-cols-2 items-center">
             {lineChartData.chart1 && (
               <LineChart
+              height={150}
                 options={lineChartOptions}
                 data={lineChartData.chart1}
                 arbitrary={false}
@@ -647,6 +663,7 @@ const BarChartPopup = ({
             )}
             {lineChartData.chart2 && (
               <LineChart
+              height={150}
                 options={lineChartOptions2}
                 data={lineChartData.chart2}
                 arbitrary={false}

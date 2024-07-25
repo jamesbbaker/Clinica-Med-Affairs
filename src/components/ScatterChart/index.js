@@ -111,7 +111,6 @@ const arbitraryLinePlugin = {
 
       if (x && lineX !== undefined) {
         const xValue = x.getPixelForValue(lineX);
-
         ctx.save();
         ctx.beginPath();
         ctx.moveTo(xValue, top);
@@ -123,7 +122,6 @@ const arbitraryLinePlugin = {
       }
       if (y && lineY !== undefined) {
         const yValue = y.getPixelForValue(lineY);
-
         ctx.save();
         ctx.beginPath();
         ctx.moveTo(left, yValue);
@@ -322,9 +320,9 @@ const ScatterChart = ({
                   }`
                 : insititutional
                 ? `Hospital / Clinic Affiliation: ${
-                    context.raw["Cleaned Affiliation"]
+                    context.raw["Cleaned Affiliation"] ?  context.raw["Cleaned Affiliation"]  :  context.raw["Hospital"] 
                   }, Cleaned IDN/Parent Hospital: ${
-                    context.raw["Cleaned IDN/Parent Hospital"]
+                    context.raw["Cleaned IDN/Parent Hospital"] ?   context.raw["Cleaned IDN/Parent Hospital"] : context.raw["System"]
                   }, ${[selectLabels[state.xLabel]]}:${context.raw.x}, ${
                     selectLabels[state.yLabel]
                   }:${context.raw.y}, Number of ICS-LABA Patients: ${
@@ -367,6 +365,10 @@ const ScatterChart = ({
       if (data && data.datasets) {
         handleDispatchData(labelValue);
       }
+      setLineValues((prev) => ({
+        ...prev,
+        x: Number(lineX),
+      }));
     }
   }, [lineX, dataOptions]);
 
@@ -381,6 +383,10 @@ const ScatterChart = ({
       if (data && data.datasets) {
         handleDispatchData(labelValue);
       }
+      setLineValues((prev) => ({
+        ...prev,
+        y: Number(lineY),
+      }));
     }
   }, [lineY, dataOptions]);
 
@@ -458,17 +464,17 @@ const ScatterChart = ({
             ))}
           </div>
           <div className="relative w-auto h-auto">
-            <div className="absolute border text-[#4B0082] font-[700] top-[8%] left-[8%]">
+            <div className="absolute border text-[#4B0082] font-[700] top-[14%] left-[8%]">
               {quadrantValues.topLeft}
             </div>
 
-            <div className="absolute border text-[#FF0000] font-[700] right-[8%] top-[8%]">
+            <div className="absolute border text-[#FF0000] font-[700] right-[8%] top-[14%]">
               {quadrantValues.topRight}
             </div>
 
             {chartRef.current && (
               <div
-                style={{ bottom: `10%` }}
+                style={{ bottom: `14%` }}
                 className="absolute border text-[#000] font-[700] left-[8%]"
               >
                 {quadrantValues.bottomLeft}
@@ -477,7 +483,7 @@ const ScatterChart = ({
             {chartRef.current && (
               <div
                 style={{
-                  bottom: `10%`,
+                  bottom: `14%`,
                   right: `8%`,
                 }}
                 className="absolute border text-[#D8BFD8] font-[700]"
@@ -485,7 +491,7 @@ const ScatterChart = ({
                 {quadrantValues.bottomRight}
               </div>
             )}
-            <Bubble ref={chartRef} data={data} options={dataOptions} />
+            <Bubble height={100} ref={chartRef} data={data} options={dataOptions} />
           </div>
 
           <div className="flex w-full mt-4 flex-col items-start gap-2">

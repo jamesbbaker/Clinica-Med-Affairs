@@ -388,6 +388,7 @@ const EligiblePatientLocator = ({
         getDataStats("get_hcp_concentration_curve", accessToken, refreshToken)
           .then((_res) => {
             setConcentrationCurve(_res.data);
+          
             let _data = JSON.parse(res.replaceAll("NaN", 0));
 
             if (_data) {
@@ -525,7 +526,7 @@ const EligiblePatientLocator = ({
   const Table_Columns_1 = useMemo(() => {
     const column_names = [
       {
-        header: "Assigned Physician Name",
+        header: "Physician Name",
         accessor: "Assigned Physician Name",
       },
       {
@@ -533,13 +534,14 @@ const EligiblePatientLocator = ({
         accessor: "Top Priority",
       },
       {
-        header: "Assigned Specialty",
+        header: "Specialty",
         accessor: "Assigned Specialty",
       },
       { header: "Region", accessor: "Region" },
-      { header: "State Name", accessor: "State Name" },
+      { header: "State", accessor: "State Name" },
       { header: "City", accessor: "City" },
-      { header: "Organization Name", accessor: "Organization Name" },
+      { header: "Hospital / Clinic", accessor: "Hospital" },
+      { header: "Health System / IDN", accessor: "System" },
     ];
     [...Object.keys(selectLabels)].map((item) =>
       column_names.push({

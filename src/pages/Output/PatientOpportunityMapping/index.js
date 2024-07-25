@@ -395,11 +395,10 @@ const PatientOpportunityMapping = ({
     setTimeout(() => {
       setResetMap(false);
       setCurrentLevel("region");
-      setCurrentToggle(toggleBtns[0].id);
       setMarkedStates(null);
       currentStateClicked.current = null;
       setChartDataValue(setData1, data_1_labels, summaryData);
-    }, 100);
+    }, 200);
   };
 
   const handleToggle = (e) => {
@@ -413,7 +412,9 @@ const PatientOpportunityMapping = ({
 
   return (
     <>
-      {popupData && <BarChartPopup type="HCP" data1={popupData} closeModal={closeModal} />}
+      {popupData && (
+        <BarChartPopup type="HCP" data1={popupData} closeModal={closeModal} />
+      )}
       <div
         className="w-full"
         style={{
@@ -489,8 +490,7 @@ const PatientOpportunityMapping = ({
               <div className="flex items-center justify-between">
                 <div className="flex mb-6 items-center gap-8">
                   <CustomDropdown
-                  
-          buttonWidth="40rem"
+                    buttonWidth="40rem"
                     labelClassName="mb-0"
                     className={"flex items-center"}
                     showColors={true}
@@ -509,13 +509,15 @@ const PatientOpportunityMapping = ({
                     value={currentToggle}
                   />
                 </div>
-                <button
-                  onClick={handleReset}
-                  className="flex items-center gap-1"
-                >
-                  <IoArrowBackCircle size={30} />
-                  Go Back
-                </button>
+                {currentLevel !== "region" && (
+                  <button
+                    onClick={handleReset}
+                    className="flex items-center gap-1"
+                  >
+                    <IoArrowBackCircle size={30} />
+                    Go Back
+                  </button>
+                )}
               </div>
               {resetMap ? (
                 <div
@@ -545,7 +547,7 @@ const PatientOpportunityMapping = ({
             </>
           )}
           <div className="flex items-center w-full justify-center">
-            {data1 && patientPage &&  (
+            {data1 && patientPage && (
               <div className="w-full flex items-center flex-wrap">
                 <div className="w-[100%]">
                   <BarChart

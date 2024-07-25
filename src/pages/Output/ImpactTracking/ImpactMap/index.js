@@ -162,6 +162,12 @@ const ImpactMap = ({
     setUnmetNeed(val);
   };
 
+  useEffect(() => {
+    if (selectedUnmet && selectedUnmet.length> 0) {
+      setUnmetNeed(selectedUnmet[0].value)
+    }
+  },[selectedUnmet])
+
   const handlePeriod = (val, type) => {
     if (type === "period1") {
       setPeriod1(val);
@@ -173,7 +179,6 @@ const ImpactMap = ({
   const generateStateJSON = useCallback(
     (
       countryGeoJSON,
-
       unmetNeed,
       stateData
     ) => {
@@ -1079,13 +1084,13 @@ const ImpactMap = ({
             </div>
           </div>
         )}
-        <button
+        {region !== null && <button
           onClick={handleReset}
           className="flex ml-auto py-4 items-center gap-1"
         >
           <IoArrowBackCircle size={30} />
           Go Back
-        </button>
+        </button>}
         <div ref={mapContainerRef} style={{ width: "100%", height: "70vh" }} />
         {tableData && false && (
           <div className="flex mt-8 flex-col items-start">
