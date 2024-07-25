@@ -14,6 +14,7 @@ import {
 import { LineChart } from "../../../components/LineChart";
 import CustomDropdown from "../../../components/CustomDropdown";
 import { convertToQuarter } from "../PatientOpportunityMapping/Popup";
+import { CustomOptionRenderer } from "../../../components/Table";
 
 const filterOptions = [...Object.keys(selectLabels)];
 
@@ -252,7 +253,7 @@ const TargetList = () => {
     if (fetchedData) {
       addLineData(fetchedData);
     }
-  }, [unmetNeed]);
+  }, [unmetNeed, fetchedData]);
 
 
   useEffect(() => {
@@ -339,6 +340,7 @@ const TargetList = () => {
                 </label>
                 <MultiSelect
                   labelledBy=""
+                  ItemRenderer={CustomOptionRenderer}
                   options={filterOutLabels(filterOptions, selectedUnmet)
                     .filter(
                       (item) =>

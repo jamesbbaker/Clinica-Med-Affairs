@@ -172,6 +172,8 @@ const BarChartOptions = {
 
 const TreeMap = ({
   closeModal,
+  showBack,
+  setShowBack,
   values,
   chartEvents,
   payerTable = false,
@@ -183,7 +185,9 @@ const TreeMap = ({
 }) => {
   const [openPopup, setOpenPopup] = useState(false);
   const [barChartConfig, setBarChartConfig] = useState(null);
+
   const handleClick = (row, value, data) => {
+    setShowBack(true);
     if (preventDrill) {
       handleOpen(row, value, data);
       return;
@@ -198,18 +202,21 @@ const TreeMap = ({
   };
 
   const handleBack = () => {
+    setShowBack(false);
     closeModal();
   };
 
   return (
     <div className="relative mt-10">
-      <button
-        onClick={handleBack}
-        className="flex absolute right-[1%] -top-[3.5rem] items-center gap-1"
-      >
-        <IoArrowBackCircle size={30} />
-        Go Back
-      </button>
+      {showBack && (
+        <button
+          onClick={handleBack}
+          className="flex absolute right-[1%] -top-[3.5rem] items-center gap-1"
+        >
+          <IoArrowBackCircle size={30} />
+          Go Back
+        </button>
+      )}
       {values && (
         <div className="flex absolute justify-between -top-5 w-[34%] right-[1%]">
           <div>{values.min.toFixed()}</div>

@@ -388,9 +388,6 @@ const PriorityEngagement = () => {
       {!isScatterMapOpen && (
         <>
           <ToastContainer />
-          <h1 className="text-lg font-[500] mb-4">
-            Identify Priorities based on Multiple Unmet Needs
-          </h1>
           <div className="w-full sticky top-14 z-50 bg-[#d4d4d4] mb-8 grid grid-cols-3">
             {charts.map((item, index) => (
               <div key={index} className="text-[#000]">
@@ -419,7 +416,6 @@ const PriorityEngagement = () => {
         <div className="mb-4">
           <HcpInsight />
         </div>
-        {/* <ToastContainer /> */}
         {crfData && crfLineData && crfUnmetNeed && !dataLoad ? (
           <>
             <div className="text-left w-full py-4 font-[500]">

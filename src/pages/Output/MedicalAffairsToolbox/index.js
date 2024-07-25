@@ -118,10 +118,13 @@ const MedicalAffairToolbox = ({
     }
     // Combine the base URL, dynamic specialties, and additional parameters
     const finalUrl = `${queryString}`;
+    console.log(finalUrl, "finalurl")
 
     getDataStats(finalUrl, accessToken, refreshToken)
       .then((res) => {
+        console.log(res, 'res')
         let _data = JSON.parse(res.replaceAll("NaN", 0));
+        console.log(_data)
 
         setRawData(_data.data);
         if (_data) {
@@ -277,12 +280,12 @@ const MedicalAffairToolbox = ({
       unmet_need_1: id === "xLabel" ? val : state.xLabel,
       unmet_need_2: id === "yLabel" ? val : state.yLabel,
     };
-    if (isPageUpdatable && firstUpdate) {
+    // if (isPageUpdatable && firstUpdate) {
       setPageData((prev) => ({
         ...prev,
         ...pageDataValue,
       }));
-    }
+    // }
     handleDispatchData(labelValue);
   };
 
@@ -352,7 +355,7 @@ const MedicalAffairToolbox = ({
                 <button
                   disabled={loading}
                   onClick={handleApplyFilter}
-                  className="w-40 font-[600] h-10 border border-black rounded-md hover:bg-[#c4c4c4]"
+                 className="w-40 font-[600] h-10 border border-black rounded-md hover:bg-[#c4c4c4]"
                 >
                   {loading ? (
                     <div className="text-center">

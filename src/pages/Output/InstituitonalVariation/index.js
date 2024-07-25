@@ -344,13 +344,13 @@ const InstitutionalVariation = () => {
       });
   };
 
-  const [update, setUpdate] = useState(true);
+  // const [update, setUpdate] = useState(true);
 
   const handleApplyFilter = () => {
-    setUpdate(false);
-    setTimeout(() => {
-      setUpdate(true);
-    }, 500);
+    // setUpdate(false);
+    // setTimeout(() => {
+    //   setUpdate(true);
+    // }, 500);
     fetchData();
   };
 
@@ -363,6 +363,8 @@ const InstitutionalVariation = () => {
       setSelectedSpeciality(val);
     }
   };
+
+  const [showBack, setShowBack] = useState(false)
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -384,7 +386,7 @@ const InstitutionalVariation = () => {
               {!isScatterMapOpen && (
                 <>
                    <div className="text-lg text-black font-[500]">{"Variation in Unmet Need by IDN / Health System and Sites of Care"}</div>
-                  <div className="flex flex-col mb-8  w-full justify-between items-start">
+                  <div className="flex flex-col mb-2  w-full justify-between items-start">
                     <div className="flex mb-6 items-center gap-8">
                       <CustomDropdown
                         buttonWidth="40rem"
@@ -449,7 +451,7 @@ const InstitutionalVariation = () => {
                       </div>
                       <button
                         onClick={handleApplyFilter}
-                        className="border border-[#000] px-4 py-2 rounded-xs"
+                            className="w-40 font-[600] h-10 border border-black rounded-md hover:bg-[#c4c4c4]"
                       >
                         Apply Filters
                       </button>
@@ -457,6 +459,8 @@ const InstitutionalVariation = () => {
                   </div>
                   {summaryMatrix && (
                     <TreeMap
+                    setShowBack={setShowBack}
+                    showBack={showBack}
                       closeModal={closeModal}
                       values={values}
                       preventDrill={true}

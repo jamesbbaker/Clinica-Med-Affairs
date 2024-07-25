@@ -117,13 +117,13 @@ export const menuList = [
         color: "#c4c4c4",
         icon: () => <AiOutlineQuestionCircle color="#c4c4c4" />,
       },
-      // {
-      //   name: APP_ROUTES_LABEL.testing,
-      //   id: APP_ROUTES.testing,
-      //   route: APP_ROUTES.testing,
-      //   color: "#c4c4c4",
-      //   icon: () => <AiOutlineQuestionCircle color="#c4c4c4" />,
-      // },
+      {
+        name: APP_ROUTES_LABEL.testing,
+        id: APP_ROUTES.testing,
+        route: APP_ROUTES.testing,
+        color: "#c4c4c4",
+        icon: () => <AiOutlineQuestionCircle color="#c4c4c4" />,
+      },
     ],
   },
 ];
