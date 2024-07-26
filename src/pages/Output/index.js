@@ -36,7 +36,7 @@ const NavigationMenu = [
     id: APP_ROUTES.eligible_patient_locator,
     color: "#FF6666",
     route: `${APP_ROUTES.outputs}/${APP_ROUTES.eligible_patient_locator}`,
-    description: "Deep clinical profiles for top HCPs by priority unmet needs",
+    description: "Clinical profiles for top HCPs by priority unmet needs",
   },
   {
     name: APP_ROUTES_LABEL.institutional_variation,
@@ -44,7 +44,7 @@ const NavigationMenu = [
     color: "#FF6666",
     route: `${APP_ROUTES.outputs}/${APP_ROUTES.institutional_variation}`,
     description:
-      "Deep clinical profiles for top hospitals, clinics, IDNs, and systems by priority unmet needs",
+      "Clinical profiles for top hospitals, clinics, IDNs, and systems by priority unmet needs",
   },
   {
     name: APP_ROUTES_LABEL.payer_variation,
@@ -52,7 +52,7 @@ const NavigationMenu = [
     color: "#FF6666",
     route: `${APP_ROUTES.outputs}/${APP_ROUTES.payer_variation}`,
     description:
-      "Deep clinical profiles for top plans and payers by priority unmet needs",
+      "Clinical profiles for top plans and payers by priority unmet needs",
   },
   {
     name: APP_ROUTES_LABEL.target_lists,
