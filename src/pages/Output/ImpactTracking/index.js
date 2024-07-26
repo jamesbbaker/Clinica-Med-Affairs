@@ -7,6 +7,7 @@ import { capitalize } from "lodash";
 import CustomDropdown from "../../../components/CustomDropdown";
 import RealTimeBox from "../../../components/RealTimeBox";
 import HCPTable from "../../../components/HCPTable";
+import { TargetLine } from "../TargetLists";
 
 export const options = {
   responsive: true,
@@ -142,6 +143,28 @@ const ImpactTracking = ({ patientPage }) => {
         setRegionData(data);
       }
     );
+    getDataStats(`get_priority_quarterly?Type=HCP`, accessToken, refreshToken)
+      .then((res) => {
+        let _data = JSON.parse(res.replaceAll("NaN", 0));
+        console.log(_data, "hcp");
+      })
+      .catch((err) => console.log(err));
+    getDataStats(
+      `get_priority_quarterly?Type=Hospital`,
+      accessToken,
+      refreshToken
+    )
+      .then((res) => {
+        let _data = JSON.parse(res.replaceAll("NaN", 0));
+        console.log(_data, "hospital");
+      })
+      .catch((err) => console.log(err));
+    getDataStats(`get_priority_quarterly?Type=Plan`, accessToken, refreshToken)
+      .then((res) => {
+        let _data = JSON.parse(res.replaceAll("NaN", 0));
+        console.log(_data, "plan");
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   const [mapLoading, setMapLoading] = useState(false);
@@ -159,7 +182,9 @@ const ImpactTracking = ({ patientPage }) => {
 
   return (
     <div className="flex w-full flex-col gap-8">
-      <h2 className="font-medium text-lg">{patientPage ? "Unmet Need Trends" : ""}</h2>
+      <h2 className="font-medium text-lg">
+        {patientPage ? "Unmet Need Trends" : ""}
+      </h2>
       {stateData && regionData ? (
         <div className="flex flex-col items-start gap-2 w-full">
           <CustomDropdown
@@ -170,10 +195,22 @@ const ImpactTracking = ({ patientPage }) => {
               label: "Select Chart",
               name: "Select Chart",
               type: "select",
-              options: ["national", "region", "state"].map((item) => ({
-                name: capitalize(item),
-                value: item,
-              })),
+              options: [
+                "national",
+                "region",
+                "state",
+                "HCP",
+                "Hospital",
+                "Plan",
+              ]
+                .filter(
+                  (item) =>
+                    !(patientPage && ["HCP", "Hospital", "Plan"].includes(item))
+                )
+                .map((item) => ({
+                  name: capitalize(item),
+                  value: item,
+                })),
               id: "xLabel",
             }}
             handleSelect={(val) => handleSelectChart(val)}
@@ -188,6 +225,9 @@ const ImpactTracking = ({ patientPage }) => {
           {chartShow === "state" && (
             <ImpactLineChart type="State" lineData={stateData.data} />
           )}
+          {chartShow === "HCP" && <TargetLine selectedChart="HCP" />}
+          {chartShow === "Hospital" && <TargetLine selectedChart="Hospital" />}
+          {chartShow === "Plan" && <TargetLine selectedChart="Plan" />}
         </div>
       ) : (
         <div className="h-[40vh] flex justify-center items-center">

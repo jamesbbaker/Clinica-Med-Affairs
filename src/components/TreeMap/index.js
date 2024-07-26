@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Chart } from "react-google-charts";
 import { getRandomInt } from "../../utils/MathUtils";
 import Popup from "reactjs-popup";
@@ -172,8 +172,7 @@ const BarChartOptions = {
 
 const TreeMap = ({
   closeModal,
-  showBack,
-  setShowBack= () => {},
+
   values,
   chartEvents,
   payerTable = false,
@@ -187,7 +186,6 @@ const TreeMap = ({
   const [barChartConfig, setBarChartConfig] = useState(null);
 
   const handleClick = (row, value, data) => {
-    setShowBack(true);
     if (preventDrill) {
       handleOpen(row, value, data);
       return;
@@ -202,20 +200,19 @@ const TreeMap = ({
   };
 
   const handleBack = () => {
-    setShowBack(false);
     closeModal();
   };
 
   return (
     <div className="relative mt-10">
       {/* {showBack && ( */}
-        <button
-          onClick={handleBack}
-          className="flex absolute right-[1%] -top-[3.5rem] items-center gap-1"
-        >
-          <IoArrowBackCircle size={30} />
-          Go Back
-        </button>
+      <button
+      id="backBtn"
+        onClick={handleBack}
+        className="hidden absolute left-0 -top-[3.5rem] items-center gap-1"
+      >
+        <IoArrowBackCircle size={30} />
+      </button>
       {/* )} */}
       {values && (
         <div className="flex absolute justify-between -top-5 w-[34%] right-[1%]">
@@ -236,6 +233,8 @@ const TreeMap = ({
               if (!needCallbacks) {
                 return;
               }
+              let backBtn = document.getElementById("backBtn")
+              backBtn.style.display = "flex"
               const chart = chartWrapper.getChart();
               const data = chartWrapper.getDataTable();
               google.visualization.events.addListener(

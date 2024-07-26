@@ -55,6 +55,7 @@ export const USERS_TABLE_COLUMNS = [
 ];
 
 export const APP_ROUTES = {
+  home: 'home',
   users: "users",
   outputs: "outputs",
   patient_opportunity_mapping_and_strategy:
@@ -93,11 +94,11 @@ export const APP_ROUTES_LABEL = {
   institutional_variation: "Hospital/Clinic Care Profiles",
   payer_variation: "Payer Care Profiles",
   medical_affair_toolbox: "Medical Affairs Toolbox",
-  target_lists: "Saved Lists",
+  target_lists: "Saved Accounts",
   data_quality: "Data Quality",
   unmet_need_definition: "Unmet Need Definitions",
   priority_engagement_opportunity_page: "Priority Engagement Opportunities",
-  help: "Need Help?",
+  help: "Help",
   testing: "Testing"
 };
 

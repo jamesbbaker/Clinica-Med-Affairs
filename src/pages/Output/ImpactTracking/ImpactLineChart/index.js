@@ -541,7 +541,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
           />
         </div>
       </div>
-      <div className="grid grid-cols-2 items-center">
+      <div className="grid custom:grid-cols-2 grid-cols-1 items-center">
         {lineChartData.chart1 && (
           <LineChart
             height={150}
