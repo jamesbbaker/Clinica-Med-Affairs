@@ -36,7 +36,7 @@ const NavigationMenu = [
     color: "#FF6666",
     route: `${APP_ROUTES.outputs}/${APP_ROUTES.eligible_patient_locator}`,
     icon: () => <AiOutlineTable />,
-    description: "Deep clinical profiles for top HCPs by priority unmet needs",
+    description: "Clinical profiles for top HCPs by priority unmet needs",
   },
   {
     name: APP_ROUTES_LABEL.target_lists,
@@ -71,7 +71,7 @@ const NavigationMenu = [
     route: `${APP_ROUTES.outputs}/${APP_ROUTES.institutional_variation}`,
     icon: () => <AiOutlineProject />,
     description:
-      "Deep clinical profiles for top hospitals, clinics, IDNs, and systems by priority unmet needs",
+      "Clinical profiles for top hospitals, clinics, IDNs, and systems by priority unmet needs",
   },
   {
     name: APP_ROUTES_LABEL.impact_tracking,
@@ -100,7 +100,7 @@ const NavigationMenu = [
     route: `${APP_ROUTES.outputs}/${APP_ROUTES.payer_variation}`,
     icon: () => <AiOutlineProject />,
     description:
-      "Deep clinical profiles for top plans and payers by priority unmet needs",
+      "Clinical profiles for top plans and payers by priority unmet needs",
   },
   {
     name: null,
@@ -190,7 +190,7 @@ const Home = () => {
                       // subItem.id !==
                       //   APP_ROUTES.priority_engagement_opportunity_page &&
                       // subItem.id !== APP_ROUTES.target_lists &&
-                      user.page_view.includes(_item.id)
+                      user.page_view.includes(_item.id),
                   ).map((item) => {
                     return item.name ? (
                       <div
