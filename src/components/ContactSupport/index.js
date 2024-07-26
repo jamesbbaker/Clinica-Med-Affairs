@@ -6,8 +6,6 @@ import { AuthContext } from "../../context/AuthContext";
 
 const ContactSupport = ({ contactPage = false }) => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
     message: "",
   });
   const [loading, setLoading] = useState(false);
@@ -25,8 +23,6 @@ const ContactSupport = ({ contactPage = false }) => {
     e.preventDefault();
     setLoading(true);
     if (
-      formData.name.length === 0 ||
-      formData.email.length === 0 ||
       formData.message.length === 0
     ) {
       setLoading(false);
@@ -45,7 +41,7 @@ const ContactSupport = ({ contactPage = false }) => {
 
   return (
     <div
-      className={`w-full h-[60vh] flex items-center mx-auto mt-10  border ${
+      className={`w-full flex items-center mx-auto mt-10  border ${
         !contactPage ? "rounded-lg bg-slate-300" : "bg-white shadow-lg"
       } `}
     >
@@ -54,7 +50,7 @@ const ContactSupport = ({ contactPage = false }) => {
           Contact Support
         </h2>
         <form className="w-full" onSubmit={handleSubmit}>
-          <div className={`${contactPage && "w-[40%]"} mb-8`}>
+          {/* <div className={`${contactPage && "w-[40%]"} mb-8`}>
             <label
               className="block text-[#000] text-sm font-[500] mb-2"
               htmlFor="name"
@@ -89,13 +85,13 @@ const ContactSupport = ({ contactPage = false }) => {
               className="shadow appearance-none border-[#c4c4c4] rounded w-full py-2 px-3 text-[#000] leading-tight focus:outline-none focus:shadow-outline"
               placeholder="Your email"
             />
-          </div>
+          </div> */}
           <div className="mb-10">
             <label
               className="block text-[#000] text-sm font-[500] mb-2"
               htmlFor="message"
             >
-              Comment or Message
+          Comment or Message for Clinica AI Support Team
             </label>
             <textarea
               required

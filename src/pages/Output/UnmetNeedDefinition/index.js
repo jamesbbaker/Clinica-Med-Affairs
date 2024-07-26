@@ -12,7 +12,7 @@ import { IoArrowBackCircle } from "react-icons/io5";
 const UnmetNeedDefinitionData = {
   id1: {
     id: "id1",
-    title: "Key treatment decisions",
+    title: "Diagnosis",
     buttonText: "",
     description: "Lorem Ipsum",
     color: "#8CC9E6",
@@ -1538,536 +1538,566 @@ const UnmetNeedDefinition = ({ setShowPopup }) => {
   };
 
   return (
-    <div className={`${!modalId && "grid grid-cols-3"} w-full items-center`}>
-      {!modalId && (
-        <>
-         <div className="px-4 py-2 font-semibold text-lg">
-            Asthma Clinical Patient Treatment Trajectory
-          </div>
-          <div className="px-4 py-2 font-semibold text-lg">
-            Key Treatment Decisions
-          </div>
-          <div className="px-4 py-2 font-semibold text-lg">
-            Area of patient need
-          </div>
-         
-          <div className="col-span-1">
-            <img
-              src={unmetChart}
-              className="w-100 h-100 border-r-2 border-r-slate-900"
-              alt="unmetChart"
-            />
-          </div>
-          <div className="grid grid-cols-2 col-span-2 ">
-            {Object.keys(UnmetNeedDefinitionData).map((key, index) => {
-              return (
-                <div className="col-span-2 relative" key={key}>
-                  <div
-                    className={`bg-white px-4 ${
-                      UnmetNeedDefinitionData[key].buttonText ? "py-2" : "py-1"
-                    } gap-6 grid grid-cols-2 items-center rounded`}
-                  >
-                    <div className="flex col-span-1 items-center justify-between">
-                      <h2
-                        style={
-                          UnmetNeedDefinitionData[key].buttonText
-                            ? {}
-                            : { color: `${UnmetNeedDefinitionData[key].color}` }
-                        }
-                        className={`text-sm ${
-                          UnmetNeedDefinitionData[key].buttonText
-                            ? `font-medium text-gray-700`
-                            : `font-bold`
-                        } `}
-                      >
-                        {UnmetNeedDefinitionData[key].title}
-                      </h2>
+    <>
+      <div className="flex  flex-col custom:hidden items-center justify-center gap-2">
+        <div className="px-4 flex py-2 font-semibold text-lg">
+          Asthma Clinical Patient Treatment Trajectory
+        </div>
+        <div className="flex items-center w-full justify-center">
+          <img
+            src={unmetChart}
+            className="w-1/2 h-100"
+            alt="unmetChart"
+          />
+        </div>
+      </div>
+      <div
+        className={`${
+          !modalId && "grid custom:grid-cols-3 grid-cols-2"
+        } w-full items-center`}
+      >
+        {!modalId && (
+          <>
+            <div className="px-4 hidden custom:flex py-2 font-semibold text-lg">
+              Asthma Clinical Patient Treatment Trajectory
+            </div>
+            <div className="px-4 py-2 font-semibold text-lg">
+              Key Treatment Decisions
+            </div>
+            <div className="px-4 py-2 font-semibold text-lg">
+              Area of patient need
+            </div>
+
+            <div className="hidden custom:flex col-span-1">
+              <img
+                src={unmetChart}
+                className="w-100 h-100 border-r-2 border-r-slate-900"
+                alt="unmetChart"
+              />
+            </div>
+            <div className="grid grid-cols-2 col-span-2 ">
+              {Object.keys(UnmetNeedDefinitionData).map((key, index) => {
+                return (
+                  <div className="col-span-2 relative" key={key}>
+                    <div
+                      className={`bg-white px-4 ${
+                        UnmetNeedDefinitionData[key].buttonText
+                          ? "py-2"
+                          : "py-1"
+                      } gap-3 grid grid-cols-2 items-center rounded`}
+                    >
+                      <div className="flex col-span-1 items-center justify-between">
+                        <h2
+                          style={
+                            UnmetNeedDefinitionData[key].buttonText
+                              ? {}
+                              : {
+                                  color: `${UnmetNeedDefinitionData[key].color}`,
+                                }
+                          }
+                          className={`text-sm ${
+                            UnmetNeedDefinitionData[key].buttonText
+                              ? `font-medium text-gray-700`
+                              : `font-bold`
+                          } `}
+                        >
+                          {UnmetNeedDefinitionData[key].title}
+                        </h2>
+                      </div>
+                      {UnmetNeedDefinitionData[key].buttonText && (
+                        <button
+                          onMouseOver={() => mouseOver(key, index)}
+                          onMouseLeave={() =>
+                            setTooltip({ id: "", index: null })
+                          }
+                          onClick={() => handleClick(key)}
+                          style={{
+                            borderColor: UnmetNeedDefinitionData[key].color,
+                          }}
+                          className={`text-gray-700 hover:scale-105 text-sm transition-all ease-linear border-2 px-4 py-1`}
+                        >
+                          {UnmetNeedDefinitionData[key].buttonText}
+                          {showTooltip.index === index && nationalData && (
+                            <div className="absolute -top-[1rem] bg-[#fff] text-md text-[#000] border px-2 py-2">
+                              Number of Patients:{" "}
+                              {showTooltip
+                                ? showTooltip.id.toLocaleString()
+                                : ""}
+                            </div>
+                          )}
+                        </button>
+                      )}
                     </div>
-                    {UnmetNeedDefinitionData[key].buttonText && (
-                      <button
-                        onMouseOver={() => mouseOver(key, index)}
-                        onMouseLeave={() => setTooltip({ id: "", index: null })}
-                        onClick={() => handleClick(key)}
-                        style={{
-                          borderColor: UnmetNeedDefinitionData[key].color,
-                        }}
-                        className={`text-gray-700 hover:scale-105 transition-all ease-linear border-2 px-4 py-2`}
-                      >
-                        {UnmetNeedDefinitionData[key].buttonText}
-                        {showTooltip.index === index && nationalData && (
-                          <div className="absolute -top-[1rem] bg-[#fff] text-[#000] border px-2 py-2">
-                            Number of Patients:{" "}
-                            {showTooltip ? showTooltip.id.toLocaleString() : ""}
-                          </div>
-                        )}
-                      </button>
-                    )}
                   </div>
-                </div>
-              );
-            })}
-          </div>
-          
-        </>
-      )}
+                );
+              })}
+            </div>
+          </>
+        )}
 
-      {modalId && (
-        <div className="flex flex-col items-center w-full">
-          <div className="w-[100%] flex justify-between items-center bg-white  text-lg text-left py-8 font-[600] text-[#808080]">
-            {UnmetNeedDefinitionData[modalId].buttonText}
-            <button onClick={handleClose} className="flex items-center gap-1">
-              <IoArrowBackCircle size={30} />
-              Go Back
-            </button>
-          </div>
-          {dataValue && (
-            <div className="flex flex-col mb-2 items-start w-full">
-              <div>
-                Number of Patients: <strong>{dataValue.id}</strong>
-              </div>
-              <div>
-                Eligible Patients:{" "}
-                <strong>
-                  {Math.round(dataValue.id / (dataValue.percent / 100))}
-                </strong>
-              </div>
-              <div>
-                Percent of Eligible Patients with Unmet Need:{" "}
-                <strong>{Math.round(dataValue.percent)}%</strong>
-              </div>
+        {modalId && (
+          <div className="flex flex-col items-center w-full">
+            <div className="w-[100%] flex justify-between items-center bg-white  text-lg text-left py-8 font-[600] text-[#808080]">
+              {UnmetNeedDefinitionData[modalId].buttonText}
+              <button onClick={handleClose} className="flex items-center gap-1">
+                <IoArrowBackCircle size={30} />
+              </button>
             </div>
-          )}
-          
-          <p className=" w-full text-[#808080] pb-4 text-left text-sm">
-            {UnmetNeedDefinitionData[modalId].description}
-          </p>
-          {dataValue && modalId === "id18" && (
-            <div className="flex py-4 flex-col mb-2 items-start w-full">
-              <div>
-                {">900mg / year steroids on Double Therapy"}:{" "}
-                <strong>
-                  {nationalData["Number of ICS-LABA >900mg/year steroids"]}
-                </strong>
-              </div>
-              <div>
-                {">900mg / year steroids on Double Therapy percent"}:{" "}
-                <strong>
-                  {nationalData[
-                    "Percent of ICS-LABA >900mg/year steroids"
-                  ].toFixed(2)}
-                  %
-                </strong>
-              </div>
-              <div>
-                {"Excessive Steroids with <5mg / OCS day on Double Therapy"}:{" "}
-                <strong>
-                  {
-                    nationalData[
-                      "Number of ICS-LABA High Steroid Usage with ER visit"
-                    ]
-                  }
-                </strong>
-              </div>
-              <div>
-                {
-                  "Excessive Steroids with <5mg / OCS day on Double Therapy percent"
-                }
-                :{" "}
-                <strong>
-                  {nationalData[
-                    "Percent of ICS-LABA High Steroid Usage with ER visit"
-                  ].toFixed(2)}
-                  %
-                </strong>
-              </div>
-              <div>
-                {"Excessive steroids with >5mg / OCS day on Double Therapy"}:{" "}
-                <strong>
-                  {
-                    nationalData[
-                      "Number of ICS-LABA High Steroid Usage without ER visit"
-                    ]
-                  }
-                </strong>
-              </div>
-              <div>
-                {
-                  "Excessive steroids with >5mg / OCS day on Double Therapy percent"
-                }
-                :{" "}
-                <strong>
-                  {nationalData[
-                    "Percent of ICS-LABA High Steroid Usage without ER visit"
-                  ].toFixed(2)}
-                  %
-                </strong>
-              </div>
-            </div>
-          )}
-           {dataValue && modalId === "id8" && (
-            <div className="flex py-4 flex-col mb-2 items-start w-full">
-              <div>
-                {"Failure to Escalate 3+ Exacerbations on Double Therapy"}:{" "}
-                <strong>
-                  {nationalData["Number of Failure To Escalate With 3 Exacerbations"]}
-                </strong>
-              </div>
-              <div>
-                {"Failure to Escalate 3+ Exacerbations on Double Therapy percent"}:{" "}
-                <strong>
-                  {nationalData[
-                    "Percent of Failure To Escalate With 3 Exacerbations"
-                  ].toFixed(2)}
-                  %
-                </strong>
-              </div>
-            </div>
-          )}
-          <div className="w-full pb-10 flex flex-col gap-2 items-center bg-white">
-            {statsData6 && (
-              <div className="h-[30rem] flex items-center justify-center w-full">
-                <Table
-                  initialState={{ pageSize: 10, pageIndex: 0 }}
-                  marginTop={0}
-                  Title="No treatment"
-                  activeCells={false}
-                  showSelectionBtns={false}
-                  TableData={statsData6}
-                  TableColummns={Table_Columns_3}
-                />
-              </div>
-            )}
-            {statsData10 && (
-              <div className="h-[30rem] flex items-center justify-center w-full">
-                <Table
-                  initialState={{ pageSize: 10, pageIndex: 0 }}
-                  marginTop={0}
-                  Title="Testing Counts"
-                  activeCells={false}
-                  showSelectionBtns={false}
-                  TableData={statsData10.data}
-                  TableColummns={statsData10.headers.map((item, index) => ({
-                    Header: item,
-                    accessor: item,
-                  }))}
-                />
-              </div>
-            )}
-            {statsData7 && (
-              <div className="h-[30rem] flex items-center justify-center w-full">
-                <Table
-                  initialState={{ pageSize: 10, pageIndex: 0 }}
-                  marginTop={0}
-                  Title="Testing Counts"
-                  activeCells={false}
-                  showSelectionBtns={false}
-                  TableData={statsData7.data}
-                  TableColummns={statsData7.headers.map((item, index) => ({
-                    Header: item,
-                    accessor: item,
-                  }))}
-                />
-              </div>
-            )}
-            {statsData8 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Delay from Diagnosis to Spirometry testing
+            {dataValue && (
+              <div className="flex flex-col mb-2 items-start w-full">
+                <div>
+                  Number of Patients: <strong>{dataValue.id}</strong>
                 </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData8}
-                  options={chart_8_options}
-                />
-              </>
-            )}
-            {statsData13 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  First Year Compliance to Therapy
+                <div>
+                  Eligible Patients:{" "}
+                  <strong>
+                    {Math.round(dataValue.id / (dataValue.percent / 100))}
+                  </strong>
                 </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData13}
-                  options={compliance_options}
-                />
-              </>
-            )}
-            {statsData15 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  First Year Compliance to Therapy
+                <div>
+                  Percent of Eligible Patients with Unmet Need:{" "}
+                  <strong>{Math.round(dataValue.percent)}%</strong>
                 </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData15}
-                  options={compliance_options}
-                />
-              </>
-            )}
-            {statsData18 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  First Year Compliance to Therapy
-                </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData18}
-                  options={compliance_options}
-                />
-              </>
-            )}
-            {statsData14 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Persistence on Therapy
-                </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData14}
-                  options={persistence_options}
-                />
-              </>
-            )}
-            {statsData16 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Persistence on Therapy
-                </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData16}
-                  options={persistence_options}
-                />
-              </>
-            )}
-            {statsData20 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Days Supply in first Year after receiving OCS (Single
-                  patients)'
-                </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData20}
-                  options={excessive_options}
-                />
-              </>
-            )}
-            {statsData21 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Distinct Calendar Months with OCS Prescription (Single
-                  patients)
-                </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData21}
-                  options={excessive_options_2}
-                />
-              </>
+              </div>
             )}
 
-            {statsData19 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Persistence on Therapy
+            <p className=" w-full text-[#808080] pb-4 text-left text-sm">
+              {UnmetNeedDefinitionData[modalId].description}
+            </p>
+            {dataValue && modalId === "id18" && (
+              <div className="flex py-4 flex-col mb-2 items-start w-full">
+                <div>
+                  {">900mg / year steroids on Double Therapy"}:{" "}
+                  <strong>
+                    {nationalData["Number of ICS-LABA >900mg/year steroids"]}
+                  </strong>
                 </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData19}
-                  options={persistence_options}
-                />
-              </>
-            )}
-            {statsData11 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Delay between Exacerbation and Escalation
+                <div>
+                  {">900mg / year steroids on Double Therapy percent"}:{" "}
+                  <strong>
+                    {nationalData[
+                      "Percent of ICS-LABA >900mg/year steroids"
+                    ].toFixed(2)}
+                    %
+                  </strong>
                 </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData11}
-                  options={chart_10_options}
-                />
-              </>
-            )}
-            {statsData12 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Delay between Exacerbation and Escalation
+                <div>
+                  {"Excessive Steroids with <5mg / OCS day on Double Therapy"}:{" "}
+                  <strong>
+                    {
+                      nationalData[
+                        "Number of ICS-LABA High Steroid Usage with ER visit"
+                      ]
+                    }
+                  </strong>
                 </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData12}
-                  options={chart_10_options}
-                />
-              </>
-            )}
-            {statsData9 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Delay from Diagnosis to EOS / CBC testing
+                <div>
+                  {
+                    "Excessive Steroids with <5mg / OCS day on Double Therapy percent"
+                  }
+                  :{" "}
+                  <strong>
+                    {nationalData[
+                      "Percent of ICS-LABA High Steroid Usage with ER visit"
+                    ].toFixed(2)}
+                    %
+                  </strong>
                 </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData9}
-                  options={chart_9_options}
-                />
-              </>
-            )}
-            {statsData5 && (
-              <div className="h-[30rem] flex items-center justify-center w-full">
-                <Table
-                  initialState={{ pageSize: 10, pageIndex: 0 }}
-                  marginTop={0}
-                  Title="Summary Table"
-                  activeCells={false}
-                  showSelectionBtns={false}
-                  TableData={statsData5}
-                  TableColummns={Table_Columns_3}
-                />
+                <div>
+                  {"Excessive steroids with >5mg / OCS day on Double Therapy"}:{" "}
+                  <strong>
+                    {
+                      nationalData[
+                        "Number of ICS-LABA High Steroid Usage without ER visit"
+                      ]
+                    }
+                  </strong>
+                </div>
+                <div>
+                  {
+                    "Excessive steroids with >5mg / OCS day on Double Therapy percent"
+                  }
+                  :{" "}
+                  <strong>
+                    {nationalData[
+                      "Percent of ICS-LABA High Steroid Usage without ER visit"
+                    ].toFixed(2)}
+                    %
+                  </strong>
+                </div>
               </div>
             )}
-            {statsData1 && (
-              <LineChart
-                height={window.innerWidth > 1400 ? 120 : 80}
-                arbitrary={false}
-                data={statsData1}
-                options={Line_options_2}
-              />
+            {dataValue && modalId === "id8" && (
+              <div className="flex py-4 flex-col mb-2 items-start w-full">
+                <div>
+                  {"Failure to Escalate 3+ Exacerbations on Double Therapy"}:{" "}
+                  <strong>
+                    {
+                      nationalData[
+                        "Number of Failure To Escalate With 3 Exacerbations"
+                      ]
+                    }
+                  </strong>
+                </div>
+                <div>
+                  {
+                    "Failure to Escalate 3+ Exacerbations on Double Therapy percent"
+                  }
+                  :{" "}
+                  <strong>
+                    {nationalData[
+                      "Percent of Failure To Escalate With 3 Exacerbations"
+                    ].toFixed(2)}
+                    %
+                  </strong>
+                </div>
+              </div>
             )}
-            {statsData2 && (
-              <BarChart
-                height={window.innerWidth > 1400 ? 120 : 80}
-                data={statsData2}
-                options={_options}
-              />
-            )}
-            {statsData4 && (
-              <div className="my-10 w-full h-auto">
+            <div className="w-full pb-10 flex flex-col gap-2 items-center bg-white">
+              {statsData6 && (
+                <div className="h-[30rem] flex items-center justify-center w-full">
+                  <Table
+                    initialState={{ pageSize: 10, pageIndex: 0 }}
+                    marginTop={0}
+                    Title="No treatment"
+                    activeCells={false}
+                    showSelectionBtns={false}
+                    TableData={statsData6}
+                    TableColummns={Table_Columns_3}
+                  />
+                </div>
+              )}
+              {statsData10 && (
+                <div className="h-[30rem] flex items-center justify-center w-full">
+                  <Table
+                    initialState={{ pageSize: 10, pageIndex: 0 }}
+                    marginTop={0}
+                    Title="Testing Counts"
+                    activeCells={false}
+                    showSelectionBtns={false}
+                    TableData={statsData10.data}
+                    TableColummns={statsData10.headers.map((item, index) => ({
+                      Header: item,
+                      accessor: item,
+                    }))}
+                  />
+                </div>
+              )}
+              {statsData7 && (
+                <div className="h-[30rem] flex items-center justify-center w-full">
+                  <Table
+                    initialState={{ pageSize: 10, pageIndex: 0 }}
+                    marginTop={0}
+                    Title="Testing Counts"
+                    activeCells={false}
+                    showSelectionBtns={false}
+                    TableData={statsData7.data}
+                    TableColummns={statsData7.headers.map((item, index) => ({
+                      Header: item,
+                      accessor: item,
+                    }))}
+                  />
+                </div>
+              )}
+              {statsData8 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Delay from Diagnosis to Spirometry testing
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData8}
+                    options={chart_8_options}
+                  />
+                </>
+              )}
+              {statsData13 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    First Year Compliance to Therapy
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData13}
+                    options={compliance_options}
+                  />
+                </>
+              )}
+              {statsData15 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    First Year Compliance to Therapy
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData15}
+                    options={compliance_options}
+                  />
+                </>
+              )}
+              {statsData18 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    First Year Compliance to Therapy
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData18}
+                    options={compliance_options}
+                  />
+                </>
+              )}
+              {statsData14 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Persistence on Therapy
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData14}
+                    options={persistence_options}
+                  />
+                </>
+              )}
+              {statsData16 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Persistence on Therapy
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData16}
+                    options={persistence_options}
+                  />
+                </>
+              )}
+              {statsData20 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Days Supply in first Year after receiving OCS (Single
+                    patients)'
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData20}
+                    options={excessive_options}
+                  />
+                </>
+              )}
+              {statsData21 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Distinct Calendar Months with OCS Prescription (Single
+                    patients)
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData21}
+                    options={excessive_options_2}
+                  />
+                </>
+              )}
+
+              {statsData19 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Persistence on Therapy
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData19}
+                    options={persistence_options}
+                  />
+                </>
+              )}
+              {statsData11 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Delay between Exacerbation and Escalation
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData11}
+                    options={chart_10_options}
+                  />
+                </>
+              )}
+              {statsData12 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Delay between Exacerbation and Escalation
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData12}
+                    options={chart_10_options}
+                  />
+                </>
+              )}
+              {statsData9 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Delay from Diagnosis to EOS / CBC testing
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData9}
+                    options={chart_9_options}
+                  />
+                </>
+              )}
+              {statsData5 && (
+                <div className="h-[30rem] flex items-center justify-center w-full">
+                  <Table
+                    initialState={{ pageSize: 10, pageIndex: 0 }}
+                    marginTop={0}
+                    Title="Summary Table"
+                    activeCells={false}
+                    showSelectionBtns={false}
+                    TableData={statsData5}
+                    TableColummns={Table_Columns_3}
+                  />
+                </div>
+              )}
+              {statsData1 && (
+                <LineChart
+                  height={window.innerWidth > 1400 ? 120 : 80}
+                  arbitrary={false}
+                  data={statsData1}
+                  options={Line_options_2}
+                />
+              )}
+              {statsData2 && (
+                <BarChart
+                  height={window.innerWidth > 1400 ? 120 : 80}
+                  data={statsData2}
+                  options={_options}
+                />
+              )}
+              {statsData4 && (
+                <div className="my-10 w-full h-auto">
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 80 : 90}
+                    data={statsData4}
+                    options={chart_3_options}
+                  />
+                </div>
+              )}
+              {statsData3 && (
                 <BarChart
                   height={window.innerWidth > 1400 ? 80 : 90}
-                  data={statsData4}
-                  options={chart_3_options}
+                  data={statsData3}
+                  options={chart_2_options}
                 />
-              </div>
-            )}
-            {statsData3 && (
-              <BarChart
-                height={window.innerWidth > 1400 ? 80 : 90}
-                data={statsData3}
-                options={chart_2_options}
-              />
-            )}
-            {statsData22 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Days Supply in first Year after receiving OCS (Double
-                  patients)'
-                </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData22}
-                  options={excessive_double_2}
-                />
-              </>
-            )}
-            {statsData23 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Distinct Calendar Months with OCS Prescription (Double
-                  patients)
-                </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData23}
-                  options={excessive_options_2}
-                />
-              </>
-            )}
-            {statsData24 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Number of patients by distinct OCS prescriptions in year on
-                  treatment (Single)
-                </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData24}
-                  options={excessive_ocs_options_2}
-                />
-              </>
-            )}
-            {statsData25 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Number of patients by distinct OCS prescriptions in year on
-                  treatment (Double)
-                </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData25}
-                  options={excessive_ocs_options_2}
-                />
-              </>
-            )}
-            {statsData26 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Number of patients by average MG per days supply of OCS
-                  prescriptions (Single)
-                </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData26}
-                  options={optionsmgdays}
-                />
-              </>
-            )}
-            {statsData27 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Number of patients by average MG per days supply of OCS
-                  prescriptions (Double)
-                </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData27}
-                  options={optionsmgdays}
-                />
-              </>
-            )}
-            {statsData28 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Delay between Triple therapy and Biologic
-                </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData28}
-                  options={icslabalama_monoclonal_hist}
-                />
-              </>
-            )}
-            {statsData29 && (
-              <>
-                <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
-                  Delay between Triple therapy and Biologic Patients first
-                  treated after 2021
-                </div>
-                <BarChart
-                  height={window.innerWidth > 1400 ? 120 : 80}
-                  data={statsData29}
-                  options={icslabalama_monoclonal_hist}
-                />
-              </>
-            )}
+              )}
+              {statsData22 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Days Supply in first Year after receiving OCS (Double
+                    patients)'
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData22}
+                    options={excessive_double_2}
+                  />
+                </>
+              )}
+              {statsData23 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Distinct Calendar Months with OCS Prescription (Double
+                    patients)
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData23}
+                    options={excessive_options_2}
+                  />
+                </>
+              )}
+              {statsData24 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Number of patients by distinct OCS prescriptions in year on
+                    treatment (Single)
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData24}
+                    options={excessive_ocs_options_2}
+                  />
+                </>
+              )}
+              {statsData25 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Number of patients by distinct OCS prescriptions in year on
+                    treatment (Double)
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData25}
+                    options={excessive_ocs_options_2}
+                  />
+                </>
+              )}
+              {statsData26 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Number of patients by average MG per days supply of OCS
+                    prescriptions (Single)
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData26}
+                    options={optionsmgdays}
+                  />
+                </>
+              )}
+              {statsData27 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Number of patients by average MG per days supply of OCS
+                    prescriptions (Double)
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData27}
+                    options={optionsmgdays}
+                  />
+                </>
+              )}
+              {statsData28 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Delay between Triple therapy and Biologic
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData28}
+                    options={icslabalama_monoclonal_hist}
+                  />
+                </>
+              )}
+              {statsData29 && (
+                <>
+                  <div className="flex font-[500] text-left w-full mt-2 text-[#808080]">
+                    Delay between Triple therapy and Biologic Patients first
+                    treated after 2021
+                  </div>
+                  <BarChart
+                    height={window.innerWidth > 1400 ? 120 : 80}
+                    data={statsData29}
+                    options={icslabalama_monoclonal_hist}
+                  />
+                </>
+              )}
+            </div>
           </div>
-         
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 };
 

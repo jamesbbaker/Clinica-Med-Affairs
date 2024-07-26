@@ -192,14 +192,14 @@ const Sidebar = () => {
                     if (
                       item.name === "outputs" &&
                       user.page_view &&
-                      subItem.id !== APP_ROUTES.hcp_insights &&
-                      subItem.id !== APP_ROUTES.medical_affair_toolbox &&
-                      subItem.id !== APP_ROUTES.payer_variation &&
-                      subItem.id !== APP_ROUTES.help &&
-                      subItem.id !== APP_ROUTES.testing &&
-                      subItem.id !==
-                        APP_ROUTES.priority_engagement_opportunity_page &&
-                      subItem.id !== APP_ROUTES.target_lists &&
+                      // subItem.id !== APP_ROUTES.hcp_insights &&
+                      // subItem.id !== APP_ROUTES.medical_affair_toolbox &&
+                      // subItem.id !== APP_ROUTES.payer_variation &&
+                      // subItem.id !== APP_ROUTES.help &&
+                      // subItem.id !== APP_ROUTES.testing &&
+                      // subItem.id !==
+                      //   APP_ROUTES.priority_engagement_opportunity_page &&
+                      // subItem.id !== APP_ROUTES.target_lists &&
                       !user.page_view.includes(subItem.id)
                     ) {
                       return false;
@@ -232,7 +232,7 @@ const Sidebar = () => {
                           currentMenu === subItem.id
                             ? "bg-slate-50"
                             : "hover:bg-slate-200 hover:bg-opacity-40 "
-                        } flex cursor-pointer relative rounded-md transition-all ease-in-out duration-200 px-2 py-2 font-semibold items-center gap-2  w-full text-left`}
+                        } flex cursor-pointer relative rounded-md transition-all ease-in-out duration-200 justify-center custom:justify-between px-2 py-2 font-semibold items-center gap-2  w-full text-left`}
                       >
                         <div className="w-full md:w-auto grid place-content-center">
                           <subItem.icon color={item.color} />
@@ -244,7 +244,7 @@ const Sidebar = () => {
                             APP_ROUTES.patient_opportunity_mapping_and_strategy) && (
                           <div className="absolute rounded-[20px] left-0 h-[0.25rem] w-[100%] -top-[0.5rem] bg-[#c4c4c4]"></div>
                         )}
-                        <div className="w-full hidden md:block">
+                        <div className="w-full hidden custom:block">
                           {subItem.name}
                         </div>
                       </div>

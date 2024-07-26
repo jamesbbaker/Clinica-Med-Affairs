@@ -53,9 +53,8 @@ const Prioitize = () => {
         <div className="mb-6 w-full flex justify-between items-center font-[500]">
           <h2>Prioritize Unmet Needs</h2>
         </div>
-        <div className="flex w-full justify-between items-center gap-6">
+        <div className="flex w-full flex-col custom:flex-row justify-between custom:items-center items-start gap-6">
           <MultiSelect
-        
             ItemRenderer={CustomOptionRenderer}
             labelledBy=""
             options={filterOptions.map((item) => ({

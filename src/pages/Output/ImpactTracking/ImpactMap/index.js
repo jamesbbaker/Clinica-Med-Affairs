@@ -316,7 +316,7 @@ const ImpactMap = ({
 
         let minVal = getMinValue(updatedRegionsGeoJSON);
         let maxVal = getMaxValue(updatedRegionsGeoJSON);
-        let midValue = (maxVal - Math.abs(minVal)) / 2;
+        let midValue = 0//(maxVal - Math.abs(minVal)) / 2;
 
         map.setPaintProperty("regions-layer", "fill-color", [
           "interpolate",
@@ -530,7 +530,7 @@ const ImpactMap = ({
 
         let minVal = getMinValue(regionsGeoJSON);
         let maxVal = getMaxValue(regionsGeoJSON);
-        let midValue = (maxVal - Math.abs(minVal)) / 2;
+        let midValue = 0//(maxVal - Math.abs(minVal)) / 2;
 
         map.addLayer(
           {
@@ -613,7 +613,7 @@ const ImpactMap = ({
 
         let minValCountry = getMinValue(generateJSON);
         let maxValCountry = getMaxValue(generateJSON);
-        let midValueCountry = (maxVal - Math.abs(minVal)) / 2;
+        let midValueCountry = 0// (maxVal - Math.abs(minVal)) / 2;
 
         map.addLayer({
           id: "countries-layer",
@@ -1086,10 +1086,9 @@ const ImpactMap = ({
         )}
         {region !== null && <button
           onClick={handleReset}
-          className="flex ml-auto py-4 items-center gap-1"
+          className="flex mr-auto py-4 items-center gap-1"
         >
           <IoArrowBackCircle size={30} />
-          Go Back
         </button>}
         <div ref={mapContainerRef} style={{ width: "100%", height: "70vh" }} />
         {tableData && false && (

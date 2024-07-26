@@ -236,7 +236,7 @@ const BarChartPopup = ({
     lineDataFilter.sort((a, b) => new Date(a.Quarter) - new Date(b.Quarter));
     let _labels = lineDataFilter.map((item) => convertToQuarter(item.Quarter));
 
-    console.log(unmetNeed)
+    console.log(unmetNeed);
     let data = {
       chart1: {
         labels: _labels,
@@ -478,7 +478,23 @@ const BarChartPopup = ({
         !InstitutionalTreeMap && `items-start`
       } gap-4`}
     >
-       <ToastContainer />
+      <ToastContainer />
+      <div className="flex w-full justify-between items-center">
+      <button
+        onClick={closeModal}
+        className="flex-end  text-md rounded-sm"
+      >
+        <IoArrowBackCircle size={30} />
+      </button>
+      <div className="flex ml-auto items-center gap-1">
+        <PrimaryBtn
+          disabled={loading}
+          className={"px-4 text-[#fff]"}
+          text={"Save to List"}
+          onClick={handleSave}
+        />
+      </div>
+      </div>
       <div
         style={{
           justifyContent: payerData && !payer ? "space-between" : "flex-start",
@@ -514,82 +530,82 @@ const BarChartPopup = ({
                 </strong>
               </div>
             </div>
-            {insititutional && (
-              <div className="flex items-center gap-1">
-                <PrimaryBtn
-                  disabled={loading}
-                  className={"px-4 text-[#fff]"}
-                  text={"Save to List"}
-                  onClick={handleSave}
-                />
-                <button
-                  onClick={closeModal}
-                  className="flex-end  text-md rounded-sm"
-                >
-                  <IoArrowBackCircle size={50} />
-                </button>
-              </div>
-            )}
           </div>
         ) : (
           <>
-            <div className="flex items-center justify-between w-full">
-              <div className="flex items-center">
-                Name:{" "}
-                <strong className="ml-2">
-                  {payerData && !payer
-                    ? data1[0]["Item"].split("_")[0]
-                    : payer
-                    ? data1["0"]["Payer Name"]
-                    : data1["0"]["Assigned Physician Name"]}
-                </strong>
-              </div>
-              {/* {type === "HCP" && <div className="flex items-center gap-3">
-                HCP Name: <InputField  input={type: "text"} /></div>} */}
-              {!insititutional && (
-                <div className="flex items-center gap-1">
-                  <PrimaryBtn
-                    disabled={loading}
-                    className={"px-4 text-[#fff]"}
-                    text={"Save to List"}
-                    onClick={handleSave}
-                  />
-                  <button
-                    onClick={closeModal}
-                    className="flex-end text-md rounded-sm"
-                  >
-                    <IoArrowBackCircle size={50} />
-                  </button>
-                </div>
-              )}
-            </div>
-            {payer && (
-              <div className="flex items-center">
-                Plan name:{" "}
-                <strong className="ml-2">
-                  {payerData && !payer
-                    ? data1[0]["Item"].split("_")[0]
-                    : payer
-                    ? data1["0"]["Plan Name"]
-                    : data1["0"]["Assigned Physician Name"]}
-                </strong>
-              </div>
-            )}
+            <div className="flex w-full justify-between items-start">
+              <div className="flex w-1/2 flex-col items-start">
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center">
+                    Name:{" "}
+                    <strong className="ml-2">
+                      {payerData && !payer
+                        ? data1[0]["Item"].split("_")[0]
+                        : payer
+                        ? data1["0"]["Payer Name"]
+                        : data1["0"]["Assigned Physician Name"]}
+                    </strong>
+                  </div>
 
-            {!payerData && (
-              <>
-                <div className="flex items-center">
-                  Primary Specialty Description:{" "}
-                  <strong className="ml-2">
-                    {data1["0"]["Primary Specialty Description"]}
-                  </strong>
+                  {/* {type === "HCP" && <div className="flex items-center gap-3">
+                HCP Name: <InputField  input={type: "text"} /></div>} */}
                 </div>
-                <div className="flex items-center">
-                  Region:{" "}
-                  <strong className="ml-2">{data1["0"]["Region"]}</strong>
-                </div>
-              </>
-            )}
+                {!payer && !insititutional && (
+                  <div className="flex flex-col items-start">
+                    <div className="flex items-center">
+                      Hospital / Clinic:{" "}
+                      <strong className="ml-2">{data1["0"]["Hospital"]}</strong>
+                    </div>
+                    <div className="flex items-center">
+                      Health System / IDN:{" "}
+                      <strong className="ml-2">{data1["0"]["System"]}</strong>
+                    </div>
+                  </div>
+                )}
+                {payer && (
+                  <div className="flex items-center">
+                    Plan name:{" "}
+                    <strong className="ml-2">
+                      {payerData && !payer
+                        ? data1[0]["Item"].split("_")[0]
+                        : payer
+                        ? data1["0"]["Plan Name"]
+                        : data1["0"]["Assigned Physician Name"]}
+                    </strong>
+                  </div>
+                )}
+
+                {!payerData && (
+                  <>
+                    <div className="flex items-center">
+                      Primary Specialty Description:{" "}
+                      <strong className="ml-2">
+                        {data1["0"]["Primary Specialty Description"]}
+                      </strong>
+                    </div>
+                  </>
+                )}
+              </div>
+              <div className="flex flex-col w-1/2 gap-3 items-start justify-between">
+                {data1 && data1["0"] && data1["0"]["Region"] && (
+                  <div className="flex items-center">
+                    Region:{" "}
+                    <strong className="ml-2">{data1["0"]["Region"]}</strong>
+                  </div>
+                )}
+                {data1["0"] && (
+                  <div className="flex items-center">
+                    State Name:{" "}
+                    <strong className="ml-2">{data1["0"]["State Name"]}</strong>
+                  </div>
+                )}
+                {data1["0"] && (
+                  <div className="flex items-center">
+                    City: <strong className="ml-2">{data1["0"]["City"]}</strong>
+                  </div>
+                )}
+              </div>
+            </div>
           </>
         )}
       </div>
@@ -655,7 +671,7 @@ const BarChartPopup = ({
           <div className="grid  w-full grid-cols-2 items-center">
             {lineChartData.chart1 && (
               <LineChart
-              height={150}
+                height={150}
                 options={lineChartOptions}
                 data={lineChartData.chart1}
                 arbitrary={false}
@@ -663,7 +679,7 @@ const BarChartPopup = ({
             )}
             {lineChartData.chart2 && (
               <LineChart
-              height={150}
+                height={150}
                 options={lineChartOptions2}
                 data={lineChartData.chart2}
                 arbitrary={false}

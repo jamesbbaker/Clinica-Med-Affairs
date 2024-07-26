@@ -489,7 +489,7 @@ const PatientOpportunityMapping = ({
         <div style={{ opacity: loading ? 0 : 1 }}>
           {!patientPage && (
             <>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col items-start justify-between">
                 <div className="flex mb-6 items-center gap-8">
                   <CustomDropdown
                     buttonWidth="40rem"
@@ -514,10 +514,9 @@ const PatientOpportunityMapping = ({
                 {currentLevel !== "region" && (
                   <button
                     onClick={handleReset}
-                    className="flex items-center gap-1"
+                    className="flex items-center mb-4 gap-1"
                   >
                     <IoArrowBackCircle size={30} />
-                    Go Back
                   </button>
                 )}
               </div>
@@ -642,7 +641,7 @@ const PatientOpportunityMapping = ({
                     }}
                   />
                 </div>
-                <div className="w-[50%]">
+                <div className="custom:w-[50%] w-[100%]">
                   <BarChart
                     options={options}
                     label={`Diagnosis and Investigation (N = ${formatNumber(
@@ -652,7 +651,7 @@ const PatientOpportunityMapping = ({
                     data={data1.mapValue1}
                   />
                 </div>
-                <div className="w-[50%]">
+                <div className="custom:w-[50%] w-[100%]">
                   <BarChart
                     options={options}
                     label={`Treatment (ICS or beta-agonist) (N = ${formatNumber(
@@ -662,7 +661,7 @@ const PatientOpportunityMapping = ({
                     data={data1.mapValue3}
                   />
                 </div>
-                <div className="w-[50%]">
+                <div className="custom:w-[50%] w-[100%]">
                   <BarChart
                     options={options}
                     label={`Treatment (ICS-LABA) (N = ${formatNumber(
@@ -672,7 +671,7 @@ const PatientOpportunityMapping = ({
                     data={data1.mapValue4}
                   />
                 </div>
-                <div className="w-[50%]">
+                <div className="custom:w-[50%] w-[100%]">
                   <BarChart
                     options={options}
                     label={`Treatment (ICS-LABA-LAMA) (N = ${formatNumber(
