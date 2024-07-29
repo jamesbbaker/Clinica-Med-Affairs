@@ -142,6 +142,9 @@ th {
   background: linear-gradient(to bottom, #1abc9c, #3498db);
 }
 
+.hero-card-5 {
+  background: linear-gradient(to bottom, #9b59b6, #1abc9c);
+}
 
 @keyframes clipAnimation {
   0%{ 

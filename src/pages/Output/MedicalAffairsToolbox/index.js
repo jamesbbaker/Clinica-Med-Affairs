@@ -128,8 +128,8 @@ const MedicalAffairToolbox = ({
           dispatch({
             type: actions.handleUpdate,
             payload: {
-              regionList: _data.region_list,
-              primaryList: _data.specialty_list,
+              regionList: _data.region_list.sort(),
+              primaryList: _data.specialty_list.sort(),
             },
           });
           let data = handleChartData(_data.data);

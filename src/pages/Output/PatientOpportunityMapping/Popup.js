@@ -214,10 +214,10 @@ const BarChartPopup = ({
 
   useEffect(() => {
     if (selectedUnmet && selectedUnmet.length > 0) {
-      let defaultUnmet = selectedUnmet.find(
+      let defaultUnmet = selectedUnmet.filter(
         (item) => !item.value.toLowerCase().includes("percent")
       );
-      setUnmetNeed([defaultUnmet]);
+      setUnmetNeed([...defaultUnmet]);
     }
   }, [selectedUnmet]);
   const [lineChartData, setLineChartData] = useState(null);

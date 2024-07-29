@@ -242,6 +242,7 @@ const InstitutionalVariation = () => {
   };
 
   const handleToggleFilter = (e) => {
+    console.log(e, "er")
     setToggleFilter(e);
     let secondlevelData = rawData.filter(
       (item) => item.Parent && item.Parent !== "GLOBAL"
@@ -313,6 +314,7 @@ const InstitutionalVariation = () => {
         if (res) {
           let _data = JSON.parse(res.replaceAll("NaN", 0));
           if (_data) {
+  
             setRawData(_data.data);
             let _summarymetrics = {};
             _data.summary_metrics.forEach(
@@ -332,7 +334,7 @@ const InstitutionalVariation = () => {
             // setSpecialityOptions(
             //   _data.specialty_list.filter((item) => isNaN(item))
             // );
-            setRegionOptions(_data.region_list.filter((item) => isNaN(item)));
+            setRegionOptions(_data.region_list.filter((item) => isNaN(item)).sort());
 
             handleTreeData(_data.data, toggleFilter);
             setLoading(false);

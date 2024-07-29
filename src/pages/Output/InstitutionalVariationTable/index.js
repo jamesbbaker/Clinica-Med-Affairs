@@ -441,11 +441,11 @@ const InstitutionalVariationTable = ({
           settotalPage(Math.floor(_data.total / currentSize));
           const responseData = _data.data;
           // setSpecialityList(_data.specialty_list);
-          setRegionList(_data.region_list);
+          setRegionList(_data.region_list.sort());
           //   setorganisationList(_data.organization_list);
-          setCleanedAffilitionList(_data.cleaned_affiliation_list);
-          setCleanedIDList(_data.cleaned_idn_list);
-          setstateNameList(_data.state_name_list);
+          setCleanedAffilitionList(_data.cleaned_affiliation_list.sort());
+          setCleanedIDList(_data.cleaned_idn_list.sort());
+          setstateNameList(_data.state_name_list.sort());
           const newData = responseData.map((item) => {
             return {
               ...item,

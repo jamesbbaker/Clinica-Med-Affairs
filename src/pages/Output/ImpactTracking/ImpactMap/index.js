@@ -316,7 +316,7 @@ const ImpactMap = ({
 
         let minVal = getMinValue(updatedRegionsGeoJSON);
         let maxVal = getMaxValue(updatedRegionsGeoJSON);
-        let midValue = 0//(maxVal - Math.abs(minVal)) / 2;
+        let midValue = (maxVal - Math.abs(minVal)) / 2;
 
         map.setPaintProperty("regions-layer", "fill-color", [
           "interpolate",
@@ -530,7 +530,7 @@ const ImpactMap = ({
 
         let minVal = getMinValue(regionsGeoJSON);
         let maxVal = getMaxValue(regionsGeoJSON);
-        let midValue = 0//(maxVal - Math.abs(minVal)) / 2;
+        let midValue = (maxVal - Math.abs(minVal)) / 2;
 
         map.addLayer(
           {
@@ -613,7 +613,7 @@ const ImpactMap = ({
 
         let minValCountry = getMinValue(generateJSON);
         let maxValCountry = getMaxValue(generateJSON);
-        let midValueCountry = 0// (maxVal - Math.abs(minVal)) / 2;
+        let midValueCountry = (maxVal - Math.abs(minVal)) / 2;
 
         map.addLayer({
           id: "countries-layer",
@@ -998,7 +998,6 @@ const ImpactMap = ({
         <div className="flex my-4 items-center gap-4">
           <CustomDropdown
             showColors
-            
           buttonWidth="40rem"
             labelClassName="mb-0"
             className={"flex w-[40rem] mb-4 items-center gap-2"}
