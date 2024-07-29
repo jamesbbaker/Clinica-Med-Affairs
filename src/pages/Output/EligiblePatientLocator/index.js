@@ -394,10 +394,10 @@ const EligiblePatientLocator = ({
             if (_data) {
               settotalPage(Math.floor(_data.total / currentSize));
               const responseData = _data.data;
-              setSpecialityList(_data.specialty_list);
-              setRegionList(_data.region_list);
-              setorganisationList(_data.organization_list);
-              setstateNameList(_data.state_name_list);
+              setSpecialityList(_data.specialty_list.sort());
+              setRegionList(_data.region_list.sort());
+              setorganisationList(_data.organization_list.sort());
+              setstateNameList(_data.state_name_list.sort());
               const newData = responseData.map((item) => {
                 return {
                   ...item,
@@ -418,10 +418,10 @@ const EligiblePatientLocator = ({
             if (_data) {
               settotalPage(Math.floor(_data.total / currentSize));
               const responseData = _data.data;
-              setSpecialityList(_data.specialty_list);
-              setRegionList(_data.region_list);
-              setorganisationList(_data.organization_list);
-              setstateNameList(_data.state_name_list);
+              setSpecialityList(_data.specialty_list.sort());
+              setRegionList(_data.region_list.sort());
+              setorganisationList(_data.organization_list.sort());
+              setstateNameList(_data.state_name_list.sort());
               const newData = responseData.map((item) => {
                 return {
                   ...item,

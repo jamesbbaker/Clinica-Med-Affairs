@@ -1,10 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 import { AuthContext } from "../../context/AuthContext";
-
 import Header from "../../components/Header";
-
 import "./index.css";
 
 const DashboardLayout = () => {

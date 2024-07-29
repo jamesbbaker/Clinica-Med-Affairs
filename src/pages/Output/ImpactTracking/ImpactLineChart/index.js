@@ -152,10 +152,10 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
 
   useEffect(() => {
     if (selectedUnmet && selectedUnmet.length > 0) {
-      let defaultUnmet = selectedUnmet.find(
+      let defaultUnmet = selectedUnmet.filter(
         (item) => !item.value.toLowerCase().includes("percent")
       );
-      setUnmetNeed([defaultUnmet]);
+      setUnmetNeed([...defaultUnmet]);
     }
   }, []);
 
@@ -186,7 +186,7 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
         }
         lineDataByRegion[item.Region].data.push(item);
       });
-      setRegionsList(Object.keys(lineDataByRegion));
+      setRegionsList(Object.keys(lineDataByRegion).sort());
       let _selectedRegions = [];
       if (initial) {
         _selectedRegions = Object.keys(lineDataByRegion)
@@ -280,10 +280,10 @@ const ImpactLineChart = ({ lineData, type = "National" }) => {
           }
           lineDataByState[item["State ID"]].data.push(item);
         });
-      setStatesList(Object.keys(lineDataByState));
+      setStatesList(Object.keys(lineDataByState).sort());
       let _selectedStates = [];
       if (initial) {
-        _selectedStates = Object.keys(lineDataByState)
+        _selectedStates = Object.keys(lineDataByState).sort()
           .map((item) => ({
             value: item,
             label: item,

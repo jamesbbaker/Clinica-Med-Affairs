@@ -423,10 +423,11 @@ const PayerVariationTable = ({
       .then((res) => {
         let _data = JSON.parse(res.replaceAll("NaN", 0));
         if (_data) {
+  
           settotalPage(Math.floor(_data.total / currentSize));
           const responseData = _data.data;
-          setCleanedAffilitionList(_data.payer_list);
-          setCleanedIDList(_data.plan_list);
+          setCleanedAffilitionList(_data.payer_list.sort());
+          setCleanedIDList(_data.plan_list.sort());
           const newData = responseData.map((item) => {
             return {
               ...item,

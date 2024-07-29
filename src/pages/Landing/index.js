@@ -239,14 +239,14 @@ export default function Index() {
                       className="grid min-w-[50%] grid-cols-2 gap-10 mb-10"
                     >
                       <a
-                        className={`flex flex-col-reverse justify-between md:flex-row items-center  md:h-[10rem] text-lg p-5 rounded border transition duration-300 ease-in-out `}
+                        className={`flex flex-col-reverse md:flex-row items-center  md:h-[10rem] text-lg p-5 rounded border transition duration-300 ease-in-out `}
                         href="#0"
                       >
-                        <div className="flex items-center flex-col">
-                          <h4 className="font-bold text-sm md:text-xl leading-snug tracking-tight mb-1">
+                        <div className="flex items-center w-11/12 flex-col">
+                          <h4 className="font-bold text-sm md:text-xl text-center leading-snug tracking-tight mb-1">
                             {item.title}
                           </h4>
-                          <p className="text-xs md:text-md text-gray-600">
+                          <p className="text-xs md:text-md text-center text-gray-600">
                             {item.description}
                           </p>
                         </div>
@@ -264,7 +264,7 @@ export default function Index() {
                         className={`h-[100%] w-[100%] grid place-content-center hero-card-${item.id}`}
                       >
                         <h1
-                          className={`text-xl md:text-5xl font-extrabold  text-white`}
+                          className={`text-xl md:text-4xl px-4 text-center font-extrabold  text-white`}
                         >
                           {item.cardText}
                         </h1>
