@@ -60,7 +60,7 @@ const CustomMarker = ({
   };
 
   function interpolateRadius(value, maxValue) {
-    const minRadius = 0;
+    const minRadius = 20;
     const maxRadius = 100;
     // Maximum value
 

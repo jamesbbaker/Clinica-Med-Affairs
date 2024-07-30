@@ -164,73 +164,7 @@ const PatientOpportunityMapping = ({
   const [summaryData, setSummaryData] = useState(null);
   const [options, setOptions] = useState(defaultOptions);
 
-  useEffect(() => {
-    if (selectedUnmet.length > 0) {
-      let _selectedUnmetsObj = {};
-      selectedUnmet.forEach((element) => {
-        _selectedUnmetsObj[element.label] = element;
-      });
-      let _options = {
-        indexAxis: "y",
-        elements: {
-          bar: {
-            borderWidth: 1,
-          },
-        },
-        responsive: true,
-        scales: {
-          y: {
-            ticks: {
-              stepSize: 1,
-              min: 0,
-              autoSkip: false,
-              font: function (context) {
-                const label = context.tick.label;
-                // Example condition: Make 'Career' label bold
-                return _selectedUnmetsObj.hasOwnProperty(label)
-                  ? { size: 13.5, weight: "bold" }
-                  : { size: 13.5 };
-              },
-              color: "#000",
-            },
-          },
-          x: {
-            title: {
-              display: true,
-              text: "Patients",
-            },
-            ticks: {
-              callback: function (value, index, values) {
-                if (value === 0) return "0";
-                else if (value >= 1e6 || value <= -1e6) {
-                  // Convert to million with one decimal place
-                  return `${(value / 1e6).toFixed(value % 1e6 !== 0 ? 1 : 0)}m`;
-                } else if (value >= 1e3 || value <= -1e3) {
-                  // Convert to thousand with one decimal place
-                  return `${(value / 1e3).toFixed(value % 1e3 !== 0 ? 1 : 0)}k`;
-                } else {
-                  return `${value}`;
-                }
-              },
-              font: {
-                size: 12,
-              },
-            },
-          },
-        },
-        plugins: {
-          legend: {
-            display: false,
-          },
-          datalabels: {
-            display: false,
-          },
-        },
-      };
-      setOptions(_options);
-      setCurrentToggle(selectedUnmet[0].value);
-    }
-  }, [selectedUnmet]);
+
 
   useEffect(() => {
     getDataStats("region_level_data", accessToken, refreshToken)
@@ -245,7 +179,7 @@ const PatientOpportunityMapping = ({
     getDataStats("state_level_data", accessToken, refreshToken)
       .then(async (res) => {
         if (res) {
-          console.log(res, "res")
+         
           let _data = JSON.parse(res.replaceAll("NaN", 0));
 
           let StateByRegion = {};
@@ -281,11 +215,77 @@ const PatientOpportunityMapping = ({
 
   useEffect(() => {
     if (stateData) {
+      if (selectedUnmet.length > 0) {
+        let _selectedUnmetsObj = {};
+        selectedUnmet.forEach((element) => {
+          _selectedUnmetsObj[element.label] = element;
+        });
+        let _options = {
+          indexAxis: "y",
+          elements: {
+            bar: {
+              borderWidth: 1,
+            },
+          },
+          responsive: true,
+          scales: {
+            y: {
+              ticks: {
+                stepSize: 1,
+                min: 0,
+                autoSkip: false,
+                font: function (context) {
+                  const label = context.tick.label;
+                  // Example condition: Make 'Career' label bold
+                  return _selectedUnmetsObj.hasOwnProperty(label)
+                    ? { size: 13.5, weight: "bold" }
+                    : { size: 13.5 };
+                },
+                color: "#000",
+              },
+            },
+            x: {
+              title: {
+                display: true,
+                text: "Patients",
+              },
+              ticks: {
+                callback: function (value, index, values) {
+                  if (value === 0) return "0";
+                  else if (value >= 1e6 || value <= -1e6) {
+                    // Convert to million with one decimal place
+                    return `${(value / 1e6).toFixed(value % 1e6 !== 0 ? 1 : 0)}m`;
+                  } else if (value >= 1e3 || value <= -1e3) {
+                    // Convert to thousand with one decimal place
+                    return `${(value / 1e3).toFixed(value % 1e3 !== 0 ? 1 : 0)}k`;
+                  } else {
+                    return `${value}`;
+                  }
+                },
+                font: {
+                  size: 12,
+                },
+              },
+            },
+          },
+          plugins: {
+            legend: {
+              display: false,
+            },
+            datalabels: {
+              display: false,
+            },
+          },
+        };
+        setOptions(_options);
+        setCurrentToggle(selectedUnmet[0].value);
+      }
       setLoading(false);
     }
   }, [stateData]);
 
   const handleStateLevelData = async (_state, clickedState) => {
+   
     try {
       const res = await getDataStats(
         `hcp_map_data?state=${clickedState.trim()}`,
