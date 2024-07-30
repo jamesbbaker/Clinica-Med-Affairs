@@ -158,6 +158,7 @@ th {
 .spider-leg-container {
   width: 1px;
   height: 1px;
+  background:red;
   overflow: display;
   will-change: transform;
 }
@@ -233,4 +234,10 @@ th {
 
 .dropdown-content {
   z-index:1000 !important;
+}
+.mapboxgl-popup {
+  pointer-events: none !important;
+}
+.mapboxgl-popup-content {
+  pointer-events: none !important;
 }

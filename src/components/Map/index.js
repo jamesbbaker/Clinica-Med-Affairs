@@ -13,7 +13,6 @@ import {
   selectLabels,
 } from "../../constants/appConstants";
 
-
 mapboxgl.accessToken =
   "pk.eyJ1IjoiY2xpbmljYS1haSIsImEiOiJjbHU3eXE2bXUwYWNlMmpvM3Nsd2ZiZDA3In0.BxJb0GE9oDVg2umCg6QBSw";
 
@@ -89,7 +88,6 @@ function MapAddLayer(
       source: layerId,
       layout: {},
       paint: {
-     
         "fill-opacity": 0.2,
       },
       filter: ["==", "name", ""],
@@ -211,10 +209,12 @@ const levelToggles = {
       "Number of Failure To Escalate With 3 Exacerbations",
     "Percent of Failure To Escalate With 3 Exacerbations":
       "Percent of Failure To Escalate With 3 Exacerbations",
-      "Number of Biologic Before Triple":'Number of Biologic Before Triple',
-      "Percent of Biologic Before Triple":"Percent of Biologic Before Triple",
-      "Number of Exacerbation Without Spirometry":"Number of Exacerbation Without Spirometry",
-      "Percent of Exacerbation Without Spirometry":"Percent of Exacerbation Without Spirometry"
+    "Number of Biologic Before Triple": "Number of Biologic Before Triple",
+    "Percent of Biologic Before Triple": "Percent of Biologic Before Triple",
+    "Number of Exacerbation Without Spirometry":
+      "Number of Exacerbation Without Spirometry",
+    "Percent of Exacerbation Without Spirometry":
+      "Percent of Exacerbation Without Spirometry",
   },
   state: {
     "Number of Asthma Patients": "Total Asthma Patients",
@@ -279,13 +279,15 @@ const levelToggles = {
     "Number of ICS-LABA Patients with LAMA": "Total ICS-LABA With LAMA",
     "Percent of ICS-LABA Patients with LAMA": "Percent ICS-LABA With LAMA",
     "Number of Failure To Escalate With 3 Exacerbations":
-    "Number of Failure To Escalate With 3 Exacerbations",
-  "Percent of Failure To Escalate With 3 Exacerbations":
-    "Percent of Failure To Escalate With 3 Exacerbations",
-    "Number of Biologic Before Triple":'Number of Biologic Before Triple',
-    "Percent of Biologic Before Triple":"Percent of Biologic Before Triple",
-    "Number of Exacerbation Without Spirometry":"Number of Exacerbation Without Spirometry",
-    "Percent of Exacerbation Without Spirometry":"Percent of Exacerbation Without Spirometry"
+      "Number of Failure To Escalate With 3 Exacerbations",
+    "Percent of Failure To Escalate With 3 Exacerbations":
+      "Percent of Failure To Escalate With 3 Exacerbations",
+    "Number of Biologic Before Triple": "Number of Biologic Before Triple",
+    "Percent of Biologic Before Triple": "Percent of Biologic Before Triple",
+    "Number of Exacerbation Without Spirometry":
+      "Number of Exacerbation Without Spirometry",
+    "Percent of Exacerbation Without Spirometry":
+      "Percent of Exacerbation Without Spirometry",
   },
   hcp: {
     "Number of Asthma Patients": "Number of Asthma Patients",
@@ -340,21 +342,25 @@ const levelToggles = {
       "Number of ICS-LABA LAMA Persistence < 360",
     "Percent of ICS-LABA LAMA Persistence < 360":
       "Percent of ICS-LABA LAMA Persistence < 360",
-    "Number of ICS-LABA Patients with LAMA": "Number of ICS-LABA With LAMA",
-    "Percent of ICS-LABA Patients with LAMA": "Percent of ICS-LABA With LAMA",
+    "Number of ICS-LABA Patients with LAMA":
+      "Number of ICS-LABA Patients with LAMA",
+    "Percent of ICS-LABA Patients with LAMA":
+      "Percent of ICS-LABA Patients with LAMA",
     "Number of Failure To Escalate With 3 Exacerbations":
-    "Number of Failure To Escalate With 3 Exacerbations",
-  "Percent of Failure To Escalate With 3 Exacerbations":
-    "Percent of Failure To Escalate With 3 Exacerbations",
-    "Number of Biologic Before Triple":'Number of Biologic Before Triple',
-    "Percent of Biologic Before Triple":"Percent of Biologic Before Triple",
-    "Number of Exacerbation Without Spirometry":"Number of Exacerbation Without Spirometry",
-    "Percent of Exacerbation Without Spirometry":"Percent of Exacerbation Without Spirometry"
+      "Number of Failure To Escalate With 3 Exacerbations",
+    "Percent of Failure To Escalate With 3 Exacerbations":
+      "Percent of Failure To Escalate With 3 Exacerbations",
+    "Number of Biologic Before Triple": "Number of Biologic Before Triple",
+    "Percent of Biologic Before Triple": "Percent of Biologic Before Triple",
+    "Number of Exacerbation Without Spirometry":
+      "Number of Exacerbation Without Spirometry",
+    "Percent of Exacerbation Without Spirometry":
+      "Percent of Exacerbation Without Spirometry",
   },
 };
 
 const Map = ({
-  setHcpProfilePage=() => {},
+  setHcpProfilePage = () => {},
   impactLayer = () => {},
   impactMap,
   currentLevel,
@@ -461,7 +467,7 @@ const Map = ({
 
   const handleToggleData = (toggleId) => {
     if (!popups || !spiderifier.current) {
-      return
+      return;
     }
     popups.forEach((popup) => popup.remove());
     setPopups([]);
@@ -473,8 +479,7 @@ const Map = ({
       onClick: function (e, spiderLeg) {
         var feature = spiderLeg.feature;
         setChartDataValue(setData1, null, [feature.properties]);
-        setHcpProfilePage("map")
-     
+        setHcpProfilePage("map");
       },
       initializeLeg: function initializeSpiderLeg(spiderLeg) {
         var pinElem = spiderLeg.elements.pin;
@@ -485,7 +490,9 @@ const Map = ({
         function interpolateRadius(value) {
           const minRadius = 10;
           const maxRadius =
-            currentToggle === "Number of High Steroid Usage Patients" ? 50 : 100;
+            currentToggle === "Number of High Steroid Usage Patients"
+              ? 50
+              : 100;
           // Maximum value
 
           // Ensure value is within range [0, maxValue]
@@ -523,10 +530,14 @@ const Map = ({
             closeOnClick: false,
             offset: MapboxglSpiderifier.popupOffsetForSpiderLeg(newObject),
           });
+          const popupElement = document.querySelector(".mapboxgl-popup");
+          if (popupElement) {
+            popupElement.style.pointerEvents = "none";
+          }
 
           popup
             .setHTML(
-              `<div className="text-sm max-w-[10rem]"><h4 className="text-xs">Name: <strong className="font-bold">${
+              `<div className="text-sm pointer-events-none max-w-[10rem]"><h4 className="text-xs">Name: <strong className="font-bold">${
                 feature.properties["Assigned Physician Name"]
               }</strong></h4><h4 className="text-xs">Primary Specialty Description: <strong className="font-bold">${
                 feature.properties["Assigned Specialty"]
@@ -567,16 +578,13 @@ const Map = ({
     }
   };
 
-
-
- 
-
   const handleStateLevelMarkers = (
     data,
     markerClass,
     circleColor = "#f28cb1"
   ) => {
     let groupObj = {};
+    console.log(currentToggle, "cccc")
     data.forEach((marker, index) => {
       let size = marker[currentToggle];
       const key = `${marker.LONG},${marker.LAT}`;
@@ -587,30 +595,31 @@ const Map = ({
           ...prevObj,
           size: newSize,
           coordinates: [marker.LONG, marker.LAT],
-          [`marker${index}`]: JSON.stringify({
+          [`marker${index}`]: {
             type: "Feature",
             geometry: {
               type: "Point",
               coordinates: [marker.LONG, marker.LAT],
             },
             properties: { ...marker, size },
-          }),
+          },
         };
       } else {
         groupObj[key] = {
           size,
           coordinates: [marker.LONG, marker.LAT],
-          [`marker${index}`]: JSON.stringify({
+          [`marker${index}`]: {
             type: "Feature",
             geometry: {
               type: "Point",
               coordinates: [marker.LONG, marker.LAT],
             },
             properties: { ...marker, size },
-          }),
+          },
         };
       }
     });
+  
 
     const geojson = {
       type: "FeatureCollection",
@@ -662,6 +671,7 @@ const Map = ({
             (item) => item.properties && item.properties.size !== 0
           ),
         ];
+
         //   console.log(filteredArr)
         //   const spiralMarkers = createSpiralMarkers(newArr[1], filteredArr);
         //   const geojson = {
@@ -688,24 +698,26 @@ const Map = ({
             newArr.push(JSON.parse(item));
           });
         }
+
         // newArr.splice(0,2)
         let filteredArr = [
           ...newArr.filter(
             (item) => item.properties && item.properties.size !== 0
           ),
         ];
+
         if (filteredArr.length > 1) {
+          let _sortArr = filteredArr.sort(
+            (a, b) => a.properties[currentToggle] - b.properties[currentToggle]
+          );
           spiderifier.current.unspiderfy();
           spiderifier.current.spiderfy(
             e.features[0].geometry.coordinates,
-            filteredArr
+            _sortArr
           );
         } else {
-
-
           setChartDataValue(setData1, null, [filteredArr[0].properties]);
-          setHcpProfilePage("map")
-       
+          setHcpProfilePage("map");
         }
 
         // const stateFeature = e.features.find(
@@ -741,14 +753,14 @@ const Map = ({
 
   const handleStateMarkers = (data, markerClass) => {
     setCurrentLevel("state");
-    const newStateMarkers = data.filter(feature => (feature.Region !== 0))
+    const newStateMarkers = data.filter((feature) => feature.Region !== 0);
     setStateMarkers(newStateMarkers);
     mapboxglMarker.current.forEach((marker) => marker && marker.remove());
     mapboxglMarker.current = [];
   };
 
   const handleRegionMarkers = (data, markerClass) => {
-    const newMapMarkers = data.filter(feature => (feature.Region !== 0))
+    const newMapMarkers = data.filter((feature) => feature.Region !== 0);
     setMapMarkers(newMapMarkers);
   };
 
@@ -902,8 +914,7 @@ const Map = ({
         onClick: function (e, spiderLeg) {
           var feature = spiderLeg.feature;
           setChartDataValue(setData1, null, [feature.properties]);
-          setHcpProfilePage("map")
-  
+          setHcpProfilePage("map");
         },
         initializeLeg: function initializeSpiderLeg(spiderLeg) {
           var pinElem = spiderLeg.elements.pin;
@@ -914,15 +925,15 @@ const Map = ({
           // let maxValue = highestValue(markedStates, currentToggle);
           function interpolateRadius(value) {
             const minRadius = 10;
-            const maxRadius = 50;
+            const maxRadius = 60;
             // Maximum value
 
             // Ensure value is within range [0, maxValue]
-            const clampedValue = Math.min(Math.max(value, 0), 20);
+            const clampedValue = Math.min(Math.max(value, 0), 30);
 
             // Linear interpolation formula
             const radius =
-              (clampedValue / 40) * (maxRadius - minRadius) + minRadius;
+              (clampedValue / 30) * (maxRadius - minRadius) + minRadius;
 
             return radius;
           }
@@ -954,7 +965,7 @@ const Map = ({
 
             popup
               .setHTML(
-                `<div className="text-sm max-w-[10rem]"><h4 className="text-xs">Name: <strong className="font-bold">${
+                `<div className="text-sm pointer-events-none max-w-[10rem]"><h4 className="text-xs">Name: <strong className="font-bold">${
                   feature.properties["Assigned Physician Name"]
                 }</strong></h4><h4 className="text-xs">Primary Specialty Description: <strong className="font-bold">${
                   feature.properties["Assigned Specialty"]
@@ -967,6 +978,10 @@ const Map = ({
                 }</strong></h4></div>`
               )
               .addTo(mapRef.current);
+            const popupElement = document.querySelector(".mapboxgl-popup");
+            if (popupElement) {
+              popupElement.style.pointerEvents = "none";
+            }
 
             spiderLeg.mapboxMarker.setPopup(popup);
           });
@@ -1107,49 +1122,53 @@ const Map = ({
     <div className="relative">
       {mapRef.current &&
         mapMarkers &&
-        mapMarkers.filter(marker => marker).map((marker, index) => {
-          return (
-            <CustomMarker
-              key={index}
-              allMarkers={mapMarkers}
-              handleCustomAddMarkers={handleCustomAddMarkers}
-              levelToggles={levelToggles}
-              currentToggle={currentToggle}
-              markersData={markers}
-              currentLevel={currentLevel}
-              setCurrentLevel={setCurrentLevel}
-              setDetailsItem={setDetailsItem}
-              setDetailsPosition={setDetailsPosition}
-              onClick={regionClicked}
-              className={"marker1"}
-              mapRef={mapRef}
-              feature={marker}
-            />
-          );
-        })}
+        mapMarkers
+          .filter((marker) => marker)
+          .map((marker, index) => {
+            return (
+              <CustomMarker
+                key={index}
+                allMarkers={mapMarkers}
+                handleCustomAddMarkers={handleCustomAddMarkers}
+                levelToggles={levelToggles}
+                currentToggle={currentToggle}
+                markersData={markers}
+                currentLevel={currentLevel}
+                setCurrentLevel={setCurrentLevel}
+                setDetailsItem={setDetailsItem}
+                setDetailsPosition={setDetailsPosition}
+                onClick={regionClicked}
+                className={"marker1"}
+                mapRef={mapRef}
+                feature={marker}
+              />
+            );
+          })}
       {mapRef.current &&
         stateMarkers &&
         currentRegion &&
-        stateMarkers.filter(marker => marker).map((marker, index) => {
-          return (
-            <CustomMarker
-              allMarkers={stateMarkers}
-              key={index}
-              currentLevel={currentLevel}
-              handleCustomAddMarkers={handleCustomAddStateMarkers}
-              levelToggles={levelToggles}
-              currentToggle={currentToggle}
-              markersData={stateData[currentRegion]}
-              setCurrentLevel={setCurrentLevel}
-              setDetailsItem={setDetailsItem}
-              setDetailsPosition={setDetailsPosition}
-              onClick={handleClick}
-              className={"marker1"}
-              mapRef={mapRef}
-              feature={marker}
-            />
-          );
-        })}
+        stateMarkers
+          .filter((marker) => marker)
+          .map((marker, index) => {
+            return (
+              <CustomMarker
+                allMarkers={stateMarkers}
+                key={index}
+                currentLevel={currentLevel}
+                handleCustomAddMarkers={handleCustomAddStateMarkers}
+                levelToggles={levelToggles}
+                currentToggle={currentToggle}
+                markersData={stateData[currentRegion]}
+                setCurrentLevel={setCurrentLevel}
+                setDetailsItem={setDetailsItem}
+                setDetailsPosition={setDetailsPosition}
+                onClick={handleClick}
+                className={"marker1"}
+                mapRef={mapRef}
+                feature={marker}
+              />
+            );
+          })}
       {detailsItem && (
         <div
           className="bg-white shadow-xl pointer-events-none px-2 py-2"
