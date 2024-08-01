@@ -75,7 +75,8 @@ export const APP_ROUTES = {
   target_lists: "target_lists",
   priority_engagement_opportunity_page: "priority_engagement_opportunity_page",
   help: "help",
-  testing: "testing"
+  testing: "testing",
+  settings:'settings'
 };
 
 export const APP_ROUTES_LABEL = {
@@ -99,7 +100,8 @@ export const APP_ROUTES_LABEL = {
   unmet_need_definition: "Unmet Need Definitions",
   priority_engagement_opportunity_page: "Priority Engagement Opportunities",
   help: "Help",
-  testing: "Testing"
+  testing: "Testing",
+  settings:"Settings"
 };
 
 export const patientTotals = [

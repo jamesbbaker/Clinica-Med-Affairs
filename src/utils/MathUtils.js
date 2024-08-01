@@ -12,7 +12,7 @@ export const getLowestValue = (data,label) => {
 
 
 export const highestValue = (data,label) => {
-  console.log(data, label)
+
  
   const highestValue = data.reduce((max, obj) => {
     return obj[label] > max ? obj[label] : max;
