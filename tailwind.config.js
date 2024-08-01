@@ -27,7 +27,7 @@ module.exports = {
         '9/10': '90%',
       },
       screens: {
-        'custom': '1024px', // Replace 'custom' with your preferred name and '1024px' with your desired breakpoint.
+        'custom': '1260px', // Replace 'custom' with your preferred name and '1024px' with your desired breakpoint.
       },
       fontSize: {
         xs: ['0.75rem', { lineHeight: '1.5' }],

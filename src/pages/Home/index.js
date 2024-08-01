@@ -105,14 +105,22 @@ const NavigationMenu = [
   {
     name: null,
   },
-  // {
-  //   name: APP_ROUTES_LABEL.testing,
-  //   id: APP_ROUTES.testing,
-  //   route: APP_ROUTES.testing,
-  //   color: "#c4c4c4",
-  //   icon: () => <AiOutlineQuestionCircle />,
-  //   description: "Page for testing new features.",
-  // },
+  {
+    name: APP_ROUTES_LABEL.testing,
+    id: APP_ROUTES.testing,
+    route: APP_ROUTES.testing,
+    color: "#c4c4c4",
+    icon: () => <AiOutlineQuestionCircle />,
+    description: "Page for testing new features.",
+  },
+  {
+    name: APP_ROUTES_LABEL.settings,
+    id: APP_ROUTES.settings,
+    route: APP_ROUTES.settings,
+    color: "#c4c4c4",
+    icon: () => <AiOutlineQuestionCircle />,
+    description: "Adjust Settings for Medical AI Suite",
+  },
 ];
 
 const colorDescriptions = [
@@ -178,10 +186,12 @@ const Home = () => {
                     ></div>
                     <p className="text-sm text-center">{item.description}</p>
                   </div>
-                  {NavigationMenu.filter(
+                  {NavigationMenu
+                  .filter(
                     (_item) =>
-                      _item.color === item.color &&
-                      user.page_view &&
+                      _item.color === item.color 
+                    // &&
+                      // user.page_view &&
                       // subItem.id !== APP_ROUTES.hcp_insights &&
                       // subItem.id !== APP_ROUTES.medical_affair_toolbox &&
                       // subItem.id !== APP_ROUTES.payer_variation &&
@@ -190,7 +200,7 @@ const Home = () => {
                       // subItem.id !==
                       //   APP_ROUTES.priority_engagement_opportunity_page &&
                       // subItem.id !== APP_ROUTES.target_lists &&
-                      user.page_view.includes(_item.id),
+                      // user.page_view.includes(_item.id),
                   ).map((item) => {
                     return item.name ? (
                       <div

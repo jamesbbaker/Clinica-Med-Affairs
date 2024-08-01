@@ -25,6 +25,18 @@ const router = createBrowserRouter([
         path: "/about",
       },
       {
+        path: "/medicalAffairs",
+        element: <Landing />,
+      },
+      {
+        path: "/rnd",
+        element: <Landing />,
+      },
+      {
+        path: "/nonprofit",
+        element: <Landing />,
+      },
+      {
         element: <ContactUs />,
         path: "/contactus",
       },
@@ -43,6 +55,7 @@ const router = createBrowserRouter([
             path: "/testing",
             element: <Testing />,
           },
+          
           {
             path: "outputs",
             children: [

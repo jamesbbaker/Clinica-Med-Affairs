@@ -14,6 +14,7 @@ import PatientOpportunityPage from "../PatientOpportunityPage";
 import PhysicianCareProfile from "../PhysicianCareProfile";
 import TargetList from "./TargetLists";
 import { useParams } from "react-router-dom";
+import Settings from "../Settings";
 
 const NavigationMenu = [
   {
@@ -128,6 +129,7 @@ const Output = () => {
       {currentMenu === APP_ROUTES.unmet_need_definition && (
         <UnmetNeedDefinition />
       )}
+      {currentMenu === APP_ROUTES.settings && <Settings />}
     </>
   );
 };

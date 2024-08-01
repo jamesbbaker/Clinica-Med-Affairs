@@ -13,6 +13,7 @@ import {
   AiOutlineQuestionCircle,
   AiOutlineDotChart,
 } from "react-icons/ai";
+import { IoIosSettings } from "react-icons/io";
 import { GiTriangleTarget } from "react-icons/gi";
 import { APP_ROUTES, APP_ROUTES_LABEL } from "../../constants/appConstants";
 import { AuthContext } from "../../context/AuthContext";
@@ -124,6 +125,13 @@ export const menuList = [
         color: "#c4c4c4",
         icon: () => <AiOutlineQuestionCircle color="#c4c4c4" />,
       },
+      {
+        name: APP_ROUTES_LABEL.settings,
+        id: APP_ROUTES.settings,
+        route: `${APP_ROUTES.outputs}/${APP_ROUTES.settings}`,
+        color: "#c4c4c4",
+        icon: () => <IoIosSettings color="#c4c4c4" />,
+      },
     ],
   },
 ];
@@ -219,7 +227,8 @@ const Sidebar = () => {
                           marginTop:
                             subItem.id === APP_ROUTES.patient_journey ||
                             subItem.id === APP_ROUTES.target_lists ||
-                            subItem.id === APP_ROUTES.eligible_patient_locator ||
+                            subItem.id ===
+                              APP_ROUTES.eligible_patient_locator ||
                             subItem.id ===
                               APP_ROUTES.patient_opportunity_mapping_and_strategy
                               ? "0.75rem"

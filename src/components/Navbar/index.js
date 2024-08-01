@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
+import { CiMenuBurger } from "react-icons/ci";
+
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -31,13 +33,18 @@ const Navbar = () => {
     return;
   };
 
+  const [showList, setShowList] = useState(false)
+  const handleShowNav = () => {
+    console.log("first")
+  }
+
   return (
     <header
       className={`fixed w-full z-30 md:bg-opacity-90 transition bg-white duration-300 ease-in-out ${
         !top ? " backdrop-blur-sm shadow-2xl" : ""
       }`}
     >
-      <div className="max-w-[75%] mx-auto">
+      <div className="custom:max-w-[90%] max-w-[95%] mx-auto">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Site branding */}
           <div className="shrink-0 mr-4 flex items-center gap-2">
@@ -47,20 +54,25 @@ const Navbar = () => {
               alt="logo"
               className="w-[6rem] md:w-[150px] cursor-pointer  object-contain"
             />
-            <p className="hidden md:block">AI & RWD for better patient care</p>
+            <p className="hidden custom:block">AI & RWD for better patient care</p>
           </div>
 
           {/* Desktop navigation */}
-          <nav className="md:flex md:grow">
+          <nav className="md:flex md:grow hidden ">
             {/* Desktop sign in divs */}
             <ul className="flex grow justify-end flex-wrap items-center">
-              <li>
+              <li onMouseOver={() => setShowList(true)} onMouseLeave={() => setShowList(false)} className="relative">
                 <div
-                  onClick={() => handleNavigate("/contactus")}
+                
                   className="cursor-pointer font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out"
                 >
                   Solutions
                 </div>
+                {showList &&<li  className="absolute text-[0.85rem] gap-2 bg-slate-200 text-center top-10 left-0">
+                  <ul   onClick={() => handleNavigate("/medicalAffairs")} className="hover:bg-slate-100 px-2 py-2 text-gray-600 cursor-pointer font-[500]">Medical Affairs</ul>
+                  <ul   onClick={() => handleNavigate("/rnd")} className="hover:bg-slate-100 px-2 py-2 text-gray-600 cursor-pointer font-[500]">R&D</ul>
+                  <ul   onClick={() => handleNavigate("/nonprofit")} className="hover:bg-slate-100 px-2 py-2 text-gray-600 cursor-pointer font-[500]">Non-Profits</ul>
+                </li>}
               </li>
               <li>
                 <div
@@ -106,6 +118,9 @@ const Navbar = () => {
               </li>
             </ul>
           </nav>
+          <div onClick={handleShowNav} className="flex md:hidden">
+            <CiMenuBurger />
+          </div>
         </div>
       </div>
     </header>

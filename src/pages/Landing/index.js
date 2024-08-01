@@ -1,16 +1,30 @@
 /*eslint-disable*/
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Navbar from "../../components/Navbar";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import ReactPlayer from "react-player";
+import video1 from "../../assets/videos/intro.mp4";
+import PrimaryBtn from "../../components/PrimaryBtn";
+import Slider from "react-slick";
+import clientLogo from "../../assets/images/Vector.png";
+import icon from "../../assets/images/Icon.png";
+import Icon_2 from "../../assets/images/Icon_2.png";
+import Icon_3 from "../../assets/images/Icon_3.png";
+import Icon_4 from "../../assets/images/Icon_4.png";
+import Quote_mark from "../../assets/images/Quote_mark.png"
+import { useNavigate } from "react-router-dom";
+import { MdOutlineReplay } from "react-icons/md";
+
 
 gsap.registerPlugin(ScrollTrigger);
 
 const SolutionsList = [
   {
     id: 1,
+    text: "Medical Strategy",
     title: "Map of patient need across clinical journey",
     description:
       "Our clinical and data experts have years of experience in mapping the patient journey from diagnosis to post-treatment across more than 20 diseases.",
@@ -18,6 +32,7 @@ const SolutionsList = [
   },
   {
     id: 2,
+    text: "Targeted Engagement",
     title: "HCPs, hospitals / clinics, plans patient need (MSL ready)",
     description:
       "Measure disparities in care in a disease down to the individual physician",
@@ -25,6 +40,7 @@ const SolutionsList = [
   },
   {
     id: 3,
+    text: "Tailored Messaging",
     title: "Tailored messaging based on deep profiles",
     description:
       "Tailor messaging based on profiles to bring the most impactful messages to the right audiences to influence care",
@@ -32,6 +48,7 @@ const SolutionsList = [
   },
   {
     id: 4,
+    text: "Evidence Generation and Digital",
     title: "Generate evidence and materials to support strategy",
     description:
       "Develop evidence and digital tools to support targeted engagement strategy",
@@ -39,6 +56,7 @@ const SolutionsList = [
   },
   {
     id: 5,
+    text: "Impact Tracking",
     title: "Track impact of initiatives",
     description:
       "Track the real patient impact of initiatives in real-time across initiatives",
@@ -69,10 +87,70 @@ export default function Index() {
             pinSpacing: false,
             repeat: 0,
           },
-        },
+        }
       );
     });
   }, []);
+
+  const video1ref = useRef(null);
+  const isAnimationPlayed = useRef(false);
+  const [currentToggle, setCurrentToggle] = useState(0);
+
+  var settings = {
+    dots: false,
+    arrows: false,
+    infinite: true,
+    speed: 500,
+    autoplay: true,
+    autoplaySpeed: 2000,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    afterChange: (e) => {
+      setCurrentToggle(e);
+    },
+  };
+
+  const handleReady = () => {
+    if (isAnimationPlayed.current) {
+      return;
+    }
+    isAnimationPlayed.current = true;
+
+    gsap.fromTo(
+      `#introVideo`,
+      {
+        scale: 0,
+      },
+      {
+        scale: 1,
+        ease: "power2.inOut",
+      }
+    );
+  };
+
+  const sliderRef = useRef(null);
+
+  const navigate = useNavigate()
+
+  const handleClick = (index) => {
+    sliderRef.current.slickGoTo(index);
+  };
+
+  
+
+  const [showEnded, setShowEnded] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false)
+
+  const handleReplay = () => {
+    setShowEnded(false)
+    video1ref.current.seekTo(0)
+    setIsPlaying(true)
+  }
+
+  const handleEnd = () => {
+    setShowEnded(true)
+    setIsPlaying(false)
+  }
 
   return (
     <>
@@ -108,112 +186,55 @@ export default function Index() {
           </svg>
         </div>
 
-        <div className="max-w-6xl z-[1] mx-auto px-4 sm:px-6">
+        <div className="z-[1] md:py-52 custom:py-32 py-20 mx-auto grid grid-cols-1 custom:grid-cols-2 custom:px-20 px-10 sm:px-6">
           {/* Hero content */}
-          <div className="pt-32 pb-12 md:pt-40 md:pb-20">
+          <div className="flex gap-10 px-10 flex-col items-center justify-center">
             {/* Section header */}
-            <div className="text-center pb-14 md:pb-16">
-              <h1
-                className="text-2xl md:text-6xl font-extrabold leading-tighter mb-4"
-                data-aos="zoom-y-out"
-              >
-                The first real-time Medical Affairs intelligence suite driven by
-              </h1>
-              <h1
-                data-aos="zoom-y-out"
-                data-aos-delay="150"
-                className="mt-8 text-3xl md:text-6xl font-extrabold leading-tighter tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400"
-              >
-                AI + RWD
-              </h1>
-              <div className="max-w-3xl mt-12 mx-auto">
-                <p
-                  className="text-md md:text-xl text-gray-600 mb-4"
-                  data-aos="zoom-y-out"
-                  data-aos-delay="250"
-                >
-                  Digital, AI, and RWD have enabled a new frontier of Medical
-                  Affairs patient impact.
-                </p>
-                <p
-                  className="text-md md:text-xl text-gray-600 mb-4"
-                  data-aos="zoom-y-out"
-                  data-aos-delay="300"
-                >
-                  We are able to measure granular patient care patterns
-                  physician, hospital / clinic, and plan levels
-                </p>
-                <p
-                  className="text-md md:text-xl text-gray-600 mb-4"
-                  data-aos="zoom-y-out"
-                  data-aos-delay="350"
-                >
-                  The app suite includes a real-time mapping of patient care
-                  across the clinical treatment journey and deep profiles on
-                  stakeholders including HCPs, hospitals / clinics, health
-                  systems, and payers.
-                </p>
-                {/* <div
-                  className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center"
-                  data-aos="zoom-y-out"
-                  data-aos-delay="300"
-                >
-                  <div>
-                    <a
-                      className="btn text-white bg-blue-600 hover:bg-blue-700 w-full mb-4 sm:w-auto sm:mb-0"
-                      href="#0"
-                    >
-                      Start free trial
-                    </a>
-                  </div>
-                  <div>
-                    <a
-                      className="btn text-white bg-gray-900 hover:bg-gray-800 w-full sm:w-auto sm:ml-4"
-                      href="#0"
-                    >
-                      Learn more
-                    </a>
-                  </div>
-                </div> */}
-                <div className="grid md:grid-cols-2 mt-12 gap-8">
-                  <div
-                    data-aos="zoom-y-out"
-                    data-aos-delay="400"
-                    className="text-whit shadow-box mt-6 rounded-xl"
-                  >
-                    <h3 className="text-2xl text-white h-100  py-4 bg-[#7bdcb5] rounded-tr-xl rounded-tl-xl bg-circle font-bold ">
-                      Problem
-                    </h3>
-                    <p className="text-lg py-6 text-gray-600  px-10">
-                      Significant disparities in patient care across physicians,
-                      institutions, payers, and regions
-                    </p>
-                  </div>
-                  <div
-                    data-aos="zoom-y-out"
-                    data-aos-delay="400"
-                    className="text-white h-100 shadow-box mt-6 rounded-xl"
-                  >
-                    <h3 className="text-2xl py-4 bg-[#87CEEB] rounded-tr-xl rounded-tl-xl bg-circle font-bold ">
-                      Solution
-                    </h3>
-                    <p className="text-lg py-6 text-gray-600  px-10">
-                      Best-in-class mapping of clinical patient care, variation
-                      in care, and profiles across stakeholders to guide
-                      initiatives
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+
+            <h1
+              className="text-xl text-center custom:text-3xl md:text-5xl font-extrabold leading-tighter"
+              data-aos="zoom-y-out"
+            >
+              The first real-time Medical Affairs intelligence suite driven by
+            </h1>
+            <h1
+              data-aos="zoom-y-out"
+              data-aos-delay="150"
+              className="text-3xl custom:text-3xl md:text-6xl font-extrabold leading-tighter tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400"
+            >
+              AI + RWD
+            </h1>
+
+            <PrimaryBtn
+            onClick={() => navigate("/contactus")}
+              text={"Request a Demo"}
+              className={"md:px-10 px-4 md:text-lg text:xs text-[#fff]"}
+            />
+          </div>
+          <div className="relative w-full custom:mt-0 mt-10 grid place-content-center">
+            <ReactPlayer
+              // muted={true}
+              id="introVideo"
+              url={video1}
+              onEnded={handleEnd}
+              width={document.body.clientWidth < 800 ? 300 : 600}
+              className="scale-0"
+              ref={video1ref}
+              playsinline
+              onReady={handleReady}
+              playing={isPlaying}
+              onPlay={() => setIsPlaying(true)}
+              controls={true}
+            />
+            {showEnded && <div onClick={handleReplay} className=" absolute left-0 top-0 w-full h-full flex items-center justify-center">
+                <MdOutlineReplay size={80}  className="cursor-pointer"/>
+              </div>}
           </div>
         </div>
       </section>
-      <section className="relative overflow-hidden  bg-gray-100">
-        <div className=" max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="pt-12 md:pt-20">
-            {/* Section header */}
-            <div
+      <section className="relative overflow-hidden py-20   bg-gray-100">
+        {/* Section header */}
+        {/* <div
               data-aos="zoom-y-out"
               data-aos-delay="150"
               className="max-w-3xl mx-auto text-center pb-12 md:pb-16"
@@ -223,10 +244,43 @@ export default function Index() {
                 The Medical Affairs AI Suite enables healthcare organizations to
                 measure and maximize the patient impact of initiatives
               </p>
+            </div> */}
+        {/* Section content */}
+        {/* Content */}
+        <div className="flex flex-none flex-wrap justify-center gap-6 items-center px-10 py-4">
+          {SolutionsList.map((item, index) => (
+            <div
+              onClick={() => handleClick(index)}
+              className={`${
+                currentToggle === index && "bg-slate-300"
+              } font-[500] rounded-md text-center hover:bg-slate-300 p-2 cursor-pointer`}
+            >
+              {item.text}
             </div>
-            {/* Section content */}
-            {/* Content */}
-            <div className="max-w-xl h-[200vh] md:max-w-none md:w-full mx-auto">
+          ))}
+        </div>
+        <div className="md:px-20 px-10 h-full justify-center flex flex-col relative">
+          <Slider ref={sliderRef} {...settings}>
+            {SolutionsList.map((item) => {
+              return (
+                <div className="md:px-4 px-0 py-10 w-full  min-h-[20rem] ">
+                  <div className=" grid grid-cols-1 custom:grid-cols-2">
+                    <div className="flex h-full justify-center col-span-1 flex-col items-center gap-4">
+                      <div className="md:text-3xl text-xl font-[500] text-center">
+                        {item.title}
+                      </div>
+                      <div className="md:text-xl text-md text-center">
+                        {item.description}
+                      </div>
+                    </div>
+                    <div className="col-span-1 custom:mt-0 mt-10 w-[80%] mx-auto h-[30rem] border-2 "></div>
+                  </div>
+                </div>
+              );
+            })}
+          </Slider>
+        </div>
+        {/* <div className="max-w-xl h-[200vh] md:max-w-none md:w-full mx-auto">
               <div
                 id={`solution-wrapper`}
                 className="mb-8 overflow-hidden md:mb-0"
@@ -272,6 +326,109 @@ export default function Index() {
                     </div>
                   );
                 })}
+              </div>
+            </div> */}
+      </section>
+      <section className="py-20 relative bg-[#D5FAFC] flex flex-col justify-center">
+        <div className="w-full flex-col gap-10 cusotm:gap-0 relative h-full flex justify-center items-center">
+          <div className="custom:absolute text-center custom:text-left custom:-top-4 custom:left-[20%] relative">
+            <h2 className="text-4xl custom:max-w-[70%] max-w-[100%] font-[700]">
+              <img src={Quote_mark} className="absolute -top-10 -left-28" alt="quote" />
+              Real Stories from Real Customers
+            </h2>
+            <p className="text-center custom:text-left">
+              Get inspired by these stories.
+            </p>
+          </div>
+          <div className="grid relative items-center gap-4 custom:max-w-[70%] max-w-[100%] grid-cols-1 custom:grid-cols-2">
+            <div className="md:w-[25rem] custom:mt-20 mt-0 flex flex-col gap-6 p-10 bg-white rounded-xl ">
+              <img
+                src={clientLogo}
+                className="h-[2rem] w-[5rem] object-contain"
+              />
+              <p className="custom:text-lg text-md">
+                To quickly start my startup landing page design, I was looking
+                for a landing page UI Kit. Landify is one of the best landing
+                page UI kit I have come across. It’s so flexible, well organised
+                and easily editable.
+              </p>
+              <div className="flex flex-col items-start">
+                <h2 className="font-[600]">Floyd Miles</h2>
+                <p className="font-[300] text-[0.85rem]">
+                  Vice President, GoPro
+                </p>
+              </div>
+            </div>
+            <div className="relative flex flex-col gap-4 items-start">
+              <div className="md:w-[25rem] flex flex-col gap-6 p-10 bg-white rounded-xl ">
+                <img
+                  src={clientLogo}
+                  className="h-[2rem] w-[5rem] object-contain"
+                />
+                <p className="custom:text-lg text-md">
+                  I used landify and created a landing page for my startup
+                  within a week. The Landify UI Kit is simple and highly
+                  intuitive, so anyone can use it.
+                </p>
+                <div className="flex flex-col items-start">
+                  <h2 className="font-[600]">Jane Cooper</h2>
+                  <p className="font-[300] text-[0.85rem]">CEO, Airbnb</p>
+                </div>
+              </div>
+              <div className="custom:w-[20rem] md:w-[25rem]  flex flex-col gap-6 p-10 bg-white rounded-xl ">
+                <img
+                  src={clientLogo}
+                  className="h-[2rem] w-[5rem] object-contain"
+                />
+                <p className="custom:text-lg text-md">
+                  Landify saved our time in designing my company page.
+                </p>
+                <div className="flex flex-col items-start">
+                  <h2 className="font-[600]">Kristin Watson</h2>
+                  <p className="font-[300] text-[0.85rem]">
+                    Co-Founder, Strapi
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div className="grid custom:grid-cols-2 grid-cols-1 px-10 md:px-28 py-20">
+          <div className="flex flex-col items-start gap-4">
+            <h2 className="md:text-6xl text-3xl custom:max-w-[100%] max-w-[100%] font-[600]">
+              Over 18 years of achievements
+            </h2>
+            <p>With out super powers we have reached this</p>
+          </div>
+          <div className="grid custom:mt-0 mt-10 md:gap-8 gap-10 grid-cols-1 md:grid-cols-2">
+            <div className="flex items-center gap-2">
+              <img src={icon} />
+              <div className="flex flex-col items-start">
+                <h2 className="text-3xl font-[600]">10,000+</h2>
+                <p>Downloads per day</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <img src={Icon_2} />
+              <div className="flex flex-col items-start">
+                <h2 className="text-3xl font-[600]">2 Million</h2>
+                <p>Users</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <img src={Icon_3} />
+              <div className="flex flex-col items-start">
+                <h2 className="text-3xl font-[600]">500+</h2>
+                <p>Clients</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <img src={Icon_4} />
+              <div className="flex flex-col items-start">
+                <h2 className="text-3xl font-[600]">140</h2>
+                <p>Countries</p>
               </div>
             </div>
           </div>
