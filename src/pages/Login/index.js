@@ -6,6 +6,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { useState } from "react";
 import Navbar from "../../components/Navbar";
 import { Bounce, ToastContainer, toast } from "react-toastify";
+import Footer from "../../components/Footer";
 
 const inputs = [
   {
@@ -249,6 +250,7 @@ const Login = ({ passwordChange }) => {
           </form>
         </div>
       </div>
+      <Footer />
     </>
   );
 };

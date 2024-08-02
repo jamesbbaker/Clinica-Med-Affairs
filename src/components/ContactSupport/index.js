@@ -3,6 +3,7 @@ import PrimaryBtn from "../PrimaryBtn";
 import Popup from "reactjs-popup";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { AuthContext } from "../../context/AuthContext";
+import contactImg from "../../assets/images/contact.png"
 
 const ContactSupport = ({ contactPage = false }) => {
   const [formData, setFormData] = useState({
@@ -41,14 +42,16 @@ const ContactSupport = ({ contactPage = false }) => {
 
   return (
     <div
-      className={`w-full flex items-center mx-auto mt-10  border ${
+      className={`w-full mt-32 custom:items-start items-center flex custom:flex-row flex-col mx-auto custom:mt-10  border ${
         !contactPage ? "rounded-lg bg-slate-300" : "bg-white shadow-lg"
       } `}
     >
-      <div className="flex flex-col items-start px-10 py-5 w-full">
-        <h2 className="text-3xl text-[#000] font-[400] mb-12">
-          Contact Support
+      {contactPage && <img src={contactImg} alt="contactImg" className="w-[50rem] object-contain" />}
+      <div className="flex flex-col justify-between items-start px-10 py-20 w-full">
+        <h2 className="text-5xl text-[#000] font-[500] mb-12">
+         {contactPage ? "Reach out to the Clinica team" : "Contact Support"}
         </h2>
+        {/* {contactPage && <p className="text-2xl font-[500] max-w-[80%] text-[#000]">Let us know your reason for setting up the discussion and we will respond shortly</p>} */}
         <form className="w-full" onSubmit={handleSubmit}>
           {/* <div className={`${contactPage && "w-[40%]"} mb-8`}>
             <label
@@ -67,13 +70,13 @@ const ContactSupport = ({ contactPage = false }) => {
               className="shadow appearance-none  border-[#c4c4c4] rounded w-full py-2 px-3 text-[#000] leading-tight focus:outline-none "
               placeholder="Your name"
             />
-          </div>
-          <div className={`${contactPage && "w-[40%]"} mb-8`}>
+          </div> */}
+          {contactPage &&<div className={`${contactPage && "w-[40%]"} mt-10 mb-8`}>
             <label
-              className="block text-[#000] text-sm font-[500] mb-2"
+              className="block text-gray-500 text-sm font-[500] mb-2"
               htmlFor="email"
             >
-              Email
+              Email address
             </label>
             <input
               required
@@ -85,10 +88,10 @@ const ContactSupport = ({ contactPage = false }) => {
               className="shadow appearance-none border-[#c4c4c4] rounded w-full py-2 px-3 text-[#000] leading-tight focus:outline-none focus:shadow-outline"
               placeholder="Your email"
             />
-          </div> */}
+          </div>}
           <div className="mb-10">
             <label
-              className="block text-[#000] text-sm font-[500] mb-2"
+              className="block text-gray-500 text-sm font-[500] mb-2"
               htmlFor="message"
             >
           Comment or Message for Clinica AI Support Team
@@ -108,7 +111,7 @@ const ContactSupport = ({ contactPage = false }) => {
             <PrimaryBtn
               disabled={loading}
               className={"w-40 text-slate-50"}
-              text={"Submit"}
+              text={"Send Message"}
             />
           </div>
         </form>

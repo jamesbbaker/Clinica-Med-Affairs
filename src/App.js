@@ -11,6 +11,9 @@ import "react-toastify/dist/ReactToastify.css";
 import NeedHelp from "./pages/NeedHelp";
 import ContactUs from "./pages/ContactUs";
 import Testing from "./pages/Testing";
+import MedicalAffairsLanding from "./pages/MedicalAffairs";
+import Research from "./pages/Research";
+import TermsAndConditions from "./pages/TermsAndConditions";
 
 const router = createBrowserRouter([
   {
@@ -26,15 +29,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/medicalAffairs",
-        element: <Landing />,
+        element: <MedicalAffairsLanding />,
       },
       {
         path: "/rnd",
-        element: <Landing />,
+        element: <Research />,
       },
       {
         path: "/nonprofit",
         element: <Landing />,
+      },
+      {
+        path: "/termsandconditions",
+        element: <TermsAndConditions />,
       },
       {
         element: <ContactUs />,

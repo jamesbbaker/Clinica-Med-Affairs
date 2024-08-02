@@ -197,9 +197,9 @@ const Sidebar = () => {
               {item.children && (
                 <div className="flex pl-4  justify-center px-2 flex-col items-center w-full">
                   {item.children.map((subItem, index) => {
-                    // if (
-                    //   item.name === "outputs" &&
-                    //   user.page_view &&
+                    if (
+                      item.name === "outputs" &&
+                      user.page_view &&
                     //   // subItem.id !== APP_ROUTES.hcp_insights &&
                     //   // subItem.id !== APP_ROUTES.medical_affair_toolbox &&
                     //   // subItem.id !== APP_ROUTES.payer_variation &&
@@ -208,10 +208,10 @@ const Sidebar = () => {
                     //   // subItem.id !==
                     //   //   APP_ROUTES.priority_engagement_opportunity_page &&
                     //   // subItem.id !== APP_ROUTES.target_lists &&
-                    //   !user.page_view.includes(subItem.id)
-                    // ) {
-                    //   return false;
-                    // }
+                      !user.page_view.includes(subItem.id)
+                    ) {
+                      return false;
+                    }
                     if (
                       item.name === "dashboard" &&
                       subItem.id === APP_ROUTES.users &&

@@ -292,5 +292,9 @@ input:checked + .slider:before {
 }
 
 
+video {
+  object-fit:cover;
+}
+
 
 

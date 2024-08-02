@@ -186,21 +186,11 @@ const Home = () => {
                     ></div>
                     <p className="text-sm text-center">{item.description}</p>
                   </div>
-                  {NavigationMenu
-                  .filter(
+                  {NavigationMenu.filter(
                     (_item) =>
-                      _item.color === item.color 
-                    // &&
-                      // user.page_view &&
-                      // subItem.id !== APP_ROUTES.hcp_insights &&
-                      // subItem.id !== APP_ROUTES.medical_affair_toolbox &&
-                      // subItem.id !== APP_ROUTES.payer_variation &&
-                      // subItem.id !== APP_ROUTES.help &&
-                      // subItem.id !== APP_ROUTES.testing &&
-                      // subItem.id !==
-                      //   APP_ROUTES.priority_engagement_opportunity_page &&
-                      // subItem.id !== APP_ROUTES.target_lists &&
-                      // user.page_view.includes(_item.id),
+                      _item.color === item.color &&
+                      user.page_view &&
+                      user.page_view.includes(_item.id)
                   ).map((item) => {
                     return item.name ? (
                       <div
