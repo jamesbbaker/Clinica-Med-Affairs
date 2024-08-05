@@ -152,7 +152,7 @@ const Home = () => {
 
   return (
     <div>
-      <h2 className="font-[500] mb-6 text-2xl">Medical AI Suite Home</h2>
+      <h2 className="font-[500] mb-6 text-lg md:text-2xl">Medical AI Suite Home</h2>
       {currentMenu === sidebarRoutes.USERS ? (
         <>
           <Popup
@@ -173,25 +173,28 @@ const Home = () => {
         </>
       ) : (
         <>
-          <div className="grid mb-8 gap-[1rem] grid-cols-4">
+          <div className="grid mb-8 min-w-[700px] overflow-x-auto gap-[1rem] grid-cols-4">
             {colorDescriptions.map((item) => {
               return (
                 <div className="flex flex-col items-center gap-2">
-                  <div className="flex h-[4rem] justify-center w-full my-4 px-4 items-center gap-3">
+                  <div className="flex md:h-[4rem] h-[7rem] justify-center w-full my-4 px-4 items-center gap-3">
                     <div
                       style={{
                         background: item.color,
                       }}
                       className={`w-8 h-8 rounded-sm`}
                     ></div>
-                    <p className="text-sm text-center">{item.description}</p>
+                    <p className="md:text-sm text-xs text-center">{item.description}</p>
                   </div>
-                  {NavigationMenu.filter(
+                  {NavigationMenu
+                  .filter(
                     (_item) =>
-                      _item.color === item.color &&
-                      user.page_view &&
-                      user.page_view.includes(_item.id)
-                  ).map((item) => {
+                      _item.color === item.color
+                    //  &&
+                    //   user.page_view &&
+                    //   user.page_view.includes(_item.id)
+                  )
+                  .map((item) => {
                     return item.name ? (
                       <div
                         key={item.id}
@@ -199,10 +202,10 @@ const Home = () => {
                           borderColor: item.color,
                         }}
                         onClick={() => (window.location.href = item.route)}
-                        className={`px-2 w-full h-[12rem] border-[4px] hover:scale-105 gap-1 font-[600] text-lg transition-all ease-in-out duration-200 shadow-md cursor-pointer rounded bg-slate-200 py-14 grid place-content-center text-center`}
+                        className={`px-2 w-full md:h-[12rem] h-[15rem] border-[4px] hover:scale-105 gap-1 font-[600] md:text-lg text-md transition-all ease-in-out duration-200 shadow-md cursor-pointer rounded bg-slate-200 py-14 grid place-content-center text-center`}
                       >
                         {item.name}
-                        <div className="text-sm font-[400]">
+                        <div className="md:text-sm text-xs font-[400]">
                           {item.description}
                         </div>
                       </div>

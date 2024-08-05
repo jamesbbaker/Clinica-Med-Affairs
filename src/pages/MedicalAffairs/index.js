@@ -18,9 +18,11 @@ import Quote_mark from "../../assets/images/Quote_mark.png";
 import { useNavigate } from "react-router-dom";
 import { MdOutlineReplay } from "react-icons/md";
 import Popup from "reactjs-popup";
-import InputField from "../../components/InputField";
 import DemoContact from "../../components/DemoContact";
 import medicalImg from "../../assets/images/medicalSvg.svg"
+import targetImage from "../../assets/images/targetedEngagement.gif"
+import tailoredMessaging from "../../assets/images/tailoredMessaging.gif"
+import evidence from "../../assets/images/evidence.svg"
 import Footer from "../../components/Footer";
 import impactTracking from "../../assets/images/impactTracking.gif"
 
@@ -39,7 +41,7 @@ const SolutionsList = [
   {
     id: 2,
     text: "Targeted Engagement",
-    img:medicalImg,
+    img:targetImage,
     title: "HCPs, hospitals / clinics, plans patient need (MSL ready)",
     description:
       "Measure disparities in care in a disease down to the individual physician",
@@ -48,7 +50,7 @@ const SolutionsList = [
   {
     id: 3,
     text: "Tailored Messaging",
-    img:medicalImg,
+    img:tailoredMessaging,
     title: "Tailored messaging based on deep profiles",
     description:
       "Tailor messaging based on profiles to bring the most impactful messages to the right audiences to influence care",
@@ -57,7 +59,7 @@ const SolutionsList = [
   {
     id: 4,
     text: "Evidence Generation and Digital",
-    img:medicalImg,
+    img:evidence,
     title: "Generate evidence and materials to support strategy",
     description:
       "Develop evidence and digital tools to support targeted engagement strategy",
@@ -112,7 +114,7 @@ export default function MedicalAffairsLanding() {
     infinite: true,
     speed: 500,
     autoplay: true,
-    autoplaySpeed: 2000,
+    autoplaySpeed: 3000,
     slidesToShow: 1,
     slidesToScroll: 1,
     afterChange: (e) => {
@@ -167,38 +169,8 @@ export default function MedicalAffairsLanding() {
 
   return (
     <>
-      <Navbar />
+      <Navbar  />
       <section className="relative overflow-hidden">
-        <div
-          className="absolute left-1/2 transform -translate-x-1/2 bottom-0 pointer-events-none z-[-1]"
-          aria-hidden="true"
-        >
-          <svg
-            width="1360"
-            height="578"
-            viewBox="0 0 1360 578"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <linearGradient
-                x1="50%"
-                y1="0%"
-                x2="50%"
-                y2="100%"
-                id="illustration-01"
-              >
-                <stop stopColor="#FFF" offset="0%" />
-                <stop stopColor="#EAEAEA" offset="77.402%" />
-                <stop stopColor="#DFDFDF" offset="100%" />
-              </linearGradient>
-            </defs>
-            <g fill="url(#illustration-01)" fillRule="evenodd">
-              <circle cx="1232" cy="128" r="128" />
-              <circle cx="155" cy="443" r="64" />
-            </g>
-          </svg>
-        </div>
-
         <div className="z-[1] md:py-52 custom:py-32 py-20 mx-auto grid grid-cols-1 custom:grid-cols-2 custom:px-20 px-10 sm:px-6">
           {/* Hero content */}
           <div className="flex gap-10 px-10 flex-col items-center justify-center">

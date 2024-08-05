@@ -18,9 +18,11 @@ import Quote_mark from "../../assets/images/Quote_mark.png";
 import { useNavigate } from "react-router-dom";
 import { MdOutlineReplay } from "react-icons/md";
 import Popup from "reactjs-popup";
-import InputField from "../../components/InputField";
 import DemoContact from "../../components/DemoContact";
 import Footer from "../../components/Footer";
+import carousel1 from "../../assets/videos/caorusel_1.mp4";
+import carousel2 from "../../assets/videos/carousel_2.mp4";
+import carousel3 from "../../assets/videos/carousel_3.gif";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -32,6 +34,7 @@ const SolutionsList = [
     description:
       "Our clinical and data experts have years of experience in mapping the patient journey from diagnosis to post-treatment across more than 20 diseases.",
     cardText: "Medical Strategy",
+    video: carousel1,
   },
   {
     id: 2,
@@ -40,6 +43,7 @@ const SolutionsList = [
     description:
       "Measure disparities in care in a disease down to the individual physician",
     cardText: "",
+    video: carousel2,
   },
   {
     id: 3,
@@ -48,6 +52,7 @@ const SolutionsList = [
     description:
       "Tailor messaging based on profiles to bring the most impactful messages to the right audiences to influence care",
     cardText: "Tailored Messaging",
+    img: carousel3,
   },
 ];
 
@@ -89,7 +94,7 @@ export default function Research() {
     infinite: true,
     speed: 500,
     autoplay: true,
-    autoplaySpeed: 2000,
+    autoplaySpeed: 3000,
     slidesToShow: 1,
     slidesToScroll: 1,
     afterChange: (e) => {
@@ -146,36 +151,6 @@ export default function Research() {
     <>
       <Navbar />
       <section className="relative overflow-hidden">
-        <div
-          className="absolute left-1/2 transform -translate-x-1/2 bottom-0 pointer-events-none z-[-1]"
-          aria-hidden="true"
-        >
-          <svg
-            width="1360"
-            height="578"
-            viewBox="0 0 1360 578"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <linearGradient
-                x1="50%"
-                y1="0%"
-                x2="50%"
-                y2="100%"
-                id="illustration-01"
-              >
-                <stop stopColor="#FFF" offset="0%" />
-                <stop stopColor="#EAEAEA" offset="77.402%" />
-                <stop stopColor="#DFDFDF" offset="100%" />
-              </linearGradient>
-            </defs>
-            <g fill="url(#illustration-01)" fillRule="evenodd">
-              <circle cx="1232" cy="128" r="128" />
-              <circle cx="155" cy="443" r="64" />
-            </g>
-          </svg>
-        </div>
-
         <div className="z-[1] md:py-52 custom:py-32 py-20 mx-auto grid grid-cols-1 custom:grid-cols-2 custom:px-20 px-10 sm:px-6">
           {/* Hero content */}
           <div className="flex gap-10 px-10 flex-col items-center justify-center">
@@ -240,11 +215,11 @@ export default function Research() {
         <div className="flex flex-none flex-wrap justify-center gap-6 items-center px-10 py-4">
           {SolutionsList.map((item, index) => (
             <div
-            onClick={() => handleClick(index)}
-            className={`${
-              currentToggle === index && "bg-slate-300"
-            } font-[500] md:text-2xl text-md rounded-md text-center hover:bg-slate-300 p-2 cursor-pointer`}
-          >
+              onClick={() => handleClick(index)}
+              className={`${
+                currentToggle === index && "bg-slate-300"
+              } font-[500] md:text-2xl text-md rounded-md text-center hover:bg-slate-300 p-2 cursor-pointer`}
+            >
               {item.text}
             </div>
           ))}
@@ -259,11 +234,25 @@ export default function Research() {
                       <div className="md:text-3xl text-xl font-[500] text-center">
                         {item.title}
                       </div>
-                      <div className="md:text-xl text-md text-center">
+                      {/* <div className="md:text-xl text-md text-center">
                         {item.description}
-                      </div>
+                      </div> */}
                     </div>
-                    <div className="col-span-1 custom:mt-0 mt-10 w-[80%] mx-auto h-[30rem] border-2 "></div>
+                    <div className="col-span-1  grid place-content-center custom:mt-0 mt-10 w-[80%] mx-auto h-[30rem] ">
+                      {item.video ? (
+                        <ReactPlayer
+                          url={item.video}
+                          className="object-contain w-[20rem] h-[20rem]"
+                          muted={true}
+                          loop
+                          playsinline
+                          playing={true}
+                          controls={false}
+                        />
+                      ) : (
+                        <img src={item.img} className="w-[20rem] h-[20rem] object-contain" alt="img" />
+                      )}
+                    </div>
                   </div>
                 </div>
               );

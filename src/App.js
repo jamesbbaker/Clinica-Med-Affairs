@@ -1,4 +1,8 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  RouterProvider,
+  createBrowserRouter,
+  useLocation,
+} from "react-router-dom";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -14,6 +18,9 @@ import Testing from "./pages/Testing";
 import MedicalAffairsLanding from "./pages/MedicalAffairs";
 import Research from "./pages/Research";
 import TermsAndConditions from "./pages/TermsAndConditions";
+import { useEffect } from "react";
+import useGA4PageTracking from "./Hooks/useGA4PageTracking";
+import { Outlet } from "react-router-dom";
 
 const router = createBrowserRouter([
   {
@@ -62,7 +69,7 @@ const router = createBrowserRouter([
             path: "/testing",
             element: <Testing />,
           },
-          
+
           {
             path: "outputs",
             children: [
@@ -83,7 +90,16 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <RouterProvider router={router}>
+      <RouterOutlet />
+    </RouterProvider>
+  );
 }
 
 export default App;
+
+const RouterOutlet = () => {
+  useGA4PageTracking();
+  return <Outlet />;
+};

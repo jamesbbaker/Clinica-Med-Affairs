@@ -396,7 +396,7 @@ const PriorityEngagement = () => {
             {charts.map((item, index) => (
               <div key={index} className="text-[#000]">
                 <button
-                  className={`text-[#000] hover:shadow-xl transition-all ease-in-out duration-300 shadow-md text-lg px-4 w-full text-center py-4 font-[500] ${
+                  className={`text-[#000] hover:shadow-xl transition-all ease-in-out duration-300 shadow-md md:text-lg text-sm px-4 w-full text-center py-4 font-[500] ${
                     currentChart === item.id
                       ? "bg-blue-500 text-white"
                       : "text-gray-700"

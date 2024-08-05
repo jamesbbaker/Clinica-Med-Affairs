@@ -42,12 +42,12 @@ const ContactSupport = ({ contactPage = false }) => {
 
   return (
     <div
-      className={`w-full mt-32 custom:items-start items-center flex custom:flex-row flex-col mx-auto custom:mt-10  border ${
+      className={`w-full md:mt-32 mt-10 custom:items-start items-center flex custom:flex-row flex-col mx-auto custom:mt-10  border ${
         !contactPage ? "rounded-lg bg-slate-300" : "bg-white shadow-lg"
       } `}
     >
       {contactPage && <img src={contactImg} alt="contactImg" className="w-[50rem] object-contain" />}
-      <div className="flex flex-col justify-between items-start px-10 py-20 w-full">
+      <div className="flex flex-col justify-between items-start px-4 md:px-10 py-20 w-full">
         <h2 className="text-5xl text-[#000] font-[500] mb-12">
          {contactPage ? "Reach out to the Clinica team" : "Contact Support"}
         </h2>

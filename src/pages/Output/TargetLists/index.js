@@ -366,7 +366,7 @@ export const TargetLine = ({ selectedChart }) => {
             />
           </div>
 
-          <div className="grid  w-full grid-cols-2 items-center">
+          <div className="grid  w-full custom:grid-cols-2 grid-cols-1 items-center">
             {lineChartData.chart1 && (
               <LineChart
                 options={lineChartOptions}

@@ -103,10 +103,10 @@ const NeedHelp = () => {
               className="flex  w-full cursor-pointer shadow-box bg-slate-300 rounded-md flex-col items-start"
             >
               <div className="px-4 w-full flex justify-between items-center py-4 font-[600]">
-                <div className="flex  text-[1.125rem] items-center gap-5">
+                <div className="flex  md:text-[1.125rem] text-[0.95rem] items-center gap-5">
                   <img
                     src={item.img}
-                    className="h-[5rem] rounded-sm object-contain"
+                    className="md:h-[5rem] h-[2.5rem] rounded-sm object-contain"
                     alt="icon"
                   />
                   {item.title}
@@ -115,7 +115,7 @@ const NeedHelp = () => {
                   className="transition-all duration-[200]"
                   style={{ rotate: currentIndex === index ? "45deg" : "0deg" }}
                 >
-                  <IoMdAdd size={25} />
+                  <IoMdAdd size={document.body.clientWidth < 786 ?  25 : 10} />
                 </div>
               </div>
 
