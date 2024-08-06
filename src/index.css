@@ -297,4 +297,7 @@ video {
 }
 
 
-
+.card:hover > .card-item {
+  opacity: 1;
+  transition: all 500ms ease-in-out;
+}

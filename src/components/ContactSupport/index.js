@@ -4,8 +4,9 @@ import Popup from "reactjs-popup";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { AuthContext } from "../../context/AuthContext";
 import contactImg from "../../assets/images/contact.png"
+import { IoCloseCircle } from "react-icons/io5";
 
-const ContactSupport = ({ contactPage = false }) => {
+const ContactSupport = ({closeContact, contactPage = false }) => {
   const [formData, setFormData] = useState({
     message: "",
   });
@@ -42,15 +43,17 @@ const ContactSupport = ({ contactPage = false }) => {
 
   return (
     <div
-      className={`w-full md:mt-32 mt-10 custom:items-start items-center flex custom:flex-row flex-col mx-auto custom:mt-10  border ${
-        !contactPage ? "rounded-lg bg-slate-300" : "bg-white shadow-lg"
+      className={`w-full  custom:items-start items-center flex custom:flex-row flex-col   ${
+        !contactPage ? "rounded-lg border bg-slate-300 mt-10 custom:mt-10 mx-auto  md:mt-32 " : "bg-white py-10"
       } `}
     >
+      {contactPage && <IoCloseCircle onClick={closeContact} size={40} className="absolute top-5 right-5" />}
       {contactPage && <img src={contactImg} alt="contactImg" className="w-[50rem] object-contain" />}
       <div className="flex flex-col justify-between items-start px-4 md:px-10 py-20 w-full">
-        <h2 className="text-5xl text-[#000] font-[500] mb-12">
-         {contactPage ? "Reach out to the Clinica team" : "Contact Support"}
+        <h2 className="text-5xl text-[#000] font-[500] mb-0">
+         {contactPage ? "Reach out to the" : "Contact Support"}
         </h2>
+        {contactPage && <h2 className="text-5xl text-[#000] font-[500] mb-12">Clinica team</h2>}
         {/* {contactPage && <p className="text-2xl font-[500] max-w-[80%] text-[#000]">Let us know your reason for setting up the discussion and we will respond shortly</p>} */}
         <form className="w-full" onSubmit={handleSubmit}>
           {/* <div className={`${contactPage && "w-[40%]"} mb-8`}>
@@ -94,7 +97,7 @@ const ContactSupport = ({ contactPage = false }) => {
               className="block text-gray-500 text-sm font-[500] mb-2"
               htmlFor="message"
             >
-          Comment or Message for Clinica AI Support Team
+          Message
             </label>
             <textarea
               required

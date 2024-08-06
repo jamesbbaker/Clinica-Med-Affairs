@@ -1,15 +1,11 @@
 import ContactSupport from "../../components/ContactSupport";
-import Footer from "../../components/Footer";
-import Navbar from "../../components/Navbar";
 
-export default function ContactUs() {
+export default function ContactUs({closeContact}) {
   return (
-    <div className="h-full w-full bg-white">
-      <Navbar />
-      <div className="flex h-[100vh] justify-center items-center max-w-[90%] m-auto">
-      <ContactSupport contactPage />
-      </div>
-      <Footer />
+    <div className="h-full w-ful">
+  
+      <ContactSupport closeContact={closeContact} contactPage />
+    
     </div>
   );
 }

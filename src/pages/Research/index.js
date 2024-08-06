@@ -20,7 +20,7 @@ import { MdOutlineReplay } from "react-icons/md";
 import Popup from "reactjs-popup";
 import DemoContact from "../../components/DemoContact";
 import Footer from "../../components/Footer";
-import carousel1 from "../../assets/videos/caorusel_1.mp4";
+import carousel1 from "../../assets/videos/carousel_1.gif";
 import carousel2 from "../../assets/videos/carousel_2.mp4";
 import carousel3 from "../../assets/videos/carousel_3.gif";
 
@@ -34,7 +34,7 @@ const SolutionsList = [
     description:
       "Our clinical and data experts have years of experience in mapping the patient journey from diagnosis to post-treatment across more than 20 diseases.",
     cardText: "Medical Strategy",
-    video: carousel1,
+    img: carousel1,
   },
   {
     id: 2,
@@ -183,7 +183,7 @@ export default function Research() {
             className="rounded-xl"
             position="center center"
           >
-            <DemoContact />
+            <DemoContact handleClose={closeModal} />
           </Popup>
           <div className="relative w-full custom:mt-0 mt-10 grid place-content-center">
             <ReactPlayer
@@ -242,15 +242,16 @@ export default function Research() {
                       {item.video ? (
                         <ReactPlayer
                           url={item.video}
-                          className="object-contain w-[20rem] h-[20rem]"
+                          className="object-contain"
                           muted={true}
                           loop
                           playsinline
                           playing={true}
                           controls={false}
                         />
+                        
                       ) : (
-                        <img src={item.img} className="w-[20rem] h-[20rem] object-contain" alt="img" />
+                        <img src={item.img} className="h-[50rem] object-contain" alt="img" />
                       )}
                     </div>
                   </div>

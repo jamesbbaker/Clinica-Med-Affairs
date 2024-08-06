@@ -21,6 +21,7 @@ import TermsAndConditions from "./pages/TermsAndConditions";
 import { useEffect } from "react";
 import useGA4PageTracking from "./Hooks/useGA4PageTracking";
 import { Outlet } from "react-router-dom";
+import ResearchPage from "./pages/ResearchPage";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: "/rnd",
         element: <Research />,
+      },
+      {
+        path: "/research",
+        element: <ResearchPage />,
       },
       {
         path: "/nonprofit",

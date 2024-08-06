@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { AuthContext } from "../../context/AuthContext";
 
-import Logo from "../../assets/images/logo.png";
+import Logo from "../../assets/images/logo.svg";
 import Popup from "reactjs-popup";
 import Login from "../../pages/Login";
 

@@ -203,7 +203,7 @@ export default function MedicalAffairsLanding() {
             className="rounded-xl"
             position="center center"
           >
-            <DemoContact />
+            <DemoContact handleClose={closeModal} />
           </Popup>
           <div className="relative w-full custom:mt-0 mt-10 grid place-content-center">
             <ReactPlayer

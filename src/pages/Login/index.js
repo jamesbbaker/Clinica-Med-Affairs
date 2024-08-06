@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useReducer } from "react";
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/images/logo.svg";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import InputField from "../../components/InputField";
 import { AuthContext } from "../../context/AuthContext";
