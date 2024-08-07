@@ -298,21 +298,21 @@ export default function Research() {
                 <h2 className="text-xl font-[600]">
                   {">50k predictive features"}
                 </h2>
-                {/* <p>Downloads per day</p> */}
+              
               </div>
             </div>
             <div className="flex items-center gap-2">
               <img src={Icon_2} />
               <div className="flex flex-col items-start">
                 <h2 className="text-xl font-[600]">All diseases</h2>
-                {/* <p>Users</p> */}
+             
               </div>
             </div>
             <div className="flex items-center gap-2">
               <img src={Icon_3} />
               <div className="flex flex-col items-start">
                 <h2 className="text-xl font-[600]">Dozes of use cases</h2>
-                {/* <p>Clients</p> */}
+               
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -321,7 +321,6 @@ export default function Research() {
                 <h2 className="text-xl font-[600]">
                   Claims, Medical Records, Proprietary Webscraped Datasets
                 </h2>
-                {/* <p>Countries</p> */}
               </div>
             </div>
           </div>
