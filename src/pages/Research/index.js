@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Navbar from "../../components/Navbar";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -9,12 +9,10 @@ import ReactPlayer from "react-player";
 import video1 from "../../assets/videos/randd.mp4";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import Slider from "react-slick";
-import clientLogo from "../../assets/images/Vector.png";
 import icon from "../../assets/images/Icon.png";
 import Icon_2 from "../../assets/images/Icon_2.png";
 import Icon_3 from "../../assets/images/Icon_3.png";
 import Icon_4 from "../../assets/images/Icon_4.png";
-import Quote_mark from "../../assets/images/Quote_mark.png";
 import { useNavigate } from "react-router-dom";
 import { MdOutlineReplay } from "react-icons/md";
 import Popup from "reactjs-popup";
@@ -23,6 +21,9 @@ import Footer from "../../components/Footer";
 import carousel1 from "../../assets/videos/carousel_1.gif";
 import carousel2 from "../../assets/videos/carousel_2.mp4";
 import carousel3 from "../../assets/videos/carousel_3.gif";
+import carousel4 from "../../assets/videos/carousel_4.mp4";
+import SolutionsTextSection from "../../components/SolutionsTextSection";
+import ContactFooter from "../../components/ContactFooter";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -53,6 +54,14 @@ const SolutionsList = [
       "Tailor messaging based on profiles to bring the most impactful messages to the right audiences to influence care",
     cardText: "Tailored Messaging",
     img: carousel3,
+  },
+  {
+    id: 2,
+    text: "Revive opportunities",
+    title: "Revive opportunities",
+    description: "Identify trials where imbalances led to false results",
+    cardText: "",
+    video: carousel4,
   },
 ];
 
@@ -87,20 +96,24 @@ export default function Research() {
   const video1ref = useRef(null);
   const isAnimationPlayed = useRef(false);
   const [currentToggle, setCurrentToggle] = useState(0);
+  const [loop, setLoop] = useState(true);
 
-  var settings = {
-    dots: false,
-    arrows: false,
-    infinite: true,
-    speed: 500,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    afterChange: (e) => {
-      setCurrentToggle(e);
-    },
-  };
+  var settings = useMemo(
+    () => ({
+      dots: false,
+      arrows: false,
+      infinite: true,
+      speed: 500,
+      autoplay: loop,
+      autoplaySpeed: 3000,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      afterChange: (e) => {
+        setCurrentToggle(e);
+      },
+    }),
+    [loop]
+  );
 
   const handleReady = () => {
     if (isAnimationPlayed.current) {
@@ -125,6 +138,7 @@ export default function Research() {
   const navigate = useNavigate();
 
   const handleClick = (index) => {
+    setLoop(false)
     sliderRef.current.slickGoTo(index);
   };
 
@@ -157,23 +171,24 @@ export default function Research() {
             {/* Section header */}
 
             <h1
-              className="text-xl text-center custom:text-3xl md:text-6xl font-[600] leading-tighter"
+              className="text-xl text-center custom:text-3xl  font-[600] leading-tighter"
               data-aos="zoom-y-out"
             >
-              The first real-time Medical Affairs intelligence suite driven by
+              Conduct faster, more accurate trials with fewer patients
             </h1>
             <h1
               data-aos="zoom-y-out"
               data-aos-delay="150"
-              className="text-3xl custom:text-3xl md:text-6xl font-extrabold leading-tighter tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400"
+              className="text-lg custom:text-xl text-center font-[500] leading-tighter tracking-tighter "
             >
-              AI + RWD
+              Color faster, more accurate and fewer patients in the AI + RWD
+              bold blue gradient text
             </h1>
 
             <PrimaryBtn
               onClick={() => setPopup(true)}
               text={"Request a Demo"}
-              className={"md:px-10 px-4 md:text-2xl text:xs text-[#fff]"}
+              className={"md:px-10  bg-[#0A1172]  hover:scale-105 transition-all ease-in-out duration-200 px-4 md:text-2xl text:xs text-[#fff]"}
             />
           </div>
           <Popup
@@ -249,9 +264,12 @@ export default function Research() {
                           playing={true}
                           controls={false}
                         />
-                        
                       ) : (
-                        <img src={item.img} className="h-[50rem] object-contain" alt="img" />
+                        <img
+                          src={item.img}
+                          className="h-[50rem] object-contain"
+                          alt="img"
+                        />
                       )}
                     </div>
                   </div>
@@ -261,115 +279,55 @@ export default function Research() {
           </Slider>
         </div>
       </section>
-      <section className="py-20 relative bg-[#D5FAFC] flex flex-col justify-center">
-        <div className="w-full flex-col gap-10 cusotm:gap-0 relative h-full flex justify-center items-center">
-          <div className="custom:absolute text-center custom:text-left custom:-top-4 custom:left-[20%] relative">
-            <h2 className="text-4xl custom:max-w-[70%] max-w-[100%] font-[700]">
-              <img
-                src={Quote_mark}
-                className="absolute -top-10 -left-28"
-                alt="quote"
-              />
-              Real Stories from Real Customers
-            </h2>
-            <p className="text-center custom:text-left">
-              Get inspired by these stories.
-            </p>
-          </div>
-          <div className="grid relative items-center gap-4 custom:max-w-[70%] max-w-[100%] grid-cols-1 custom:grid-cols-2">
-            <div className="md:w-[25rem] custom:mt-20 mt-0 flex flex-col gap-6 p-10 bg-white rounded-xl ">
-              <img
-                src={clientLogo}
-                className="h-[2rem] w-[5rem] object-contain"
-              />
-              <p className="custom:text-lg text-md">
-                To quickly start my startup landing page design, I was looking
-                for a landing page UI Kit. Landify is one of the best landing
-                page UI kit I have come across. It’s so flexible, well organised
-                and easily editable.
-              </p>
-              <div className="flex flex-col items-start">
-                <h2 className="font-[600]">Floyd Miles</h2>
-                <p className="font-[300] text-[0.85rem]">
-                  Vice President, GoPro
-                </p>
-              </div>
-            </div>
-            <div className="relative flex flex-col gap-4 items-start">
-              <div className="md:w-[25rem] flex flex-col gap-6 p-10 bg-white rounded-xl ">
-                <img
-                  src={clientLogo}
-                  className="h-[2rem] w-[5rem] object-contain"
-                />
-                <p className="custom:text-lg text-md">
-                  I used landify and created a landing page for my startup
-                  within a week. The Landify UI Kit is simple and highly
-                  intuitive, so anyone can use it.
-                </p>
-                <div className="flex flex-col items-start">
-                  <h2 className="font-[600]">Jane Cooper</h2>
-                  <p className="font-[300] text-[0.85rem]">CEO, Airbnb</p>
-                </div>
-              </div>
-              <div className="custom:w-[20rem] md:w-[25rem]  flex flex-col gap-6 p-10 bg-white rounded-xl ">
-                <img
-                  src={clientLogo}
-                  className="h-[2rem] w-[5rem] object-contain"
-                />
-                <p className="custom:text-lg text-md">
-                  Landify saved our time in designing my company page.
-                </p>
-                <div className="flex flex-col items-start">
-                  <h2 className="font-[600]">Kristin Watson</h2>
-                  <p className="font-[300] text-[0.85rem]">
-                    Co-Founder, Strapi
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <SolutionsTextSection />
       <section>
-        <div className="grid custom:grid-cols-2 grid-cols-1 px-10 md:px-28 py-20">
+        <div className="grid bg-gray-200 custom:grid-cols-2 grid-cols-1 px-10 md:px-28 py-20">
           <div className="flex flex-col items-start gap-4">
             <h2 className="md:text-6xl text-3xl custom:max-w-[100%] max-w-[100%] font-[600]">
-              Over 18 years of achievements
+              Best-in-class AI prediction
             </h2>
-            <p>With out super powers we have reached this</p>
+            <p>
+              Leveraging a proprietary feature library of over 50k patient
+              features
+            </p>
           </div>
           <div className="grid custom:mt-0 mt-10 md:gap-8 gap-10 grid-cols-1 md:grid-cols-2">
             <div className="flex items-center gap-2">
               <img src={icon} />
               <div className="flex flex-col items-start">
-                <h2 className="text-3xl font-[600]">10,000+</h2>
-                <p>Downloads per day</p>
+                <h2 className="text-xl font-[600]">
+                  {">50k predictive features"}
+                </h2>
+                {/* <p>Downloads per day</p> */}
               </div>
             </div>
             <div className="flex items-center gap-2">
               <img src={Icon_2} />
               <div className="flex flex-col items-start">
-                <h2 className="text-3xl font-[600]">2 Million</h2>
-                <p>Users</p>
+                <h2 className="text-xl font-[600]">All diseases</h2>
+                {/* <p>Users</p> */}
               </div>
             </div>
             <div className="flex items-center gap-2">
               <img src={Icon_3} />
               <div className="flex flex-col items-start">
-                <h2 className="text-3xl font-[600]">500+</h2>
-                <p>Clients</p>
+                <h2 className="text-xl font-[600]">Dozes of use cases</h2>
+                {/* <p>Clients</p> */}
               </div>
             </div>
             <div className="flex items-center gap-2">
               <img src={Icon_4} />
               <div className="flex flex-col items-start">
-                <h2 className="text-3xl font-[600]">140</h2>
-                <p>Countries</p>
+                <h2 className="text-xl font-[600]">
+                  Claims, Medical Records, Proprietary Webscraped Datasets
+                </h2>
+                {/* <p>Countries</p> */}
               </div>
             </div>
           </div>
         </div>
       </section>
+      <ContactFooter />
       <Footer />
     </>
   );

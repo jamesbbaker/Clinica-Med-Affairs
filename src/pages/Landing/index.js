@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Navbar from "../../components/Navbar";
 import "aos/dist/aos.css";
 import ReactPlayer from "react-player";
@@ -11,20 +11,24 @@ import PrimaryBtn from "../../components/PrimaryBtn";
 import Footer from "../../components/Footer";
 import gsap from "gsap/all";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import MA_Section_Homepage from "../../assets/images/MA_Section_Homepage.svg"
-import DemoContact from "../../components/DemoContact";
-import Popup from "reactjs-popup";
-import ContactUs from "../ContactUs";
-
+import MA_Section_Homepage from "../../assets/images/MA_Section_Homepage.svg";
+import icon from "../../assets/images/Icon.png";
+import Icon_2 from "../../assets/images/Icon_2.png";
+import Icon_3 from "../../assets/images/Icon_3.png";
+import Icon_4 from "../../assets/images/Icon_4.png";
+import rnd from "../../assets/videos/R&D_Section_Homepage.mp4";
+import Testimonials from "../../components/Testimonials";
+import ContactFooter from "../../components/ContactFooter";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const SolutionsList = [
   {
     id: 1,
-    text: "R&D",
-    title: "R&D",
+    text: "RWE",
+    title: "RWE",
     link: "rnd",
+    video: rnd,
     description:
       "Predict patient outcomes, optimize clinical trials, and enhance recruitment efficiency for faster, more accurate therapeutic innovation",
   },
@@ -47,32 +51,32 @@ const SolutionsList = [
   // },
 ];
 
-const texts = [
-  "Find patients without diagnosis (e.g., endometriosis, dementia)",
-  "Determine risk or severity of disease (e.g., high risk of Severe COVID Outcomes)",
-  "Assess staging of disease (e.g., breast, lung cancer staging)",
-  "Determine unobserved biomarkers (e.g., EGFR, HER2, PD-L1)",
-  "Account for patients with incomplete data",
-];
+
 
 export default function Index() {
   const video1ref = useRef(null);
   const [currentToggle, setCurrentToggle] = useState(0);
-  const [popupOpen, setPopup] = useState(false);
 
-  var settings = {
-    dots: false,
-    arrows: false,
-    infinite: true,
-    speed: 500,
-    autoplay: true,
-    autoplaySpeed: 2000,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    afterChange: (e) => {
-      setCurrentToggle(e);
-    },
-  };
+
+  const [loop, setLoop] = useState(true);
+
+  var settings = useMemo(
+    () => ({
+      dots: false,
+      arrows: false,
+      infinite: true,
+      speed: 500,
+      autoplay: loop,
+      autoplaySpeed: 3000,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      afterChange: (e) => {
+        setCurrentToggle(e);
+      },
+    }),
+    [loop]
+  );
+
 
   const handleReady = () => {
     console.log("first");
@@ -83,6 +87,7 @@ export default function Index() {
   const navigate = useNavigate();
 
   const handleClick = (index) => {
+    setLoop(false)
     sliderRef.current.slickGoTo(index);
   };
 
@@ -90,35 +95,7 @@ export default function Index() {
     navigate(val);
   };
 
-  const [contact, setContact] = useState(false)
-
-  const itemsRef = useRef([])
-  useEffect(() => {
-    const items = itemsRef.current;
-    gsap.to(items, {
-      opacity: 1,
-      duration: 0.5,
-      stagger: 1,
-      repeat: -1,
-      repeatDelay: 1,
-      ease: "linear",
-      yoyo: false,
-      delay: 1,
-      onComplete: () => {
-        items.forEach(item => item.style.opacity = 0);
-      }
-    });
-  }, []);
-
-  const closeModal = () => {
-    setPopup(false);
-  };
-
-  const closeContact = () => {
-    setContact(false);
-  };
-
-
+ 
   return (
     <>
       <Navbar darkMode />
@@ -137,24 +114,8 @@ export default function Index() {
           playing={true}
           controls={false}
         />
-          <Popup
-            onClose={closeModal}
-            modal
-            open={popupOpen}
-            className="rounded-xl"
-            position="center center"
-          >
-            <DemoContact handleClose={closeModal} />
-          </Popup>
-          <Popup
-            onClose={closeContact}
-            modal
-            open={contact}
-            className="rounded-xl"
-            position="center center"
-          >
-            <ContactUs closeContact={closeContact} />
-          </Popup>
+        
+       
         <div className="z-2  rounded-xl px-12 py-10 flex flex-col items-center justify-center gap-4">
           <h2 className="md:text-[3rem] backdrop-blur-sm text-[1.5rem] nd:max-w-[70%] max-w-[90%] text-[#fff] text-center font-[400]">
             Empowering organizations to improve patient care with AI and RWE
@@ -162,18 +123,26 @@ export default function Index() {
           <div className="h-[10rem] p-2 flex items-center gap-2 rounded-lg">
             {/* <img src={logo} className="h-full" alt="logo" /> */}
             <PrimaryBtn
-              text={"Request a Demo"}
+              text={"RWE"}
               bg={"transparent"}
-              onClick={() => setPopup(true)}
+              onClick={() => handleNavigate("rnd")}
               className={
-                "px-10  before:absolute before:left-0 relative z-2 border-2 text-[#fff] border-[#fff] hover:text-[#000] before:top-0 before:bg-[#fff]  before:-z-2 overflow-hidden before:overflow-hidden before:w-full before:h-0 hover:before:top-[unset] hover:before:h-full hover:before:bottom-0 before:transition-all before:duration-200 before:ease-in-out md:text-2xl text-md hover:scale-105 text-[#000]"
+                "px-10  before:absolute before:left-0 relative z-2 border text-[#ffff] border-[#fff] hover:text-[#000] before:top-0 before:bg-[#fff]  before:-z-2 overflow-hidden before:overflow-hidden before:w-full before:h-0 hover:before:top-[unset] hover:before:h-full hover:before:bottom-0 before:transition-all before:duration-200 before:ease-in-out md:text-2xl text-md hover:scale-105 text-[#000]"
+              }
+            />
+            <PrimaryBtn
+              text={"Medical Affairs"}
+              bg={"transparent"}
+              onClick={() => handleNavigate("medicalaffairs")}
+              className={
+                "px-10  before:absolute before:left-0 relative z-2 border text-[#ffff]  border-[#fff] hover:text-[#000] before:top-0 before:bg-[#fff]  before:-z-2 overflow-hidden before:overflow-hidden before:w-full before:h-0 hover:before:top-[unset] hover:before:h-full hover:before:bottom-0 before:transition-all before:duration-200 before:ease-in-out md:text-2xl text-md hover:scale-105 text-[#000]"
               }
             />
             {/* <PrimaryBtn text={"Talk to an Expert"} bg={"#c4c4c4"}  className={"px-10  md:text-2xl textmd hover:scale-105 text-[#000]"} /> */}
           </div>
         </div>
       </section>
-      <section className="relative overflow-hidden py-20   bg-gray-100">
+      <section className="relative overflow-hidden py-10   bg-gray-100">
         <div className="flex flex-none flex-wrap justify-center gap-6 items-center px-10 py-4">
           {SolutionsList.map((item, index) => (
             <div
@@ -190,7 +159,7 @@ export default function Index() {
           <Slider ref={sliderRef} {...settings}>
             {SolutionsList.map((item) => {
               return (
-                <div className="md:px-4 px-0 py-10 w-full  min-h-[20rem] ">
+                <div className="md:px-4 px-0  w-full  min-h-[20rem] ">
                   <div className=" grid grid-cols-1 custom:grid-cols-2">
                     <div className="flex h-full justify-center col-span-1 flex-col items-center gap-4">
                       <div className="md:text-3xl text-xl font-[500] text-center">
@@ -202,15 +171,28 @@ export default function Index() {
                       <PrimaryBtn
                         onClick={() => handleNavigate(item.link)}
                         text={"Learn more"}
-                        className={"px-10 md:text-2xl mt-2 text-md text-[#fff]"}
+                        className={"px-10 bg-[#0A1172]  hover:scale-105 transition-all ease-in-out duration-200 md:text-2xl mt-2 text-md text-[#fff]"}
                       />
                     </div>
-                    <div className="col-span-1 custom:mt-0 mt-10 w-[80%] mx-auto h-[30rem]">
-                     {item.img && <img
-                        src={item.img}
-                        alt={item.title}
-                        className="object-contain w-full h-full"
-                      />}
+                    <div className="col-span-1 grid place-content-center custom:mt-0 mt-10 w-[80%] mx-auto h-[30rem]">
+                      {item.img && (
+                        <img
+                          src={item.img}
+                          alt={item.title}
+                          className="object-contain w-full h-full"
+                        />
+                      )}
+                      {item.video && (
+                        <ReactPlayer
+                          muted={true}
+                          url={item.video}
+                          loop
+                          playsinline
+                          onReady={handleReady}
+                          playing={true}
+                          controls={false}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -219,52 +201,50 @@ export default function Index() {
           </Slider>
         </div>
       </section>
-      <section className="min-h-[50vh] md:px-20 px-10 bg-[#fff] z-2 grid grid-cols-1">
-        <div className="grid md:px-10 bg-[#fff] place-content-center">
-          <h2 className="md:text-3xl text-xl text-center font-[400]">
-            Each of our solutions leverages distinctive clinical and AI
-            machinery to answer the most important questions
-          </h2>
-        </div>
-        <div
-          id="btn-section"
-          className="grid gap-6 mt-10 md:mt-0 md:grid-cols-3 grid-cols-2 mb-20 bg-[#fff]"
-        >
-          {texts.map((text, index) => (
-            <div
-              key={index}
-              ref={(el) => (itemsRef.current[index] = el)}
-              className={` opacity-0 md:text-xl text-md text-center grid place-content-center `}
-            >
-              {text}
+      <Testimonials />
+    
+      <ContactFooter />
+      <section>
+        <div className="grid custom:grid-cols-2 grid-cols-1 px-10 md:px-28 py-20">
+          <div className="flex flex-col items-start gap-4">
+            <h2 className="md:text-6xl text-3xl custom:max-w-[100%] max-w-[100%] font-[600]">
+              Over 18 years of achievements
+            </h2>
+            <p>With out super powers we have reached this</p>
+          </div>
+          <div className="grid custom:mt-0 mt-10 md:gap-8 gap-10 grid-cols-1 md:grid-cols-2">
+            <div className="flex items-center gap-2">
+              <img src={icon} />
+              <div className="flex flex-col items-start">
+                <h2 className="text-3xl font-[600]">10,000+</h2>
+                <p>Downloads per day</p>
+              </div>
             </div>
-          ))}
-        </div>
-      </section>
-      <section className="flex bg-slate-200 px-10 py-20  items-center flex-col gap-10">
-        <div className="flex flex-col gap-10 font-[500] items-center">
-          <h2 className="text-5xl">Contact Us</h2>
-          <p className="text-3xl">
-            Learn how we can empower your Medical Affairs and R&D teams
-          </p>
-        </div>
-        <div className="grid grid-cols-2">
-          <div className="px-10 grid place-content-center py-10">
-            <PrimaryBtn
-             onClick={() => setPopup(true)}
-              text={"Request a Demo"}
-              className={"px-10 md:text-2xl text-md text-[#fff]"}
-            />
-          </div>
-          <div className="px-10 grid place-content-center py-10">
-            <PrimaryBtn
-             onClick={() => setContact(true)}
-              text={"Talk to an Expert"}
-              className={"px-10 md:text-2xl text-md text-[#fff]"}
-            />
+            <div className="flex items-center gap-2">
+              <img src={Icon_2} />
+              <div className="flex flex-col items-start">
+                <h2 className="text-3xl font-[600]">2 Million</h2>
+                <p>Users</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <img src={Icon_3} />
+              <div className="flex flex-col items-start">
+                <h2 className="text-3xl font-[600]">500+</h2>
+                <p>Clients</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <img src={Icon_4} />
+              <div className="flex flex-col items-start">
+                <h2 className="text-3xl font-[600]">140</h2>
+                <p>Countries</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
+   
       <Footer />
     </>
   );

@@ -15,17 +15,7 @@ const aboutPeople = [
       "Former Chair of Medicine at Yale and Stanford, Dean at Case Western, Practicing academic physician (35+ years,) SVP at GSK",
     college: "American College of Physicians, MACP",
     // twitter: "https://www.linkedin.com/in/ralph-horwitz-733b3126/",
-    linkedin:"https://www.linkedin.com/in/ralph-horwitz-733b3126/"
-  },
-  {
-    name: "Dr. Mark Cullen",
-    image: img4,
-    designation: "Sr Clinical Advisor",
-    description:
-      "Former Dean for Research of Stanford Medical School, Chief Division of General Medicine, Director of Stanford Center for Population Health Sciences",
-    college: "Yale University Medical School, MD Harvard University, A.B.",
-        // twitter: "https://www.linkedin.com/in/mark-cullen-35b99224/",
-    linkedin:"https://www.linkedin.com/in/mark-cullen-35b99224/"
+    linkedin: "https://www.linkedin.com/in/ralph-horwitz-733b3126/",
   },
   {
     name: "James Baker",
@@ -34,8 +24,8 @@ const aboutPeople = [
     description:
       "Former Expert in Al and Lead Data Scientist McKinsey Life Sciences practice; Columbia Biomedical Informatics PhD student",
     college: "Yale University, B.A. Applied Mathematics",
-        twitter: "https://x.com/jamesbbaker4",
-    linkedin:" https://www.linkedin.com/in/james-baker-b1a0259b/"
+    twitter: "https://x.com/jamesbbaker4",
+    linkedin: " https://www.linkedin.com/in/james-baker-b1a0259b/",
   },
   {
     name: "Dr. Arnie Ghatak",
@@ -45,8 +35,18 @@ const aboutPeople = [
       "Former Senior Partner at McKinsey (20+ yrs); Global head of Medical Affairs (8+ yrs); Recently Head of Strategy and Innovation at Public Biotech",
     college:
       "University of Pennsylvania, MD, MBA Princeton University, A.B. Molecular Biology",
-      // twitter: "https://www.linkedin.com/in/arnie-ghatak/",
-      linkedin:"https://www.linkedin.com/in/arnie-ghatak/",
+    // twitter: "https://www.linkedin.com/in/arnie-ghatak/",
+    linkedin: "https://www.linkedin.com/in/arnie-ghatak/",
+  },
+  {
+    name: "Dr. Mark Cullen",
+    image: img4,
+    designation: "Sr Clinical Advisor",
+    description:
+      "Former Dean for Research of Stanford Medical School, Chief Division of General Medicine, Director of Stanford Center for Population Health Sciences",
+    college: "Yale University Medical School, MD Harvard University, A.B.",
+    // twitter: "https://www.linkedin.com/in/mark-cullen-35b99224/",
+    linkedin: "https://www.linkedin.com/in/mark-cullen-35b99224/",
   },
 ];
 
@@ -55,16 +55,19 @@ export default function About() {
     <>
       <Navbar />
       <div className=" min-h-[100vh] py-4 pt-20 md:pt-44 md:max-w-[90%] mx-auto ">
-        <h1 className="md:text-6xl md:px-0 px-10 text-2xl text-gray-500 border-b-2 pb-6 pt-4 font-bold">
+        <h1 className="md:text-6xl md:px-0 px-10 text-2xl text-black border-b-2 pb-6 pt-4 font-[500]">
           About
         </h1>
-        <div className="font-regular pt-4 md:px-0 px-10  text-xl md:text-2xl">
-          At Clinica AI, we recognize the growing importance of Medical Affairs
+        <div className="font-[500] pt-4 md:px-0 px-10  text-xl md:text-4xl">
+          Clinica AI develops first-in-class digital software to empower
+          healthcare leaders to improve the care of patients by using RWD and AI
+          to crack previously unsolvable problems
+          {/* At Clinica AI, we recognize the growing importance of Medical Affairs
           in the healthcare industry and its critical role in improving patient
           outcomes. Despite facing higher perceived barriers to change, we
           believe that Medical Affairs holds tremendous potential to drive
-          competitive advantage and transform patient care.
-          <div className="font-regular pt-4 text-xl md:text-2xl">
+          competitive advantage and transform patient care. */}
+          {/* <div className="font-regular pt-4 text-xl md:text-2xl">
             Our approach leverages cutting-edge technology to enhance the
             precision and impact of Medical Affairs. With RWD and AI, we provide
             granular insights into care, enable highly tailored initiatives, and
@@ -76,7 +79,7 @@ export default function About() {
             direction-based approaches to precise, data-driven strategies, we
             aim to empower Medical Affairs to lead in delivering exceptional
             patient care.
-          </div>
+          </div> */}
         </div>
         <div className="grid mt-28  md:grid-cols-4  grid-cols-1 gap-10">
           {aboutPeople.map((item) => {
@@ -89,8 +92,14 @@ export default function About() {
                   <p>{item.description}</p>
                   <p>{item.college}</p>
                   <div className="flex mt-2 items-center gap-6">
-                    <a target="_blank" rel={"noreferrer"} href={item.linkedin}><FaLinkedin size={40} /></a>
-                    {item.twitter && <a target="_blank" rel={"noreferrer"} href={item.twitter}><FaXTwitter size={40} /></a>}
+                    <a target="_blank" rel={"noreferrer"} href={item.linkedin}>
+                      <FaLinkedin size={40} />
+                    </a>
+                    {item.twitter && (
+                      <a target="_blank" rel={"noreferrer"} href={item.twitter}>
+                        <FaXTwitter size={40} />
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>

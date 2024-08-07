@@ -22,6 +22,7 @@ import { useEffect } from "react";
 import useGA4PageTracking from "./Hooks/useGA4PageTracking";
 import { Outlet } from "react-router-dom";
 import ResearchPage from "./pages/ResearchPage";
+import ArticlesPage from "./pages/ArticlesPage";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
       {
         path: "/research",
         element: <ResearchPage />,
+      },
+      {
+        path: "/articles/:id",
+        element: <ArticlesPage />,
       },
       {
         path: "/nonprofit",

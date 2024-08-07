@@ -57,9 +57,8 @@ const Navbar = ({ darkMode = false }) => {
     <header
       className={`fixed w-full z-30  transition ${
         dark ? "bg-transparent opacity-100" : "bg-white md:bg-opacity-90 "
-      } duration-300 ease-in-out ${!top ? " backdrop-blur-sm shadow-2xl" : ""}`}
+      } duration-300 ease-in-out ${!top ? " md:backdrop-blur-sm backdrop-blur-none shadow-2xl" : ""}`}
     >
-    
       <Popup
         onClose={closeContact}
         modal
@@ -67,9 +66,7 @@ const Navbar = ({ darkMode = false }) => {
         className="rounded-xl"
         position="center center"
       >
-       
         <ContactUs closeContact={closeContact} />
-     
       </Popup>
       <div className="custom:max-w-[90%] max-w-[95%] mx-auto">
         <div className="flex items-center justify-between h-16 md:h-20">
@@ -79,7 +76,7 @@ const Navbar = ({ darkMode = false }) => {
               onClick={handleHome}
               src={dark ? darkLogo : logo}
               alt="logo"
-              className="w-[5rem] md:w-[150px] bg-transparent cursor-pointer  object-contain"
+              className="w-[10rem] md:w-[200px] bg-transparent cursor-pointer  object-contain"
             />
             <p
               className={`hidden custom:block ${
@@ -103,28 +100,29 @@ const Navbar = ({ darkMode = false }) => {
                   className={`cursor-pointer  font-medium ${
                     dark
                       ? "text-gray-200"
-                      : "text-gray-600 before:bg-[#000] hover:text-gray-900"
-                  } px-5 py-3 flex items-center before:left-0 before:w-0 before:h-[0.15rem] hover:before:w-full before:absolute relative before:bottom-2 before:transition-all before:ease-in-out before:duration-200 transition duration-150 ease-in-out`}
+                      : "text-black before:bg-[#000] hover:text-gray-900"
+                  } px-5 py-3 flex items-center before:left-0 before:w-0 before:h-[0.15rem] hover:before:w-full before:absolute relative before:bottom-2 before:transition-all before:ease-in-out text-xl hover:font-[700] before:duration-200 transition duration-150 ease-in-out`}
                 >
                   Solutions
                 </div>
                 {showList && (
                   <li className="absolute  text-[0.85rem] gap-2 bg-slate-200 w-[12rem] text-center top-12 left-0">
                     <ul
+                      onClick={() => handleNavigate("/rnd")}
+                      className="hover:bg-slate-100 px-2 py-2 text-xl hover:font-[700] text-black cursor-pointer font-[500]  before:left-0 before:w-0 before:h-[0.15rem] hover:before:w-full before:bg-[#000] before:absolute relative before:bottom-0 before:transition-all before:ease-in-out before:duration-200 transition duration-150 ease-in-out"
+                    >
+                      RWE
+                    </ul>
+                    <ul
                       onClick={() => handleNavigate("/medicalAffairs")}
-                      className="hover:bg-slate-100 px-2  before:left-0 before:w-0 before:h-[0.15rem] hover:before:w-full before:bg-[#000] before:absolute relative before:bottom-0 before:transition-all before:ease-in-out before:duration-200 transition duration-150 ease-in-out py-2 text-gray-600 cursor-pointer font-[500]"
+                      className="hover:bg-slate-100 px-2 text-xl hover:font-[700]  before:left-0 before:w-0 before:h-[0.15rem] hover:before:w-full before:bg-[#000] before:absolute relative before:bottom-0 before:transition-all before:ease-in-out before:duration-200 transition duration-150 ease-in-out py-2 text-black cursor-pointer font-[500]"
                     >
                       Medical Affairs
                     </ul>
-                    <ul
-                      onClick={() => handleNavigate("/rnd")}
-                      className="hover:bg-slate-100 px-2 py-2 text-gray-600 cursor-pointer font-[500]  before:left-0 before:w-0 before:h-[0.15rem] hover:before:w-full before:bg-[#000] before:absolute relative before:bottom-0 before:transition-all before:ease-in-out before:duration-200 transition duration-150 ease-in-out"
-                    >
-                      R&D
-                    </ul>
+
                     {/* <ul
                       onClick={() => handleNavigate("/nonprofit")}
-                      className="hover:bg-slate-100 px-2 py-2 text-gray-600 cursor-pointer font-[500]"
+                      className="hover:bg-slate-100 px-2 py-2 text-black cursor-pointer font-[500]"
                     >
                       Non-Profits
                     </ul> */}
@@ -134,10 +132,10 @@ const Navbar = ({ darkMode = false }) => {
               <li>
                 <div
                   onClick={() => handleNavigate("/about")}
-                  className={`cursor-pointer before:left-0 before:w-0 before:h-[0.15rem] hover:before:w-full before:absolute relative before:bottom-2 before:transition-all before:ease-in-out before:duration-200  font-medium ${
+                  className={`cursor-pointer before:left-0 text-xl hover:font-[700] before:w-0 before:h-[0.15rem] hover:before:w-full before:absolute relative before:bottom-2 before:transition-all before:ease-in-out before:duration-200  font-medium ${
                     dark
                       ? "text-gray-200"
-                      : "text-gray-600 before:bg-[#000] hover:text-gray-900"
+                      : "text-black before:bg-[#000] hover:text-gray-900"
                   } px-5 py-3 flex items-center transition duration-150 ease-in-out`}
                 >
                   About
@@ -146,10 +144,10 @@ const Navbar = ({ darkMode = false }) => {
               <li>
                 <div
                   onClick={() => handleNavigate("/research")}
-                  className={`cursor-pointer before:left-0 before:w-0 before:h-[0.15rem] hover:before:w-full before:absolute relative before:bottom-2 before:transition-all before:ease-in-out before:duration-200 font-medium ${
+                  className={`cursor-pointer before:left-0 text-xl hover:font-[700] before:w-0 before:h-[0.15rem] hover:before:w-full before:absolute relative before:bottom-2 before:transition-all before:ease-in-out before:duration-200 font-medium ${
                     dark
                       ? "text-gray-200"
-                      : "text-gray-600 before:bg-[#000] hover:text-gray-900"
+                      : "text-black before:bg-[#000] hover:text-gray-900"
                   } px-5 py-3 flex items-center transition duration-150 ease-in-out`}
                 >
                   Research
@@ -158,10 +156,10 @@ const Navbar = ({ darkMode = false }) => {
               <li>
                 <div
                   onClick={() => setContact(true)}
-                  className={`cursor-pointer before:left-0 before:w-0 before:h-[0.15rem] hover:before:w-full before:absolute relative before:bottom-2 before:transition-all before:ease-in-out before:duration-200 font-medium ${
+                  className={`cursor-pointer text-xl hover:font-[700] before:left-0 before:w-0 before:h-[0.15rem] hover:before:w-full before:absolute relative before:bottom-2 before:transition-all before:ease-in-out before:duration-200 font-medium ${
                     dark
                       ? "text-gray-200"
-                      : "text-gray-600 before:bg-[#000] hover:text-gray-900"
+                      : "text-black before:bg-[#000] hover:text-gray-900"
                   } px-5 py-3 flex items-center transition duration-150 ease-in-out`}
                 >
                   Contact
@@ -174,7 +172,7 @@ const Navbar = ({ darkMode = false }) => {
                     dark
                       ? "text-[#000] bg-[#fff]  hover:bg-gray-200"
                       : "text-[#fff] bg-[#000] hover:bg-gray-800"
-                  } cursor-pointer btn-sm  ml-3`}
+                  } cursor-pointer text-xl hover:font-[700] btn-sm  ml-3`}
                 >
                   <span>{"Sign in"}</span>
                   <svg
@@ -223,19 +221,19 @@ const Navbar = ({ darkMode = false }) => {
                   <li className="absolute text-[0.85rem] gap-2 bg-slate-200 text-center top-10 left-0">
                     <ul
                       onClick={() => handleNavigate("/medicalAffairs")}
-                      className="hover:bg-slate-100 px-2 py-2 text-gray-600 cursor-pointer font-[500]"
+                      className="hover:bg-slate-100 px-2 py-2 text-black cursor-pointer font-[500]"
                     >
                       Medical Affairs
                     </ul>
                     <ul
                       onClick={() => handleNavigate("/rnd")}
-                      className="hover:bg-slate-100 px-2 py-2 text-gray-600 cursor-pointer font-[500]"
+                      className="hover:bg-slate-100 px-2 py-2 text-black cursor-pointer font-[500]"
                     >
-                      R&D
+                      RWE
                     </ul>
                     {/* <ul
                       onClick={() => handleNavigate("/nonprofit")}
-                      className="hover:bg-slate-100 px-2 py-2 text-gray-600 cursor-pointer font-[500]"
+                      className="hover:bg-slate-100 px-2 py-2 text-black cursor-pointer font-[500]"
                     >
                       Non-Profits
                     </ul> */}

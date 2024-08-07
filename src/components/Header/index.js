@@ -35,12 +35,13 @@ const Header = () => {
     <header className="md:sticky fixed left-0 right-0 max-w-[100vw] md:max-w-[unset] top-0 z-[20] backdrop-blur bg-white shadow-md">
       <div className="md:w-full h-14 px-6 py-4 flex justify-between items-center">
         <span>
-          <div onClick={handleGoTo} className="cursor-pointer app__logo">
+          <div onClick={handleGoTo} className="cursor-pointer flex items-center app__logo">
             <img
               src={Logo}
               alt="Clinica AI"
-              className="w-full"
+              className="w-[126px] object-contain"
             />
+           <p className="hidden md:block">AI & RWD for better patient care</p>
           </div>
         </span>
         <span className="flex items-center gap-2">

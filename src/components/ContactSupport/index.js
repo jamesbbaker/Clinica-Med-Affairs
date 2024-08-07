@@ -113,7 +113,7 @@ const ContactSupport = ({closeContact, contactPage = false }) => {
           <div className="flex items-center justify-between">
             <PrimaryBtn
               disabled={loading}
-              className={"w-40 text-slate-50"}
+              className={"w-40 bg-[#0A1172]  hover:scale-105 transition-all ease-in-out duration-200 text-slate-50"}
               text={"Send Message"}
             />
           </div>

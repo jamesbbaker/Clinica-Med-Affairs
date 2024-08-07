@@ -36,7 +36,7 @@ const DemoContact = ( {handleClose}) => {
           <InputField input={item} />
         ))}
       </div>
-      <PrimaryBtn text={"Submit"} className={"w-full text-[#fff]"} />
+      <PrimaryBtn text={"Submit"} className={"w-full bg-[#0A1172] hover:scale-105 transition-all ease-in-out duration-200 text-[#fff]"} />
     </div>
   );
 };
