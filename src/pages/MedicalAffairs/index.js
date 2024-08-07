@@ -329,7 +329,7 @@ export default function MedicalAffairsLanding() {
           </div>
         </div>
       </section>
-      <ContactFooter />
+      {/* <ContactFooter /> */}
       <Footer />
     </>
   );

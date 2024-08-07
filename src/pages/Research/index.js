@@ -327,7 +327,7 @@ export default function Research() {
           </div>
         </div>
       </section>
-      <ContactFooter />
+      {/* <ContactFooter /> */}
       <Footer />
     </>
   );

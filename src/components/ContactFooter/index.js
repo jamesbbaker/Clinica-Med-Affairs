@@ -39,8 +39,8 @@ const ContactFooter = () => {
       <div className="flex flex-col gap-10 font-[500] items-center">
         <h2 className="text-5xl">Contact Us</h2>
         <p className="text-3xl">
-          Learn how we can empower your RWE and Medical Affairs teams
-        </p>
+          Learn how we can empower your R&D and Medical Affairs teams
+        </p>  
       </div>
       <div className="grid grid-cols-2">
         <div className="px-10 grid place-content-center py-10">

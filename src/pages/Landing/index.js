@@ -25,8 +25,8 @@ gsap.registerPlugin(ScrollTrigger);
 const SolutionsList = [
   {
     id: 1,
-    text: "RWE",
-    title: "RWE",
+    text: "R&D",
+    title: "R&D",
     link: "rnd",
     video: rnd,
     description:
@@ -123,7 +123,7 @@ export default function Index() {
           <div className="h-[10rem] p-2 flex items-center gap-2 rounded-lg">
             {/* <img src={logo} className="h-full" alt="logo" /> */}
             <PrimaryBtn
-              text={"RWE"}
+              text={"R&D"}
               bg={"transparent"}
               onClick={() => handleNavigate("rnd")}
               className={
@@ -203,47 +203,55 @@ export default function Index() {
       </section>
       <Testimonials />
     
-      <ContactFooter />
+     
       <section>
-        <div className="grid custom:grid-cols-2 grid-cols-1 px-10 md:px-28 py-20">
+        <div className="grid bg-gray-200 custom:grid-cols-2 grid-cols-1 px-10 md:px-28 py-20">
           <div className="flex flex-col items-start gap-4">
             <h2 className="md:text-6xl text-3xl custom:max-w-[100%] max-w-[100%] font-[600]">
-              Over 18 years of achievements
+              Best-in-class AI prediction
             </h2>
-            <p>With out super powers we have reached this</p>
+            <p>
+              Leveraging a proprietary feature library of over 50k patient
+              features
+            </p>
           </div>
           <div className="grid custom:mt-0 mt-10 md:gap-8 gap-10 grid-cols-1 md:grid-cols-2">
             <div className="flex items-center gap-2">
               <img src={icon} />
               <div className="flex flex-col items-start">
-                <h2 className="text-3xl font-[600]">10,000+</h2>
-                <p>Downloads per day</p>
+                <h2 className="text-xl font-[600]">
+                  {">50k predictive features"}
+                </h2>
+                {/* <p>Downloads per day</p> */}
               </div>
             </div>
             <div className="flex items-center gap-2">
               <img src={Icon_2} />
               <div className="flex flex-col items-start">
-                <h2 className="text-3xl font-[600]">2 Million</h2>
-                <p>Users</p>
+                <h2 className="text-xl font-[600]">All diseases</h2>
+                {/* <p>Users</p> */}
               </div>
             </div>
             <div className="flex items-center gap-2">
               <img src={Icon_3} />
               <div className="flex flex-col items-start">
-                <h2 className="text-3xl font-[600]">500+</h2>
-                <p>Clients</p>
+                <h2 className="text-xl font-[600]">Dozes of use cases</h2>
+                {/* <p>Clients</p> */}
               </div>
             </div>
             <div className="flex items-center gap-2">
               <img src={Icon_4} />
               <div className="flex flex-col items-start">
-                <h2 className="text-3xl font-[600]">140</h2>
-                <p>Countries</p>
+                <h2 className="text-xl font-[600]">
+                  Claims, Medical Records, Proprietary Webscraped Datasets
+                </h2>
+                {/* <p>Countries</p> */}
               </div>
             </div>
           </div>
         </div>
       </section>
+      <ContactFooter />
    
       <Footer />
     </>

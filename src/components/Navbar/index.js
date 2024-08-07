@@ -111,7 +111,7 @@ const Navbar = ({ darkMode = false }) => {
                       onClick={() => handleNavigate("/rnd")}
                       className="hover:bg-slate-100 px-2 py-2 text-xl hover:font-[700] text-black cursor-pointer font-[500]  before:left-0 before:w-0 before:h-[0.15rem] hover:before:w-full before:bg-[#000] before:absolute relative before:bottom-0 before:transition-all before:ease-in-out before:duration-200 transition duration-150 ease-in-out"
                     >
-                      RWE
+                      R&D
                     </ul>
                     <ul
                       onClick={() => handleNavigate("/medicalAffairs")}
@@ -229,7 +229,7 @@ const Navbar = ({ darkMode = false }) => {
                       onClick={() => handleNavigate("/rnd")}
                       className="hover:bg-slate-100 px-2 py-2 text-black cursor-pointer font-[500]"
                     >
-                      RWE
+                      R&D
                     </ul>
                     {/* <ul
                       onClick={() => handleNavigate("/nonprofit")}
