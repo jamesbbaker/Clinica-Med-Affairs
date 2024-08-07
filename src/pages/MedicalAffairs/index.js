@@ -282,7 +282,7 @@ export default function MedicalAffairsLanding() {
         </div>
       </section>
       <SolutionsTextSection />
-      <section>
+      {/* <section>
         <div className="grid bg-gray-200 custom:grid-cols-2 grid-cols-1 px-10 md:px-28 py-20">
           <div className="flex flex-col items-start gap-4">
             <h2 className="md:text-6xl text-3xl custom:max-w-[100%] max-w-[100%] font-[600]">
@@ -300,21 +300,21 @@ export default function MedicalAffairsLanding() {
                 <h2 className="text-xl font-[600]">
                   {">50k predictive features"}
                 </h2>
-                {/* <p>Downloads per day</p> */}
+              
               </div>
             </div>
             <div className="flex items-center gap-2">
               <img src={Icon_2} />
               <div className="flex flex-col items-start">
                 <h2 className="text-xl font-[600]">All diseases</h2>
-                {/* <p>Users</p> */}
+               
               </div>
             </div>
             <div className="flex items-center gap-2">
               <img src={Icon_3} />
               <div className="flex flex-col items-start">
                 <h2 className="text-xl font-[600]">Dozes of use cases</h2>
-                {/* <p>Clients</p> */}
+             
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -323,13 +323,13 @@ export default function MedicalAffairsLanding() {
                 <h2 className="text-xl font-[600]">
                   Claims, Medical Records, Proprietary Webscraped Datasets
                 </h2>
-                {/* <p>Countries</p> */}
+               
               </div>
             </div>
           </div>
         </div>
-      </section>
-      {/* <ContactFooter /> */}
+      </section> */}
+      <ContactFooter />
       <Footer />
     </>
   );

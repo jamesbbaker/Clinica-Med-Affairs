@@ -280,7 +280,7 @@ export default function Research() {
         </div>
       </section>
       <SolutionsTextSection />
-      <section>
+      {/* <section>
         <div className="grid bg-gray-200 custom:grid-cols-2 grid-cols-1 px-10 md:px-28 py-20">
           <div className="flex flex-col items-start gap-4">
             <h2 className="md:text-6xl text-3xl custom:max-w-[100%] max-w-[100%] font-[600]">
@@ -326,8 +326,8 @@ export default function Research() {
             </div>
           </div>
         </div>
-      </section>
-      {/* <ContactFooter /> */}
+      </section> */}
+      <ContactFooter />
       <Footer />
     </>
   );
