@@ -183,7 +183,7 @@ export default function Index() {
                         />
                       )}
                       {item.video && (
-                        <div className="h-full w-[70vw] py-10">
+                        <div className="h-full md:w-[50vw] w-[70vw] py-10">
                         <ReactPlayer
                           muted={true}
                           url={item.video}
