@@ -4,7 +4,6 @@ import Navbar from "../../components/Navbar";
 import "aos/dist/aos.css";
 import ReactPlayer from "react-player";
 import video1 from "../../assets/videos/landing_bg.mov";
-import logo from "../../assets/images/logoIcon.png";
 import Slider from "react-slick";
 import { useNavigate } from "react-router-dom";
 import PrimaryBtn from "../../components/PrimaryBtn";
@@ -99,7 +98,7 @@ export default function Index() {
   return (
     <>
       <Navbar darkMode />
-      <section className="w-full flex flex-col justify-center items-center relative h-[100vh]">
+      <section className="w-full flex flex-col justify-center relative items-center h-[100vh]">
         <ReactPlayer
           muted={true}
           id="introVideo"
@@ -114,11 +113,12 @@ export default function Index() {
           playing={true}
           controls={false}
         />
+        <div className="absolute left-0 top-0 w-[100vw] h-[100vh]    backdrop-blur-sm"></div>
         
        
         <div className="z-2  rounded-xl px-12 py-10 flex flex-col items-center justify-center gap-4">
-          <h2 className="md:text-[3rem] backdrop-blur-sm text-[1.5rem] nd:max-w-[70%] max-w-[90%] text-[#fff] text-center font-[400]">
-            Empowering organizations to improve patient care with AI and RWE
+          <h2 className="md:text-[3rem] font-secondary text-[1.5rem]  text-[#fff] text-center font-[400]">
+            Empowering organizations to improve <br/> patient care with AI and RWE
           </h2>
           <div className="h-[10rem] p-2 flex items-center gap-2 rounded-lg">
             {/* <img src={logo} className="h-full" alt="logo" /> */}
@@ -127,7 +127,7 @@ export default function Index() {
               bg={"transparent"}
               onClick={() => handleNavigate("rnd")}
               className={
-                "px-10  before:absolute before:left-0 relative z-2 border text-[#ffff] border-[#fff] hover:text-[#000] before:top-0 before:bg-[#fff]  before:-z-2 overflow-hidden before:overflow-hidden before:w-full before:h-0 hover:before:top-[unset] hover:before:h-full hover:before:bottom-0 before:transition-all before:duration-200 before:ease-in-out md:text-2xl text-md hover:scale-105 text-[#000]"
+                "px-10  before:absolute before:left-0 relative rounded-lg z-2 border text-[#ffff] border-[#fff] hover:text-[#000] before:top-0 before:bg-[#fff]  before:-z-2 overflow-hidden before:overflow-hidden before:w-full before:h-0 hover:before:top-[unset] hover:before:h-full hover:before:bottom-0 before:transition-all before:duration-200 before:ease-in-out md:text-2xl text-md hover:scale-105 text-[#000]"
               }
             />
             <PrimaryBtn
@@ -135,7 +135,7 @@ export default function Index() {
               bg={"transparent"}
               onClick={() => handleNavigate("medicalaffairs")}
               className={
-                "px-10  before:absolute before:left-0 relative z-2 border text-[#ffff]  border-[#fff] hover:text-[#000] before:top-0 before:bg-[#fff]  before:-z-2 overflow-hidden before:overflow-hidden before:w-full before:h-0 hover:before:top-[unset] hover:before:h-full hover:before:bottom-0 before:transition-all before:duration-200 before:ease-in-out md:text-2xl text-md hover:scale-105 text-[#000]"
+                "px-10  before:absolute before:left-0 relative  rounded-lg z-2 border text-[#ffff]  border-[#fff] hover:text-[#000] before:top-0 before:bg-[#fff]  before:-z-2 overflow-hidden before:overflow-hidden before:w-full before:h-0 hover:before:top-[unset] hover:before:h-full hover:before:bottom-0 before:transition-all before:duration-200 before:ease-in-out md:text-2xl text-md hover:scale-105 text-[#000]"
               }
             />
             {/* <PrimaryBtn text={"Talk to an Expert"} bg={"#c4c4c4"}  className={"px-10  md:text-2xl textmd hover:scale-105 text-[#000]"} /> */}
@@ -159,39 +159,43 @@ export default function Index() {
           <Slider ref={sliderRef} {...settings}>
             {SolutionsList.map((item) => {
               return (
-                <div className="md:px-4 px-0  w-full  min-h-[20rem] ">
-                  <div className=" grid grid-cols-1 custom:grid-cols-2">
-                    <div className="flex h-full justify-center col-span-1 flex-col items-center gap-4">
+                <div className="md:px-4 px-0  w-full  ">
+                  <div className="flex flex-col md:flex-row items-center justify-between">
+                    <div className="flex h-full justify-center flex-col items-center gap-4">
                       <div className="md:text-3xl text-xl font-[500] text-center">
                         {item.title}
                       </div>
-                      <div className="md:text-xl max-w-[70%] text-md text-center">
+                      <div className="md:text-xl  text-md max-w-[70%] text-center">
                         {item.description}
                       </div>
                       <PrimaryBtn
                         onClick={() => handleNavigate(item.link)}
                         text={"Learn more"}
-                        className={"px-10 bg-[#0A1172]  hover:scale-105 transition-all ease-in-out duration-200 md:text-2xl mt-2 text-md text-[#fff]"}
+                        className={"px-10 bg-[#0A1172] rounded-lg  hover:scale-105 transition-all ease-in-out duration-200 md:text-2xl mt-2 text-md text-[#fff]"}
                       />
                     </div>
-                    <div className="col-span-1 grid place-content-center custom:mt-0 mt-10 w-[80%] mx-auto h-[30rem]">
+                    <div className="grid place-content-center custom:mt-0 mt-10 w-[90%] mx-auto ">
                       {item.img && (
                         <img
                           src={item.img}
                           alt={item.title}
-                          className="object-contain w-full h-full"
+                          className="object-contain max-w-none h-full w-full"
                         />
                       )}
                       {item.video && (
+                        <div className="h-full w-[70vw] py-10">
                         <ReactPlayer
                           muted={true}
                           url={item.video}
+                         width={"100%"}
+                         height={"100%"}
                           loop
                           playsinline
                           onReady={handleReady}
                           playing={true}
                           controls={false}
                         />
+                      </div>
                       )}
                     </div>
                   </div>
@@ -205,14 +209,14 @@ export default function Index() {
     
      
       <section>
-        <div className="grid bg-gray-200 custom:grid-cols-2 grid-cols-1 px-10 md:px-28 py-20">
+        <div className="grid bg-gray-100 custom:grid-cols-2 grid-cols-1 px-10 md:px-28 py-20">
           <div className="flex flex-col items-start gap-4">
-            <h2 className="md:text-6xl text-3xl custom:max-w-[100%] max-w-[100%] font-[600]">
-              Best-in-class AI prediction
+            <h2 className="md:text-5xl text-2xl custom:max-w-[70%] max-w-[70%] font-[600]">
+              The most predictive machine learning algorithms
             </h2>
-            <p>
-              Leveraging a proprietary feature library of over 50k patient
-              features
+       
+            <p className="">
+            Leveraging a proprietary library of more than 50,000 patient features
             </p>
           </div>
           <div className="grid custom:mt-0 mt-10 md:gap-8 gap-10 grid-cols-1 md:grid-cols-2">
@@ -235,7 +239,7 @@ export default function Index() {
             <div className="flex items-center gap-2">
               <img src={Icon_3} />
               <div className="flex flex-col items-start">
-                <h2 className="text-xl font-[600]">Dozes of use cases</h2>
+                <h2 className="text-xl font-[600]">Dozens of use cases</h2>
                 {/* <p>Clients</p> */}
               </div>
             </div>

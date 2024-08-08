@@ -104,7 +104,7 @@ export default function Research() {
       arrows: false,
       infinite: true,
       speed: 500,
-      autoplay: loop,
+      autoplay: false,
       autoplaySpeed: 3000,
       slidesToShow: 1,
       slidesToScroll: 1,
@@ -112,7 +112,7 @@ export default function Research() {
         setCurrentToggle(e);
       },
     }),
-    [loop]
+    []
   );
 
   const handleReady = () => {
@@ -127,7 +127,7 @@ export default function Research() {
         scale: 0,
       },
       {
-        scale: 1,
+        scale: 1.2,
         ease: "power2.inOut",
       }
     );
@@ -174,21 +174,21 @@ export default function Research() {
               className="text-xl text-center custom:text-3xl  font-[600] leading-tighter"
               data-aos="zoom-y-out"
             >
-              Conduct faster, more accurate trials with fewer patients
+              Conduct <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400 font-[700]" >faster, more accurate</span> <br/>trials with <span className="bg-clip-text text-transparent font-[700] bg-gradient-to-r from-blue-500 to-teal-400">fewer patients</span>
             </h1>
-            <h1
+            {/* <h1
               data-aos="zoom-y-out"
               data-aos-delay="150"
               className="text-lg custom:text-xl text-center font-[500] leading-tighter tracking-tighter "
             >
               Color faster, more accurate and fewer patients in the AI + RWD
               bold blue gradient text
-            </h1>
+            </h1> */}
 
             <PrimaryBtn
               onClick={() => setPopup(true)}
               text={"Request a Demo"}
-              className={"md:px-10  bg-[#0A1172]  hover:scale-105 transition-all ease-in-out duration-200 px-4 md:text-2xl text:xs text-[#fff]"}
+              className={"md:px-10  bg-[#0A1172] rounded-lg hover:scale-105 transition-all ease-in-out duration-200 px-4 md:text-2xl text:xs text-[#fff]"}
             />
           </div>
           <Popup
@@ -200,14 +200,25 @@ export default function Research() {
           >
             <DemoContact handleClose={closeModal} />
           </Popup>
-          <div className="relative w-full custom:mt-0 mt-10 grid place-content-center">
+          <div className="relative w-full h-[50vh] custom:mt-0 mt-10 grid place-content-center">
             <ReactPlayer
               // muted={true}
               id="introVideo"
-              url={video1}
+              url={"https://www.youtube.com/watch?v=V55AWCNqC3E&feature=youtu.be"}
+              config={{
+                youtube: {
+                  playerVars: {
+                    modestbranding: 1, // Hides YouTube logo in the control bar
+                    rel: 0,            // Prevents showing related videos at the end
+                    showinfo: 0,       // Hides the video title and uploader info
+                    iv_load_policy: 3, // Hides annotations
+                  },
+                },
+              }}
               onEnded={handleEnd}
               width={document.body.clientWidth < 800 ? 300 : 600}
-              className="scale-0"
+              
+              className="scale-0 "
               ref={video1ref}
               playsinline
               onReady={handleReady}
@@ -249,21 +260,25 @@ export default function Research() {
                       <div className="md:text-3xl text-xl font-[500] text-center">
                         {item.title}
                       </div>
-                      {/* <div className="md:text-xl text-md text-center">
+                      <div className="md:text-xl max-w-[60%] text-md text-center">
                         {item.description}
-                      </div> */}
+                      </div>
                     </div>
-                    <div className="col-span-1  grid place-content-center custom:mt-0 mt-10 w-[80%] mx-auto h-[30rem] ">
+                    <div className="col-span-1  grid place-content-center custom:mt-0 mt-10 w-[80%] mx-auto h-[20rem] md:h-[30rem] ">
                       {item.video ? (
+                        <div className="relative h-[11.25rem] w-[20rem] overflow-hidden ">
                         <ReactPlayer
                           url={item.video}
-                          className="object-contain"
+                          width="100%"
+                          height="100%"
+                          style={{ position: 'absolute', top: '0', left: '0' }}
                           muted={true}
                           loop
                           playsinline
                           playing={true}
                           controls={false}
                         />
+                        </div> 
                       ) : (
                         <img
                           src={item.img}
@@ -284,7 +299,7 @@ export default function Research() {
         <div className="grid bg-gray-200 custom:grid-cols-2 grid-cols-1 px-10 md:px-28 py-20">
           <div className="flex flex-col items-start gap-4">
             <h2 className="md:text-6xl text-3xl custom:max-w-[100%] max-w-[100%] font-[600]">
-              Best-in-class AI prediction
+              Best-in-class AI prediction Algorithm
             </h2>
             <p>
               Leveraging a proprietary feature library of over 50k patient

@@ -99,7 +99,7 @@ const Navbar = ({ darkMode = false }) => {
                 <div
                   className={`cursor-pointer  font-medium ${
                     dark
-                      ? "text-gray-200"
+                      ? "text-gray-200 before:bg-[#fff]"
                       : "text-black before:bg-[#000] hover:text-gray-900"
                   } px-5 py-3 flex items-center before:left-0 before:w-0 before:h-[0.15rem] hover:before:w-full before:absolute relative before:bottom-2 before:transition-all before:ease-in-out text-xl hover:font-[700] before:duration-200 transition duration-150 ease-in-out`}
                 >
@@ -134,7 +134,7 @@ const Navbar = ({ darkMode = false }) => {
                   onClick={() => handleNavigate("/about")}
                   className={`cursor-pointer before:left-0 text-xl hover:font-[700] before:w-0 before:h-[0.15rem] hover:before:w-full before:absolute relative before:bottom-2 before:transition-all before:ease-in-out before:duration-200  font-medium ${
                     dark
-                      ? "text-gray-200"
+                      ? "text-gray-200 before:bg-[#fff]"
                       : "text-black before:bg-[#000] hover:text-gray-900"
                   } px-5 py-3 flex items-center transition duration-150 ease-in-out`}
                 >
@@ -146,7 +146,7 @@ const Navbar = ({ darkMode = false }) => {
                   onClick={() => handleNavigate("/research")}
                   className={`cursor-pointer before:left-0 text-xl hover:font-[700] before:w-0 before:h-[0.15rem] hover:before:w-full before:absolute relative before:bottom-2 before:transition-all before:ease-in-out before:duration-200 font-medium ${
                     dark
-                      ? "text-gray-200"
+                      ? "text-gray-200 before:bg-[#fff]"
                       : "text-black before:bg-[#000] hover:text-gray-900"
                   } px-5 py-3 flex items-center transition duration-150 ease-in-out`}
                 >
@@ -158,7 +158,7 @@ const Navbar = ({ darkMode = false }) => {
                   onClick={() => setContact(true)}
                   className={`cursor-pointer text-xl hover:font-[700] before:left-0 before:w-0 before:h-[0.15rem] hover:before:w-full before:absolute relative before:bottom-2 before:transition-all before:ease-in-out before:duration-200 font-medium ${
                     dark
-                      ? "text-gray-200"
+                      ? "text-gray-200 before:bg-[#fff]"
                       : "text-black before:bg-[#000] hover:text-gray-900"
                   } px-5 py-3 flex items-center transition duration-150 ease-in-out`}
                 >

@@ -111,6 +111,7 @@ module.exports = {
       },
       fontFamily: {
         primary: ["Montserrat"],
+        secondary: ["Roboto"],
       },
       borderRadius: {
         "1/2": "50%",

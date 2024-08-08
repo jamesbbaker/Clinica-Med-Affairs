@@ -1,6 +1,8 @@
 import React from "react";
 import Navbar from "../../components/Navbar";
 import { useNavigate } from "react-router-dom";
+import ContactFooter from "../../components/ContactFooter";
+import Footer from "../../components/Footer";
 
 export const articles = [
   {
@@ -30,7 +32,7 @@ export const articles = [
     name: "Article 3",
     id: "article3",
     desc: "Severe COVID Outcomes Risk Score",
-    label: "Unlock Severe COVID Outcomes Risk Score (SCORS) in Moments",
+    label: "Severe COVID Outcomes Risk Score",
     para: `Dive deep into a scientifically-validated assessment of Risk Adjusted Age for Severe COVID Outcomes. This research is outlined in the research publication ‘Development of a Novel Risk Score for COVID-19 Infections’, featured in the American Journal of Medicine (December, 2023). Developed as part of our public-private partnership with the COVID-19 Research Database to improve patient care for the public good using data and AI. We do not save any user submitted healthcare information.`,
     button1: 'Less than 1 minute to your personalized SCORS',
     button1Desc: "A refined risk assessment empowers both patients and healthcare professionals to make informed, safety-first choices.",
@@ -72,7 +74,9 @@ const ResearchPage = () => {
   const navigate = useNavigate();
 
   const handleClick = (link) => {
-    window.location.href = link;
+    const newTab = window.open();
+    newTab.opener = null; // Ensures no reference to the current tab
+  newTab.location = `${link}`;
   };
 
   const handleGoToArticle = (id) => {
@@ -83,7 +87,7 @@ const ResearchPage = () => {
     <>
       <Navbar />
       <div className="md:px-20 px-10 py-20">
-        <h2 className="text-5xl mt-10 font-[500]">Research</h2>
+        <h2 className="text-5xl mt-10 font-[500]">Our Research</h2>
         <h2 className="text-4xl mt-10 font-[500]">Articles</h2>
         <div className="text-[#000] grid grid-cols-1 md:grid-cols-4 mt-10 items-center gap-4 ">
           {articles.map((item) => (
@@ -92,7 +96,7 @@ const ResearchPage = () => {
               className="border-2 cursor-pointer h-[25rem] p-6 hover:scale-105 transform-all ease-in-out duration-200"
             >
               <div className="w-full h-[15rem] border-2"></div>
-              <p className="text-2xl mt-10">{item.desc}</p>
+              <p className="text-md md:text-xl mt-10">{item.desc}</p>
             </div>
           ))}
         </div>
@@ -108,7 +112,7 @@ const ResearchPage = () => {
               className="flex cursor-pointer hover:bg-[#c4c4c4] px-4 w-full justify-between  items-start"
             >
               <div className="flex text-xl text-gray-800 flex-col items-start">
-                <div className="md:text-3xl text-xl text-[#000]">{item.title}</div>
+                <div className="md:text-3xl text-lg text-[#000]">{item.title}</div>
                 <div>{item.sub}</div>
                 <div>{item.desc}</div>
               </div>
@@ -117,6 +121,8 @@ const ResearchPage = () => {
           ))}
         </div>
       </div>
+      <ContactFooter />
+      <Footer/>
     </>
   );
 };

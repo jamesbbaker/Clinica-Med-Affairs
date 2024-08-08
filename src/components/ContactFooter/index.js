@@ -17,7 +17,7 @@ const ContactFooter = () => {
   };
 
   return (
-    <section className="flex bg-slate-200 px-10 py-20  items-center flex-col gap-10">
+    <section className="flex bg-[#a0cff5] px-10 py-20  items-center flex-col gap-10">
       <Popup
         onClose={closeModal}
         modal
@@ -47,14 +47,14 @@ const ContactFooter = () => {
           <PrimaryBtn
             onClick={() => setPopup(true)}
             text={"Request a Demo"}
-            className={"px-10 bg-[#0A1172] hover:scale-105 transition-all ease-in-out duration-200 md:text-2xl text-md text-[#fff]"}
+            className={"px-10 rounded-lg bg-[#0A1172] hover:scale-105 transition-all w-[10rem] md:w-auto ease-in-out duration-200 md:text-2xl text-md text-[#fff]"}
           />
         </div>
         <div className="px-10 grid place-content-center py-10">
           <PrimaryBtn
             onClick={() => setContact(true)}
             text={"Talk to an Expert"}
-            className={"px-10 bg-[#0A1172] hover:scale-105 transition-all ease-in-out duration-200 md:text-2xl text-md text-[#fff]"}
+            className={"px-10 rounded-lg bg-[#0A1172] hover:scale-105 transition-all w-[10rem] md:w-auto ease-in-out duration-200 md:text-2xl text-md text-[#fff]"}
           />
         </div>
       </div>

@@ -5,6 +5,7 @@ import img2 from "../../assets/images/about/image2.png";
 import img3 from "../../assets/images/about/image3.png";
 import img4 from "../../assets/images/about/image4.png";
 import { FaLinkedin, FaXTwitter } from "react-icons/fa6";
+import ContactFooter from "../../components/ContactFooter";
 
 const aboutPeople = [
   {
@@ -56,9 +57,9 @@ export default function About() {
       <Navbar />
       <div className=" min-h-[100vh] py-4 pt-20 md:pt-44 md:max-w-[90%] mx-auto ">
         <h1 className="md:text-6xl md:px-0 px-10 text-2xl text-black border-b-2 pb-6 pt-4 font-[500]">
-          About
+          About Us
         </h1>
-        <div className="font-[500] pt-4 md:px-0 px-10  text-xl md:text-4xl">
+        <div className="pt-4 md:px-0 px-10  md:text-xl  text-md">
           Clinica AI develops first-in-class digital software to empower
           healthcare leaders to improve the care of patients by using RWD and AI
           to crack previously unsolvable problems
@@ -86,12 +87,12 @@ export default function About() {
             return (
               <div className="flex text-center mb-20 cursor-pointer card flex-col items-center gap-2">
                 <img src={item.image} alt="image1" />
-                <div className="flex flex-col gap-2 card-item  md:max-w-[100%] max-w-[80%] md:opacity-0 md:mt-0 mt-4  items-center text-center">
+                <div className="flex flex-col gap-2 card-box  md:max-w-[100%] max-w-[80%] md:mt-0 mt-4  items-center text-center">
                   <h2 className="font-[500] text-2xl">{item.name}</h2>
                   <p>{item.designation}</p>
-                  <p>{item.description}</p>
-                  <p>{item.college}</p>
-                  <div className="flex mt-2 items-center gap-6">
+                  <p className="card-item  md:opacity-0 ">{item.description}</p>
+                  <p className="card-item  md:opacity-0 ">{item.college}</p>
+                  <div className="flex card-item  md:opacity-0  mt-2 items-center gap-6">
                     <a target="_blank" rel={"noreferrer"} href={item.linkedin}>
                       <FaLinkedin size={40} />
                     </a>
@@ -107,6 +108,7 @@ export default function About() {
           })}
         </div>
       </div>
+      <ContactFooter />
       <Footer />
     </>
   );

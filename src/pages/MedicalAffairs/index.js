@@ -117,7 +117,7 @@ export default function MedicalAffairsLanding() {
       arrows: false,
       infinite: true,
       speed: 500,
-      autoplay: loop,
+      autoplay: false,
       autoplaySpeed: 3000,
       slidesToShow: 1,
       slidesToScroll: 1,
@@ -125,7 +125,7 @@ export default function MedicalAffairsLanding() {
         setCurrentToggle(e);
       },
     }),
-    [loop]
+    []
   );
 
   const handleReady = () => {
@@ -140,7 +140,7 @@ export default function MedicalAffairsLanding() {
         scale: 0,
       },
       {
-        scale: 1,
+        scale: 1.2,
         ease: "power2.inOut",
       }
     );
@@ -151,7 +151,7 @@ export default function MedicalAffairsLanding() {
   const navigate = useNavigate();
 
   const handleClick = (index) => {
-    setLoop(false)
+    setLoop(false);
     sliderRef.current.slickGoTo(index);
   };
 
@@ -187,21 +187,21 @@ export default function MedicalAffairsLanding() {
               className="text-xl text-center custom:text-3xl md:text-6xl font-[600] leading-tighter"
               data-aos="zoom-y-out"
             >
-              The first real-time Medical Affairs intelligence suite driven by
-            </h1>
-            <h1
-              data-aos="zoom-y-out"
-              data-aos-delay="150"
-              className="text-3xl custom:text-3xl md:text-6xl font-extrabold leading-tighter tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400"
-            >
-              AI + RWD
+              Empowering leaders in Medical Affairs to maximize impact with{" "}
+              <span
+                data-aos="zoom-y-out"
+                data-aos-delay="150"
+                className=" md:text-3xl font-bold leading-tighter tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400"
+              >
+                AI + RWD
+              </span>
             </h1>
 
             <PrimaryBtn
               onClick={() => setPopup(true)}
               text={"Request a Demo"}
               className={
-                "md:px-10  bg-[#0A1172]  hover:scale-105 transition-all ease-in-out duration-200 px-4 md:text-2xl text:xs text-[#fff]"
+                "md:px-10 rounded-lg bg-[#0A1172]  hover:scale-105 transition-all ease-in-out duration-200 px-4 md:text-2xl text:xs text-[#fff]"
               }
             />
           </div>
@@ -214,11 +214,11 @@ export default function MedicalAffairsLanding() {
           >
             <DemoContact handleClose={closeModal} />
           </Popup>
-          <div className="relative w-full custom:mt-0 mt-10 grid place-content-center">
+          <div className="relative w-full custom:mt-0 mt-14 grid place-content-center">
             <ReactPlayer
               // muted={true}
               id="introVideo"
-              url={video1}
+              url={"https://www.youtube.com/watch?v=V-WdTcQCrJA"}
               onEnded={handleEnd}
               width={document.body.clientWidth < 800 ? 300 : 600}
               className="scale-0"
@@ -253,24 +253,24 @@ export default function MedicalAffairsLanding() {
             </div>
           ))}
         </div>
-        <div className="md:px-20 px-10 h-full justify-center flex flex-col relative">
+        <div className="md:px-20 px-10 h-full  justify-center flex flex-col relative">
           <Slider ref={sliderRef} {...settings}>
             {SolutionsList.map((item) => {
               return (
                 <div className="md:px-4 px-0 py-10 w-full  min-h-[20rem] ">
-                  <div className=" grid grid-cols-1 custom:grid-cols-2">
-                    <div className="flex h-full justify-center col-span-1 flex-col items-center gap-4">
-                      <div className="md:text-3xl text-xl font-[500] text-center">
+                  <div className=" flex flex-col md:flex-row items-center justify-between">
+                    <div className="flex h-full justify-center  flex-col items-center gap-4">
+                      <div className="md:text-3xl max-w-[100%] text-xl font-[500] text-center">
                         {item.title}
                       </div>
                       <div className="md:text-xl text-md text-center">
                         {item.description}
                       </div>
                     </div>
-                    <div className="col-span-1 custom:mt-0 mt-10 w-[80%] mx-auto h-[30rem] grid place-content-center">
+                    <div className="col-span-3 custom:mt-0 mt-10 w-[100%] mx-auto grid place-content-center">
                       <img
                         src={item.img}
-                        className="w-full object-contain"
+                        className="w-[60vw] max-w-none h-full object-contain"
                         alt="solution image"
                       />
                     </div>
@@ -286,7 +286,7 @@ export default function MedicalAffairsLanding() {
         <div className="grid bg-gray-200 custom:grid-cols-2 grid-cols-1 px-10 md:px-28 py-20">
           <div className="flex flex-col items-start gap-4">
             <h2 className="md:text-6xl text-3xl custom:max-w-[100%] max-w-[100%] font-[600]">
-              Best-in-class AI prediction
+              Best-in-class AI prediction Algorithm
             </h2>
             <p>
               Leveraging a proprietary feature library of over 50k patient

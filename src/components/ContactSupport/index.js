@@ -47,7 +47,7 @@ const ContactSupport = ({closeContact, contactPage = false }) => {
         !contactPage ? "rounded-lg border bg-slate-300 mt-10 custom:mt-10 mx-auto  md:mt-32 " : "bg-white py-10"
       } `}
     >
-      {contactPage && <IoCloseCircle onClick={closeContact} size={40} className="absolute top-5 right-5" />}
+      {contactPage && <IoCloseCircle onClick={closeContact} size={40} className="absolute cursor-pointer top-5 right-5" />}
       {contactPage && <img src={contactImg} alt="contactImg" className="w-[50rem] object-contain" />}
       <div className="flex flex-col justify-between items-start px-4 md:px-10 py-20 w-full">
         <h2 className="text-5xl text-[#000] font-[500] mb-0">
@@ -74,7 +74,7 @@ const ContactSupport = ({closeContact, contactPage = false }) => {
               placeholder="Your name"
             />
           </div> */}
-          {contactPage &&<div className={`${contactPage && "w-[40%]"} mt-10 mb-8`}>
+          {contactPage &&<div className={` mt-10 mb-8`}>
             <label
               className="block text-gray-500 text-sm font-[500] mb-2"
               htmlFor="email"

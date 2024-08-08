@@ -29,7 +29,7 @@ const SolutionsTextSection = ({ textsList = texts }) => {
     });
   }, []);
   return (
-    <section className="min-h-[50vh] md:px-20 px-10 bg-[#fff] z-2 grid grid-cols-1">
+    <section className="min-h-[50vh] pt-10 md:px-20 px-10 bg-[#fff] z-2 grid grid-cols-1">
       <div className="grid md:px-10 bg-[#fff] place-content-center">
         <h2 className="md:text-3xl text-xl text-center font-[400]">
           Each of our solutions leverages distinctive clinical and AI machinery
@@ -38,13 +38,13 @@ const SolutionsTextSection = ({ textsList = texts }) => {
       </div>
       <div
         id="btn-section"
-        className="grid gap-6 mt-10 md:mt-0 md:grid-cols-3 grid-cols-2 mb-20 bg-[#fff]"
+        className="gap-6 mt-10 md:mt-0 flex items-center flex-wrap justify-center mb-20 bg-[#fff]"
       >
         {textsList.map((text, index) => (
           <div
             key={index}
             ref={(el) => (itemsRef.current[index] = el)}
-            className={` opacity-0 md:text-xl text-md text-center grid place-content-center `}
+            className={` opacity-0 md:text-xl text-md md:w-[25%] w-[100%] text-center grid place-content-center `}
           >
             {text}
           </div>
