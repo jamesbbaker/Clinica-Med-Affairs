@@ -46,9 +46,7 @@ const Testimonials = () => {
               </p>
               <div className="flex flex-col items-start">
                 <h2 className="font-[600]">Head of US Commercial</h2>
-                <p className="font-[300] text-[0.85rem]">
-                  Pre-launch respiratory product
-                </p>
+                <p className="font-[300] text-[0.85rem]">Top 5 biopharma</p>
               </div>
             </div>
             <div className="custom:w-[20rem] md:w-[25rem]  flex flex-col gap-6 p-10 bg-white rounded-xl ">

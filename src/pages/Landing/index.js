@@ -70,7 +70,7 @@ export default function Index() {
         setCurrentToggle(e);
       },
     }),
-    [loop]
+    [loop],
   );
 
   const handleReady = () => {
@@ -110,10 +110,17 @@ export default function Index() {
         />
         <div className="absolute left-0 top-0 w-[100vw] h-[100vh]    backdrop-blur-sm"></div>
 
+<<<<<<< HEAD
         <div className="z-2  rounded-xl md:px-12 px-10 py-10 flex flex-col items-center justify-center gap-4">
           <h2 className="md:text-[3rem] font-secondary text-[1.75rem]  text-[#fff] text-center font-[400]">
             Empowering organizations to improve <br /> patient care with AI and
             RWE
+=======
+        <div className="z-2  rounded-xl px-12 py-10 flex flex-col items-center justify-center gap-4">
+          <h2 className="md:text-[3rem] font-secondary text-[1.5rem]  text-[#fff] text-center font-[400]">
+            Empowering organizations to improve <br /> patient care with AI and
+            RWD
+>>>>>>> aff7789bc4180722275dbc787822bd62c0021729
           </h2>
           <div className="h-[10rem] p-2 flex items-center gap-2 rounded-lg">
             {/* <img src={logo} className="h-full" alt="logo" /> */}
@@ -179,6 +186,7 @@ export default function Index() {
                           alt={item.title}
                           className="object-contain  h-full w-full"
                         />
+<<<<<<< HEAD
                       </div>
                     )}
                     {item.video && (
@@ -196,6 +204,25 @@ export default function Index() {
                         />
                       </div>
                     )}
+=======
+                      )}
+                      {item.video && (
+                        <div className="h-full md:w-[50vw] w-[70vw] py-10">
+                          <ReactPlayer
+                            muted={true}
+                            url={item.video}
+                            width={"100%"}
+                            height={"100%"}
+                            loop
+                            playsinline
+                            onReady={handleReady}
+                            playing={true}
+                            controls={false}
+                          />
+                        </div>
+                      )}
+                    </div>
+>>>>>>> aff7789bc4180722275dbc787822bd62c0021729
                   </div>
                 </div>
               );
