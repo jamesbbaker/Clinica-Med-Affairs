@@ -110,6 +110,10 @@ function App() {
 export default App;
 
 const RouterOutlet = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
   useGA4PageTracking();
   return <Outlet />;
 };

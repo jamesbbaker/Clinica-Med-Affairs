@@ -57,7 +57,9 @@ const Navbar = ({ darkMode = false }) => {
     <header
       className={`fixed w-full z-30  transition ${
         dark ? "bg-transparent opacity-100" : "bg-white md:bg-opacity-90 "
-      } duration-300 ease-in-out ${!top ? " md:backdrop-blur-sm backdrop-blur-none shadow-2xl" : ""}`}
+      } duration-300 ease-in-out ${
+        !top ? " md:backdrop-blur-sm backdrop-blur-[none] shadow-2xl" : ""
+      }`}
     >
       <Popup
         onClose={closeContact}
@@ -76,7 +78,7 @@ const Navbar = ({ darkMode = false }) => {
               onClick={handleHome}
               src={dark ? darkLogo : logo}
               alt="logo"
-              className="w-[10rem] md:w-[200px] bg-transparent cursor-pointer  object-contain"
+              className="w-[10rem] md:w-[7rem] bg-transparent cursor-pointer  object-contain"
             />
             <p
               className={`hidden custom:block ${
@@ -190,102 +192,105 @@ const Navbar = ({ darkMode = false }) => {
             </ul>
           </nav>
           <div onClick={handleShowNav} className="flex md:hidden">
-            <CiMenuBurger color={dark ? "#fff" : "#000"} />
+            <CiMenuBurger size={40} color={dark ? "#fff" : "#000"} />
           </div>
           {showNav && (
             <div
               onClick={() => setShowNav(false)}
-              className="fixed z-[100] top-2 right-2"
+              className="fixed z-[100]  top-2 right-2"
             >
-              <IoCloseCircle size={40} color={dark ? "#fff" : "#000"} />
+              <IoCloseCircle size={40} color={dark && document.body.clientWidth > 800 ? "#fff" : "#000"} />
             </div>
           )}
         </div>
       </div>
-      {showNav && (
-        <div className="fixed bg-[#c4c4c4] left-0 right-0 top-0 bottom-0">
-          <div className="flex justify-center w-full h-full  items-center flex-col md:hidden  ">
-            {/* Desktop sign in divs */}
-            <ul className="items-center text-center">
-              <li
-                onMouseOver={() => setShowList(true)}
-                onMouseLeave={() => setShowList(false)}
-                className="relative"
+
+      <div
+        className={`fixed md:hidden block w-[50vw] overflow-hidden bg-gray-100  transition-all ease-in-out duration-200 ${
+          showNav ? "right-0" : "-right-full"
+        } top-0 bottom-0`}
+      >
+        <div className="flex mt-8 px-[1rem] w-full h-full  items-center flex-col md:hidden  ">
+          {/* Desktop sign in divs */}
+          <ul className="items-center text-right">
+            <li
+              onMouseOver={() => setShowList(true)}
+              onMouseLeave={() => setShowList(false)}
+              className="relative"
+            >
+              <div
+                className={`cursor-pointer font-medium  text-gray-[#000] text-center hover:text-gray-900 py-3 flex items-center justify-end transition duration-150 ease-in-out`}
               >
-                <div
-                  className={`cursor-pointer font-medium  text-gray-[#000] text-center hover:text-gray-900 py-3 flex items-center transition duration-150 ease-in-out`}
-                >
-                  Solutions
-                </div>
-                {showList && (
-                  <li className="absolute text-[0.85rem] gap-2 bg-slate-200 text-center top-10 left-0">
-                    <ul
-                      onClick={() => handleNavigate("/medicalAffairs")}
-                      className="hover:bg-slate-100 px-2 py-2 text-black cursor-pointer font-[500]"
-                    >
-                      Medical Affairs
-                    </ul>
-                    <ul
-                      onClick={() => handleNavigate("/rnd")}
-                      className="hover:bg-slate-100 px-2 py-2 text-black cursor-pointer font-[500]"
-                    >
-                      R&D
-                    </ul>
-                    {/* <ul
+                Solutions
+              </div>
+              {showList && (
+                <li className="absolute text-[0.85rem] gap-2 bg-slate-200 text-center top-10 left-0">
+                  <ul
+                    onClick={() => handleNavigate("/medicalAffairs")}
+                    className="hover:bg-slate-100 px-2 py-2 text-black cursor-pointer font-[500]"
+                  >
+                    Medical Affairs
+                  </ul>
+                  <ul
+                    onClick={() => handleNavigate("/rnd")}
+                    className="hover:bg-slate-100 px-2 py-2 text-black cursor-pointer font-[500]"
+                  >
+                    R&D
+                  </ul>
+                  {/* <ul
                       onClick={() => handleNavigate("/nonprofit")}
                       className="hover:bg-slate-100 px-2 py-2 text-black cursor-pointer font-[500]"
                     >
                       Non-Profits
                     </ul> */}
-                  </li>
-                )}
-              </li>
-              <li>
-                <div
-                  onClick={() => handleNavigate("/about")}
-                  className={`cursor-pointer font-medium  text-gray-[#000] text-center hover:text-gray-900 py-3 flex items-center transition duration-150 ease-in-out`}
+                </li>
+              )}
+            </li>
+            <li>
+              <div
+                onClick={() => handleNavigate("/about")}
+                className={`cursor-pointer font-medium  text-gray-[#000] text-center hover:text-gray-900 justify-end py-3 flex items-center transition duration-150 ease-in-out`}
+              >
+                About
+              </div>
+            </li>
+            <li>
+              <div
+                onClick={() => handleNavigate("/research")}
+                className={`cursor-pointer font-medium  text-gray-[#000] text-center hover:text-gray-900 justify-end py-3 flex items-center transition duration-150 ease-in-out`}
+              >
+                Research
+              </div>
+            </li>
+            <li>
+              <div
+              onClick={() => setContact(true)}
+                className={`cursor-pointer font-medium text-gray-[#000] text-center justify-end  hover:text-gray-905 py-3 flex items-center transition duration-150 ease-in-out`}
+              >
+                Contact
+              </div>
+            </li>
+            <li>
+              <div
+                onClick={handleSignIn}
+                className={`cursor-pointer btn-sm mt-4 md:mt-0 justify-end text-gray-200 bg-gray-900 hover:bg-gray-800 `}
+              >
+                <span>{"Sign in"}</span>
+                <svg
+                  className="w-3 h-3 fill-current text-gray-400 shrink-0 ml-2 -mr-1"
+                  viewBox="0 0 12 12"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  About
-                </div>
-              </li>
-              <li>
-                <div
-                  onClick={() => handleNavigate("/contactus")}
-                  className={`cursor-pointer font-medium  text-gray-[#000] text-center hover:text-gray-900 py-3 flex items-center transition duration-150 ease-in-out`}
-                >
-                  Research
-                </div>
-              </li>
-              <li>
-                <div
-                  onClick={() => handleNavigate("/contactus")}
-                  className={`cursor-pointer font-medium text-gray-[#000] text-center  hover:text-gray-905 py-3 flex items-center transition duration-150 ease-in-out`}
-                >
-                  Contact
-                </div>
-              </li>
-              <li>
-                <div
-                  onClick={handleSignIn}
-                  className={`cursor-pointer btn-sm mt-4 md:mt-0 text-gray-200 bg-gray-900 hover:bg-gray-800 `}
-                >
-                  <span>{"Sign in"}</span>
-                  <svg
-                    className="w-3 h-3 fill-current text-gray-400 shrink-0 ml-2 -mr-1"
-                    viewBox="0 0 12 12"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M11.707 5.293L7 .586 5.586 2l3 3H0v2h8.586l-3 3L7 11.414l4.707-4.707a1 1 0 000-1.414z"
-                      fillRule="nonzero"
-                    />
-                  </svg>
-                </div>
-              </li>
-            </ul>
-          </div>
+                  <path
+                    d="M11.707 5.293L7 .586 5.586 2l3 3H0v2h8.586l-3 3L7 11.414l4.707-4.707a1 1 0 000-1.414z"
+                    fillRule="nonzero"
+                  />
+                </svg>
+              </div>
+            </li>
+          </ul>
         </div>
-      )}
+      </div>
     </header>
   );
 };

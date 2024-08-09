@@ -47,13 +47,13 @@ const ContactSupport = ({closeContact, contactPage = false }) => {
         !contactPage ? "rounded-lg border bg-slate-300 mt-10 custom:mt-10 mx-auto  md:mt-32 " : "bg-white py-10"
       } `}
     >
-      {contactPage && <IoCloseCircle onClick={closeContact} size={40} className="absolute cursor-pointer top-5 right-5" />}
+      {contactPage && <IoCloseCircle onClick={closeContact} size={40} className="absolute z-[10] cursor-pointer top-2 md:right-5 right-2" />}
       {contactPage && <img src={contactImg} alt="contactImg" className="w-[50rem] object-contain" />}
-      <div className="flex flex-col justify-between items-start px-4 md:px-10 py-20 w-full">
-        <h2 className="text-5xl text-[#000] font-[500] mb-0">
+      <div className="flex flex-col justify-between items-start px-4 md:px-10 md:py-20 py-10 w-full">
+        <h2 className="md:text-5xl text-2xl  text-[#000] font-[500] mb-0">
          {contactPage ? "Reach out to the" : "Contact Support"}
         </h2>
-        {contactPage && <h2 className="text-5xl text-[#000] font-[500] mb-12">Clinica team</h2>}
+        {contactPage && <h2 className="md:text-5xl text-2xl text-[#000] font-[500] md:mb-12 mb-0">Clinica team</h2>}
         {/* {contactPage && <p className="text-2xl font-[500] max-w-[80%] text-[#000]">Let us know your reason for setting up the discussion and we will respond shortly</p>} */}
         <form className="w-full" onSubmit={handleSubmit}>
           {/* <div className={`${contactPage && "w-[40%]"} mb-8`}>

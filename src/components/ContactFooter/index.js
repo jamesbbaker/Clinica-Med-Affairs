@@ -37,24 +37,24 @@ const ContactFooter = () => {
         <ContactUs closeContact={closeContact} />
       </Popup>
       <div className="flex flex-col gap-10 font-[500] items-center">
-        <h2 className="text-5xl">Contact Us</h2>
-        <p className="text-3xl">
+        <h2 className="md:text-5xl text-3xl">Contact Us</h2>
+        <p className="md:text-3xl text-xl">
           Learn how we can empower your R&D and Medical Affairs teams
         </p>  
       </div>
-      <div className="grid grid-cols-2">
+      <div className="grid grid-cols-2 gap-4">
         <div className="px-10 grid place-content-center py-10">
           <PrimaryBtn
             onClick={() => setPopup(true)}
             text={"Request a Demo"}
-            className={"px-10 rounded-lg bg-[#0A1172] hover:scale-105 transition-all w-[10rem] md:w-auto ease-in-out duration-200 md:text-2xl text-md text-[#fff]"}
+            className={"md:px-10 px-10 rounded-lg bg-[#0A1172] hover:scale-105 transition-all  md:w-auto ease-in-out duration-200 md:text-2xl text-md text-[#fff]"}
           />
         </div>
         <div className="px-10 grid place-content-center py-10">
           <PrimaryBtn
             onClick={() => setContact(true)}
             text={"Talk to an Expert"}
-            className={"px-10 rounded-lg bg-[#0A1172] hover:scale-105 transition-all w-[10rem] md:w-auto ease-in-out duration-200 md:text-2xl text-md text-[#fff]"}
+            className={"md:px-10 px-10 rounded-lg bg-[#0A1172] hover:scale-105 transition-all  md:w-auto ease-in-out duration-200 md:text-2xl text-md text-[#fff]"}
           />
         </div>
       </div>

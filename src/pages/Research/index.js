@@ -200,7 +200,7 @@ export default function Research() {
           >
             <DemoContact handleClose={closeModal} />
           </Popup>
-          <div className="relative w-full h-[50vh] custom:mt-0 mt-10 grid place-content-center">
+          <div className="relative w-full md:h-[50vh]  custom:mt-0 mt-10 grid place-content-center">
             <ReactPlayer
               // muted={true}
               id="introVideo"
@@ -238,13 +238,13 @@ export default function Research() {
         </div>
       </section>
       <section className="relative overflow-hidden py-20   bg-gray-100">
-        <div className="flex flex-none flex-wrap justify-center gap-6 items-center px-10 py-4">
+        <div className="flex flex-none md:flex-wrap flex-nowrap overflow-x-auto justify-center ml-10  md:gap-6 items-center px-20 md:px-10 py-4">
           {SolutionsList.map((item, index) => (
             <div
               onClick={() => handleClick(index)}
               className={`${
                 currentToggle === index && "bg-slate-300"
-              } font-[500] md:text-2xl text-md rounded-md text-center hover:bg-slate-300 p-2 cursor-pointer`}
+              } font-[500] md:text-2xl whitespace-nowrap text-md rounded-md text-center hover:bg-slate-300 p-2 cursor-pointer`}
             >
               {item.text}
             </div>
@@ -266,7 +266,7 @@ export default function Research() {
                     </div>
                     <div className="col-span-1  grid place-content-center custom:mt-0 mt-10 w-[80%] mx-auto h-[20rem] md:h-[30rem] ">
                       {item.video ? (
-                        <div className="relative h-[11.25rem] w-[20rem] overflow-hidden ">
+                        <div className="relative md:w-[53.33rem] md:h-[30rem] h-[8.4375rem] w-[15rem] overflow-hidden  ">
                         <ReactPlayer
                           url={item.video}
                           width="100%"

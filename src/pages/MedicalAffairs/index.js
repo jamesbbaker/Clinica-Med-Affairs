@@ -240,8 +240,8 @@ export default function MedicalAffairsLanding() {
           </div>
         </div>
       </section>
-      <section className="relative overflow-hidden py-20   bg-gray-100">
-        <div className="flex flex-none flex-wrap justify-center gap-6 items-center px-10 py-4">
+      <section className="relative overflow-hidden md:py-20 py-10 bg-gray-100">
+        <div className="flex flex-none md:flex-wrap flex-nowrap overflow-x-auto justify-center gap-6 items-center px-10 py-4">
           {SolutionsList.map((item, index) => (
             <div
               onClick={() => handleClick(index)}
@@ -257,8 +257,8 @@ export default function MedicalAffairsLanding() {
           <Slider ref={sliderRef} {...settings}>
             {SolutionsList.map((item) => {
               return (
-                <div className="md:px-4 px-0 py-10 w-full  min-h-[20rem] ">
-                  <div className=" flex flex-col md:flex-row items-center justify-between">
+                <div className="md:px-4 px-0 py-10 w-full md:h-[30rem]  h-[30rem] ">
+                  <div className=" flex flex-col md:flex-row items-center md:justify-between h-full justify-center gap-10">
                     <div className="flex h-full justify-center  flex-col items-center gap-4">
                       <div className="md:text-3xl max-w-[100%] text-xl font-[500] text-center">
                         {item.title}
@@ -268,11 +268,11 @@ export default function MedicalAffairsLanding() {
                       </div>
                     </div>
                     <div className="col-span-3 custom:mt-0 mt-10 w-[100%] mx-auto grid place-content-center">
-                      <img
-                        src={item.img}
-                        className="w-[60vw] max-w-none h-full object-contain"
-                        alt="solution image"
-                      />
+                    <img
+                          src={item.img}
+                          className="md:h-[50rem] h-[20rem] object-contain"
+                          alt="img"
+                        />
                     </div>
                   </div>
                 </div>
