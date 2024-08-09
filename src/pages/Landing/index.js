@@ -50,12 +50,9 @@ const SolutionsList = [
   // },
 ];
 
-
-
 export default function Index() {
   const video1ref = useRef(null);
   const [currentToggle, setCurrentToggle] = useState(0);
-
 
   const [loop, setLoop] = useState(true);
 
@@ -73,9 +70,8 @@ export default function Index() {
         setCurrentToggle(e);
       },
     }),
-    [loop]
+    [loop],
   );
-
 
   const handleReady = () => {
     console.log("first");
@@ -86,7 +82,7 @@ export default function Index() {
   const navigate = useNavigate();
 
   const handleClick = (index) => {
-    setLoop(false)
+    setLoop(false);
     sliderRef.current.slickGoTo(index);
   };
 
@@ -94,7 +90,6 @@ export default function Index() {
     navigate(val);
   };
 
- 
   return (
     <>
       <Navbar darkMode />
@@ -114,11 +109,11 @@ export default function Index() {
           controls={false}
         />
         <div className="absolute left-0 top-0 w-[100vw] h-[100vh]    backdrop-blur-sm"></div>
-        
-       
+
         <div className="z-2  rounded-xl px-12 py-10 flex flex-col items-center justify-center gap-4">
           <h2 className="md:text-[3rem] font-secondary text-[1.5rem]  text-[#fff] text-center font-[400]">
-            Empowering organizations to improve <br/> patient care with AI and RWE
+            Empowering organizations to improve <br /> patient care with AI and
+            RWD
           </h2>
           <div className="h-[10rem] p-2 flex items-center gap-2 rounded-lg">
             {/* <img src={logo} className="h-full" alt="logo" /> */}
@@ -171,7 +166,9 @@ export default function Index() {
                       <PrimaryBtn
                         onClick={() => handleNavigate(item.link)}
                         text={"Learn more"}
-                        className={"px-10 bg-[#0A1172] rounded-lg  hover:scale-105 transition-all ease-in-out duration-200 md:text-2xl mt-2 text-md text-[#fff]"}
+                        className={
+                          "px-10 bg-[#0A1172] rounded-lg  hover:scale-105 transition-all ease-in-out duration-200 md:text-2xl mt-2 text-md text-[#fff]"
+                        }
                       />
                     </div>
                     <div className="grid place-content-center custom:mt-0 mt-10 w-[90%] mx-auto ">
@@ -184,18 +181,18 @@ export default function Index() {
                       )}
                       {item.video && (
                         <div className="h-full md:w-[50vw] w-[70vw] py-10">
-                        <ReactPlayer
-                          muted={true}
-                          url={item.video}
-                         width={"100%"}
-                         height={"100%"}
-                          loop
-                          playsinline
-                          onReady={handleReady}
-                          playing={true}
-                          controls={false}
-                        />
-                      </div>
+                          <ReactPlayer
+                            muted={true}
+                            url={item.video}
+                            width={"100%"}
+                            height={"100%"}
+                            loop
+                            playsinline
+                            onReady={handleReady}
+                            playing={true}
+                            controls={false}
+                          />
+                        </div>
                       )}
                     </div>
                   </div>
@@ -206,17 +203,17 @@ export default function Index() {
         </div>
       </section>
       <Testimonials />
-    
-     
+
       <section>
         <div className="grid bg-gray-100 custom:grid-cols-2 grid-cols-1 px-10 md:px-28 py-20">
           <div className="flex flex-col items-start gap-4">
             <h2 className="md:text-5xl text-2xl custom:max-w-[70%] max-w-[70%] font-[600]">
               The most predictive machine learning algorithms
             </h2>
-       
+
             <p className="">
-            Leveraging a proprietary library of more than 50,000 patient features
+              Leveraging a proprietary library of more than 50,000 patient
+              features
             </p>
           </div>
           <div className="grid custom:mt-0 mt-10 md:gap-8 gap-10 grid-cols-1 md:grid-cols-2">
@@ -256,7 +253,7 @@ export default function Index() {
         </div>
       </section>
       <ContactFooter />
-   
+
       <Footer />
     </>
   );
